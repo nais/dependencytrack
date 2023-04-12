@@ -127,7 +127,6 @@ func (c *Client) AddToTeam(ctx context.Context, username string, team string) er
 }
 
 func sendRequest(ctx context.Context, httpMethod string, url string, headers map[string][]string, body []byte) ([]byte, error) {
-	// TODO: check if body is nil
 	req, err := http.NewRequestWithContext(ctx, httpMethod, url, bytes.NewReader(body))
 	if err != nil {
 		return nil, fmt.Errorf("creating request: %w", err)
