@@ -137,6 +137,10 @@ func (r *RequestError) Error() string {
 	return fmt.Sprintf("status %d: err %v", r.StatusCode, r.Err)
 }
 
+func (r *RequestError) AlreadyExists() bool {
+	return r.StatusCode == http.StatusConflict
+}
+
 func fail(status int, err error) *RequestError {
 	return &RequestError{
 		StatusCode: status,

@@ -57,7 +57,7 @@ func main() {
 	if err != nil {
 		e, ok := err.(*client.RequestError)
 		if ok {
-			if e.StatusCode == 409 {
+			if e.AlreadyExists() {
 				log.Infof("user %s already exists", cfg.NewUser)
 				return
 			}
