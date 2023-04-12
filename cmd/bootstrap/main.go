@@ -55,6 +55,13 @@ func main() {
 
 	err = c.NewManagedUser(ctx, cfg.NewUser, cfg.NewUserPassword)
 	if err != nil {
+		e, ok := err.(*client.RequestError)
+		if ok {
+			if e.StatusCode == 409 {
+				log.Infof("user %s already exists", cfg.NewUser)
+				return
+			}
+		}
 		log.Fatalf("creating new managed user: %v", err)
 	}
 

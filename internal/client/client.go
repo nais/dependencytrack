@@ -7,6 +7,8 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+
+	log "github.com/sirupsen/logrus"
 )
 
 type Client struct {
@@ -126,6 +128,22 @@ func (c *Client) AddToTeam(ctx context.Context, username string, team string) er
 	return nil
 }
 
+type RequestError struct {
+	StatusCode int
+	Err        error
+}
+
+func (r *RequestError) Error() string {
+	return fmt.Sprintf("status %d: err %v", r.StatusCode, r.Err)
+}
+
+func fail(status int, err error) *RequestError {
+	return &RequestError{
+		StatusCode: status,
+		Err:        err,
+	}
+}
+
 func sendRequest(ctx context.Context, httpMethod string, url string, headers map[string][]string, body []byte) ([]byte, error) {
 	req, err := http.NewRequestWithContext(ctx, httpMethod, url, bytes.NewReader(body))
 	if err != nil {
@@ -138,12 +156,15 @@ func sendRequest(ctx context.Context, httpMethod string, url string, headers map
 	if err != nil {
 		return nil, fmt.Errorf("sending request: %w", err)
 	}
+
+	log.Debugf("Response: %s", resp.Status)
+
 	if resp.StatusCode > 299 {
 		b, err := io.ReadAll(resp.Body)
 		if err != nil {
 			return nil, fmt.Errorf("reading response body: %w", err)
 		}
-		return nil, fmt.Errorf("unexpected status code: %d, with body:\n%s\n", resp.StatusCode, string(b))
+		return nil, fail(resp.StatusCode, fmt.Errorf("%s\n", string(b)))
 	}
 	resBody, err := io.ReadAll(resp.Body)
 	return resBody, err
