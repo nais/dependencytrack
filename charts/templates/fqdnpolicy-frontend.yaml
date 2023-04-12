@@ -1,0 +1,20 @@
+{{- if .Capabilities.APIVersions.Has "networking.gke.io/v1" }}
+apiVersion: networking.gke.io/v1alpha3
+kind: FQDNNetworkPolicy
+metadata:
+  name: {{ include "dependencytrack-frontend.name" . }}-fqdn
+spec:
+  egress:
+    - ports:
+        - port: 443
+          protocol: TCP
+      to:
+        - fqdns:
+            - {{ .Values.backend.ingress }}
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/instance: {{ include "dependencytrack-frontend.name" . }}
+      app.kubernetes.io/name: {{ .Release.Name }}
+  policyTypes:
+    - Egress
+{{- end }}

@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "dependencytrack-frontend.name" . }}
+  labels:
+    {{- include "dependencytrack-frontend.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "dependencytrack-frontend.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "dependencytrack-frontend.selectorLabels" . | nindent 8 }}
+        component: frontend
+      annotations:
+        kubectl.kubernetes.io/default-container: {{ include "dependencytrack-frontend.name" . }}
+    spec:
+      volumes:
+        - name: writable-tmp
+          emptyDir: {}
+
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
+        fsGroup: 101
+      containers:
+        - name: {{ include "dependencytrack-frontend.name" . }}
+          image: "{{ .Values.frontend.image.repository }}/{{ .Values.frontend.image.name }}:{{ .Values.frontend.image.tag }}"
+          imagePullPolicy: {{ .Values.frontend.image.pullPolicy }}
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 101
+            runAsGroup: 101
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: false
+            capabilities:
+              drop:
+                - ALL
+          env:
+            {{- range $key, $value := .Values.frontend.env }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          volumeMounts:
+            - name: writable-tmp
+              mountPath: /tmp
+          resources:
+            {{- toYaml .Values.frontend.resources | nindent 12 }}

@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "dependencytrack-frontend.name" . }}
+data:
+  config.json: |
+    {
+      "API_BASE_URL": "http://dependencytrack-backend"
+    }

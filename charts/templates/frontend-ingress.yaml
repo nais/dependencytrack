@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "dependencytrack-frontend.name" . }}
+  labels:
+    {{- include "dependencytrack-frontend.labels" . | nindent 4 }}
+spec:
+  ingressClassName: {{ .Values.frontend.ingressClassName }}
+  rules:
+    - host: {{ .Values.frontend.ingress | quote }}
+      http:
+        paths:
+          - backend:
+              service:
+                name: {{ include "dependencytrack-frontend.name" . }}
+                port:
+                  number: 80
+            path: /
+            pathType: Prefix

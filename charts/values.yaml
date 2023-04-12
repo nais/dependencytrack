@@ -1,0 +1,107 @@
+# Default values for dependencytrack.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+backend:
+  image:
+    name: apiserver
+    repository: dependencytrack
+    pullPolicy: IfNotPresent
+    # Overrides the image tag whose default is the chart appVersion.
+    tag:
+  replicas:
+    min: 1
+    max: 1
+  resources:
+    limits:
+      memory: 8Gi
+      cpu: "2"
+    requests:
+      memory: 4608Mi
+      cpu: "2"
+  outbound: []
+  ingressClassName: nais-ingress
+  ingress:
+  livenessProbe:
+    enabled: true
+    path: "/api/version"
+    initialDelaySeconds: 60
+    periodSeconds: 10
+    timeoutSeconds: 2
+    successThreshold: 1
+    failureThreshold: 3
+  readinessProbe:
+    enabled: true
+    path: "/"
+    initialDelaySeconds: 60
+    periodSeconds: 10
+    timeoutSeconds: 2
+    successThreshold: 1
+    failureThreshold: 3
+
+  cloudProxy:
+    repository: gcr.io/cloudsql-docker/gce-proxy
+    tag: 1.33.5
+
+  postgresql:
+    enabled: true
+    password:
+    database: salsa
+    username:
+    host: 127.0.0.1
+    port: 5432
+    connectionName:
+
+  serviceAccount:
+    create: true
+    googleServiceAccountEmail:
+
+  persistence:
+    accessMode: ReadWriteOnce
+    size: 10Gi
+    storageClass: "standard-rwo"
+    existingClaim: ""
+  env:
+    ALPINE_OIDC_ENABLED: true
+    ALPINE_OIDC_ISSUER:
+    ALPINE_OIDC_CLIENT_ID:
+    ALPINE_OIDC_USERNAME_CLAIM: email
+    ALPINE_DATABASE_POOL_MAX_LIFETIME: 500000
+    #ALPINE_OIDC_TEAMS_CLAIM: groups
+    ALPINE_OIDC_USER_PROVISIONING: true
+    # Optional Cross-Origin Resource Sharing (CORS) Headers
+    ALPINE_CORS_ENABLED: true
+    ALPINE_CORS_ALLOW_ORIGIN:
+    ALPINE_CORS_ALLOW_METHODS: GET, POST, PUT, PATCH, DELETE, OPTIONS
+    ALPINE_CORS_ALLOW_HEADERS: Origin, Content-Type, Authorization, X-Requested-With, Content-Length, Accept, Origin, X-Api-Key, X-Total-Count, *
+    ALPINE_CORS_EXPOSE_HEADERS: Origin, Content-Type, Authorization, X-Requested-With, Content-Length, Accept, Origin, X-Api-Key, X-Total-Count
+    ALPINE_CORS_ALLOW_CREDENTIALS: true
+    ALPINE_CORS_MAX_AGE: 3600
+    #ALPINE_OIDC_TEAM_SYNCHRONIZATION: true
+
+frontend:
+  image:
+    name: frontend
+    repository: dependencytrack
+    pullPolicy: IfNotPresent
+    # Overrides the image tag whose default is the chart appVersion.
+    tag:
+  replicas:
+    min: 1
+    max: 1
+  resources:
+    limits:
+      memory: 512Mi
+    requests:
+      memory: 128Mi
+      cpu: 200m
+  outbound: []
+  ingressClassName: nais-ingress
+  ingress:
+  env:
+    # auth code flow without client_secret using pkce not supported by google.
+    # https://stackoverflow.com/questions/60724690/using-google-oidc-with-code-flow-and-pkce
+    OIDC_FLOW: implicit
+    API_BASE_URL:
+    OIDC_ISSUER:
+    OIDC_CLIENT_ID:

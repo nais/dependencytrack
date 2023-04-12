@@ -1,0 +1,58 @@
+name: Build and deploy dependencytrack
+
+on:
+  push:
+    paths-ignore:
+      - 'charts/**'
+      - '.github/workflows/chart.yaml'
+      - '*.md'
+
+env:
+  REGISTRY: europe-north1-docker.pkg.dev/nais-io/nais/images
+
+jobs:
+  tests:
+    if: ${{ github.actor != 'dependabot[bot]' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3.3.0
+      - uses: actions/setup-go@v3
+        with:
+          go-version: ">=1.20.2"
+      - run: go test -cover ./...
+      - name: Vulnerability check
+        run: |
+          go install golang.org/x/vuln/cmd/govulncheck@latest
+          govulncheck ./...
+  build_and_push_registry:
+    needs: [ "tests" ]
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      digest: ${{ steps.build-push.outputs.digest }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: nais/platform-build-push-sign@salsa
+        id: build_push_sign
+        with:
+          name: dependencytrack
+          dockerfile: Dockerfile
+          google_service_account: gh-dependencytrack
+          push: ${{ github.actor != 'dependabot[bot]' }}
+          workload_identity_provider: ${{ secrets.NAIS_IO_WORKLOAD_IDENTITY_PROVIDER }}
+
+  # rollout:
+  #   permissions:
+  #     id-token: write
+  #   needs: [ "build_and_push_registry" ]
+  #   runs-on: fasit-deploy
+  #   steps:
+  #     - uses: nais/fasit-deploy@main
+  #       with:
+  #         json: '{"image": {"tag": "${{ needs.build_and_push_registry.outputs.version }}"}}'
+  #         feature_name: dependencytrack
+#

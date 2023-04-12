@@ -1,0 +1,17 @@
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ include "dependencytrack-backend.name" . }}
+  labels: {{- include "dependencytrack-backend.labels" . | nindent 4 }}
+spec:
+  endpoints:
+  - interval: 1m
+    port: http
+    scrapeTimeout: 10s
+  namespaceSelector:
+    matchNames:
+    - {{ .Release.Namespace }}
+  selector:
+    matchLabels:
+      {{- include "dependencytrack-backend.selectorLabels" . | nindent 6 }}
