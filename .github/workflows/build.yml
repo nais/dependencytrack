@@ -1,4 +1,4 @@
-name: Build and deploy dependencytrack
+name: Build and deploy dependencytrack-bootstrap
 
 on:
   push:
@@ -39,7 +39,7 @@ jobs:
       - uses: nais/platform-build-push-sign@main
         id: build_push_sign
         with:
-          name: dependencytrack
+          name: dependencytrack-bootstrap
           dockerfile: Dockerfile
           google_service_account: gh-dependencytrack
           push: ${{ github.actor != 'dependabot[bot]' }}
@@ -54,5 +54,5 @@ jobs:
   #     - uses: nais/fasit-deploy@main
   #       with:
   #         json: '{"image": {"tag": "${{ needs.build_and_push_registry.outputs.version }}"}}'
-  #         feature_name: dependencytrack
+  #         feature_name: dependencytrack-bootstrap
 #
