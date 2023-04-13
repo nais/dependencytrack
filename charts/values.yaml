@@ -3,6 +3,10 @@
 # Declare variables to be passed into your templates.
 
 bootstrap:
+  logLevel: INFO
+  baseUrl: http://dependencytrack-backend
+  defaultAdminPassword: todo
+  adminPassword: todo
   image:
     name: dependencytrack-bootstrap
     repository: europe-north1-docker.pkg.dev/nais-io/nais/images
@@ -10,6 +14,7 @@ bootstrap:
   users:
     - username: console
       password: todo
+
 backend:
   image:
     name: apiserver

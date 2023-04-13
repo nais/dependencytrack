@@ -46,10 +46,31 @@ spec:
             capabilities:
               drop:
                 - ALL
+          env:
+            - name: LOG_LEVEL
+              value: "{{ .Values.bootstrap.logLevel }}"
+            - name: BASE_URL
+              value: "{{ .Values.bootstrap.baseUrl }}"
+          envFrom:
+            - secretRef:
+                name: "{{ .Release.Name }}-bootstrap-pwd"
       volumes:
         - name: bootstrap
           secret:
             secretName: "{{ .Release.Name }}-bootstrap"
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: "{{ .Release.Name }}-bootstrap-pwd"
+  labels:
+    app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
+    app.kubernetes.io/instance: "{{ .Release.Name }}-bootstrap"
+    app.kubernetes.io/name: {{ .Release.Name | quote }}
+type: Opaque
+stringData:
+  DEFAULT_ADMIN_PASSWORD: "{{ .Values.bootstrap.defaultAdminPassword }}"
+  ADMIN_PASSWORD: "{{ .Values.bootstrap.adminPassword }}"
 ---
 apiVersion: v1
 kind: Secret
