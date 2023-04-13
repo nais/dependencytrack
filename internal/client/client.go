@@ -5,8 +5,10 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"gopkg.in/yaml.v3"
 	"io"
 	"net/http"
+	"os"
 
 	log "github.com/sirupsen/logrus"
 )
@@ -54,6 +56,48 @@ func (c *Client) ChangeAdminPassword(ctx context.Context, oldPassword, newPasswo
 	return nil
 }
 
+type Users struct {
+	Users []NewUser `json:"users" yaml:"users"`
+}
+
+type NewUser struct {
+	Username string `json:"username" yaml:"username"`
+	Password string `json:"password" yaml:"password"`
+}
+
+func (c *Client) CreateUsers(ctx context.Context, filePath, teamUuid string) error {
+	file, err := os.ReadFile(filePath)
+	if err != nil {
+		return err
+	}
+	var users Users
+	err = yaml.Unmarshal(file, &users)
+	if err != nil {
+		return err
+	}
+	for _, user := range users.Users {
+		err := c.NewManagedUser(ctx, user.Username, user.Password)
+		if err != nil {
+			e, ok := err.(*RequestError)
+			if !ok {
+				return err
+			} else {
+				if !e.AlreadyExists() {
+					return err
+				} else {
+					log.Infof("user %s already exists", user.Username)
+				}
+			}
+		}
+		err = c.AddToTeam(ctx, user.Username, teamUuid)
+		if err != nil {
+			return err
+		}
+		log.Infof("created user %s", user.Username)
+	}
+	return nil
+}
+
 func (c *Client) NewManagedUser(ctx context.Context, username, password string) error {
 	user := &User{
 		Username:            username,
@@ -86,10 +130,10 @@ func (c *Client) NewManagedUser(ctx context.Context, username, password string) 
 	return nil
 }
 
-func (c *Client) AddToTeam(ctx context.Context, username string, team string) error {
+func (c *Client) GetTeamUuid(ctx context.Context, team string) (string, error) {
 	token, err := c.Token(ctx)
 	if err != nil {
-		return fmt.Errorf("getting Token: %w", err)
+		return "", fmt.Errorf("getting Token: %w", err)
 	}
 
 	resp, err := sendRequest(ctx, http.MethodGet, c.baseUrl+"/api/v1/team", map[string][]string{
@@ -98,12 +142,12 @@ func (c *Client) AddToTeam(ctx context.Context, username string, team string) er
 		"Authorization": {"Bearer " + token},
 	}, nil)
 	if err != nil {
-		return fmt.Errorf("getting teams: %w", err)
+		return "", fmt.Errorf("getting teams: %w", err)
 	}
 
 	var teams []Team
 	if err = json.Unmarshal(resp, &teams); err != nil {
-		return fmt.Errorf("unmarshalling teams: %w", err)
+		return "", fmt.Errorf("unmarshalling teams: %w", err)
 	}
 
 	var uuid string
@@ -113,7 +157,15 @@ func (c *Client) AddToTeam(ctx context.Context, username string, team string) er
 		}
 	}
 	if uuid == "" {
-		return fmt.Errorf("team %s not found", team)
+		return "", fmt.Errorf("team %s not found", team)
+	}
+	return uuid, nil
+}
+
+func (c *Client) AddToTeam(ctx context.Context, username string, uuid string) error {
+	token, err := c.Token(ctx)
+	if err != nil {
+		return fmt.Errorf("getting Token: %w", err)
 	}
 
 	_, err = sendRequest(ctx, http.MethodPost, c.baseUrl+"/api/v1/user/"+username+"/membership", map[string][]string{
@@ -123,6 +175,14 @@ func (c *Client) AddToTeam(ctx context.Context, username string, team string) er
 	}, []byte(`{"uuid": "`+uuid+`"}`))
 
 	if err != nil {
+		e, ok := err.(*RequestError)
+		if !ok {
+			return fmt.Errorf("adding user to team: %w", err)
+		}
+		if e.StatusCode == http.StatusNotModified {
+			log.Infof("user %s already in team", username)
+			return nil
+		}
 		return fmt.Errorf("adding user to team: %w", err)
 	}
 	return nil

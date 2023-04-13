@@ -2,6 +2,14 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
+bootstrap:
+  image:
+    name: dependencytrack-bootstrap
+    repository: europe-north1-docker.pkg.dev/nais-io/nais/images
+    tag: 20230413-125757-9c359f3
+  users:
+    - username: console
+      password: todo
 backend:
   image:
     name: apiserver

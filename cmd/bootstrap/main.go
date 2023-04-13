@@ -18,12 +18,11 @@ var cfg = &Config{
 }
 
 type Config struct {
-	LogLevel             string `json:"log-level"`
+	AdminPassword        string `json:"admin-password"`
 	BaseUrl              string `json:"base-url"`
 	DefaultAdminPassword string `json:"default-admin-password"`
-	AdminPassword        string `json:"admin-password"`
-	NewUser              string `json:"new-user"`
-	NewUserPassword      string `json:"new-user-password"`
+	LogLevel             string `json:"log-level"`
+	UsersFile            string `json:"users-file"`
 }
 
 func init() {
@@ -31,8 +30,7 @@ func init() {
 	flag.StringVar(&cfg.BaseUrl, "base-url", "http://localhost:9001", "base url of dependencytrack")
 	flag.StringVar(&cfg.DefaultAdminPassword, "default-admin-password", "admin", "default admin password")
 	flag.StringVar(&cfg.AdminPassword, "admin-password", cfg.AdminPassword, "new admin password")
-	flag.StringVar(&cfg.NewUser, "new-user", cfg.NewUser, "new admin user")
-	flag.StringVar(&cfg.NewUserPassword, "new-user-password", cfg.NewUserPassword, "new admin user password")
+	flag.StringVar(&cfg.UsersFile, "users-file", "/bootstrap/users.yaml", "file with users to create")
 }
 
 // TODO: add timer and retry logic to wait for dependencytrack to be ready
@@ -53,23 +51,17 @@ func main() {
 		}
 	}
 
-	err = c.NewManagedUser(ctx, cfg.NewUser, cfg.NewUserPassword)
+	teamUuid, err := c.GetTeamUuid(ctx, "Administrators")
 	if err != nil {
-		e, ok := err.(*client.RequestError)
-		if ok {
-			if e.AlreadyExists() {
-				log.Infof("user %s already exists", cfg.NewUser)
-				return
-			}
-		}
-		log.Fatalf("creating new managed user: %v", err)
+		log.Fatalf("get team uuid: %v", err)
 	}
 
-	err = c.AddToTeam(ctx, cfg.NewUser, "Administrators")
+	err = c.CreateUsers(ctx, cfg.UsersFile, teamUuid)
 	if err != nil {
-		log.Fatalf("adding user to team: %v", err)
+		log.Fatalf("create users: %v", err)
 	}
-	log.Infof("done: created %s and added to Administrators team", "user1")
+
+	log.Infof("done: created users and added to Administrators team")
 
 }
 

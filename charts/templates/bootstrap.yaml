@@ -1,0 +1,66 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: "{{ .Release.Name }}-bootstrap"
+  labels:
+    app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
+    app.kubernetes.io/instance: "{{ .Release.Name }}-bootstrap"
+    app.kubernetes.io/name: {{ .Release.Name | quote }}
+    helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+  annotations:
+    # This is what defines this resource as a hook. Without this line, the
+    # job is considered part of the release.
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-weight": "-5"
+    "helm.sh/hook-delete-policy": hook-succeeded
+spec:
+  backoffLimit: 6
+  template:
+    metadata:
+      name: "{{ .Release.Name }}-bootstrap"
+      labels:
+        app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
+        app.kubernetes.io/instance: "{{ .Release.Name }}-bootstrap"
+        app.kubernetes.io/name: {{ .Release.Name | quote }}
+        helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    spec:
+      restartPolicy: Never
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+      containers:
+        - name: "{{ .Release.Name }}-bootstrap"
+          image: "{{ .Values.bootstrap.image.repository }}/{{ .Values.bootstrap.image.name }}:{{ .Values.bootstrap.image.tag }}"
+          volumeMounts:
+            - name: bootstrap
+              mountPath: "/bootstrap"
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1000
+            runAsGroup: 1000
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+      volumes:
+        - name: bootstrap
+          secret:
+            secretName: "{{ .Release.Name }}-bootstrap"
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: "{{ .Release.Name }}-bootstrap"
+  labels:
+    app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
+    app.kubernetes.io/instance: "{{ .Release.Name }}-bootstrap"
+    app.kubernetes.io/name: {{ .Release.Name | quote }}
+type: Opaque
+stringData:
+  users.yaml: |
+    users:
+    {{- .Values.bootstrap.users | toYaml | nindent 6 }}
