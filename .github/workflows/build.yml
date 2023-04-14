@@ -11,15 +11,9 @@ env:
   REGISTRY: europe-north1-docker.pkg.dev/nais-io/nais/images
 
 jobs:
-  build_and_push_registry:
+  tests:
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      id-token: write
-    outputs:
-      version: ${{ steps.version.outputs.version }}
-      digest: ${{ steps.build-push.outputs.digest }}
     steps:
       - uses: actions/checkout@v3.3.0
       - uses: actions/setup-go@v4
@@ -32,6 +26,17 @@ jobs:
         run: |
           go install golang.org/x/vuln/cmd/govulncheck@latest
           govulncheck ./...
+  build_and_push_registry:
+    needs: [ "tests" ]
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      digest: ${{ steps.build-push.outputs.digest }}
+    steps:
       - uses: actions/checkout@v3
       - uses: nais/platform-build-push-sign@salsa
         id: build_push_sign
