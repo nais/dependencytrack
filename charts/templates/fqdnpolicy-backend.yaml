@@ -16,7 +16,8 @@ spec:
               app: picante
   podSelector:
     matchLabels:
-      app: {{ .Release.Name }}
+      app.kubernetes.io/instance: {{ include "dependencytrack-backend.name" . }}-backend
+      app.kubernetes.io/name: {{ .Release.Name }}
   policyTypes:
     - Ingress
 ---
