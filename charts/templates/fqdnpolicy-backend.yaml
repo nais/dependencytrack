@@ -11,7 +11,8 @@ spec:
         - port: 443
           protocol: TCP
       to:
-        - ipBlock: {{ .Values.backend.postgresql.ip }}
+        - ipBlock:
+            cidr: {{ .Values.backend.postgresql.ip }}/32
   ingress:
     - from:
         - namespaceSelector:
