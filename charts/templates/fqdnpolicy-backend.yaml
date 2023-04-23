@@ -7,10 +7,7 @@ metadata:
   name: {{ .Release.Name }}
 spec:
   egress:
-    - ports:
-        - port: 443
-          protocol: TCP
-      to:
+    - to:
         - ipBlock:
             cidr: {{ .Values.backend.postgresql.ip }}/32
   ingress:
