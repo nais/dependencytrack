@@ -6,6 +6,12 @@ metadata:
     app.kubernetes.io/name: {{ .Release.Name }}
   name: {{ .Release.Name }}
 spec:
+  egress:
+    - ports:
+        - port: 443
+          protocol: TCP
+      to:
+        - ipBlock: {{ .Values.backend.postgresql.ip }}
   ingress:
     - from:
         - namespaceSelector:
@@ -36,11 +42,6 @@ spec:
             - nvd.nist.gov
             - epss.cyentia.com
             - osv-vulnerabilities.storage.googleapis.com
-    - ports:
-        - port: 80
-          protocol: TCP
-      to:
-        - ipBlock: {{ .Values.backend.postgresql.ip }}
   podSelector:
     matchLabels:
       app.kubernetes.io/instance: {{ include "dependencytrack-backend.name" . }}-backend
