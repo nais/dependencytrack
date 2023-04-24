@@ -24,6 +24,7 @@ spec:
       app.kubernetes.io/name: {{ .Release.Name }}
   policyTypes:
     - Ingress
+    - Egress
 ---
 {{- if .Capabilities.APIVersions.Has "networking.gke.io/v1" }}
 apiVersion: networking.gke.io/v1alpha3
