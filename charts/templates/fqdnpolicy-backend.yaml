@@ -41,9 +41,15 @@ spec:
             - nvd.nist.gov
             - epss.cyentia.com
             - osv-vulnerabilities.storage.googleapis.com
+    - ports:
+        - port: 80
+          protocol: TCP
+      to:
+        - fqdns:
+            - metadata.google.internal
   podSelector:
     matchLabels:
-      app.kubernetes.io/instance: {{ include "dependencytrack-backend.name" . }}-backend
+      app.kubernetes.io/instance: {{ include "dependencytrack-backend.name" . }}
       app.kubernetes.io/name: {{ .Release.Name }}
   policyTypes:
     - Egress
