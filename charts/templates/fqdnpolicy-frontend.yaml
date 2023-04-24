@@ -4,7 +4,7 @@ metadata:
   labels:
     app.kubernetes.io/instance: {{ include "dependencytrack-frontend.name" . }}
     app.kubernetes.io/name: {{ .Release.Name }}
-  name: {{ .Release.Name }}
+  name: {{ .Release.Name }}-frontend
 spec:
   egress:
     - to:
