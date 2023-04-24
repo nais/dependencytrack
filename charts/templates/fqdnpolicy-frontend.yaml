@@ -24,6 +24,9 @@ apiVersion: networking.gke.io/v1alpha3
 kind: FQDNNetworkPolicy
 metadata:
   name: {{ include "dependencytrack-frontend.name" . }}-fqdn
+  labels:
+    app.kubernetes.io/instance: {{ include "dependencytrack-frontend.name" . }}
+    app.kubernetes.io/name: {{ .Release.Name }}
 spec:
   egress:
     - to:
