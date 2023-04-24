@@ -2,7 +2,7 @@ apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   labels:
-    app.kubernetes.io/instance: {{ include "dependencytrack-backend.name" . }}-backend
+    app.kubernetes.io/instance: {{ include "dependencytrack-backend.name" . }}
     app.kubernetes.io/name: {{ .Release.Name }}
   name: {{ .Release.Name }}
 spec:
@@ -20,7 +20,7 @@ spec:
               app: picante
   podSelector:
     matchLabels:
-      app.kubernetes.io/instance: {{ include "dependencytrack-backend.name" . }}-backend
+      app.kubernetes.io/instance: {{ include "dependencytrack-backend.name" . }}
       app.kubernetes.io/name: {{ .Release.Name }}
   policyTypes:
     - Ingress
