@@ -21,6 +21,11 @@ spec:
             matchLabels:
               app.kubernetes.io/instance: picante
               app.kubernetes.io/name: picante
+    - from:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/instance: {{ include "dependencytrack-frontend.name" . }}
+              app.kubernetes.io/name: {{ .Release.Name }}
   podSelector:
     matchLabels:
       app.kubernetes.io/instance: {{ include "dependencytrack-backend.name" . }}

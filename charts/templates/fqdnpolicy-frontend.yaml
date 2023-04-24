@@ -10,7 +10,7 @@ spec:
           protocol: TCP
       to:
         - fqdns:
-            - {{ .Values.backend.ingress }}
+            - {{ .Values.backend.ingress | quote }}
   podSelector:
     matchLabels:
       app.kubernetes.io/instance: {{ include "dependencytrack-frontend.name" . }}
