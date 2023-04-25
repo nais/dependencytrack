@@ -2,6 +2,7 @@ package client
 
 import (
 	"context"
+	"net/url"
 	"time"
 
 	"github.com/lestrrat-go/jwx/v2/jwt"
@@ -21,10 +22,15 @@ func (c *Client) Token(ctx context.Context) (string, error) {
 }
 
 func (c *Client) login(ctx context.Context) (string, error) {
+	data := url.Values{
+		"username": {c.username},
+		"password": {c.password},
+	}
+
 	token, err := sendRequest(ctx, "POST", c.baseUrl+"/api/v1/user/login", map[string][]string{
 		"Content-Type": {"application/x-www-form-urlencoded"},
 		"Accept":       {"text/plain"},
-	}, []byte("username="+c.username+"&password="+c.password))
+	}, []byte(data.Encode()))
 
 	if err != nil {
 		return "", err
