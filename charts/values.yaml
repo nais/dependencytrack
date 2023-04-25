@@ -10,7 +10,7 @@ bootstrap:
   image:
     name: dependencytrack-bootstrap
     repository: europe-north1-docker.pkg.dev/nais-io/nais/images
-    tag: 20230413-125757-9c359f3
+    tag: 20230425-013814-49c0c46
   users:
     - username: console
       password: todo
