@@ -55,6 +55,11 @@ func main() {
 	if err != nil {
 		log.Fatalf("get team uuid: %v", err)
 	}
+	//remove users before adding to ensure passwords in sync
+	err = c.RemoveUsers(ctx, cfg.UsersFile)
+	if err != nil {
+		log.Fatalf("remove users: %v", err)
+	}
 
 	err = c.CreateUsers(ctx, cfg.UsersFile, teamUuid)
 	if err != nil {

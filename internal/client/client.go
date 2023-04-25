@@ -5,10 +5,11 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"gopkg.in/yaml.v3"
 	"io"
 	"net/http"
 	"os"
+
+	"gopkg.in/yaml.v3"
 
 	log "github.com/sirupsen/logrus"
 )
@@ -70,11 +71,12 @@ func (c *Client) CreateUsers(ctx context.Context, filePath, teamUuid string) err
 	if err != nil {
 		return err
 	}
-	var users Users
-	err = yaml.Unmarshal(file, &users)
+	users := &Users{}
+	err = yaml.Unmarshal(file, users)
 	if err != nil {
 		return err
 	}
+
 	for _, user := range users.Users {
 		err := c.NewManagedUser(ctx, user.Username, user.Password)
 		if err != nil {
@@ -94,6 +96,37 @@ func (c *Client) CreateUsers(ctx context.Context, filePath, teamUuid string) err
 			return err
 		}
 		log.Infof("created user %s", user.Username)
+	}
+	return nil
+}
+
+func (c *Client) RemoveUsers(ctx context.Context, filePath string) error {
+
+	file, err := os.ReadFile(filePath)
+	if err != nil {
+		return err
+	}
+	users := &Users{}
+	err = yaml.Unmarshal(file, users)
+	if err != nil {
+		return err
+	}
+
+	for _, user := range users.Users {
+		err := c.DeleteUser(ctx, user.Username)
+		if err != nil {
+			e, ok := err.(*RequestError)
+			if !ok {
+				return err
+			} else {
+				if e.StatusCode != http.StatusNotFound {
+					return err
+				} else {
+					log.Infof("user %s does not exist, nothing to remove", user.Username)
+				}
+			}
+		}
+		log.Infof("removed user %s", user.Username)
 	}
 	return nil
 }
@@ -184,6 +217,31 @@ func (c *Client) AddToTeam(ctx context.Context, username string, uuid string) er
 			return nil
 		}
 		return fmt.Errorf("adding user to team: %w", err)
+	}
+	return nil
+}
+
+func (c *Client) DeleteUser(ctx context.Context, username string) error {
+	user := &User{
+		Username: username,
+	}
+	body, err := json.Marshal(user)
+	if err != nil {
+		return fmt.Errorf("marshalling user: %w", err)
+	}
+
+	token, err := c.Token(ctx)
+	if err != nil {
+		return fmt.Errorf("getting Token: %w", err)
+	}
+
+	_, err = sendRequest(ctx, http.MethodDelete, c.baseUrl+"/api/v1/user/managed", map[string][]string{
+		"Content-Type":  {"application/json"},
+		"Accept":        {"application/json"},
+		"Authorization": {"Bearer " + token},
+	}, body)
+	if err != nil {
+		return err
 	}
 	return nil
 }
