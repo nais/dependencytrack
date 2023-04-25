@@ -1,4 +1,4 @@
-module bootstrap
+module github.com/nais/dependencytrack
 
 go 1.20
 
