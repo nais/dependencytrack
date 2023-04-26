@@ -70,8 +70,8 @@ metadata:
     app.kubernetes.io/name: {{ .Release.Name | quote }}
 type: Opaque
 stringData:
-  DEFAULT_ADMIN_PASSWORD: "{{ .Values.bootstrap.defaultAdminPassword }}"
-  ADMIN_PASSWORD: "{{ .Values.bootstrap.adminPassword }}"
+  DEFAULT_ADMIN_PASSWORD: "{{ .Values.bootstrap.defaultAdminPassword | quote }}"
+  ADMIN_PASSWORD: "{{ .Values.bootstrap.adminPassword | quote }}"
 ---
 apiVersion: v1
 kind: Secret
