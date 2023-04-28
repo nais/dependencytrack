@@ -10,7 +10,7 @@ import (
 	"time"
 
 	"github.com/joho/godotenv"
-	"github.com/nais/dependencytrack/pkg/dependencytrack"
+	"github.com/nais/dependencytrack/pkg/client"
 	"github.com/sirupsen/logrus"
 	"gopkg.in/yaml.v3"
 )
@@ -47,7 +47,12 @@ func main() {
 		log.Fatalf("setup logger: %v", err)
 	}
 
-	c := dependencytrack.NewClient(cfg.BaseUrl, "admin", cfg.AdminPassword, nil, log.WithField("system", "dependencytrack-bootstrap"))
+	c := client.New(
+		cfg.BaseUrl,
+		"admin",
+		cfg.AdminPassword,
+		client.WithLogger(log.WithField("system", "dependencytrack-bootstrap")),
+	)
 
 	//if auth doesn't fail, it means we have already changed the password
 	_, err = c.Headers(ctx)
@@ -62,7 +67,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("read users file: %v", err)
 	}
-	users := &dependencytrack.AdminUsers{}
+	users := &client.AdminUsers{}
 	err = yaml.Unmarshal(file, users)
 	if err != nil {
 		log.Fatalf("unmarshal users file: %v", err)

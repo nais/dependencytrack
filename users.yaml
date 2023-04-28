@@ -1,5 +1,5 @@
 users:
   - username: console
-    password: todo
+    password: "todo"
   - username: picante
-    password: todos
+    password: "todos"

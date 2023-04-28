@@ -1,4 +1,4 @@
-package dependencytrack
+package client
 
 import (
 	"context"
@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"net/url"
 
-	"github.com/nais/dependencytrack/pkg/dependencytrack/auth"
+	"github.com/nais/dependencytrack/pkg/client/auth"
 	"github.com/nais/dependencytrack/pkg/httpclient"
 	log "github.com/sirupsen/logrus"
 )
@@ -23,9 +23,13 @@ type Client interface {
 	GetTeamUuid(ctx context.Context, team string) (string, error)
 	CreateOidcUser(ctx context.Context, email string) error
 	CreateManagedUser(ctx context.Context, username, password string) error
+	DeleteManagedUser(ctx context.Context, username string) error
+	DeleteOidcUser(ctx context.Context, username string) error
 	AddToTeam(ctx context.Context, username string, uuid string) error
 	DeleteTeam(ctx context.Context, uuid string) error
 	DeleteUserMembership(ctx context.Context, uuid string, username string) error
+	// TODO: create return type for this
+	GetOidcUsers(ctx context.Context) ([]User, error)
 	auth.Auth
 }
 
@@ -36,22 +40,63 @@ type client struct {
 	log        *log.Entry
 }
 
-func (c *client) Headers(ctx context.Context) (http.Header, error) {
-	return c.authSource.Headers(ctx)
+type Options struct {
+	authSource       auth.Auth
+	log              *log.Entry
+	client           *http.Client
+	responseCallback func(res http.Response, err error)
 }
 
-func NewClient(baseUrl string, username string, password string, c *httpclient.HttpClient, log *log.Entry) Client {
-	if c == nil {
-		c = httpclient.New(http.DefaultClient, log)
-	}
-	source := auth.NewUsernamePasswordSource(baseUrl+"/user/login", username, password, c, log)
+type Option = func(c *Options)
 
+func New(baseUrl, username, password string, opts ...Option) Client {
+	o := &Options{}
+	for _, opt := range opts {
+		opt(o)
+	}
+	if o.client == nil {
+		o.client = http.DefaultClient
+	}
+	if o.log == nil {
+		o.log = log.NewEntry(log.New())
+	}
+	httpClient := httpclient.New(o.client, o.log)
+	if o.authSource == nil {
+		o.authSource = auth.NewUsernamePasswordSource(baseUrl+"/user/login", username, password, httpClient, o.log)
+	}
 	return &client{
 		baseUrl:    baseUrl,
-		authSource: source,
-		httpClient: c,
-		log:        log,
+		authSource: o.authSource,
+		httpClient: httpclient.New(o.client, o.log),
 	}
+}
+
+func WithHttpClient(client *http.Client) Option {
+	return func(o *Options) {
+		o.client = client
+	}
+}
+
+func WithLogger(log *log.Entry) Option {
+	return func(o *Options) {
+		o.log = log
+	}
+}
+
+func WithAuthSource(authSource auth.Auth) Option {
+	return func(o *Options) {
+		o.authSource = authSource
+	}
+}
+
+func WithResponseCallback(callback func(res http.Response, err error)) Option {
+	return func(o *Options) {
+		o.responseCallback = callback
+	}
+}
+
+func (c *client) Headers(ctx context.Context) (http.Header, error) {
+	return c.authSource.Headers(ctx)
 }
 
 func (c *client) ChangeAdminPassword(ctx context.Context, oldPassword string, newPassword string) error {
@@ -99,7 +144,7 @@ func (c *client) CreateAdminUsers(ctx context.Context, users *AdminUsers, teamUu
 
 func (c *client) RemoveAdminUsers(ctx context.Context, users *AdminUsers) error {
 	for _, user := range users.Users {
-		err := c.DeleteUser(ctx, user.Username)
+		err := c.DeleteManagedUser(ctx, user.Username)
 		if err != nil {
 			e, ok := err.(*httpclient.RequestError)
 			if !ok {
@@ -115,6 +160,19 @@ func (c *client) RemoveAdminUsers(ctx context.Context, users *AdminUsers) error 
 		c.log.Infof("removed user %s", user.Username)
 	}
 	return nil
+}
+
+func (c *client) GetOidcUsers(ctx context.Context) ([]User, error) {
+	b, err := c.Get(ctx, c.baseUrl+"/user/oidc", c.authSource)
+	if err != nil {
+		return nil, err
+	}
+
+	var users []User
+	if err := json.Unmarshal(b, &users); err != nil {
+		return nil, err
+	}
+	return users, nil
 }
 
 func (c *client) GetTeams(ctx context.Context) ([]Team, error) {
@@ -222,7 +280,7 @@ func (c *client) CreateOidcUser(ctx context.Context, email string) error {
 	return nil
 }
 
-func (c *client) DeleteUser(ctx context.Context, username string) error {
+func (c *client) DeleteManagedUser(ctx context.Context, username string) error {
 	user := &User{
 		Username: username,
 	}
@@ -232,6 +290,22 @@ func (c *client) DeleteUser(ctx context.Context, username string) error {
 	}
 
 	_, err = c.Delete(ctx, c.baseUrl+"/user/managed", c.authSource, body)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (c *client) DeleteOidcUser(ctx context.Context, username string) error {
+	user := &User{
+		Username: username,
+	}
+	body, err := json.Marshal(user)
+	if err != nil {
+		return fmt.Errorf("marshalling user: %w", err)
+	}
+
+	_, err = c.Delete(ctx, c.baseUrl+"/user/oidc", c.authSource, body)
 	if err != nil {
 		return err
 	}

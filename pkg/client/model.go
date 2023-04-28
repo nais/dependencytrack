@@ -1,4 +1,4 @@
-package dependencytrack
+package client
 
 type Permission string
 
