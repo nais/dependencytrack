@@ -36,6 +36,7 @@ type Client interface {
 	GetProject(ctx context.Context, name string, version string) (*Project, error)
 	UpdateProjectInfo(ctx context.Context, uuid, version, team, namespace string) error
 	GenerateApiKey(ctx context.Context, uuid string) (string, error)
+	DeleteProjects(ctx context.Context, name string) error
 	auth.Auth
 }
 
@@ -481,6 +482,25 @@ func (c *client) UpdateProjectInfo(ctx context.Context, uuid, version, team, nam
 
 	c.log.Info("additional info added to project")
 
+	return nil
+}
+
+func (c *client) DeleteProjects(ctx context.Context, name string) error {
+	b, err := c.Get(ctx, c.baseUrl+"/project"+"?name="+name+"&excludeInactive=false", c.authSource)
+	if err != nil {
+		return fmt.Errorf("getting projects: %w", err)
+	}
+	var projects []Project
+	if err = json.Unmarshal(b, &projects); err != nil {
+		return fmt.Errorf("unmarshalling response body: %w", err)
+	}
+
+	for _, project := range projects {
+		_, err := c.Delete(ctx, c.baseUrl+"/project/"+project.Uuid, c.authSource, nil)
+		if err != nil {
+			return fmt.Errorf("deleting project: %w", err)
+		}
+	}
 	return nil
 }
 
