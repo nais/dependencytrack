@@ -53,7 +53,7 @@ type apiKey struct {
 
 func NewUsernamePasswordSource(loginUrl LoginUrl, username Username, password Password, c *httpclient.HttpClient, log *log.Entry) Auth {
 	if c == nil {
-		c = httpclient.New(http.DefaultClient, log)
+		c = httpclient.New(httpclient.WithLogger(log))
 	}
 	return &usernamePasswordSource{
 		loginUrl:   loginUrl,
@@ -128,6 +128,9 @@ func (c *usernamePasswordSource) parseToken(token string) (jwt.Token, error) {
 }
 
 func NewApiKeySource(baseUrl string, team string, source Auth, c *httpclient.HttpClient, log *log.Entry) Auth {
+	if c == nil {
+		c = httpclient.New(httpclient.WithLogger(log))
+	}
 	return &apikeySource{
 		baseUrl:    baseUrl,
 		source:     source,

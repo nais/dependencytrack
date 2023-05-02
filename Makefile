@@ -11,3 +11,6 @@ vet:
 
 local:
 	go run cmd/bootstrap/main.go
+
+compose:
+	docker-compose build && docker-compose up

@@ -25,9 +25,14 @@ type AdminUser struct {
 }
 
 type Team struct {
-	Uuid      string `json:"uuid,omitempty"`
-	Name      string `json:"name,omitempty"`
-	OidcUsers []User `json:"oidcUsers,omitempty"`
+	Uuid      string   `json:"uuid,omitempty"`
+	Name      string   `json:"name,omitempty"`
+	OidcUsers []User   `json:"oidcUsers,omitempty"`
+	ApiKeys   []ApiKey `json:"apiKeys,omitempty"`
+}
+
+type ApiKey struct {
+	Key string `json:"key,omitempty"`
 }
 
 type BomSubmitRequest struct {

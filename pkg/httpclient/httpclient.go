@@ -17,16 +17,45 @@ type RequestError struct {
 
 type HttpClient struct {
 	*http.Client
-	log *log.Entry
+	log              *log.Entry
+	responseCallback func(res *http.Response, err error)
 }
 
-func New(c *http.Client, log *log.Entry) *HttpClient {
-	if c == nil {
-		c = http.DefaultClient
+type Option func(*HttpClient)
+
+func New(opts ...Option) *HttpClient {
+	c := &HttpClient{}
+	for _, opt := range opts {
+		opt(c)
 	}
-	return &HttpClient{
-		c,
-		log,
+
+	if c.Client == nil {
+		c.Client = http.DefaultClient
+	}
+	if c.log == nil {
+		c.log = log.NewEntry(log.New())
+	}
+	if c.responseCallback == nil {
+		c.responseCallback = func(res *http.Response, err error) {}
+	}
+	return c
+}
+
+func WithResponseCallback(responseCallback func(res *http.Response, err error)) Option {
+	return func(c *HttpClient) {
+		c.responseCallback = responseCallback
+	}
+}
+
+func WithLogger(log *log.Entry) Option {
+	return func(c *HttpClient) {
+		c.log = log
+	}
+}
+
+func WithClient(client *http.Client) Option {
+	return func(c *HttpClient) {
+		c.Client = client
 	}
 }
 
@@ -48,6 +77,8 @@ func (c *HttpClient) SendRequest(ctx context.Context, httpMethod string, url str
 		return nil, err
 	}
 	defer resp.Body.Close()
+
+	c.responseCallback(resp, err)
 
 	if resp.StatusCode > 299 {
 		c.log.Debugf("response status: %d", resp.StatusCode)

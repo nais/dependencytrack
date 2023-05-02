@@ -73,9 +73,16 @@ func main() {
 		log.Fatalf("unmarshal users file: %v", err)
 	}
 
-	teamUuid, err := c.GetTeamUuid(ctx, "Administrators")
+	team, err := c.GetTeam(ctx, "Administrators")
 	if err != nil {
 		log.Fatalf("get team uuid: %v", err)
+	}
+
+	if len(team.ApiKeys) == 0 {
+		_, err = c.GenerateApiKey(ctx, team.Uuid)
+		if err != nil {
+			log.Fatalf("generate api key: %v", err)
+		}
 	}
 
 	//remove users before adding to ensure passwords in sync
@@ -84,7 +91,7 @@ func main() {
 		log.Fatalf("remove users: %v", err)
 	}
 
-	err = c.CreateAdminUsers(ctx, users, teamUuid)
+	err = c.CreateAdminUsers(ctx, users, team.Uuid)
 	if err != nil {
 		log.Fatalf("create users: %v", err)
 	}

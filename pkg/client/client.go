@@ -22,7 +22,7 @@ type Client interface {
 	RemoveAdminUsers(ctx context.Context, users *AdminUsers) error
 	CreateTeam(ctx context.Context, teamName string, permissions []Permission) (*Team, error)
 	GetTeams(ctx context.Context) ([]Team, error)
-	GetTeamUuid(ctx context.Context, team string) (string, error)
+	GetTeam(ctx context.Context, team string) (*Team, error)
 	CreateOidcUser(ctx context.Context, email string) error
 	CreateManagedUser(ctx context.Context, username, password string) error
 	DeleteManagedUser(ctx context.Context, username string) error
@@ -35,6 +35,7 @@ type Client interface {
 	UploadProject(ctx context.Context, name, version string, statement *in_toto.CycloneDXStatement) error
 	GetProject(ctx context.Context, name string, version string) (*Project, error)
 	UpdateProjectInfo(ctx context.Context, uuid, version, team, namespace string) error
+	GenerateApiKey(ctx context.Context, uuid string) (string, error)
 	auth.Auth
 }
 
@@ -50,7 +51,7 @@ type Options struct {
 	log              *log.Entry
 	client           *http.Client
 	team             string
-	responseCallback func(res http.Response, err error)
+	responseCallback func(res *http.Response, err error)
 }
 
 type Option = func(c *Options)
@@ -66,7 +67,11 @@ func New(baseUrl, username, password string, opts ...Option) Client {
 	if o.log == nil {
 		o.log = log.NewEntry(log.New())
 	}
-	httpClient := httpclient.New(o.client, o.log)
+	httpClient := httpclient.New(
+		httpclient.WithClient(o.client),
+		httpclient.WithLogger(o.log),
+		httpclient.WithResponseCallback(o.responseCallback),
+	)
 	if o.team != "" {
 		u := auth.NewUsernamePasswordSource(baseUrl+"/user/login", username, password, httpClient, o.log)
 		o.authSource = auth.NewApiKeySource(baseUrl, o.team, u, httpClient, o.log)
@@ -78,7 +83,7 @@ func New(baseUrl, username, password string, opts ...Option) Client {
 		baseUrl:    baseUrl,
 		authSource: o.authSource,
 		log:        o.log,
-		httpClient: httpclient.New(o.client, o.log),
+		httpClient: httpClient,
 	}
 }
 
@@ -106,7 +111,7 @@ func WithAuthSource(authSource auth.Auth) Option {
 	}
 }
 
-func WithResponseCallback(callback func(res http.Response, err error)) Option {
+func WithResponseCallback(callback func(res *http.Response, err error)) Option {
 	return func(o *Options) {
 		o.responseCallback = callback
 	}
@@ -114,6 +119,19 @@ func WithResponseCallback(callback func(res http.Response, err error)) Option {
 
 func (c *client) Headers(ctx context.Context) (http.Header, error) {
 	return c.authSource.Headers(ctx)
+}
+
+func (c *client) GenerateApiKey(ctx context.Context, uuid string) (string, error) {
+	res, err := c.Put(ctx, fmt.Sprintf("%s/team/%s/key", c.baseUrl, uuid), c.authSource, nil)
+	if err != nil {
+		return "", err
+	}
+	var apiKey ApiKey
+	err = json.Unmarshal(res, &apiKey)
+	if err != nil {
+		return "", err
+	}
+	return apiKey.Key, nil
 }
 
 func (c *client) ChangeAdminPassword(ctx context.Context, oldPassword string, newPassword string) error {
@@ -206,22 +224,18 @@ func (c *client) GetTeams(ctx context.Context) ([]Team, error) {
 	return teams, nil
 }
 
-func (c *client) GetTeamUuid(ctx context.Context, team string) (string, error) {
+func (c *client) GetTeam(ctx context.Context, team string) (*Team, error) {
 	teams, err := c.GetTeams(ctx)
 	if err != nil {
-		return "", nil
+		return nil, err
 	}
 
-	var uuid string
 	for _, t := range teams {
 		if t.Name == team {
-			uuid = t.Uuid
+			return &t, nil
 		}
 	}
-	if uuid == "" {
-		return "", fmt.Errorf("team %s not found", team)
-	}
-	return uuid, nil
+	return nil, fmt.Errorf("team %s not found", team)
 }
 
 func (c *client) CreateTeam(ctx context.Context, teamName string, permissions []Permission) (*Team, error) {
