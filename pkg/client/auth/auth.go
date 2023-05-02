@@ -2,6 +2,7 @@ package auth
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"net/url"
@@ -27,6 +28,27 @@ type usernamePasswordSource struct {
 	accessToken string
 	httpClient  *httpclient.HttpClient
 	log         *log.Entry
+}
+
+var _ Auth = &apikeySource{}
+
+type apikeySource struct {
+	baseUrl    string
+	source     Auth
+	team       string
+	log        *log.Entry
+	httpClient *httpclient.HttpClient
+	apiKey     string
+}
+
+type team struct {
+	Uuid    string   `json:"uuid"`
+	Name    string   `json:"name"`
+	Apikeys []apiKey `json:"apikeys"`
+}
+
+type apiKey struct {
+	Key string `json:"key"`
 }
 
 func NewUsernamePasswordSource(loginUrl LoginUrl, username Username, password Password, c *httpclient.HttpClient, log *log.Entry) Auth {
@@ -103,4 +125,65 @@ func (c *usernamePasswordSource) parseToken(token string) (jwt.Token, error) {
 		jwt.WithVerify(false),
 	}
 	return jwt.ParseString(token, parseOpts...)
+}
+
+func NewApiKeySource(baseUrl string, team string, source Auth, c *httpclient.HttpClient, log *log.Entry) Auth {
+	return &apikeySource{
+		baseUrl:    baseUrl,
+		source:     source,
+		team:       team,
+		log:        log,
+		httpClient: c,
+	}
+}
+
+func (c *apikeySource) Headers(ctx context.Context) (http.Header, error) {
+	key, err := c.refreshApiKey(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return map[string][]string{"X-Api-Key": {key}}, nil
+}
+
+func (c *apikeySource) refreshApiKey(ctx context.Context) (string, error) {
+	if c.apiKey == "" {
+		c.log.Debug("Fetching apiKey")
+		key, err := c.getApiKey(ctx)
+		if err != nil {
+			return "", err
+		}
+		c.apiKey = key
+	}
+	return c.apiKey, nil
+}
+
+func (c *apikeySource) getApiKey(ctx context.Context) (string, error) {
+	headers, err := c.source.Headers(ctx)
+	if err != nil {
+		return "", err
+	}
+
+	headers.Set("Accept", "application/json")
+	responseTeams, err := c.httpClient.SendRequest(ctx, http.MethodGet, c.baseUrl+"/team", headers, nil)
+
+	if err != nil {
+		return "", err
+	}
+
+	var teams []team
+	err = json.Unmarshal(responseTeams, &teams)
+	if err != nil {
+		return "", err
+	}
+
+	for _, t := range teams {
+		if t.Name == c.team {
+			if len(t.Apikeys) == 0 {
+				return "", fmt.Errorf("no apikeys found for team %s", c.team)
+			}
+			return t.Apikeys[0].Key, nil
+		}
+	}
+
+	return "", fmt.Errorf("no team found with name %s", c.team)
 }

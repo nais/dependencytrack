@@ -29,3 +29,30 @@ type Team struct {
 	Name      string `json:"name,omitempty"`
 	OidcUsers []User `json:"oidcUsers,omitempty"`
 }
+
+type BomSubmitRequest struct {
+	ProjectName    string `json:"projectName"`
+	ProjectVersion string `json:"projectVersion"`
+	AutoCreate     bool   `json:"autoCreate"`
+	Bom            string `json:"bom"`
+}
+
+type Project struct {
+	Active     bool   `json:"active"`
+	Author     string `json:"author"`
+	Classifier string `json:"classifier"`
+	Group      string `json:"group"`
+	Name       string `json:"name"`
+	Publisher  string `json:"publisher"`
+	Tags       []Tag  `json:"tags"`
+	Uuid       string `json:"uuid"`
+	Version    string `json:"version"`
+}
+
+type Tag struct {
+	Name string `json:"name"`
+}
+
+type Tags struct {
+	Tags []Tag `json:"tags"`
+}

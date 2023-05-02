@@ -2,11 +2,13 @@ package client
 
 import (
 	"context"
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"net/http"
 	"net/url"
 
+	"github.com/in-toto/in-toto-golang/in_toto"
 	"github.com/nais/dependencytrack/pkg/client/auth"
 	"github.com/nais/dependencytrack/pkg/httpclient"
 	log "github.com/sirupsen/logrus"
@@ -30,6 +32,9 @@ type Client interface {
 	DeleteUserMembership(ctx context.Context, uuid string, username string) error
 	// TODO: create return type for this
 	GetOidcUsers(ctx context.Context) ([]User, error)
+	UploadProject(ctx context.Context, name, version string, statement *in_toto.CycloneDXStatement) error
+	GetProject(ctx context.Context, name string, version string) (*Project, error)
+	UpdateProjectInfo(ctx context.Context, uuid, version, team, namespace string) error
 	auth.Auth
 }
 
@@ -44,6 +49,7 @@ type Options struct {
 	authSource       auth.Auth
 	log              *log.Entry
 	client           *http.Client
+	team             string
 	responseCallback func(res http.Response, err error)
 }
 
@@ -61,13 +67,24 @@ func New(baseUrl, username, password string, opts ...Option) Client {
 		o.log = log.NewEntry(log.New())
 	}
 	httpClient := httpclient.New(o.client, o.log)
+	if o.team != "" {
+		u := auth.NewUsernamePasswordSource(baseUrl+"/user/login", username, password, httpClient, o.log)
+		o.authSource = auth.NewApiKeySource(baseUrl, o.team, u, httpClient, o.log)
+	}
 	if o.authSource == nil {
 		o.authSource = auth.NewUsernamePasswordSource(baseUrl+"/user/login", username, password, httpClient, o.log)
 	}
 	return &client{
 		baseUrl:    baseUrl,
 		authSource: o.authSource,
+		log:        o.log,
 		httpClient: httpclient.New(o.client, o.log),
+	}
+}
+
+func WithApiKeySource(team string) Option {
+	return func(o *Options) {
+		o.team = team
 	}
 }
 
@@ -377,6 +394,82 @@ func (c *client) DeleteUserMembership(ctx context.Context, uuid string, username
 	return nil
 }
 
+func (c *client) UploadProject(ctx context.Context, name, version string, statement *in_toto.CycloneDXStatement) error {
+	c.log.WithFields(log.Fields{
+		"name":    name,
+		"version": version,
+	}).Info("uploading sbom")
+
+	b, err := json.Marshal(statement.Predicate)
+	if err != nil {
+		return fmt.Errorf("marshalling statement.predicate: %w", err)
+	}
+
+	bom := base64.StdEncoding.EncodeToString(b)
+	body, err := json.Marshal(&BomSubmitRequest{
+		ProjectName:    name,
+		ProjectVersion: version,
+		AutoCreate:     true,
+		Bom:            bom,
+	})
+
+	if err != nil {
+		return fmt.Errorf("marshalling bom submit request: %w", err)
+	}
+
+	_, err = c.Put(ctx, c.baseUrl+"/bom", c.authSource, body)
+	if err != nil {
+		return fmt.Errorf("uploading bom: %w", err)
+	}
+
+	c.log.Info("sbom uploaded")
+	return nil
+}
+
+func (c *client) GetProject(ctx context.Context, name, version string) (*Project, error) {
+	res, err := c.Get(ctx, c.baseUrl+"/project/lookup?name="+name+"&version="+version, c.authSource)
+	if err != nil {
+		return nil, fmt.Errorf("get project: %w", err)
+	}
+
+	var project Project
+	if err = json.Unmarshal(res, &project); err != nil {
+		return nil, fmt.Errorf("unmarshalling response body: %w", err)
+	}
+
+	return &project, nil
+}
+
+func (c *client) UpdateProjectInfo(ctx context.Context, uuid, version, team, namespace string) error {
+	c.log.WithFields(log.Fields{
+		"uuid":      uuid,
+		"team":      team,
+		"namespace": namespace,
+	}).Debug("adding additional info to project")
+
+	body, err := json.Marshal(Project{
+		Publisher:  "picante",
+		Active:     true,
+		Classifier: "APPLICATION",
+		Version:    version,
+		Group:      namespace,
+		Tags: []Tag{
+			{
+				Name: team,
+			},
+		},
+	})
+
+	_, err = c.Patch(ctx, c.baseUrl+"/project/"+uuid, c.authSource, body)
+	if err != nil {
+		return fmt.Errorf("creating request: %w", err)
+	}
+
+	c.log.Info("additional info added to project")
+
+	return nil
+}
+
 func (c *client) Get(ctx context.Context, url string, authSource auth.Auth) ([]byte, error) {
 	headers, err := authSource.Headers(ctx)
 	if err != nil {
@@ -393,7 +486,7 @@ func (c *client) Post(ctx context.Context, url string, authSource auth.Auth, bod
 	}
 	headers["Content-Type"] = []string{"application/json"}
 	headers["Accept"] = []string{"application/json"}
-	return c.httpClient.SendRequest(ctx, "POST", url, headers, body)
+	return c.httpClient.SendRequest(ctx, http.MethodPost, url, headers, body)
 }
 
 func (c *client) Put(ctx context.Context, url string, authSource auth.Auth, body []byte) ([]byte, error) {
@@ -403,7 +496,17 @@ func (c *client) Put(ctx context.Context, url string, authSource auth.Auth, body
 	}
 	headers["Content-Type"] = []string{"application/json"}
 	headers["Accept"] = []string{"application/json"}
-	return c.httpClient.SendRequest(ctx, "PUT", url, headers, body)
+	return c.httpClient.SendRequest(ctx, http.MethodPut, url, headers, body)
+}
+
+func (c *client) Patch(ctx context.Context, url string, authSource auth.Auth, body []byte) ([]byte, error) {
+	headers, err := authSource.Headers(ctx)
+	if err != nil {
+		return nil, err
+	}
+	headers["Content-Type"] = []string{"application/json"}
+	headers["Accept"] = []string{"application/json"}
+	return c.httpClient.SendRequest(ctx, http.MethodPatch, url, headers, body)
 }
 
 func (c *client) Delete(ctx context.Context, url string, authSource auth.Auth, body []byte) ([]byte, error) {
@@ -413,5 +516,5 @@ func (c *client) Delete(ctx context.Context, url string, authSource auth.Auth, b
 	}
 	headers["Content-Type"] = []string{"application/json"}
 	headers["Accept"] = []string{"application/json"}
-	return c.httpClient.SendRequest(ctx, "DELETE", url, headers, body)
+	return c.httpClient.SendRequest(ctx, http.MethodDelete, url, headers, body)
 }
