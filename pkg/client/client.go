@@ -150,7 +150,6 @@ func (c *client) ChangeAdminPassword(ctx context.Context, oldPassword string, ne
 		"Content-Type": {"application/x-www-form-urlencoded"},
 		"Accept":       {"text/plain"},
 	}, []byte(data.Encode()))
-
 	if err != nil {
 		return err
 	}
@@ -216,7 +215,6 @@ func (c *client) GetOidcUsers(ctx context.Context) ([]User, error) {
 
 func (c *client) GetTeams(ctx context.Context) ([]Team, error) {
 	b, err := c.Get(ctx, c.baseUrl+"/api/v1/team", c.authSource)
-
 	if err != nil {
 		return nil, err
 	}
@@ -249,7 +247,6 @@ func (c *client) CreateTeam(ctx context.Context, teamName string, permissions []
 
 	t := &Team{}
 	b, err := c.Put(ctx, c.baseUrl+"/api/v1/team", c.authSource, body)
-
 	if err != nil {
 		return nil, err
 	}
@@ -349,7 +346,6 @@ func (c *client) DeleteOidcUser(ctx context.Context, username string) error {
 
 func (c *client) AddToTeam(ctx context.Context, username string, uuid string) error {
 	_, err := c.Post(ctx, c.baseUrl+"/api/v1/user/"+username+"/membership", c.authSource, []byte(`{"uuid": "`+uuid+`"}`))
-
 	if err != nil {
 		e, ok := err.(*httpclient.RequestError)
 		if !ok {
@@ -430,7 +426,6 @@ func (c *client) UploadProject(ctx context.Context, name, version string, statem
 		AutoCreate:     true,
 		Bom:            bom,
 	})
-
 	if err != nil {
 		return fmt.Errorf("marshalling bom submit request: %w", err)
 	}

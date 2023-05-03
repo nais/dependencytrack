@@ -15,6 +15,7 @@ require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/decred/dcrd/dcrec/secp256k1/v4 v4.1.0 // indirect
 	github.com/goccy/go-json v0.10.2 // indirect
+	github.com/google/go-cmp v0.5.9 // indirect
 	github.com/lestrrat-go/blackmagic v1.0.1 // indirect
 	github.com/lestrrat-go/httpcc v1.0.1 // indirect
 	github.com/lestrrat-go/httprc v1.0.4 // indirect
@@ -24,5 +25,9 @@ require (
 	github.com/secure-systems-lab/go-securesystemslib v0.5.0 // indirect
 	github.com/shibumi/go-pathspec v1.3.0 // indirect
 	golang.org/x/crypto v0.7.0 // indirect
+	golang.org/x/mod v0.10.0 // indirect
+	golang.org/x/sync v0.1.0 // indirect
 	golang.org/x/sys v0.7.0 // indirect
+	golang.org/x/tools v0.8.0 // indirect
+	mvdan.cc/gofumpt v0.5.0 // indirect
 )

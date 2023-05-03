@@ -54,7 +54,7 @@ func main() {
 		client.WithLogger(log.WithField("system", "dependencytrack-bootstrap")),
 	)
 
-	//if auth doesn't fail, it means we have already changed the password
+	// if auth doesn't fail, it means we have already changed the password
 	_, err = c.Headers(ctx)
 	if err != nil {
 		err := c.ChangeAdminPassword(ctx, cfg.DefaultAdminPassword, cfg.AdminPassword)
@@ -85,7 +85,7 @@ func main() {
 		}
 	}
 
-	//remove users before adding to ensure passwords in sync
+	// remove users before adding to ensure passwords in sync
 	err = c.RemoveAdminUsers(ctx, users)
 	if err != nil {
 		log.Fatalf("remove users: %v", err)
@@ -97,7 +97,6 @@ func main() {
 	}
 
 	log.Infof("done: created users and added to Administrators team")
-
 }
 
 func parseFlags() {

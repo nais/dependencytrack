@@ -18,9 +18,11 @@ type Auth interface {
 	Headers(ctx context.Context) (http.Header, error)
 }
 
-type BaseUrl = string
-type Username = string
-type Password = string
+type (
+	BaseUrl  = string
+	Username = string
+	Password = string
+)
 
 type usernamePasswordSource struct {
 	baseUrl     string
@@ -112,7 +114,6 @@ func (c *usernamePasswordSource) login(ctx context.Context) (string, error) {
 		"Content-Type": {"application/x-www-form-urlencoded"},
 		"Accept":       {"text/plain"},
 	}, []byte(data.Encode()))
-
 	if err != nil {
 		return "", fmt.Errorf("reading response body: %w", err)
 	}
@@ -177,7 +178,6 @@ func (c *apiKeySource) getApiKey(ctx context.Context) (string, error) {
 
 	headers.Set("Accept", "application/json")
 	responseTeams, err := c.httpClient.SendRequest(ctx, http.MethodGet, c.baseUrl+"/api/v1/team", headers, nil)
-
 	if err != nil {
 		return "", err
 	}

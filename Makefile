@@ -5,7 +5,7 @@ bootstrap:
 test: fmt vet
 	go test ./... -coverprofile cover.out -short
 fmt:
-	go fmt ./...
+	go run mvdan.cc/gofumpt -w ./
 vet:
 	go vet ./...
 
