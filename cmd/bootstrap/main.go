@@ -29,7 +29,7 @@ type Config struct {
 
 func init() {
 	flag.StringVar(&cfg.LogLevel, "log-level", cfg.LogLevel, "which log level to use, default 'info'")
-	flag.StringVar(&cfg.BaseUrl, "base-url", "http://localhost:9001/api/v1", "base url of dependencytrack")
+	flag.StringVar(&cfg.BaseUrl, "base-url", "http://localhost:9001", "base url of dependencytrack")
 	flag.StringVar(&cfg.DefaultAdminPassword, "default-admin-password", "admin", "default admin password")
 	flag.StringVar(&cfg.AdminPassword, "admin-password", cfg.AdminPassword, "new admin password")
 	flag.StringVar(&cfg.UsersFile, "users-file", "/bootstrap/users.yaml", "file with users to create")
