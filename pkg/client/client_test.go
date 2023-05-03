@@ -9,7 +9,6 @@ import (
 	"os"
 	"testing"
 
-	"github.com/in-toto/in-toto-golang/in_toto"
 	"github.com/nais/dependencytrack/pkg/client/test"
 
 	"github.com/stretchr/testify/assert"
@@ -19,9 +18,6 @@ const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwi
 
 func TestUploadSbom(t *testing.T) {
 	att, err := os.ReadFile("testdata/attestation.json")
-	assert.NoError(t, err)
-	var a *in_toto.CycloneDXStatement
-	err = json.Unmarshal(att, &a)
 	assert.NoError(t, err)
 
 	httpClient := test.NewTestClient(
@@ -69,7 +65,7 @@ func TestUploadSbom(t *testing.T) {
 	)
 
 	c := New("http://localhost", "admin", "admin", WithHttpClient(httpClient), WithApiKeySource("Administrators"))
-	err = c.UploadProject(context.Background(), "project1", "1.0.1", a)
+	err = c.UploadProject(context.Background(), "project1", "1.0.1", att)
 	assert.NoError(t, err)
 }
 

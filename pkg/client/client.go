@@ -9,7 +9,6 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/in-toto/in-toto-golang/in_toto"
 	"github.com/nais/dependencytrack/pkg/client/auth"
 	"github.com/nais/dependencytrack/pkg/httpclient"
 	log "github.com/sirupsen/logrus"
@@ -33,7 +32,7 @@ type Client interface {
 	DeleteUserMembership(ctx context.Context, uuid string, username string) error
 	// TODO: create return type for this
 	GetOidcUsers(ctx context.Context) ([]User, error)
-	UploadProject(ctx context.Context, name, version string, statement *in_toto.CycloneDXStatement) error
+	UploadProject(ctx context.Context, name, version string, bom []byte) error
 	GetProject(ctx context.Context, name string, version string) (*Project, error)
 	UpdateProjectInfo(ctx context.Context, uuid, version, group string, tags []string) error
 	GenerateApiKey(ctx context.Context, uuid string) (string, error)
@@ -408,23 +407,17 @@ func (c *client) DeleteUserMembership(ctx context.Context, uuid string, username
 	return nil
 }
 
-func (c *client) UploadProject(ctx context.Context, name, version string, statement *in_toto.CycloneDXStatement) error {
+func (c *client) UploadProject(ctx context.Context, name, version string, bom []byte) error {
 	c.log.WithFields(log.Fields{
 		"name":    name,
 		"version": version,
 	}).Info("uploading sbom")
 
-	b, err := json.Marshal(statement.Predicate)
-	if err != nil {
-		return fmt.Errorf("marshalling statement.predicate: %w", err)
-	}
-
-	bom := base64.StdEncoding.EncodeToString(b)
 	body, err := json.Marshal(&BomSubmitRequest{
 		ProjectName:    name,
 		ProjectVersion: version,
 		AutoCreate:     true,
-		Bom:            bom,
+		Bom:            base64.StdEncoding.EncodeToString(bom),
 	})
 	if err != nil {
 		return fmt.Errorf("marshalling bom submit request: %w", err)
