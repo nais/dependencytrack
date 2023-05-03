@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+	"strings"
 
 	"github.com/in-toto/in-toto-golang/in_toto"
 	"github.com/nais/dependencytrack/pkg/client/auth"
@@ -34,9 +35,10 @@ type Client interface {
 	GetOidcUsers(ctx context.Context) ([]User, error)
 	UploadProject(ctx context.Context, name, version string, statement *in_toto.CycloneDXStatement) error
 	GetProject(ctx context.Context, name string, version string) (*Project, error)
-	UpdateProjectInfo(ctx context.Context, uuid, version, team, namespace string) error
+	UpdateProjectInfo(ctx context.Context, uuid, version, group string, tags []string) error
 	GenerateApiKey(ctx context.Context, uuid string) (string, error)
 	DeleteProjects(ctx context.Context, name string) error
+	DeleteProject(ctx context.Context, uuid string) error
 	auth.Auth
 }
 
@@ -58,6 +60,7 @@ type Options struct {
 type Option = func(c *Options)
 
 func New(baseUrl, username, password string, opts ...Option) Client {
+	baseUrl = strings.TrimSuffix(baseUrl, "/")
 	o := &Options{}
 	for _, opt := range opts {
 		opt(o)
@@ -74,11 +77,11 @@ func New(baseUrl, username, password string, opts ...Option) Client {
 		httpclient.WithResponseCallback(o.responseCallback),
 	)
 	if o.team != "" {
-		u := auth.NewUsernamePasswordSource(baseUrl+"/user/login", username, password, httpClient, o.log)
+		u := auth.NewUsernamePasswordSource(baseUrl, username, password, httpClient, o.log)
 		o.authSource = auth.NewApiKeySource(baseUrl, o.team, u, httpClient, o.log)
 	}
 	if o.authSource == nil {
-		o.authSource = auth.NewUsernamePasswordSource(baseUrl+"/user/login", username, password, httpClient, o.log)
+		o.authSource = auth.NewUsernamePasswordSource(baseUrl, username, password, httpClient, o.log)
 	}
 	return &client{
 		baseUrl:    baseUrl,
@@ -143,7 +146,7 @@ func (c *client) ChangeAdminPassword(ctx context.Context, oldPassword string, ne
 		"confirmPassword": {newPassword},
 	}
 
-	_, err := c.httpClient.SendRequest(ctx, http.MethodPost, c.baseUrl+"/user/forceChangePassword", map[string][]string{
+	_, err := c.httpClient.SendRequest(ctx, http.MethodPost, c.baseUrl+"/api/v1/user/forceChangePassword", map[string][]string{
 		"Content-Type": {"application/x-www-form-urlencoded"},
 		"Accept":       {"text/plain"},
 	}, []byte(data.Encode()))
@@ -199,7 +202,7 @@ func (c *client) RemoveAdminUsers(ctx context.Context, users *AdminUsers) error 
 }
 
 func (c *client) GetOidcUsers(ctx context.Context) ([]User, error) {
-	b, err := c.Get(ctx, c.baseUrl+"/user/oidc", c.authSource)
+	b, err := c.Get(ctx, c.baseUrl+"/api/v1/user/oidc", c.authSource)
 	if err != nil {
 		return nil, err
 	}
@@ -212,7 +215,7 @@ func (c *client) GetOidcUsers(ctx context.Context) ([]User, error) {
 }
 
 func (c *client) GetTeams(ctx context.Context) ([]Team, error) {
-	b, err := c.Get(ctx, c.baseUrl+"/team", c.authSource)
+	b, err := c.Get(ctx, c.baseUrl+"/api/v1/team", c.authSource)
 
 	if err != nil {
 		return nil, err
@@ -245,7 +248,7 @@ func (c *client) CreateTeam(ctx context.Context, teamName string, permissions []
 	})
 
 	t := &Team{}
-	b, err := c.Put(ctx, c.baseUrl+"/team", c.authSource, body)
+	b, err := c.Put(ctx, c.baseUrl+"/api/v1/team", c.authSource, body)
 
 	if err != nil {
 		return nil, err
@@ -255,7 +258,7 @@ func (c *client) CreateTeam(ctx context.Context, teamName string, permissions []
 	}
 
 	for _, p := range permissions {
-		if _, err := c.Post(ctx, c.baseUrl+"/permission/"+string(p)+"/team/"+t.Uuid, c.authSource, nil); err != nil {
+		if _, err := c.Post(ctx, c.baseUrl+"/api/v1/permission/"+string(p)+"/team/"+t.Uuid, c.authSource, nil); err != nil {
 			return nil, err
 		}
 	}
@@ -279,7 +282,7 @@ func (c *client) CreateManagedUser(ctx context.Context, username, password strin
 		return fmt.Errorf("marshalling user: %w", err)
 	}
 
-	_, err = c.Put(ctx, c.baseUrl+"/user/managed", c.authSource, body)
+	_, err = c.Put(ctx, c.baseUrl+"/api/v1/user/managed", c.authSource, body)
 	if err != nil {
 		return err
 	}
@@ -295,7 +298,7 @@ func (c *client) CreateOidcUser(ctx context.Context, email string) error {
 		return err
 	}
 
-	_, err = c.Put(ctx, c.baseUrl+"/user/oidc", c.authSource, body)
+	_, err = c.Put(ctx, c.baseUrl+"/api/v1/user/oidc", c.authSource, body)
 
 	if err != nil {
 		e, ok := err.(*httpclient.RequestError)
@@ -321,7 +324,7 @@ func (c *client) DeleteManagedUser(ctx context.Context, username string) error {
 		return fmt.Errorf("marshalling user: %w", err)
 	}
 
-	_, err = c.Delete(ctx, c.baseUrl+"/user/managed", c.authSource, body)
+	_, err = c.Delete(ctx, c.baseUrl+"/api/v1/user/managed", c.authSource, body)
 	if err != nil {
 		return err
 	}
@@ -337,7 +340,7 @@ func (c *client) DeleteOidcUser(ctx context.Context, username string) error {
 		return fmt.Errorf("marshalling user: %w", err)
 	}
 
-	_, err = c.Delete(ctx, c.baseUrl+"/user/oidc", c.authSource, body)
+	_, err = c.Delete(ctx, c.baseUrl+"/api/v1/user/oidc", c.authSource, body)
 	if err != nil {
 		return err
 	}
@@ -345,7 +348,7 @@ func (c *client) DeleteOidcUser(ctx context.Context, username string) error {
 }
 
 func (c *client) AddToTeam(ctx context.Context, username string, uuid string) error {
-	_, err := c.Post(ctx, c.baseUrl+"/user/"+username+"/membership", c.authSource, []byte(`{"uuid": "`+uuid+`"}`))
+	_, err := c.Post(ctx, c.baseUrl+"/api/v1/user/"+username+"/membership", c.authSource, []byte(`{"uuid": "`+uuid+`"}`))
 
 	if err != nil {
 		e, ok := err.(*httpclient.RequestError)
@@ -369,7 +372,7 @@ func (c *client) DeleteTeam(ctx context.Context, uuid string) error {
 		return err
 	}
 
-	_, err = c.Delete(ctx, c.baseUrl+"/team", c.authSource, body)
+	_, err = c.Delete(ctx, c.baseUrl+"/api/v1/team", c.authSource, body)
 	if err != nil {
 		e, ok := err.(*httpclient.RequestError)
 		if !ok {
@@ -393,7 +396,7 @@ func (c *client) DeleteUserMembership(ctx context.Context, uuid string, username
 		return err
 	}
 
-	_, err = c.Delete(ctx, c.baseUrl+"/user/"+username+"/membership", c.authSource, body)
+	_, err = c.Delete(ctx, c.baseUrl+"/api/v1/user/"+username+"/membership", c.authSource, body)
 	if err != nil {
 		e, ok := err.(*httpclient.RequestError)
 		if !ok {
@@ -432,7 +435,7 @@ func (c *client) UploadProject(ctx context.Context, name, version string, statem
 		return fmt.Errorf("marshalling bom submit request: %w", err)
 	}
 
-	_, err = c.Put(ctx, c.baseUrl+"/bom", c.authSource, body)
+	_, err = c.Put(ctx, c.baseUrl+"/api/v1/bom", c.authSource, body)
 	if err != nil {
 		return fmt.Errorf("uploading bom: %w", err)
 	}
@@ -442,7 +445,7 @@ func (c *client) UploadProject(ctx context.Context, name, version string, statem
 }
 
 func (c *client) GetProject(ctx context.Context, name, version string) (*Project, error) {
-	res, err := c.Get(ctx, c.baseUrl+"/project/lookup?name="+name+"&version="+version, c.authSource)
+	res, err := c.Get(ctx, c.baseUrl+"/api/v1/project/lookup?name="+name+"&version="+version, c.authSource)
 	if err != nil {
 		return nil, fmt.Errorf("get project: %w", err)
 	}
@@ -455,27 +458,30 @@ func (c *client) GetProject(ctx context.Context, name, version string) (*Project
 	return &project, nil
 }
 
-func (c *client) UpdateProjectInfo(ctx context.Context, uuid, version, team, namespace string) error {
+func (c *client) UpdateProjectInfo(ctx context.Context, uuid, version, group string, tags []string) error {
 	c.log.WithFields(log.Fields{
-		"uuid":      uuid,
-		"team":      team,
-		"namespace": namespace,
+		"uuid":  uuid,
+		"group": group,
+		"tags":  tags,
 	}).Debug("adding additional info to project")
 
+	t := make([]Tag, 0)
+	for _, tag := range tags {
+		t = append(t, Tag{
+			Name: tag,
+		})
+	}
+
 	body, err := json.Marshal(Project{
-		Publisher:  "picante",
+		Publisher:  group,
 		Active:     true,
 		Classifier: "APPLICATION",
 		Version:    version,
-		Group:      namespace,
-		Tags: []Tag{
-			{
-				Name: team,
-			},
-		},
+		Group:      group,
+		Tags:       t,
 	})
 
-	_, err = c.Patch(ctx, c.baseUrl+"/project/"+uuid, c.authSource, body)
+	_, err = c.Patch(ctx, c.baseUrl+"/api/v1/project/"+uuid, c.authSource, body)
 	if err != nil {
 		return fmt.Errorf("creating request: %w", err)
 	}
@@ -486,7 +492,7 @@ func (c *client) UpdateProjectInfo(ctx context.Context, uuid, version, team, nam
 }
 
 func (c *client) DeleteProjects(ctx context.Context, name string) error {
-	b, err := c.Get(ctx, c.baseUrl+"/project"+"?name="+name+"&excludeInactive=false", c.authSource)
+	b, err := c.Get(ctx, c.baseUrl+"/api/v1/project"+"?name="+name+"&excludeInactive=false", c.authSource)
 	if err != nil {
 		return fmt.Errorf("getting projects: %w", err)
 	}
@@ -496,10 +502,18 @@ func (c *client) DeleteProjects(ctx context.Context, name string) error {
 	}
 
 	for _, project := range projects {
-		_, err := c.Delete(ctx, c.baseUrl+"/project/"+project.Uuid, c.authSource, nil)
+		_, err := c.Delete(ctx, c.baseUrl+"/api/v1/project/"+project.Uuid, c.authSource, nil)
 		if err != nil {
 			return fmt.Errorf("deleting project: %w", err)
 		}
+	}
+	return nil
+}
+
+func (c *client) DeleteProject(ctx context.Context, uuid string) error {
+	_, err := c.Delete(ctx, c.baseUrl+"/api/v1/project/"+uuid, c.authSource, nil)
+	if err != nil {
+		return fmt.Errorf("deleting project: %w", err)
 	}
 	return nil
 }

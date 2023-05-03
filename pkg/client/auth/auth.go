@@ -6,37 +6,38 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+	"strings"
 	"time"
 
 	"github.com/lestrrat-go/jwx/v2/jwt"
 	"github.com/nais/dependencytrack/pkg/httpclient"
-	log "github.com/sirupsen/logrus"
+	logrus "github.com/sirupsen/logrus"
 )
 
 type Auth interface {
 	Headers(ctx context.Context) (http.Header, error)
 }
 
-type LoginUrl = string
+type BaseUrl = string
 type Username = string
 type Password = string
 
 type usernamePasswordSource struct {
-	loginUrl    string
+	baseUrl     string
 	username    string
 	password    string
 	accessToken string
 	httpClient  *httpclient.HttpClient
-	log         *log.Entry
+	log         *logrus.Entry
 }
 
-var _ Auth = &apikeySource{}
+var _ Auth = &apiKeySource{}
 
-type apikeySource struct {
+type apiKeySource struct {
 	baseUrl    string
 	source     Auth
 	team       string
-	log        *log.Entry
+	log        *logrus.Entry
 	httpClient *httpclient.HttpClient
 	apiKey     string
 }
@@ -44,19 +45,23 @@ type apikeySource struct {
 type team struct {
 	Uuid    string   `json:"uuid"`
 	Name    string   `json:"name"`
-	Apikeys []apiKey `json:"apikeys"`
+	ApiKeys []apiKey `json:"apiKeys"`
 }
 
 type apiKey struct {
 	Key string `json:"key"`
 }
 
-func NewUsernamePasswordSource(loginUrl LoginUrl, username Username, password Password, c *httpclient.HttpClient, log *log.Entry) Auth {
+func NewUsernamePasswordSource(baseUrl BaseUrl, username Username, password Password, c *httpclient.HttpClient, log *logrus.Entry) Auth {
+	baseUrl = strings.TrimSuffix(baseUrl, "/")
+	if log == nil {
+		log = logrus.NewEntry(logrus.StandardLogger())
+	}
 	if c == nil {
 		c = httpclient.New(httpclient.WithLogger(log))
 	}
 	return &usernamePasswordSource{
-		loginUrl:   loginUrl,
+		baseUrl:    baseUrl,
 		username:   username,
 		password:   password,
 		httpClient: c,
@@ -103,7 +108,7 @@ func (c *usernamePasswordSource) login(ctx context.Context) (string, error) {
 		"password": {c.password},
 	}
 
-	token, err := c.httpClient.SendRequest(ctx, "POST", c.loginUrl, map[string][]string{
+	token, err := c.httpClient.SendRequest(ctx, "POST", c.baseUrl+"/api/v1/user/login", map[string][]string{
 		"Content-Type": {"application/x-www-form-urlencoded"},
 		"Accept":       {"text/plain"},
 	}, []byte(data.Encode()))
@@ -127,11 +132,15 @@ func (c *usernamePasswordSource) parseToken(token string) (jwt.Token, error) {
 	return jwt.ParseString(token, parseOpts...)
 }
 
-func NewApiKeySource(baseUrl string, team string, source Auth, c *httpclient.HttpClient, log *log.Entry) Auth {
+func NewApiKeySource(baseUrl string, team string, source Auth, c *httpclient.HttpClient, log *logrus.Entry) Auth {
+	baseUrl = strings.TrimSuffix(baseUrl, "/")
+	if log == nil {
+		log = logrus.NewEntry(logrus.StandardLogger())
+	}
 	if c == nil {
 		c = httpclient.New(httpclient.WithLogger(log))
 	}
-	return &apikeySource{
+	return &apiKeySource{
 		baseUrl:    baseUrl,
 		source:     source,
 		team:       team,
@@ -140,7 +149,7 @@ func NewApiKeySource(baseUrl string, team string, source Auth, c *httpclient.Htt
 	}
 }
 
-func (c *apikeySource) Headers(ctx context.Context) (http.Header, error) {
+func (c *apiKeySource) Headers(ctx context.Context) (http.Header, error) {
 	key, err := c.refreshApiKey(ctx)
 	if err != nil {
 		return nil, err
@@ -148,7 +157,7 @@ func (c *apikeySource) Headers(ctx context.Context) (http.Header, error) {
 	return map[string][]string{"X-Api-Key": {key}}, nil
 }
 
-func (c *apikeySource) refreshApiKey(ctx context.Context) (string, error) {
+func (c *apiKeySource) refreshApiKey(ctx context.Context) (string, error) {
 	if c.apiKey == "" {
 		c.log.Debug("Fetching apiKey")
 		key, err := c.getApiKey(ctx)
@@ -160,14 +169,14 @@ func (c *apikeySource) refreshApiKey(ctx context.Context) (string, error) {
 	return c.apiKey, nil
 }
 
-func (c *apikeySource) getApiKey(ctx context.Context) (string, error) {
+func (c *apiKeySource) getApiKey(ctx context.Context) (string, error) {
 	headers, err := c.source.Headers(ctx)
 	if err != nil {
 		return "", err
 	}
 
 	headers.Set("Accept", "application/json")
-	responseTeams, err := c.httpClient.SendRequest(ctx, http.MethodGet, c.baseUrl+"/team", headers, nil)
+	responseTeams, err := c.httpClient.SendRequest(ctx, http.MethodGet, c.baseUrl+"/api/v1/team", headers, nil)
 
 	if err != nil {
 		return "", err
@@ -181,10 +190,10 @@ func (c *apikeySource) getApiKey(ctx context.Context) (string, error) {
 
 	for _, t := range teams {
 		if t.Name == c.team {
-			if len(t.Apikeys) == 0 {
+			if len(t.ApiKeys) == 0 {
 				return "", fmt.Errorf("no apikeys found for team %s", c.team)
 			}
-			return t.Apikeys[0].Key, nil
+			return t.ApiKeys[0].Key, nil
 		}
 	}
 
