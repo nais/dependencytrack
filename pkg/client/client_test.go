@@ -30,7 +30,7 @@ func TestUploadSbom(t *testing.T) {
 			func(req *http.Request) *http.Response {
 				switch req.URL.Path {
 				case "/api/v1/project/lookup":
-					assert.Equal(t, req.Method, http.MethodGet)
+					assert.Equal(t, http.MethodGet, req.Method)
 					p, err := json.Marshal(Project{
 						Name:    "project1",
 						Uuid:    "1234",
@@ -42,7 +42,7 @@ func TestUploadSbom(t *testing.T) {
 						Body:       io.NopCloser(bytes.NewReader(p)),
 					}
 				case "/api/v1/bom":
-					assert.Equal(t, req.Method, http.MethodPut)
+					assert.Equal(t, http.MethodPut, req.Method)
 					b, err := io.ReadAll(req.Body)
 					var p BomSubmitRequest
 					err = json.Unmarshal(b, &p)
@@ -80,7 +80,7 @@ func TestClient_UpdateProjectInfo(t *testing.T) {
 			func(req *http.Request) *http.Response {
 				switch req.URL.Path {
 				case "/api/v1/project/1234":
-					assert.Equal(t, req.Method, http.MethodPatch)
+					assert.Equal(t, http.MethodPatch, req.Method)
 					var tag Tags
 					b, err := io.ReadAll(req.Body)
 					err = json.Unmarshal(b, &tag)
@@ -115,7 +115,7 @@ func TestClient_DeleteProject(t *testing.T) {
 			func(req *http.Request) *http.Response {
 				switch req.URL.Path {
 				case "/api/v1/project/1234":
-					assert.Equal(t, req.Method, http.MethodDelete)
+					assert.Equal(t, http.MethodDelete, req.Method)
 					return &http.Response{
 						StatusCode: http.StatusOK,
 						Body:       io.NopCloser(bytes.NewReader([]byte("1234"))),
@@ -138,13 +138,13 @@ func TestClient_DeleteProjects(t *testing.T) {
 			func(req *http.Request) *http.Response {
 				switch req.URL.Path {
 				case "/api/v1/project":
-					assert.Equal(t, req.Method, http.MethodGet)
+					assert.Equal(t, http.MethodGet, req.Method)
 					return &http.Response{
 						StatusCode: http.StatusOK,
 						Body:       io.NopCloser(bytes.NewReader([]byte(`[{"name":"project1","description":"project1","uuid":"1","team":{"name":"team1","description":"team1","uuid":"1"}}]`))),
 					}
 				case "/api/v1/project/1":
-					assert.Equal(t, req.Method, http.MethodDelete)
+					assert.Equal(t, http.MethodDelete, req.Method)
 					return &http.Response{
 						StatusCode: http.StatusOK,
 					}
@@ -167,7 +167,7 @@ func TestClient_GetProject(t *testing.T) {
 				switch req.URL.Path {
 				case "/api/v1/project/lookup":
 					assert.Equal(t, "GET", req.Method)
-					assert.Equal(t, req.Header.Get("X-Api-Key"), "key")
+					assert.Equal(t, "key", req.Header.Get("X-Api-Key"))
 					return &http.Response{
 						StatusCode: http.StatusOK,
 						Body:       io.NopCloser(bytes.NewReader([]byte(`{"name":"project1","version":"1.0.1"}`))),
@@ -205,7 +205,7 @@ func authenticate(t *testing.T) func(req *http.Request) *http.Response {
 			}
 		case "/api/v1/team":
 			assert.Equal(t, "GET", req.Method)
-			assert.Equal(t, req.Header.Get("Authorization"), "Bearer "+token)
+			assert.Equal(t, "Bearer "+token, req.Header.Get("Authorization"))
 			teams := []Team{
 				{
 					Name: "Administrators",
