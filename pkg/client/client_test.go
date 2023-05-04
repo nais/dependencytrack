@@ -10,7 +10,6 @@ import (
 	"testing"
 
 	"github.com/nais/dependencytrack/pkg/client/test"
-
 	"github.com/stretchr/testify/assert"
 )
 
@@ -180,6 +179,56 @@ func TestClient_GetProject(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, p.Name, "project1")
 	assert.Equal(t, p.Version, "1.0.1")
+}
+
+func TestIsHttpStatusCodes(t *testing.T) {
+	t.Run("is not found", func(t *testing.T) {
+		c := test.NewTestClient(func(req *http.Request) *http.Response {
+			return &http.Response{
+				StatusCode: http.StatusNotFound,
+				Body:       io.NopCloser(bytes.NewReader([]byte(""))),
+			}
+		})
+		client := New("http://localhost", "", "", WithHttpClient(c))
+		_, err := client.GetProject(context.Background(), "", "1.0.0")
+		assert.True(t, IsNotFound(err))
+	})
+
+	t.Run("is not modified", func(t *testing.T) {
+		c := test.NewTestClient(func(req *http.Request) *http.Response {
+			return &http.Response{
+				StatusCode: http.StatusNotModified,
+				Body:       io.NopCloser(bytes.NewReader([]byte(""))),
+			}
+		})
+		client := New("http://localhost", "", "", WithHttpClient(c))
+		_, err := client.GetProject(context.Background(), "", "1.0.0")
+		assert.True(t, IsNotModified(err))
+	})
+
+	t.Run("is conflict", func(t *testing.T) {
+		c := test.NewTestClient(func(req *http.Request) *http.Response {
+			return &http.Response{
+				StatusCode: http.StatusConflict,
+				Body:       io.NopCloser(bytes.NewReader([]byte(""))),
+			}
+		})
+		client := New("http://localhost", "", "", WithHttpClient(c))
+		_, err := client.GetProject(context.Background(), "", "1.0.0")
+		assert.True(t, IsConflict(err))
+	})
+
+	t.Run("is unauthorized", func(t *testing.T) {
+		c := test.NewTestClient(func(req *http.Request) *http.Response {
+			return &http.Response{
+				StatusCode: http.StatusUnauthorized,
+				Body:       io.NopCloser(bytes.NewReader([]byte(""))),
+			}
+		})
+		client := New("http://localhost", "", "", WithHttpClient(c))
+		_, err := client.GetProject(context.Background(), "", "1.0.0")
+		assert.True(t, IsUnauthorized(err))
+	})
 }
 
 func authenticate(t *testing.T) func(req *http.Request) *http.Response {

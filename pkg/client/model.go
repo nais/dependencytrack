@@ -5,6 +5,11 @@ type Permission string
 const ViewPortfolioPermission = Permission("VIEW_PORTFOLIO")
 
 type User struct {
+	Username string `json:"username,omitempty"`
+	Email    string `json:"email,omitempty"`
+}
+
+type NewUser struct {
 	Username            string `json:"username,omitempty"`
 	Email               string `json:"email,omitempty"`
 	NewPassword         string `json:"newPassword,omitempty"`

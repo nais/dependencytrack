@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/base64"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
 	"net/url"
@@ -30,7 +31,6 @@ type Client interface {
 	AddToTeam(ctx context.Context, username string, uuid string) error
 	DeleteTeam(ctx context.Context, uuid string) error
 	DeleteUserMembership(ctx context.Context, uuid string, username string) error
-	// TODO: create return type for this
 	GetOidcUsers(ctx context.Context) ([]User, error)
 	UploadProject(ctx context.Context, name, version string, bom []byte) error
 	GetProject(ctx context.Context, name string, version string) (*Project, error)
@@ -125,7 +125,7 @@ func (c *client) Headers(ctx context.Context) (http.Header, error) {
 }
 
 func (c *client) GenerateApiKey(ctx context.Context, uuid string) (string, error) {
-	res, err := c.Put(ctx, fmt.Sprintf("%s/team/%s/key", c.baseUrl, uuid), c.authSource, nil)
+	res, err := c.put(ctx, fmt.Sprintf("%s/team/%s/key", c.baseUrl, uuid), c.authSource, nil)
 	if err != nil {
 		return "", err
 	}
@@ -200,7 +200,7 @@ func (c *client) RemoveAdminUsers(ctx context.Context, users *AdminUsers) error 
 }
 
 func (c *client) GetOidcUsers(ctx context.Context) ([]User, error) {
-	b, err := c.Get(ctx, c.baseUrl+"/api/v1/user/oidc", c.authSource)
+	b, err := c.get(ctx, c.baseUrl+"/api/v1/user/oidc", c.authSource)
 	if err != nil {
 		return nil, err
 	}
@@ -213,7 +213,7 @@ func (c *client) GetOidcUsers(ctx context.Context) ([]User, error) {
 }
 
 func (c *client) GetTeams(ctx context.Context) ([]Team, error) {
-	b, err := c.Get(ctx, c.baseUrl+"/api/v1/team", c.authSource)
+	b, err := c.get(ctx, c.baseUrl+"/api/v1/team", c.authSource)
 	if err != nil {
 		return nil, err
 	}
@@ -245,7 +245,7 @@ func (c *client) CreateTeam(ctx context.Context, teamName string, permissions []
 	})
 
 	t := &Team{}
-	b, err := c.Put(ctx, c.baseUrl+"/api/v1/team", c.authSource, body)
+	b, err := c.put(ctx, c.baseUrl+"/api/v1/team", c.authSource, body)
 	if err != nil {
 		return nil, err
 	}
@@ -254,7 +254,7 @@ func (c *client) CreateTeam(ctx context.Context, teamName string, permissions []
 	}
 
 	for _, p := range permissions {
-		if _, err := c.Post(ctx, c.baseUrl+"/api/v1/permission/"+string(p)+"/team/"+t.Uuid, c.authSource, nil); err != nil {
+		if _, err := c.post(ctx, c.baseUrl+"/api/v1/permission/"+string(p)+"/team/"+t.Uuid, c.authSource, nil); err != nil {
 			return nil, err
 		}
 	}
@@ -263,7 +263,7 @@ func (c *client) CreateTeam(ctx context.Context, teamName string, permissions []
 }
 
 func (c *client) CreateManagedUser(ctx context.Context, username, password string) error {
-	user := &User{
+	user := &NewUser{
 		Username:            username,
 		NewPassword:         password,
 		ConfirmPassword:     password,
@@ -278,7 +278,7 @@ func (c *client) CreateManagedUser(ctx context.Context, username, password strin
 		return fmt.Errorf("marshalling user: %w", err)
 	}
 
-	_, err = c.Put(ctx, c.baseUrl+"/api/v1/user/managed", c.authSource, body)
+	_, err = c.put(ctx, c.baseUrl+"/api/v1/user/managed", c.authSource, body)
 	if err != nil {
 		return err
 	}
@@ -294,7 +294,7 @@ func (c *client) CreateOidcUser(ctx context.Context, email string) error {
 		return err
 	}
 
-	_, err = c.Put(ctx, c.baseUrl+"/api/v1/user/oidc", c.authSource, body)
+	_, err = c.put(ctx, c.baseUrl+"/api/v1/user/oidc", c.authSource, body)
 
 	if err != nil {
 		e, ok := err.(*httpclient.RequestError)
@@ -320,7 +320,7 @@ func (c *client) DeleteManagedUser(ctx context.Context, username string) error {
 		return fmt.Errorf("marshalling user: %w", err)
 	}
 
-	_, err = c.Delete(ctx, c.baseUrl+"/api/v1/user/managed", c.authSource, body)
+	_, err = c.delete(ctx, c.baseUrl+"/api/v1/user/managed", c.authSource, body)
 	if err != nil {
 		return err
 	}
@@ -336,7 +336,7 @@ func (c *client) DeleteOidcUser(ctx context.Context, username string) error {
 		return fmt.Errorf("marshalling user: %w", err)
 	}
 
-	_, err = c.Delete(ctx, c.baseUrl+"/api/v1/user/oidc", c.authSource, body)
+	_, err = c.delete(ctx, c.baseUrl+"/api/v1/user/oidc", c.authSource, body)
 	if err != nil {
 		return err
 	}
@@ -344,7 +344,7 @@ func (c *client) DeleteOidcUser(ctx context.Context, username string) error {
 }
 
 func (c *client) AddToTeam(ctx context.Context, username string, uuid string) error {
-	_, err := c.Post(ctx, c.baseUrl+"/api/v1/user/"+username+"/membership", c.authSource, []byte(`{"uuid": "`+uuid+`"}`))
+	_, err := c.post(ctx, c.baseUrl+"/api/v1/user/"+username+"/membership", c.authSource, []byte(`{"uuid": "`+uuid+`"}`))
 	if err != nil {
 		e, ok := err.(*httpclient.RequestError)
 		if !ok {
@@ -367,7 +367,7 @@ func (c *client) DeleteTeam(ctx context.Context, uuid string) error {
 		return err
 	}
 
-	_, err = c.Delete(ctx, c.baseUrl+"/api/v1/team", c.authSource, body)
+	_, err = c.delete(ctx, c.baseUrl+"/api/v1/team", c.authSource, body)
 	if err != nil {
 		e, ok := err.(*httpclient.RequestError)
 		if !ok {
@@ -391,7 +391,7 @@ func (c *client) DeleteUserMembership(ctx context.Context, uuid string, username
 		return err
 	}
 
-	_, err = c.Delete(ctx, c.baseUrl+"/api/v1/user/"+username+"/membership", c.authSource, body)
+	_, err = c.delete(ctx, c.baseUrl+"/api/v1/user/"+username+"/membership", c.authSource, body)
 	if err != nil {
 		e, ok := err.(*httpclient.RequestError)
 		if !ok {
@@ -423,7 +423,7 @@ func (c *client) UploadProject(ctx context.Context, name, version string, bom []
 		return fmt.Errorf("marshalling bom submit request: %w", err)
 	}
 
-	_, err = c.Put(ctx, c.baseUrl+"/api/v1/bom", c.authSource, body)
+	_, err = c.put(ctx, c.baseUrl+"/api/v1/bom", c.authSource, body)
 	if err != nil {
 		return fmt.Errorf("uploading bom: %w", err)
 	}
@@ -433,7 +433,7 @@ func (c *client) UploadProject(ctx context.Context, name, version string, bom []
 }
 
 func (c *client) GetProject(ctx context.Context, name, version string) (*Project, error) {
-	res, err := c.Get(ctx, c.baseUrl+"/api/v1/project/lookup?name="+name+"&version="+version, c.authSource)
+	res, err := c.get(ctx, c.baseUrl+"/api/v1/project/lookup?name="+name+"&version="+version, c.authSource)
 	if err != nil {
 		return nil, fmt.Errorf("get project: %w", err)
 	}
@@ -469,7 +469,7 @@ func (c *client) UpdateProjectInfo(ctx context.Context, uuid, version, group str
 		Tags:       t,
 	})
 
-	_, err = c.Patch(ctx, c.baseUrl+"/api/v1/project/"+uuid, c.authSource, body)
+	_, err = c.patch(ctx, c.baseUrl+"/api/v1/project/"+uuid, c.authSource, body)
 	if err != nil {
 		return fmt.Errorf("creating request: %w", err)
 	}
@@ -480,7 +480,7 @@ func (c *client) UpdateProjectInfo(ctx context.Context, uuid, version, group str
 }
 
 func (c *client) DeleteProjects(ctx context.Context, name string) error {
-	b, err := c.Get(ctx, c.baseUrl+"/api/v1/project"+"?name="+name+"&excludeInactive=false", c.authSource)
+	b, err := c.get(ctx, c.baseUrl+"/api/v1/project"+"?name="+name+"&excludeInactive=false", c.authSource)
 	if err != nil {
 		return fmt.Errorf("getting projects: %w", err)
 	}
@@ -490,7 +490,7 @@ func (c *client) DeleteProjects(ctx context.Context, name string) error {
 	}
 
 	for _, project := range projects {
-		_, err := c.Delete(ctx, c.baseUrl+"/api/v1/project/"+project.Uuid, c.authSource, nil)
+		_, err := c.delete(ctx, c.baseUrl+"/api/v1/project/"+project.Uuid, c.authSource, nil)
 		if err != nil {
 			return fmt.Errorf("deleting project: %w", err)
 		}
@@ -499,14 +499,44 @@ func (c *client) DeleteProjects(ctx context.Context, name string) error {
 }
 
 func (c *client) DeleteProject(ctx context.Context, uuid string) error {
-	_, err := c.Delete(ctx, c.baseUrl+"/api/v1/project/"+uuid, c.authSource, nil)
+	_, err := c.delete(ctx, c.baseUrl+"/api/v1/project/"+uuid, c.authSource, nil)
 	if err != nil {
 		return fmt.Errorf("deleting project: %w", err)
 	}
 	return nil
 }
 
-func (c *client) Get(ctx context.Context, url string, authSource auth.Auth) ([]byte, error) {
+func IsNotFound(err error) bool {
+	return hasStatusCode(err, http.StatusNotFound)
+}
+
+func IsNotModified(err error) bool {
+	return hasStatusCode(err, http.StatusNotModified)
+}
+
+func IsUnauthorized(err error) bool {
+	return hasStatusCode(err, http.StatusUnauthorized)
+}
+
+func IsConflict(err error) bool {
+	return hasStatusCode(err, http.StatusConflict)
+}
+
+func hasStatusCode(err error, statusCode int) bool {
+	r, ok := err.(*httpclient.RequestError)
+	if ok {
+		if r.StatusCode == statusCode {
+			return true
+		}
+	}
+	wrapped := errors.Unwrap(err)
+	if wrapped != nil {
+		return hasStatusCode(wrapped, statusCode)
+	}
+	return false
+}
+
+func (c *client) get(ctx context.Context, url string, authSource auth.Auth) ([]byte, error) {
 	headers, err := authSource.Headers(ctx)
 	if err != nil {
 		return nil, err
@@ -515,7 +545,7 @@ func (c *client) Get(ctx context.Context, url string, authSource auth.Auth) ([]b
 	return c.httpClient.SendRequest(ctx, http.MethodGet, url, headers, nil)
 }
 
-func (c *client) Post(ctx context.Context, url string, authSource auth.Auth, body []byte) ([]byte, error) {
+func (c *client) post(ctx context.Context, url string, authSource auth.Auth, body []byte) ([]byte, error) {
 	headers, err := authSource.Headers(ctx)
 	if err != nil {
 		return nil, err
@@ -525,7 +555,7 @@ func (c *client) Post(ctx context.Context, url string, authSource auth.Auth, bod
 	return c.httpClient.SendRequest(ctx, http.MethodPost, url, headers, body)
 }
 
-func (c *client) Put(ctx context.Context, url string, authSource auth.Auth, body []byte) ([]byte, error) {
+func (c *client) put(ctx context.Context, url string, authSource auth.Auth, body []byte) ([]byte, error) {
 	headers, err := authSource.Headers(ctx)
 	if err != nil {
 		return nil, err
@@ -535,7 +565,7 @@ func (c *client) Put(ctx context.Context, url string, authSource auth.Auth, body
 	return c.httpClient.SendRequest(ctx, http.MethodPut, url, headers, body)
 }
 
-func (c *client) Patch(ctx context.Context, url string, authSource auth.Auth, body []byte) ([]byte, error) {
+func (c *client) patch(ctx context.Context, url string, authSource auth.Auth, body []byte) ([]byte, error) {
 	headers, err := authSource.Headers(ctx)
 	if err != nil {
 		return nil, err
@@ -545,7 +575,7 @@ func (c *client) Patch(ctx context.Context, url string, authSource auth.Auth, bo
 	return c.httpClient.SendRequest(ctx, http.MethodPatch, url, headers, body)
 }
 
-func (c *client) Delete(ctx context.Context, url string, authSource auth.Auth, body []byte) ([]byte, error) {
+func (c *client) delete(ctx context.Context, url string, authSource auth.Auth, body []byte) ([]byte, error) {
 	headers, err := authSource.Headers(ctx)
 	if err != nil {
 		return nil, err

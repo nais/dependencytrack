@@ -11,7 +11,7 @@ import (
 
 	"github.com/lestrrat-go/jwx/v2/jwt"
 	"github.com/nais/dependencytrack/pkg/httpclient"
-	logrus "github.com/sirupsen/logrus"
+	"github.com/sirupsen/logrus"
 )
 
 type Auth interface {
