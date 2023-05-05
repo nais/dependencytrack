@@ -463,6 +463,7 @@ func (c *client) CreateProject(ctx context.Context, name string, version string,
 	}
 
 	body, err := json.Marshal(Project{
+		Name:       name,
 		Publisher:  group,
 		Active:     true,
 		Classifier: "APPLICATION",
