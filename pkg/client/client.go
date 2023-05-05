@@ -34,12 +34,15 @@ type Client interface {
 	GetOidcUsers(ctx context.Context) ([]User, error)
 	UploadProject(ctx context.Context, name, version string, bom []byte) error
 	GetProject(ctx context.Context, name string, version string) (*Project, error)
+	CreateProject(ctx context.Context, name string, version string, group string, tags []string) (*Project, error)
 	UpdateProjectInfo(ctx context.Context, uuid, version, group string, tags []string) error
 	GenerateApiKey(ctx context.Context, uuid string) (string, error)
 	DeleteProjects(ctx context.Context, name string) error
 	DeleteProject(ctx context.Context, uuid string) error
 	auth.Auth
 }
+
+var _ Client = &client{}
 
 type client struct {
 	baseUrl    string
@@ -443,6 +446,40 @@ func (c *client) GetProject(ctx context.Context, name, version string) (*Project
 		return nil, fmt.Errorf("unmarshalling response body: %w", err)
 	}
 
+	return &project, nil
+}
+
+func (c *client) CreateProject(ctx context.Context, name string, version string, group string, tags []string) (*Project, error) {
+	c.log.WithFields(log.Fields{
+		"group": group,
+		"tags":  tags,
+	}).Debug("creating project")
+
+	t := make([]Tag, 0)
+	for _, tag := range tags {
+		t = append(t, Tag{
+			Name: tag,
+		})
+	}
+
+	body, err := json.Marshal(Project{
+		Publisher:  group,
+		Active:     true,
+		Classifier: "APPLICATION",
+		Version:    version,
+		Group:      group,
+		Tags:       t,
+	})
+
+	p, err := c.put(ctx, c.baseUrl+"/api/v1/project", c.authSource, body)
+	if err != nil {
+		return nil, fmt.Errorf("creating request: %w", err)
+	}
+
+	var project Project
+	if err = json.Unmarshal(p, &project); err != nil {
+		return nil, fmt.Errorf("unmarshalling response body: %w", err)
+	}
 	return &project, nil
 }
 
