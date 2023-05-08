@@ -548,7 +548,7 @@ func (c *client) DeleteProject(ctx context.Context, uuid string) error {
 }
 
 func (c *client) PortfolioRefresh(ctx context.Context) error {
-	_, err := c.get(ctx, c.baseUrl+"/api/v1//metrics/portfolio/refresh", c.authSource)
+	_, err := c.get(ctx, c.baseUrl+"/api/v1/metrics/portfolio/refresh", c.authSource)
 	if err != nil {
 		return fmt.Errorf("refreshing portfolio: %w", err)
 	}

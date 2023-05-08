@@ -234,7 +234,7 @@ func TestClient_PortfolioRefresh(t *testing.T) {
 			authenticate(t),
 			func(req *http.Request) *http.Response {
 				switch req.URL.Path {
-				case "/api/v1//metrics/portfolio/refresh":
+				case "/api/v1/metrics/portfolio/refresh":
 					assert.Equal(t, "GET", req.Method)
 					assert.Equal(t, "key", req.Header.Get("X-Api-Key"))
 					return &http.Response{
