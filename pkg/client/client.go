@@ -34,7 +34,8 @@ type Client interface {
 	GetOidcUsers(ctx context.Context) ([]User, error)
 	UploadProject(ctx context.Context, name, version string, bom []byte) error
 	GetProject(ctx context.Context, name, version string) (*Project, error)
-	CreateProject(ctx context.Context, name, version, group, classifier string, tags []string) (*Project, error)
+	CreateProject(ctx context.Context, name, version, group string, tags []string) (*Project, error)
+	CreateChildProject(ctx context.Context, parentName, parentVersion, childName, childVersion, group, classifier string, tags []string) (*Project, error)
 	UpdateProjectInfo(ctx context.Context, uuid, version, group string, tags []string) error
 	GenerateApiKey(ctx context.Context, uuid string) (string, error)
 	DeleteProjects(ctx context.Context, name string) error
@@ -450,7 +451,47 @@ func (c *client) GetProject(ctx context.Context, name, version string) (*Project
 	return &project, nil
 }
 
-func (c *client) CreateProject(ctx context.Context, name, version, group, classifier string, tags []string) (*Project, error) {
+func (c *client) CreateChildProject(ctx context.Context, parentName, parentVersion, childName, childVersion, group, classifier string, tags []string) (*Project, error) {
+	c.log.WithFields(log.Fields{
+		"group":  group,
+		"tags":   tags,
+		"parent": fmt.Sprintf("%s:%s", parentName, parentVersion),
+		"name":   childName,
+	}).Debug("creating child project")
+
+	t := make([]Tag, 0)
+	for _, tag := range tags {
+		t = append(t, Tag{
+			Name: tag,
+		})
+	}
+
+	pp := Project{
+		Name:       childName,
+		Publisher:  group,
+		Active:     true,
+		Classifier: classifier,
+		Version:    childVersion,
+		Group:      group,
+		Tags:       t,
+		Parent:     fmt.Sprintf("%s:%s", parentName, parentVersion),
+	}
+
+	body, err := json.Marshal(pp)
+
+	p, err := c.put(ctx, c.baseUrl+"/api/v1/project", c.authSource, body)
+	if err != nil {
+		return nil, fmt.Errorf("creating request: %w", err)
+	}
+
+	var project Project
+	if err = json.Unmarshal(p, &project); err != nil {
+		return nil, fmt.Errorf("unmarshalling response body: %w", err)
+	}
+	return &project, nil
+}
+
+func (c *client) CreateProject(ctx context.Context, name, version, group string, tags []string) (*Project, error) {
 	c.log.WithFields(log.Fields{
 		"group": group,
 		"tags":  tags,
@@ -463,15 +504,11 @@ func (c *client) CreateProject(ctx context.Context, name, version, group, classi
 		})
 	}
 
-	if classifier == "" {
-		classifier = "APPLICATION"
-	}
-
 	pp := Project{
 		Name:       name,
 		Publisher:  group,
 		Active:     true,
-		Classifier: classifier,
+		Classifier: "APPLICATION",
 		Version:    version,
 		Group:      group,
 		Tags:       t,
