@@ -57,7 +57,7 @@ func TestClient_CreateProject(t *testing.T) {
 			},
 		))
 	c := New("http://localhost", "admin", "admin", WithHttpClient(httpClient), WithApiKeySource("Administrators"))
-	project, err := c.CreateProject(context.Background(), "Team", "version1", "group1", []string{"tag1", "tag2"})
+	project, err := c.CreateProject(context.Background(), "Team", "version1", "group1", "", []string{"tag1", "tag2"})
 	assert.NoError(t, err)
 	assert.Equal(t, "1234", project.Uuid)
 }
@@ -226,6 +226,29 @@ func TestClient_GetProject(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, p.Name, "project1")
 	assert.Equal(t, p.Version, "1.0.1")
+}
+
+func TestClient_PortfolioRefresh(t *testing.T) {
+	httpClient := test.NewTestClient(
+		routes(
+			authenticate(t),
+			func(req *http.Request) *http.Response {
+				switch req.URL.Path {
+				case "/api/v1//metrics/portfolio/refresh":
+					assert.Equal(t, "GET", req.Method)
+					assert.Equal(t, "key", req.Header.Get("X-Api-Key"))
+					return &http.Response{
+						StatusCode: http.StatusOK,
+					}
+				default:
+					return &http.Response{
+						StatusCode: http.StatusNotFound,
+					}
+				}
+			}))
+	c := New("http://localhost", "admin", "admin", WithHttpClient(httpClient), WithApiKeySource("Administrators"))
+	err := c.PortfolioRefresh(context.Background())
+	assert.NoError(t, err)
 }
 
 func TestIsHttpStatusCodes(t *testing.T) {
