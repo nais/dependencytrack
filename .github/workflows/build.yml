@@ -47,14 +47,14 @@ jobs:
           push: ${{ github.actor != 'dependabot[bot]' }}
           workload_identity_provider: ${{ secrets.NAIS_IO_WORKLOAD_IDENTITY_PROVIDER }}
 
-  # rollout:
-  #   permissions:
-  #     id-token: write
-  #   needs: [ "build_and_push_registry" ]
-  #   runs-on: fasit-deploy
-  #   steps:
-  #     - uses: nais/fasit-deploy@main
-  #       with:
-  #         json: '{"image": {"tag": "${{ needs.build_and_push_registry.outputs.version }}"}}'
-  #         feature_name: dependencytrack-bootstrap
-#
+  rollout:
+    permissions:
+      id-token: write
+    needs: [ "build_and_push_registry" ]
+    runs-on: fasit-deploy
+    steps:
+      - uses: nais/fasit-deploy@main
+        with:
+          json: '{"bootstrap": {"image": {"tag": "${{ needs.build_and_push_registry.outputs.version }}"}}}'
+          feature_name: dependencytrack
+
