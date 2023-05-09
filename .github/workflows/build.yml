@@ -56,4 +56,3 @@ jobs:
         with:
           json: '{"bootstrap": {"image": {"tag": "${{ needs.build_and_push_registry.outputs.version }}"}}}'
           feature_name: dependencytrack
-
