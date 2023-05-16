@@ -2,6 +2,8 @@
 bootstrap:
 	go build -o bin/bootstrap cmd/bootstrap/*.go
 
+integration_test: fmt vet
+	go test ./... -tags integration_test -run TestIntegration
 test: fmt vet
 	go test ./... -coverprofile cover.out -short
 fmt:
