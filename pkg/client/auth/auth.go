@@ -33,7 +33,10 @@ type usernamePasswordSource struct {
 	log         *logrus.Entry
 }
 
-var _ Auth = &apiKeySource{}
+type staticApiKeySource struct {
+	headerName string
+	apiKey     string
+}
 
 type apiKeySource struct {
 	baseUrl    string
@@ -53,6 +56,12 @@ type team struct {
 type apiKey struct {
 	Key string `json:"key"`
 }
+
+var (
+	_ Auth = &usernamePasswordSource{}
+	_ Auth = &staticApiKeySource{}
+	_ Auth = &apiKeySource{}
+)
 
 func NewUsernamePasswordSource(baseUrl BaseUrl, username Username, password Password, c *httpclient.HttpClient, log *logrus.Entry) Auth {
 	baseUrl = strings.TrimSuffix(baseUrl, "/")
@@ -131,6 +140,17 @@ func (c *usernamePasswordSource) parseToken(token string) (jwt.Token, error) {
 		jwt.WithVerify(false),
 	}
 	return jwt.ParseString(token, parseOpts...)
+}
+
+func NewStaticApiKeySource(headerName string, apiKey string) Auth {
+	return &staticApiKeySource{
+		headerName: headerName,
+		apiKey:     apiKey,
+	}
+}
+
+func (s *staticApiKeySource) Headers(_ context.Context) (http.Header, error) {
+	return map[string][]string{s.headerName: {s.apiKey}}, nil
 }
 
 func NewApiKeySource(baseUrl string, team string, source Auth, c *httpclient.HttpClient, log *logrus.Entry) Auth {
