@@ -14,28 +14,29 @@ import (
 const EmailPostfix = "@nais.io"
 
 type Client interface {
+	AddToTeam(ctx context.Context, username, uuid string) error
 	ChangeAdminPassword(ctx context.Context, oldPassword, newPassword string) error
 	CreateAdminUsers(ctx context.Context, users *AdminUsers, teamUuid string) error
-	RemoveAdminUsers(ctx context.Context, users *AdminUsers) error
-	CreateTeam(ctx context.Context, teamName string, permissions []Permission) (*Team, error)
-	GetTeams(ctx context.Context) ([]Team, error)
-	GetTeam(ctx context.Context, team string) (*Team, error)
-	CreateOidcUser(ctx context.Context, email string) error
 	CreateManagedUser(ctx context.Context, username, password string) error
+	CreateOidcUser(ctx context.Context, email string) error
+	CreateProject(ctx context.Context, name, version, group string, tags []string) (*Project, error)
+	CreateTeam(ctx context.Context, teamName string, permissions []Permission) (*Team, error)
 	DeleteManagedUser(ctx context.Context, username string) error
 	DeleteOidcUser(ctx context.Context, username string) error
-	AddToTeam(ctx context.Context, username, uuid string) error
+	DeleteProject(ctx context.Context, uuid string) error
+	DeleteProjects(ctx context.Context, name string) error
 	DeleteTeam(ctx context.Context, uuid string) error
 	DeleteUserMembership(ctx context.Context, uuid, username string) error
-	GetOidcUsers(ctx context.Context) ([]User, error)
-	UploadProject(ctx context.Context, name, version string, bom []byte) error
-	GetProject(ctx context.Context, name, version string) (*Project, error)
-	CreateProject(ctx context.Context, name, version, group string, tags []string) (*Project, error)
-	UpdateProjectInfo(ctx context.Context, uuid, version, group string, tags []string) error
 	GenerateApiKey(ctx context.Context, uuid string) (string, error)
-	DeleteProjects(ctx context.Context, name string) error
-	DeleteProject(ctx context.Context, uuid string) error
+	GetOidcUsers(ctx context.Context) ([]User, error)
+	GetProject(ctx context.Context, name, version string) (*Project, error)
+	GetProjectsByTag(ctx context.Context, tag string) ([]*Project, error)
+	GetTeam(ctx context.Context, team string) (*Team, error)
+	GetTeams(ctx context.Context) ([]Team, error)
 	PortfolioRefresh(ctx context.Context) error
+	RemoveAdminUsers(ctx context.Context, users *AdminUsers) error
+	UpdateProjectInfo(ctx context.Context, uuid, version, group string, tags []string) error
+	UploadProject(ctx context.Context, name, version string, bom []byte) error
 	auth.Auth
 }
 

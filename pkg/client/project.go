@@ -48,6 +48,20 @@ func (c *client) GetProject(ctx context.Context, name, version string) (*Project
 	return &project, nil
 }
 
+func (c *client) GetProjectsByTag(ctx context.Context, tag string) ([]*Project, error) {
+	res, err := c.get(ctx, c.baseUrl+"/api/v1/project/tag/"+tag, c.authSource)
+	if err != nil {
+		return nil, fmt.Errorf("get projects by tag: %w", err)
+	}
+
+	var projects []*Project
+	if err = json.Unmarshal(res, &projects); err != nil {
+		return nil, fmt.Errorf("unmarshalling response body: %w", err)
+	}
+
+	return projects, nil
+}
+
 func (c *client) CreateProject(ctx context.Context, name, version, group string, tags []string) (*Project, error) {
 	c.log.WithFields(log.Fields{
 		"group": group,

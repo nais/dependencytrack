@@ -248,3 +248,37 @@ func TestClient_PortfolioRefresh(t *testing.T) {
 	err := c.PortfolioRefresh(context.Background())
 	assert.NoError(t, err)
 }
+
+func TestClient_GetProjectsByTag(t *testing.T) {
+	httpClient := test.NewTestClient(
+		routes(
+			authenticate(t),
+			func(req *http.Request) *http.Response {
+				switch req.URL.Path {
+				case "/api/v1/project/tag/tag1":
+					assert.Equal(t, "GET", req.Method)
+					assert.Equal(t, "key", req.Header.Get("X-Api-Key"))
+					var project Project
+					project.Tags = append(project.Tags, Tag{Name: "tag1"})
+					project.Version = "1.0.1"
+					project.Name = "project1"
+					pros := []Project{project}
+					p, err := json.Marshal(pros)
+					assert.NoError(t, err)
+					return &http.Response{
+						StatusCode: http.StatusOK,
+						Body:       io.NopCloser(bytes.NewReader(p)),
+					}
+				default:
+					return &http.Response{
+						StatusCode: http.StatusNotFound,
+					}
+				}
+			}))
+
+	c := New("http://localhost", "admin", "admin", WithHttpClient(httpClient), WithApiKeySource("Administrators"))
+	p, err := c.GetProjectsByTag(context.Background(), "tag1")
+	assert.NoError(t, err)
+	assert.NotEmpty(t, p)
+	assert.Equal(t, "tag1", p[0].Tags[0].Name)
+}
