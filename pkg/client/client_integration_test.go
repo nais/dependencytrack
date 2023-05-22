@@ -22,12 +22,22 @@ func TestMain(m *testing.M) {
 	})
 	baseUrl, cleanup := test.DependencyTrackPool()
 
-	c = New(baseUrl, "admin", "test")
-	err := c.ChangeAdminPassword(context.Background(), "admin", "test")
+	cwp := New(baseUrl, "admin", "test")
+
+	err := cwp.ChangeAdminPassword(context.Background(), "admin", "test")
 	if err != nil {
 		log.Fatalf("Could not change admin password: %s", err)
 	}
+	team, err := cwp.GetTeam(context.Background(), "Administrators")
+	if err != nil {
+		log.Fatalf("Could not get team: %s", err)
+	}
+	_, err = cwp.GenerateApiKey(context.Background(), team.Uuid)
+	if err != nil {
+		log.Fatalf("Could not generate api key: %s", err)
+	}
 
+	c = New(baseUrl, "admin", "test", WithApiKeySource("Administrators"))
 	code := m.Run()
 
 	cleanup()
@@ -136,12 +146,6 @@ func TestIntegration(t *testing.T) {
 	t.Run("DeleteOidcUser", func(t *testing.T) {
 		err := c.DeleteOidcUser(ctx, "email@nav.no")
 		assert.NoError(t, err)
-	})
-
-	t.Run("GenerateApiKey", func(t *testing.T) {
-		key, err := c.GenerateApiKey(ctx, team.Uuid)
-		assert.NoError(t, err)
-		assert.NotEmpty(t, key)
 	})
 
 	t.Run("PortfolioRefresh", func(t *testing.T) {

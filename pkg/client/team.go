@@ -11,7 +11,7 @@ import (
 )
 
 func (c *client) GenerateApiKey(ctx context.Context, uuid string) (string, error) {
-	res, err := c.put(ctx, fmt.Sprintf("%s/team/%s/key", c.baseUrl, uuid), c.authSource, nil)
+	res, err := c.put(ctx, fmt.Sprintf("%s/api/v1/team/%s/key", c.baseUrl, uuid), c.authSource, nil)
 	if err != nil {
 		return "", err
 	}
