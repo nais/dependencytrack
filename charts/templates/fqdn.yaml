@@ -13,6 +13,7 @@ spec:
       - epss.cyentia.com
       - osv-vulnerabilities.storage.googleapis.com
       - private.googleapis.com
+      - accounts.google.com
   - ports:
     - port: 80
       protocol: TCP
