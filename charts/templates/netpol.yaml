@@ -5,6 +5,15 @@ metadata:
 spec:
   egress:
     - to:
+      - namespaceSelector: {}
+        podSelector:
+          matchLabels:
+            k8s-app: kube-dns
+      - namespaceSelector: {}
+        podSelector:
+          matchLabels:
+            k8s-app: node-local-dns
+    - to:
       - ipBlock:
           cidr: {{ .Values.backend.postgresql.ip }}/32
     - to:
