@@ -73,7 +73,7 @@ backend:
   persistence:
     accessMode: ReadWriteOnce
     size: 10Gi
-    storageClass: "standard-rwo"
+    storageClass: "standard"
     existingClaim: ""
   env:
     ALPINE_OIDC_ENABLED: true
