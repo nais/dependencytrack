@@ -29,6 +29,7 @@ type Client interface {
 	DeleteUserMembership(ctx context.Context, uuid, username string) error
 	GenerateApiKey(ctx context.Context, uuid string) (string, error)
 	GetOidcUsers(ctx context.Context) ([]User, error)
+	GetProjects(ctx context.Context) ([]*Project, error)
 	GetProject(ctx context.Context, name, version string) (*Project, error)
 	GetProjectsByTag(ctx context.Context, tag string) ([]*Project, error)
 	GetTeam(ctx context.Context, team string) (*Team, error)

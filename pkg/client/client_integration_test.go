@@ -101,6 +101,10 @@ func TestIntegration(t *testing.T) {
 		assert.NoError(t, err)
 		assert.Equal(t, "projectname", projects[0].Name)
 
+		projects, err = c.GetProjects(ctx)
+		assert.NoError(t, err)
+		assert.NotEmpty(t, projects)
+
 		err = c.DeleteProject(ctx, project.Uuid)
 		assert.NoError(t, err)
 	})
