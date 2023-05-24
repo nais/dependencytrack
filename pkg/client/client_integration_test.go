@@ -53,6 +53,12 @@ func TestIntegration(t *testing.T) {
 		log.Fatalf("get team uuid: %v", e)
 	}
 
+	t.Run("Get version", func(t *testing.T) {
+		version, err := c.Version(ctx)
+		assert.NoError(t, err)
+		assert.NotEmpty(t, version)
+	})
+
 	t.Run("Create admin users", func(t *testing.T) {
 		a := &AdminUsers{Users: []AdminUser{{"u1", "p1"}}}
 		err := c.CreateAdminUsers(ctx, a, team.Uuid)

@@ -14,6 +14,7 @@ import (
 const EmailPostfix = "@nais.io"
 
 type Client interface {
+	Version(ctx context.Context) (string, error)
 	AddToTeam(ctx context.Context, username, uuid string) error
 	ChangeAdminPassword(ctx context.Context, oldPassword, newPassword string) error
 	CreateAdminUsers(ctx context.Context, users *AdminUsers, teamUuid string) error
@@ -124,6 +125,14 @@ func WithResponseCallback(callback func(res *http.Response, err error)) Option {
 
 func (c *client) Headers(ctx context.Context) (http.Header, error) {
 	return c.authSource.Headers(ctx)
+}
+
+func (c *client) Version(ctx context.Context) (string, error) {
+	res, err := c.httpClient.SendRequest(ctx, http.MethodGet, c.baseUrl+"/api/version", map[string][]string{}, nil)
+	if err != nil {
+		return "", err
+	}
+	return string(res), nil
 }
 
 func IsNotFound(err error) bool {
