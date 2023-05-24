@@ -129,7 +129,7 @@ func (c *client) CreateChildProject(ctx context.Context, parentUuid, name, versi
 		Name:       name,
 		Publisher:  group,
 		Active:     true,
-		Classifier: "CONTAINER",
+		Classifier: "APPLICATION",
 		Version:    version,
 		Group:      group,
 		Tags:       t,
