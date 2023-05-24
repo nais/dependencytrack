@@ -95,6 +95,7 @@ func (c *client) CreateProject(ctx context.Context, name, version, group string,
 		Version:    version,
 		Group:      group,
 		Tags:       t,
+		Parent:     nil,
 	}
 
 	body, err := json.Marshal(pp)
@@ -132,7 +133,7 @@ func (c *client) CreateChildProject(ctx context.Context, parentUuid, name, versi
 		Version:    version,
 		Group:      group,
 		Tags:       t,
-		Parent:     parentUuid,
+		Parent:     &parentUuid,
 	}
 
 	body, err := json.Marshal(pp)
