@@ -111,6 +111,44 @@ func (c *client) CreateProject(ctx context.Context, name, version, group string,
 	return &project, nil
 }
 
+func (c *client) CreateChildProject(ctx context.Context, parentUuid, name, version, group string, tags []string) (*Project, error) {
+	c.log.WithFields(log.Fields{
+		"group": group,
+		"tags":  tags,
+	}).Debug("creating child project")
+
+	t := make([]Tag, 0)
+	for _, tag := range tags {
+		t = append(t, Tag{
+			Name: tag,
+		})
+	}
+
+	pp := Project{
+		Name:       name,
+		Publisher:  group,
+		Active:     true,
+		Classifier: "CONTAINER",
+		Version:    version,
+		Group:      group,
+		Tags:       t,
+		Parent:     parentUuid,
+	}
+
+	body, err := json.Marshal(pp)
+
+	p, err := c.put(ctx, c.baseUrl+"/api/v1/project", c.authSource, body)
+	if err != nil {
+		return nil, fmt.Errorf("creating request: %w", err)
+	}
+
+	var project Project
+	if err = json.Unmarshal(p, &project); err != nil {
+		return nil, fmt.Errorf("unmarshalling response body: %w", err)
+	}
+	return &project, nil
+}
+
 func (c *client) UpdateProjectInfo(ctx context.Context, uuid, version, group string, tags []string) error {
 	c.log.WithFields(log.Fields{
 		"uuid":  uuid,

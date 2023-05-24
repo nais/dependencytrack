@@ -57,6 +57,7 @@ type Project struct {
 	Tags       []Tag  `json:"tags"`
 	Uuid       string `json:"uuid"`
 	Version    string `json:"version"`
+	Parent     string `json:"parent"`
 }
 
 type Tag struct {

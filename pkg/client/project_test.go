@@ -60,6 +60,53 @@ func TestClient_CreateProject(t *testing.T) {
 	assert.Equal(t, "1234", project.Uuid)
 }
 
+func TestClient_CreateChildProject(t *testing.T) {
+	httpClient := test.NewTestClient(
+		routes(
+			authenticate(t),
+			func(req *http.Request) *http.Response {
+				switch req.URL.Path {
+				case "/api/v1/project":
+					assert.Equal(t, http.MethodPut, req.Method)
+					var project Project
+					b, err := io.ReadAll(req.Body)
+					err = json.Unmarshal(b, &project)
+					if err != nil {
+						assert.Error(t, err, "unmarshalling request body")
+					}
+					assert.NotEmpty(t, project.Name)
+					assert.NotEmpty(t, project.Publisher)
+					assert.NotEmpty(t, project.Version)
+					assert.NotEmpty(t, project.Group)
+					assert.NotEmpty(t, project.Tags)
+					assert.True(t, project.Active)
+					assert.Equal(t, "CONTAINER", project.Classifier)
+					assert.Equal(t, "application/json", req.Header.Get("Content-Type"))
+					assert.NotEmpty(t, req.Header.Get("X-Api-Key"), "Authorization header is empty")
+					project.Uuid = "1234"
+					b, err = json.Marshal(project)
+					if err != nil {
+						assert.Error(t, err, "marshalling response body")
+					}
+					return &http.Response{
+						StatusCode: http.StatusOK,
+						Body:       io.NopCloser(bytes.NewReader(b)),
+					}
+
+				default:
+					return &http.Response{
+						StatusCode: http.StatusNotFound,
+						Body:       io.NopCloser(bytes.NewReader([]byte("Not found: " + req.URL.Path))),
+					}
+				}
+			},
+		))
+	c := New("http://localhost", "admin", "admin", WithHttpClient(httpClient), WithApiKeySource("Administrators"))
+	child, err := c.CreateChildProject(context.Background(), "parent", "child1", "version1", "group1", []string{"tag1", "tag2"})
+	assert.NoError(t, err)
+	assert.Equal(t, "1234", child.Uuid)
+}
+
 func TestUploadSbom(t *testing.T) {
 	att, err := os.ReadFile("testdata/attestation.json")
 	assert.NoError(t, err)
