@@ -2,12 +2,11 @@ name: Build and deploy dependencytrack-bootstrap
 
 on:
   push:
-    paths:
-      - 'cmd/**'
     paths-ignore:
       - 'charts/**'
       - '.github/workflows/chart.yaml'
       - '*.md'
+      - 'pkg/**'
 
 env:
   REGISTRY: europe-north1-docker.pkg.dev/nais-io/nais/images
