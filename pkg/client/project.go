@@ -112,7 +112,7 @@ func (c *client) CreateProject(ctx context.Context, name, version, group string,
 	return &project, nil
 }
 
-func (c *client) CreateChildProject(ctx context.Context, parentUuid, name, version, group string, tags []string) (*Project, error) {
+func (c *client) CreateChildProject(ctx context.Context, parent *Project, name, version, group string, tags []string) (*Project, error) {
 	c.log.WithFields(log.Fields{
 		"group": group,
 		"tags":  tags,
@@ -133,7 +133,7 @@ func (c *client) CreateChildProject(ctx context.Context, parentUuid, name, versi
 		Version:    version,
 		Group:      group,
 		Tags:       t,
-		Parent:     &parentUuid,
+		Parent:     parent,
 	}
 
 	body, err := json.Marshal(pp)

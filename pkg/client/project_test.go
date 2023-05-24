@@ -80,7 +80,7 @@ func TestClient_CreateChildProject(t *testing.T) {
 					assert.NotEmpty(t, project.Group)
 					assert.NotEmpty(t, project.Tags)
 					assert.True(t, project.Active)
-					assert.Equal(t, "CONTAINER", project.Classifier)
+					assert.Equal(t, "APPLICATION", project.Classifier)
 					assert.Equal(t, "application/json", req.Header.Get("Content-Type"))
 					assert.NotEmpty(t, req.Header.Get("X-Api-Key"), "Authorization header is empty")
 					project.Uuid = "1234"
@@ -102,7 +102,10 @@ func TestClient_CreateChildProject(t *testing.T) {
 			},
 		))
 	c := New("http://localhost", "admin", "admin", WithHttpClient(httpClient), WithApiKeySource("Administrators"))
-	child, err := c.CreateChildProject(context.Background(), "parent", "child1", "version1", "group1", []string{"tag1", "tag2"})
+	parent, err := c.CreateProject(context.Background(), "Team", "version1", "group1", []string{"tag1", "tag2"})
+	assert.NoError(t, err)
+	assert.Equal(t, "1234", parent.Uuid)
+	child, err := c.CreateChildProject(context.Background(), parent, "child1", "version1", "group1", []string{"tag1", "tag2"})
 	assert.NoError(t, err)
 	assert.Equal(t, "1234", child.Uuid)
 }

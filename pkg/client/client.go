@@ -21,7 +21,7 @@ type Client interface {
 	CreateManagedUser(ctx context.Context, username, password string) error
 	CreateOidcUser(ctx context.Context, email string) error
 	CreateProject(ctx context.Context, name, version, group string, tags []string) (*Project, error)
-	CreateChildProject(ctx context.Context, parentUuid, name, version, group string, tags []string) (*Project, error)
+	CreateChildProject(ctx context.Context, project *Project, name, version, group string, tags []string) (*Project, error)
 	CreateTeam(ctx context.Context, teamName string, permissions []Permission) (*Team, error)
 	DeleteManagedUser(ctx context.Context, username string) error
 	DeleteOidcUser(ctx context.Context, username string) error
