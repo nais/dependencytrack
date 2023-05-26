@@ -21,6 +21,8 @@ spec:
       - maven.google.com
       - proxy.golang.org
       - pypi.org
+      - packages.atlassian.com
+      - repo.clojars.org
   - ports:
     - port: 80
       protocol: TCP
