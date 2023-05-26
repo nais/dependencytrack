@@ -25,6 +25,10 @@ spec:
         - podSelector:
             matchLabels:
               app.kubernetes.io/name: picante
+    - from:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: {{ .Release.Name }}-bootstrap
   podSelector:
     matchLabels:
       app.kubernetes.io/name: {{ .Release.Name }}
