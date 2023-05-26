@@ -20,6 +20,7 @@ spec:
       - repo1.maven.org
       - maven.google.com
       - proxy.golang.org
+      - pypi.org
   - ports:
     - port: 80
       protocol: TCP
