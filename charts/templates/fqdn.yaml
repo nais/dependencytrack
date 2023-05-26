@@ -14,6 +14,11 @@ spec:
       - osv-vulnerabilities.storage.googleapis.com
       - private.googleapis.com
       - accounts.google.com
+      - repo.clojars.org
+      - repository.jboss.org
+      - packages.atlassian.com
+      - repo1.maven.org
+      - maven.google.com
   - ports:
     - port: 80
       protocol: TCP
