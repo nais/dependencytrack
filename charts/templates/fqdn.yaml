@@ -24,6 +24,7 @@ spec:
       - packages.atlassian.com
       - repo.clojars.org
       - ossindex.sonatype.org
+      - dl.google.com
   - ports:
     - port: 80
       protocol: TCP
