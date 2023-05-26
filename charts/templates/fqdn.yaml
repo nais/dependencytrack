@@ -25,6 +25,7 @@ spec:
       - repo.clojars.org
       - ossindex.sonatype.org
       - dl.google.com
+      - registry.npmjs.org
   - ports:
     - port: 80
       protocol: TCP
