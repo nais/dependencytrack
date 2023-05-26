@@ -23,6 +23,7 @@ spec:
       - pypi.org
       - packages.atlassian.com
       - repo.clojars.org
+      - ossindex.sonatype.org
   - ports:
     - port: 80
       protocol: TCP
