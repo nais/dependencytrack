@@ -19,6 +19,7 @@ spec:
       - packages.atlassian.com
       - repo1.maven.org
       - maven.google.com
+      - proxy.golang.org
   - ports:
     - port: 80
       protocol: TCP
