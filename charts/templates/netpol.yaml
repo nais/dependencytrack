@@ -13,13 +13,18 @@ spec:
           podSelector:
             matchLabels:
               k8s-app: node-local-dns
-    - to:
-        - ipBlock:
-            cidr: {{ .Values.backend.postgresql.ip }}/32
-    - to:
         - podSelector:
             matchLabels:
               app.kubernetes.io/name: {{ .Release.Name }}
+    - to:
+        - ipBlock:
+            cidr: 142.250.0.0/15
+        - ipBlock:
+            cidr: 64.233.160.0/19
+        - ipBlock:
+            cidr: {{ .Values.backend.postgresql.ip }}/32
+        - ipBlock:
+            cidr: 209.85.128.0/17
   podSelector:
     matchLabels:
       app.kubernetes.io/name: {{ .Release.Name }}

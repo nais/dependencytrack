@@ -13,25 +13,16 @@ spec:
       - epss.cyentia.com
       - osv-vulnerabilities.storage.googleapis.com
       - private.googleapis.com
-      - accounts.google.com
       - repo.clojars.org
       - repository.jboss.org
       - packages.atlassian.com
       - repo1.maven.org
-      - maven.google.com
       - proxy.golang.org
       - pypi.org
       - packages.atlassian.com
       - repo.clojars.org
       - ossindex.sonatype.org
-      - dl.google.com
       - registry.npmjs.org
-  - ports:
-    - port: 80
-      protocol: TCP
-    to:
-    - fqdns:
-      - metadata.google.internal
   podSelector:
     matchLabels:
       app.kubernetes.io/name: {{ .Release.Name }}
