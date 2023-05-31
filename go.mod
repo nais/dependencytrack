@@ -7,7 +7,7 @@ require (
 	github.com/lestrrat-go/jwx/v2 v2.0.9
 	github.com/ory/dockertest/v3 v3.10.0
 	github.com/sirupsen/logrus v1.9.2
-	github.com/stretchr/testify v1.8.2
+	github.com/stretchr/testify v1.8.4
 	gopkg.in/yaml.v3 v3.0.1
 	mvdan.cc/gofumpt v0.5.0
 )
