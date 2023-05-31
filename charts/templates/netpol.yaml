@@ -20,6 +20,9 @@ spec:
         - podSelector:
             matchLabels:
               app.kubernetes.io/name: {{ .Release.Name }}
+    - to:
+        - ipBlock:
+            cidr: 142.250.0.0/15
   podSelector:
     matchLabels:
       app.kubernetes.io/name: {{ .Release.Name }}

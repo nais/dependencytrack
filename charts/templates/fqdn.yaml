@@ -13,7 +13,6 @@ spec:
       - epss.cyentia.com
       - osv-vulnerabilities.storage.googleapis.com
       - private.googleapis.com
-      - accounts.google.com
       - repo.clojars.org
       - repository.jboss.org
       - packages.atlassian.com
