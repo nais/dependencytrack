@@ -32,7 +32,7 @@ backend:
     requests:
       memory: 4608Mi
       cpu: "2"
-  outbound: []
+  outbound: [ ]
   ingressClassName: nais-ingress
   ingress:
   livenessProbe:
@@ -69,6 +69,10 @@ backend:
   serviceAccount:
     create: true
     googleServiceAccountEmail:
+
+  fqdn:
+    google:
+      internal: true
 
   persistence:
     accessMode: ReadWriteOnce
@@ -110,7 +114,7 @@ frontend:
     requests:
       memory: 128Mi
       cpu: 200m
-  outbound: []
+  outbound: [ ]
   ingressClassName: nais-ingress
   ingress:
   env:
