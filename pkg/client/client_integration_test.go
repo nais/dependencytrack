@@ -128,8 +128,10 @@ func TestIntegration(t *testing.T) {
 		assert.NoError(t, err)
 	})
 
-	t.Run("AddToTeam and delete membership", func(t *testing.T) {
+	t.Run("AddToTeam, add existing member and delete membership", func(t *testing.T) {
 		err := c.AddToTeam(ctx, "testuser", team.Uuid)
+		assert.NoError(t, err)
+		err = c.AddToTeam(ctx, "testuser", team.Uuid)
 		assert.NoError(t, err)
 		err = c.DeleteUserMembership(ctx, team.Uuid, "testuser")
 		assert.NoError(t, err)

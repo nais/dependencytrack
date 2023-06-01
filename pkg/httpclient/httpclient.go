@@ -84,7 +84,8 @@ func (c *HttpClient) SendRequest(ctx context.Context, httpMethod string, url str
 		c.log.Debugf("response status: %d", resp.StatusCode)
 		b, err := io.ReadAll(resp.Body)
 		if err != nil {
-			return nil, fmt.Errorf("reading response body: %w", err)
+			c.log.Debugf("error reading response body: %v", err)
+			return []byte{}, nil
 		}
 		return nil, fail(resp.StatusCode, fmt.Errorf("%s", string(b)))
 	}
