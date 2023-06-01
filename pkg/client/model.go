@@ -2,7 +2,11 @@ package client
 
 type Permission string
 
-const ViewPortfolioPermission = Permission("VIEW_PORTFOLIO")
+const (
+	ViewPortfolioPermission       = Permission("VIEW_PORTFOLIO")
+	ViewVulnerabilityPermission   = Permission("VIEW_VULNERABILITY")
+	ViewPolicyViolationPermission = Permission("VIEW_POLICY_VIOLATION")
+)
 
 type User struct {
 	Username string `json:"username,omitempty"`
