@@ -3,9 +3,13 @@ package client
 type Permission string
 
 const (
-	ViewPortfolioPermission       = Permission("VIEW_PORTFOLIO")
-	ViewVulnerabilityPermission   = Permission("VIEW_VULNERABILITY")
-	ViewPolicyViolationPermission = Permission("VIEW_POLICY_VIOLATION")
+	AccessManagementPermission        = Permission("ACCESS_MANAGEMENT")
+	PolicyManagementPermission        = Permission("POLICY_MANAGEMENT")
+	PolicyViolationAnalysisPermission = Permission("POLICY_VIOLATION_ANALYSIS")
+	SystemConfigurationPermission     = Permission("SYSTEM_CONFIGURATION")
+	ViewPortfolioPermission           = Permission("VIEW_PORTFOLIO")
+	ViewVulnerabilityPermission       = Permission("VIEW_VULNERABILITY")
+	ViewPolicyViolationPermission     = Permission("VIEW_POLICY_VIOLATION")
 )
 
 type User struct {

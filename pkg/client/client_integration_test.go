@@ -51,7 +51,6 @@ func TestIntegration(t *testing.T) {
 	team, e := c.GetTeam(ctx, "Administrators")
 	if e != nil {
 		log.Fatalf("get team uuid: %v", e)
-
 	}
 
 	t.Run("Get version", func(t *testing.T) {
