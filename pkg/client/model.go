@@ -7,9 +7,9 @@ const (
 	PolicyManagementPermission        = Permission("POLICY_MANAGEMENT")
 	PolicyViolationAnalysisPermission = Permission("POLICY_VIOLATION_ANALYSIS")
 	SystemConfigurationPermission     = Permission("SYSTEM_CONFIGURATION")
+	ViewPolicyViolationPermission     = Permission("VIEW_POLICY_VIOLATION")
 	ViewPortfolioPermission           = Permission("VIEW_PORTFOLIO")
 	ViewVulnerabilityPermission       = Permission("VIEW_VULNERABILITY")
-	ViewPolicyViolationPermission     = Permission("VIEW_POLICY_VIOLATION")
 )
 
 type User struct {
