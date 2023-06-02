@@ -5,11 +5,9 @@ metadata:
   labels:
     {{- include "dependencytrack-backend.labels" . | nindent 4 }}
 spec:
-  type: ClusterIP
   ports:
-    - port: 80
-      targetPort: http
-      protocol: TCP
+    - port: 8080
       name: http
+  clusterIP: None
   selector:
     {{- include "dependencytrack-backend.selectorLabels" . | nindent 4 }}

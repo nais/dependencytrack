@@ -1,0 +1,121 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "dependencytrack-backend.name" . }}
+spec:
+  serviceName: {{ include "dependencytrack-backend.name" . }}
+  replicas: 2
+  selector:
+    matchLabels:
+      {{- include "dependencytrack-backend.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "dependencytrack-backend.labels" . | nindent 4 }}
+    spec:
+      {{- if .Values.backend.serviceAccount.create}}
+      serviceAccountName: {{ include "dependencytrack.name" . }}
+      {{- end }}
+      volumes:
+        - name: writable-tmp
+          emptyDir: { }
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+      containers:
+        - name: cloudsql-proxy
+          image: {{ .Values.backend.cloudProxy.repository }}:{{ .Values.backend.cloudProxy.tag }}
+          command:
+            - "/cloud_sql_proxy"
+            - "-log_debug_stdout"
+            - "-instances={{ .Values.backend.postgresql.connectionName }}=tcp:5432"
+            - "-enable_iam_login"
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1000
+            runAsGroup: 1000
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+        - name: {{ include "dependencytrack-backend.name" . }}
+          image: "{{ .Values.backend.image.repository }}/{{ .Values.backend.image.name }}:{{ .Values.backend.image.tag }}"
+          imagePullPolicy: {{ .Values.backend.image.pullPolicy }}
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1000
+            runAsGroup: 1000
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+          env:
+            - name: ALPINE_DATA_DIRECTORY
+              value: "/data"
+            {{- if .Values.backend.postgresql.enabled }}
+            - name: ALPINE_DATABASE_MODE
+              value: "external"
+            - name: ALPINE_DATABASE_DRIVER
+              value: "org.postgresql.Driver"
+            - name: ALPINE_DATABASE_URL
+              value: "jdbc:postgresql://{{ .Values.backend.postgresql.host}}:{{ .Values.backend.postgresql.port}}/{{ .Values.backend.postgresql.database}}?sslmode=disable"
+            - name: ALPINE_DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "dependencytrack-backend.name" . }}-postgresql
+                  key: postgresql_password
+            - name: ALPINE_DATABASE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "dependencytrack-backend.name" . }}-postgresql
+                  key: postgresql_username
+            {{- end }}
+            {{- range $key, $value := .Values.backend.env }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
+          ports:
+            - name: http
+              containerPort: 8080
+          {{- if .Values.backend.livenessProbe.enabled }}
+          livenessProbe:
+            httpGet:
+              port: http
+              path: {{ .Values.backend.livenessProbe.path }}
+            initialDelaySeconds: {{ .Values.backend.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.backend.livenessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.backend.livenessProbe.timeoutSeconds }}
+            successThreshold: {{ .Values.backend.livenessProbe.successThreshold }}
+            failureThreshold: {{ .Values.backend.livenessProbe.failureThreshold }}
+          {{- end }}
+          {{- if .Values.backend.readinessProbe.enabled }}
+          readinessProbe:
+            httpGet:
+              port: http
+              path: {{ .Values.backend.readinessProbe.path }}
+            initialDelaySeconds: {{ .Values.backend.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.backend.readinessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.backend.readinessProbe.timeoutSeconds }}
+            successThreshold: {{ .Values.backend.readinessProbe.successThreshold }}
+            failureThreshold: {{ .Values.backend.readinessProbe.failureThreshold }}
+            {{- end }}
+          volumeMounts:
+            - name: data
+              mountPath: /data
+            - name: writable-tmp
+              mountPath: /tmp
+          resources:
+            {{- toYaml .Values.backend.resources | nindent 12 }}
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        resources:
+          requests:
+            storage: 10Gi
