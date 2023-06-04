@@ -2,9 +2,12 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: {{ include "dependencytrack-backend.name" . }}
+  labels:
+    {{- include "dependencytrack-backend.labels" . | nindent 4 }}
 spec:
   serviceName: {{ include "dependencytrack-backend.name" . }}
   replicas: 2
+  podManagementPolicy: Parallel
   selector:
     matchLabels:
       {{- include "dependencytrack-backend.selectorLabels" . | nindent 6 }}
@@ -26,22 +29,6 @@ spec:
         runAsGroup: 1000
         fsGroup: 1000
       containers:
-        - name: cloudsql-proxy
-          image: {{ .Values.backend.cloudProxy.repository }}:{{ .Values.backend.cloudProxy.tag }}
-          command:
-            - "/cloud_sql_proxy"
-            - "-log_debug_stdout"
-            - "-instances={{ .Values.backend.postgresql.connectionName }}=tcp:5432"
-            - "-enable_iam_login"
-          securityContext:
-            runAsNonRoot: true
-            runAsUser: 1000
-            runAsGroup: 1000
-            allowPrivilegeEscalation: false
-            readOnlyRootFilesystem: true
-            capabilities:
-              drop:
-                - ALL
         - name: {{ include "dependencytrack-backend.name" . }}
           image: "{{ .Values.backend.image.repository }}/{{ .Values.backend.image.name }}:{{ .Values.backend.image.tag }}"
           imagePullPolicy: {{ .Values.backend.image.pullPolicy }}
@@ -111,6 +98,22 @@ spec:
               mountPath: /tmp
           resources:
             {{- toYaml .Values.backend.resources | nindent 12 }}
+        - name: cloudsql-proxy
+          image: {{ .Values.backend.cloudProxy.repository }}:{{ .Values.backend.cloudProxy.tag }}
+          command:
+            - "/cloud_sql_proxy"
+            - "-log_debug_stdout"
+            - "-instances={{ .Values.backend.postgresql.connectionName }}=tcp:5432"
+            - "-enable_iam_login"
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1000
+            runAsGroup: 1000
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
   volumeClaimTemplates:
     - metadata:
         name: data
