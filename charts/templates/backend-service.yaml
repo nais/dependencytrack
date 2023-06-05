@@ -12,3 +12,18 @@ spec:
   clusterIP: None
   selector:
     statefulset.kubernetes.io/pod-name: {{ include "dependencytrack-backend.name" . }}-0
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "dependencytrack-backend.name" . }}-1
+  labels:
+    {{- include "dependencytrack-backend.labels" . | nindent 4 }}
+spec:
+  ports:
+    - port: 8080
+      name: http
+      targetPort: http
+  clusterIP: None
+  selector:
+    statefulset.kubernetes.io/pod-name: {{ include "dependencytrack-backend.name" . }}-1

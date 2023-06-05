@@ -12,8 +12,15 @@ spec:
         paths:
           - backend:
               service:
-                name: {{ include "dependencytrack-backend.name" . }}
+                name: {{ include "dependencytrack-backend.name" . }}-0
                 port:
-                  number: 80
+                  number: 8080
+            path: /
+            pathType: Prefix
+          - backend:
+              service:
+                name: {{ include "dependencytrack-backend.name" . }}-1
+                port:
+                  number: 8080
             path: /
             pathType: Prefix
