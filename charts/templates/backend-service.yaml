@@ -8,6 +8,7 @@ spec:
   ports:
     - port: 80
       name: http
+      targetPort: http
   clusterIP: None
   selector:
     {{- include "dependencytrack-backend.selectorLabels" . | nindent 4 }}
