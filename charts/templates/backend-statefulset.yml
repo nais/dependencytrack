@@ -13,7 +13,7 @@ spec:
   template:
     metadata:
       labels:
-        {{- include "dependencytrack-backend.selectorLabels" . | nindent 8 }}
+        {{- include "dependencytrack-backend.labels" . | nindent 8 }}
     spec:
       {{- if .Values.backend.serviceAccount.create}}
       serviceAccountName: {{ include "dependencytrack.name" . }}

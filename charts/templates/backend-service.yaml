@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "dependencytrack-backend.name" . }}
+  name: {{ include "dependencytrack-backend.name" . }}-0
   labels:
     {{- include "dependencytrack-backend.labels" . | nindent 4 }}
 spec:
@@ -11,4 +11,4 @@ spec:
       targetPort: http
   clusterIP: None
   selector:
-    {{- include "dependencytrack-backend.selectorLabels" . | nindent 4 }}
+    statefulset.kubernetes.io/pod-name: {{ include "dependencytrack-backend.name" . }}-0
