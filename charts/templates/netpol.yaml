@@ -25,6 +25,8 @@ spec:
             cidr: {{ .Values.backend.postgresql.ip }}/32
         - ipBlock:
             cidr: 209.85.128.0/17
+        - ipBlock:
+            cidr: 108.177.0.0/17
   podSelector:
     matchLabels:
       app.kubernetes.io/name: {{ .Release.Name }}
