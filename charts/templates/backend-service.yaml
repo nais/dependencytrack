@@ -6,7 +6,7 @@ metadata:
     {{- include "dependencytrack-backend.labels" . | nindent 4 }}
 spec:
   ports:
-    - port: 80
+    - port: 8080
       name: http
       targetPort: http
   clusterIP: None
