@@ -31,27 +31,13 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "dependencytrack-backend.name" . }}-0-external
+  name: {{ include "dependencytrack-backend.name" . }}
+  labels:
+    {{- include "dependencytrack-backend.labels" . | nindent 4 }}
 spec:
-  type: LoadBalancer
-  externalTrafficPolicy: Local
-  selector:
-    statefulset.kubernetes.io/pod-name: {{ include "dependencytrack-backend.name" . }}-0
   ports:
-    - port: 8080
+    - port: 80
       name: http
       targetPort: http
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: {{ include "dependencytrack-backend.name" . }}-1-external
-spec:
-  type: LoadBalancer
-  externalTrafficPolicy: Local
   selector:
-    statefulset.kubernetes.io/pod-name: {{ include "dependencytrack-backend.name" . }}-1
-  ports:
-    - port: 8080
-      name: http
-      targetPort: http
+    app.kubernetes.io/instance: {{ include "dependencytrack-backend.name" . }}
