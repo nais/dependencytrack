@@ -4,7 +4,7 @@
 
 bootstrap:
   logLevel: INFO
-  baseUrl: http://dependencytrack-backend-0:8080
+  baseUrl: http://dependencytrack-backend:8080
   defaultAdminPassword: admin
   adminPassword: todo
   image:
