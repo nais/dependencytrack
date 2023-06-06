@@ -21,6 +21,9 @@ spec:
       volumes:
         - name: writable-tmp
           emptyDir: { }
+        - name: secret-key
+          secret:
+            secretName: {{ .Release.Name }}-secret-key
       securityContext:
         seccompProfile:
           type: RuntimeDefault
@@ -60,6 +63,8 @@ spec:
                 secretKeyRef:
                   name: {{ include "dependencytrack-backend.name" . }}-postgresql
                   key: postgresql_username
+            - name: ALPINE_SECRET_KEY_PATH
+              value: /var/run/secrets/secret.key
             {{- end }}
             {{- range $key, $value := .Values.backend.env }}
             - name: {{ $key }}
@@ -93,6 +98,8 @@ spec:
           volumeMounts:
             - name: data
               mountPath: /data
+            - name: secret-key
+              mountPath: /var/run/secrets
             - name: writable-tmp
               mountPath: /tmp
           resources:
