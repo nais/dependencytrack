@@ -22,8 +22,9 @@ func TestIsHttpStatusCodes(t *testing.T) {
 				Body:       io.NopCloser(bytes.NewReader([]byte(""))),
 			}
 		})
-		client := New("http://localhost", "", "", WithHttpClient(c))
-		_, err := client.GetProject(context.Background(), "", "1.0.0")
+		cc := New("http://localhost", "", "", WithHttpClient(c)).(*client)
+
+		_, err := cc.get(context.Background(), "http://localhost", cc.authSource)
 		assert.True(t, IsNotFound(err))
 	})
 
