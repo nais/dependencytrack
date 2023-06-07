@@ -88,7 +88,7 @@ func TestIntegration(t *testing.T) {
 	})
 
 	t.Run("Create, get, update and delete project", func(t *testing.T) {
-		project, err := c.CreateProject(context.Background(), "projectname", "version1", "group1", []string{"tag1", "tag2"})
+		project, err := c.CreateProject(context.Background(), "projectname", "version1", "group1", []string{"tag1", "tag2", "team:app:container"})
 		assert.NoError(t, err)
 		assert.Equal(t, "projectname", project.Name)
 		assert.Equal(t, "version1", project.Version)
@@ -104,11 +104,11 @@ func TestIntegration(t *testing.T) {
 		assert.Equal(t, "tag1", project.Tags[0].Name)
 		assert.Equal(t, "tag2", project.Tags[1].Name)
 
-		p, err = c.UpdateProject(ctx, p.Uuid, p.Name, "newVersion", p.Group, []string{"tag1", "tag2"})
+		p, err = c.UpdateProject(ctx, p.Uuid, p.Name, "newVersion", p.Group, []string{"tag1", "tag2", "team:app:container"})
 		assert.NoError(t, err)
 		assert.Equal(t, "newVersion", p.Version)
 
-		projects, err := c.GetProjectsByTag(ctx, "tag1")
+		projects, err := c.GetProjectsByTag(ctx, "team:app:container")
 		assert.NoError(t, err)
 		assert.Equal(t, "projectname", projects[0].Name)
 

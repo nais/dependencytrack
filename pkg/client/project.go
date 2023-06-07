@@ -86,6 +86,9 @@ func (c *client) GetProjects(ctx context.Context) ([]*Project, error) {
 func (c *client) GetProject(ctx context.Context, name, version string) (*Project, error) {
 	res, err := c.get(ctx, c.baseUrl+"/api/v1/project/lookup?name="+name+"&version="+version, c.authSource)
 	if err != nil {
+		if IsNotFound(err) {
+			return nil, nil
+		}
 		return nil, fmt.Errorf("get project: %w", err)
 	}
 
