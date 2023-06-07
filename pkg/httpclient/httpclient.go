@@ -10,6 +10,12 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+type Response struct {
+	Status  int
+	Body    []byte
+	Headers http.Header
+}
+
 type RequestError struct {
 	StatusCode int
 	Err        error
@@ -63,7 +69,7 @@ func (r *RequestError) Error() string {
 	return fmt.Sprintf("status %d: err %v", r.StatusCode, r.Err)
 }
 
-func (c *HttpClient) SendRequest(ctx context.Context, httpMethod string, url string, headers map[string][]string, body []byte) ([]byte, error) {
+func (c *HttpClient) SendRequest(ctx context.Context, httpMethod string, url string, headers map[string][]string, body []byte) (*Response, error) {
 	c.log.Debugf("sending request to %s", url)
 	req, err := http.NewRequestWithContext(ctx, httpMethod, url, bytes.NewReader(body))
 	if err != nil {
@@ -85,15 +91,23 @@ func (c *HttpClient) SendRequest(ctx context.Context, httpMethod string, url str
 		b, err := io.ReadAll(resp.Body)
 		if err != nil {
 			c.log.Debugf("error reading response body: %v", err)
-			return []byte{}, nil
+			return &Response{
+				Status:  resp.StatusCode,
+				Body:    []byte{},
+				Headers: resp.Header,
+			}, nil
 		}
 		return nil, fail(resp.StatusCode, fmt.Errorf("%s", string(b)))
 	}
-	resBody, err := io.ReadAll(resp.Body)
+	respBody, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, fmt.Errorf("reading response body: %w", err)
 	}
-	return resBody, err
+	return &Response{
+		Status:  resp.StatusCode,
+		Body:    respBody,
+		Headers: resp.Header,
+	}, err
 }
 
 func fail(status int, err error) *RequestError {

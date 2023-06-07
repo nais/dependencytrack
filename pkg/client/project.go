@@ -5,6 +5,8 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"net/http"
+	"strconv"
 
 	log "github.com/sirupsen/logrus"
 )
@@ -35,15 +37,50 @@ func (c *client) UploadProject(ctx context.Context, name, version string, bom []
 }
 
 func (c *client) GetProjects(ctx context.Context) ([]*Project, error) {
-	b, err := c.get(ctx, c.baseUrl+"/api/v1/project", c.authSource)
+	headers, err := c.authSource.Headers(ctx)
 	if err != nil {
-		return nil, fmt.Errorf("get projects: %w", err)
+		return nil, err
 	}
-	projects := make([]*Project, 0)
-	if err = json.Unmarshal(b, &projects); err != nil {
+
+	headers["Accept"] = []string{"application/json"}
+	resp, err := c.httpClient.SendRequest(ctx, http.MethodGet, c.baseUrl+"/api/v1/project?offset=0", headers, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	allProjects := make([]*Project, 0)
+	if err = json.Unmarshal(resp.Body, &allProjects); err != nil {
 		return nil, fmt.Errorf("unmarshalling response body: %w", err)
 	}
-	return projects, nil
+
+	header := resp.Headers.Get("X-Total-Count")
+	if header == "" {
+		return nil, fmt.Errorf("missing X-Total-Count header")
+	}
+
+	numProjects, err := strconv.Atoi(header)
+	if err != nil {
+		return nil, fmt.Errorf("parsing X-Total-Count header: %w", err)
+	}
+	remainingPages := numProjects - 1/100
+
+	if remainingPages > 0 {
+		offset := 0
+		for i := 0; i < remainingPages; i++ {
+			offset += 100
+			projects := make([]*Project, 0)
+			b, err := c.get(ctx, c.baseUrl+"/api/v1/project?offset="+strconv.Itoa(offset), c.authSource)
+			if err != nil {
+				return nil, fmt.Errorf("get projects: %w", err)
+			}
+			if err = json.Unmarshal(b, &projects); err != nil {
+				return nil, fmt.Errorf("unmarshalling response body: %w", err)
+			}
+			allProjects = append(allProjects, projects...)
+		}
+	}
+
+	return allProjects, nil
 }
 
 func (c *client) GetProject(ctx context.Context, name, version string) (*Project, error) {

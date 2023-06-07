@@ -133,7 +133,7 @@ func (c *client) Version(ctx context.Context) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return string(res), nil
+	return string(res.Body), nil
 }
 
 func IsNotFound(err error) bool {
@@ -172,7 +172,11 @@ func (c *client) get(ctx context.Context, url string, authSource auth.Auth) ([]b
 		return nil, err
 	}
 	headers["Accept"] = []string{"application/json"}
-	return c.httpClient.SendRequest(ctx, http.MethodGet, url, headers, nil)
+	resp, err := c.httpClient.SendRequest(ctx, http.MethodGet, url, headers, nil)
+	if err != nil {
+		return nil, err
+	}
+	return resp.Body, nil
 }
 
 func (c *client) post(ctx context.Context, url string, authSource auth.Auth, body []byte) ([]byte, error) {
@@ -182,7 +186,11 @@ func (c *client) post(ctx context.Context, url string, authSource auth.Auth, bod
 	}
 	headers["Content-Type"] = []string{"application/json"}
 	headers["Accept"] = []string{"application/json"}
-	return c.httpClient.SendRequest(ctx, http.MethodPost, url, headers, body)
+	resp, err := c.httpClient.SendRequest(ctx, http.MethodPost, url, headers, body)
+	if err != nil {
+		return nil, err
+	}
+	return resp.Body, nil
 }
 
 func (c *client) put(ctx context.Context, url string, authSource auth.Auth, body []byte) ([]byte, error) {
@@ -192,7 +200,11 @@ func (c *client) put(ctx context.Context, url string, authSource auth.Auth, body
 	}
 	headers["Content-Type"] = []string{"application/json"}
 	headers["Accept"] = []string{"application/json"}
-	return c.httpClient.SendRequest(ctx, http.MethodPut, url, headers, body)
+	resp, err := c.httpClient.SendRequest(ctx, http.MethodPut, url, headers, body)
+	if err != nil {
+		return nil, err
+	}
+	return resp.Body, nil
 }
 
 func (c *client) patch(ctx context.Context, url string, authSource auth.Auth, body []byte) ([]byte, error) {
@@ -202,7 +214,11 @@ func (c *client) patch(ctx context.Context, url string, authSource auth.Auth, bo
 	}
 	headers["Content-Type"] = []string{"application/json"}
 	headers["Accept"] = []string{"application/json"}
-	return c.httpClient.SendRequest(ctx, http.MethodPatch, url, headers, body)
+	resp, err := c.httpClient.SendRequest(ctx, http.MethodPatch, url, headers, body)
+	if err != nil {
+		return nil, err
+	}
+	return resp.Body, nil
 }
 
 func (c *client) delete(ctx context.Context, url string, authSource auth.Auth, body []byte) ([]byte, error) {
@@ -212,5 +228,9 @@ func (c *client) delete(ctx context.Context, url string, authSource auth.Auth, b
 	}
 	headers["Content-Type"] = []string{"application/json"}
 	headers["Accept"] = []string{"application/json"}
-	return c.httpClient.SendRequest(ctx, http.MethodDelete, url, headers, body)
+	resp, err := c.httpClient.SendRequest(ctx, http.MethodDelete, url, headers, body)
+	if err != nil {
+		return nil, err
+	}
+	return resp.Body, nil
 }

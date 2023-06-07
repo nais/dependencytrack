@@ -119,7 +119,7 @@ func (c *usernamePasswordSource) login(ctx context.Context) (string, error) {
 		"password": {c.password},
 	}
 
-	token, err := c.httpClient.SendRequest(ctx, "POST", c.baseUrl+"/api/v1/user/login", map[string][]string{
+	res, err := c.httpClient.SendRequest(ctx, "POST", c.baseUrl+"/api/v1/user/login", map[string][]string{
 		"Content-Type": {"application/x-www-form-urlencoded"},
 		"Accept":       {"text/plain"},
 	}, []byte(data.Encode()))
@@ -127,12 +127,12 @@ func (c *usernamePasswordSource) login(ctx context.Context) (string, error) {
 		return "", fmt.Errorf("reading response body: %w", err)
 	}
 
-	_, err = c.parseToken(string(token))
+	_, err = c.parseToken(string(res.Body))
 	if err != nil {
-		return "", fmt.Errorf("could not parse token from body after login request: %w, response body: %s", err, token)
+		return "", fmt.Errorf("could not parse token from body after login request: %w, response body: %s", err, res.Body)
 	}
 
-	return string(token), nil
+	return string(res.Body), nil
 }
 
 func (c *usernamePasswordSource) parseToken(token string) (jwt.Token, error) {
@@ -197,13 +197,13 @@ func (c *apiKeySource) getApiKey(ctx context.Context) (string, error) {
 	}
 
 	headers.Set("Accept", "application/json")
-	responseTeams, err := c.httpClient.SendRequest(ctx, http.MethodGet, c.baseUrl+"/api/v1/team", headers, nil)
+	resp, err := c.httpClient.SendRequest(ctx, http.MethodGet, c.baseUrl+"/api/v1/team", headers, nil)
 	if err != nil {
 		return "", err
 	}
 
 	var teams []team
-	err = json.Unmarshal(responseTeams, &teams)
+	err = json.Unmarshal(resp.Body, &teams)
 	if err != nil {
 		return "", err
 	}

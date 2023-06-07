@@ -6,6 +6,7 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"strconv"
 	"testing"
 
 	"github.com/nais/dependencytrack/pkg/client/test"
@@ -115,12 +116,33 @@ func TestIntegration(t *testing.T) {
 		assert.NoError(t, err)
 	})
 
+	t.Run("delete project that does not exist", func(t *testing.T) {
+		err := c.DeleteProjects(ctx, "non-existing-project")
+		assert.NoError(t, err)
+	})
+
 	t.Run("Create  and delete projects", func(t *testing.T) {
 		project, err := c.CreateProject(context.Background(), "projectname", "version1", "group1", []string{"tag1", "tag2"})
 		assert.NoError(t, err)
 
 		err = c.DeleteProjects(ctx, project.Name)
 		assert.NoError(t, err)
+	})
+
+	t.Run("Get projects", func(t *testing.T) {
+		projects1, err := c.GetProjects(context.Background())
+		assert.NoError(t, err)
+		assert.Equal(t, 0, len(projects1))
+
+		for i := 0; i < 101; i++ {
+			_, err := c.CreateProject(context.Background(), "projectname"+strconv.Itoa(i), "version1", "group1", []string{"tag1", "tag2"})
+			assert.NoError(t, err)
+		}
+
+		// tests pagination as max limit per page is 100
+		projects2, err := c.GetProjects(context.Background())
+		assert.NoError(t, err)
+		assert.Equal(t, 101, len(projects2))
 	})
 
 	t.Run("CreateManagedUser", func(t *testing.T) {

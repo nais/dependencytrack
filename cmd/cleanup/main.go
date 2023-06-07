@@ -23,23 +23,25 @@ func main() {
 
 	c := client.New(baseUrl, "admin", adminPwd)
 
+	ctx := context.Background()
 	if deleteProjects != "" {
-		projects, err := c.GetProjects(context.Background())
-		if err != nil {
-			panic(err)
-		}
-		ctx := context.Background()
-
-		var projectlog string
-		log.Infof("Projects to delete: %d", len(projects))
-		for _, project := range projects {
-			if err := c.DeleteProject(ctx, project.Uuid); err != nil {
-				log.Fatalf("Error deleting project %s: %s", project.Name, err)
+		for i := 1; i <= 3; i++ {
+			projects, err := c.GetProjects(context.Background())
+			if err != nil {
+				panic(err)
 			}
-			projectlog += fmt.Sprintf("Deleted project %s\n", project.Name)
+
+			var projectlog string
+			log.Infof("Projects to delete: %d", len(projects))
+			for _, project := range projects {
+				if err := c.DeleteProject(ctx, project.Uuid); err != nil {
+					log.Fatalf("Error deleting project %s: %s", project.Name, err)
+				}
+				projectlog += fmt.Sprintf("Deleted project %s\n", project.Name)
+			}
+			log.Infof(projectlog)
 		}
 
-		log.Infof(projectlog)
 		err = c.PortfolioRefresh(ctx)
 		if err != nil {
 			log.Fatalf("Error refreshing portfolio: %s", err)
