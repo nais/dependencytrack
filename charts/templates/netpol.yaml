@@ -31,6 +31,8 @@ spec:
             cidr: 216.58.207.0/24
         - ipBlock:
             cidr: 173.194.222.0/24
+        - ipBlock:
+            cidr: 74.125.128.0/17
   podSelector:
     matchLabels:
       app.kubernetes.io/name: {{ .Release.Name }}
