@@ -3,7 +3,9 @@ package client
 import (
 	"context"
 	"errors"
+	"fmt"
 	"net/http"
+	"strconv"
 	"strings"
 
 	"github.com/nais/dependencytrack/pkg/client/auth"
@@ -178,6 +180,50 @@ func (c *client) get(ctx context.Context, url string, authSource auth.Auth) ([]b
 		return nil, err
 	}
 	return resp.Body, nil
+}
+
+func (c *client) getAllFrom(ctx context.Context, url string, authSource auth.Auth, offset, size int) ([]*httpclient.Response, error) {
+	headers, err := c.authSource.Headers(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	headers["Accept"] = []string{"application/json"}
+
+	u := url
+	if strings.Contains(url, "?") {
+		u += "&"
+	} else {
+		u += "?"
+	}
+	u += "offset=" + strconv.Itoa(offset)
+
+	resp, err := c.httpClient.SendRequest(ctx, http.MethodGet, u, headers, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	result := []*httpclient.Response{resp}
+
+	header := resp.Headers.Get("X-Total-Count")
+	if header != "" {
+		total, err := strconv.Atoi(header)
+		if err != nil {
+			return nil, fmt.Errorf("parsing X-Total-Count header: %w", err)
+		}
+
+		if total > offset+size {
+			nextOffset := offset + size
+			nextPage, err := c.getAllFrom(ctx, url, authSource, nextOffset, size)
+			if err != nil {
+				return nil, err
+			}
+
+			result = append(result, nextPage...)
+		}
+	}
+
+	return result, nil
 }
 
 func (c *client) post(ctx context.Context, url string, authSource auth.Auth, body []byte) ([]byte, error) {

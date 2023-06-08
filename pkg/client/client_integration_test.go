@@ -137,8 +137,9 @@ func TestIntegration(t *testing.T) {
 		projects1, err := c.GetProjects(context.Background())
 		assert.NoError(t, err)
 		assert.Equal(t, 0, len(projects1))
+		total := 201
 
-		for i := 0; i < 101; i++ {
+		for i := 0; i < total; i++ {
 			_, err := c.CreateProject(context.Background(), "projectname"+strconv.Itoa(i), "version1", "group1", []string{"tag1", "tag2"})
 			assert.NoError(t, err)
 		}
@@ -146,7 +147,14 @@ func TestIntegration(t *testing.T) {
 		// tests pagination as max limit per page is 100
 		projects2, err := c.GetProjects(context.Background())
 		assert.NoError(t, err)
-		assert.Equal(t, 101, len(projects2))
+		assert.Equal(t, total, len(projects2))
+		names := make([]string, len(projects2))
+		for _, p := range projects2 {
+			names = append(names, p.Name)
+		}
+		for i := 0; i < total; i++ {
+			assert.Contains(t, names, "projectname"+strconv.Itoa(i))
+		}
 	})
 
 	t.Run("CreateManagedUser", func(t *testing.T) {
