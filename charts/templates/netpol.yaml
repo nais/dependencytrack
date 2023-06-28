@@ -4,35 +4,7 @@ metadata:
   name: {{ .Release.Name }}
 spec:
   egress:
-    - to:
-        - namespaceSelector: { }
-          podSelector:
-            matchLabels:
-              k8s-app: kube-dns
-        - namespaceSelector: { }
-          podSelector:
-            matchLabels:
-              k8s-app: node-local-dns
-        - podSelector:
-            matchLabels:
-              app.kubernetes.io/name: {{ .Release.Name }}
-    - to:
-        - ipBlock:
-            cidr: 142.250.0.0/15
-        - ipBlock:
-            cidr: 64.233.160.0/19
-        - ipBlock:
-            cidr: {{ .Values.backend.postgresql.ip }}/32
-        - ipBlock:
-            cidr: 209.85.128.0/17
-        - ipBlock:
-            cidr: 108.177.0.0/17
-        - ipBlock:
-            cidr: 216.58.207.0/24
-        - ipBlock:
-            cidr: 173.194.222.0/24
-        - ipBlock:
-            cidr: 74.125.128.0/17
+    - {}
   podSelector:
     matchLabels:
       app.kubernetes.io/name: {{ .Release.Name }}
