@@ -29,6 +29,8 @@ jobs:
   build_and_push:
     outputs:
       version: ${{ steps.build-push-sign.outputs.version }}
+    needs:
+      - tests
     permissions:
       contents: "read"
       id-token: "write"
