@@ -1,5 +1,7 @@
 apiVersion: v2
 name: dependencytrack
+sources:
+  - https://github.com/nais/dependencytrack/tree/main/charts
 description: A Helm chart for Kubernetes
 type: application
 version: 0.1.4

@@ -1,0 +1,117 @@
+environmentKinds:
+  - tenant
+  - onprem
+  - legacy
+timeout: 10m0s
+values:
+  backend.env.ALPINE_CORS_ALLOW_ORIGIN:
+    displayName: Backend CORS allow origin
+    computed:
+      template: '"https://salsa.{{.Env.name}}.{{.Tenant.Name}}.cloud.nais.io"'
+  backend.env.ALPINE_DATABASE_POOL_MAX_LIFETIME:
+    displayName: Backend database pool max lifetime
+    computed:
+      template: '"400000"'
+  backend.env.ALPINE_OIDC_CLIENT_ID:
+    displayName: Backend OIDC client ID
+    required: true
+    config:
+      type: string
+  backend.env.ALPINE_OIDC_ISSUER:
+    displayName: Backend OIDC issuer
+    computed:
+      template: '"https://accounts.google.com"'
+  backend.fqdn.google.internal:
+    displayName: Add fqdn for metadata.google.internal
+    computed:
+      template: '{{ if or (eq .Kind "onprem") (eq .Kind "legacy") }}false{{ else }}true{{ end }}'
+  backend.image.tag:
+    description: dependency-track backend image
+    displayName: Backend image tag
+    config:
+      type: string
+  backend.ingress:
+    description: Backend Ingress for salsa storage
+    displayName: Backend Ingress
+    computed:
+      template: '"dependencytrack-backend.{{.Env.name}}.{{.Tenant.Name}}.cloud.nais.io"'
+  backend.postgresql.connectionName:
+    displayName: Backend postgresql connection name
+    computed:
+      template: '"{{.Env.dependencytrack_database_instance}}"'
+  backend.postgresql.database:
+    displayName: Backend postgresql database
+    computed:
+      template: '"{{.Env.dependencytrack_database_name}}"'
+  backend.postgresql.ip:
+    displayName: Backend postgresql ip
+    computed:
+      template: '"{{.Env.dependencytrack_database_ip}}"'
+  backend.postgresql.password:
+    description: Configure this if you want to use a custom postgresql password
+    displayName: Backend postgresql password
+    computed:
+      template: '"{{.Env.dependencytrack_database_password}}"'
+    config:
+      type: string
+      secret: true
+  backend.postgresql.username:
+    description: Configure this if you want to use a custom postgresql username
+    displayName: Backend postgresql username
+    computed:
+      template: '"{{.Env.dependencytrack_database_user}}"'
+    config:
+      type: string
+  backend.serviceAccount.googleServiceAccountEmail:
+    displayName: Backend Google sa email
+    computed:
+      template: '"{{.Env.dependencytrack_google_service_account_email}}"'
+  bootstrap.adminPassword:
+    displayName: Bootstrap admin password
+    computed:
+      template: '"{{.Env.admin_dependencytrack_password}}"'
+    config:
+      type: string
+      secret: true
+  bootstrap.image.tag:
+    description: dependency-track bootstrap image
+    displayName: Bootstrap image tag
+    config:
+      type: string
+  bootstrap.logLevel:
+    description: Log level for bootstrap
+    displayName: Bootstrap log level
+    config:
+      type: string
+  bootstrap.users:
+    displayName: Bootstrap users
+    computed:
+      template: |
+        - username: "console"
+          password: "{{.Env.console_dependencytrack_password}}"
+        - username: "picante"
+          password: "{{.Env.picante_dependencytrack_password}}"
+  frontend.env.API_BASE_URL:
+    description: Frontend Base URL for backend API
+    displayName: API base URL
+    computed:
+      template: '"https://dependencytrack-backend.{{.Env.name}}.{{.Tenant.Name}}.cloud.nais.io"'
+  frontend.env.OIDC_CLIENT_ID:
+    displayName: Frontend OIDC client ID
+    required: true
+    config:
+      type: string
+  frontend.env.OIDC_ISSUER:
+    displayName: Frontend OIDC issuer
+    computed:
+      template: '"https://accounts.google.com"'
+  frontend.image.tag:
+    description: dependency-track froentend image
+    displayName: Frontend image tag
+    config:
+      type: string
+  frontend.ingress:
+    description: Ingress for salsa storage frontend
+    displayName: Frontend Ingress
+    computed:
+      template: '"salsa.{{.Env.name}}.{{.Tenant.Name}}.cloud.nais.io"'
