@@ -10,9 +10,9 @@ values:
     computed:
       template: |
         {{ if eq .Kind "management" }}
-        '"https://salsa.{{.Tenant.Name}}.cloud.nais.io"'
+        "https://salsa.{{.Tenant.Name}}.cloud.nais.io"
         {{ else }}
-        '"https://salsa.{{.Env.name}}.{{.Tenant.Name}}.cloud.nais.io"'
+        "https://salsa.{{.Env.name}}.{{.Tenant.Name}}.cloud.nais.io"
         {{ end }}
   backend.env.ALPINE_DATABASE_POOL_MAX_LIFETIME:
     displayName: Backend database pool max lifetime
@@ -42,36 +42,36 @@ values:
     computed:
       template: |
         {{ if eq .Kind "management" }}
-        '"dependencytrack-backend.{{.Tenant.Name}}.cloud.nais.io"'
+        "dependencytrack-backend.{{.Tenant.Name}}.cloud.nais.io"
         {{ else }}
-        '"dependencytrack-backend.{{.Env.name}}.{{.Tenant.Name}}.cloud.nais.io"'
+        "dependencytrack-backend.{{.Env.name}}.{{.Tenant.Name}}.cloud.nais.io"
         {{ end }}
   backend.postgresql.connectionName:
     displayName: Backend postgresql connection name
     computed:
       template: |
         {{ if eq .Kind "management" }}
-        '"{{.Management.dependencytrack_database_instance}}"'
+        "{{.Management.dependencytrack_database_instance}}"
         {{ else }}
-        '"{{.Env.dependencytrack_database_instance}}"'
+        "{{.Env.dependencytrack_database_instance}}"
         {{ end }}
   backend.postgresql.database:
     displayName: Backend postgresql database
     computed:
       template: |
         {{ if eq .Kind "management" }}
-        '"{{.Management.dependencytrack_database_name}}"'
+        "{{.Management.dependencytrack_database_name}}"
         {{ else }}
-        '"{{.Env.dependencytrack_database_name}}"'
+        "{{.Env.dependencytrack_database_name}}"
         {{ end }}
   backend.postgresql.ip:
     displayName: Backend postgresql ip
     computed:
       template: |
         {{ if eq .Kind "management" }}
-        '"{{.Management.dependencytrack_database_ip}}"'
+        "{{.Management.dependencytrack_database_ip}}"
         {{ else }}
-        '"{{.Env.dependencytrack_database_ip}}"'
+        "{{.Env.dependencytrack_database_ip}}"
         {{ end }}
   backend.postgresql.password:
     description: Configure this if you want to use a custom postgresql password
@@ -79,9 +79,9 @@ values:
     computed:
       template: |
         {{ if eq .Kind "management" }}
-        '"{{.Management.dependencytrack_database_password}}"'
+        "{{.Management.dependencytrack_database_password}}"
         {{ else }}
-        '"{{.Env.dependencytrack_database_password}}"'
+        "{{.Env.dependencytrack_database_password}}"
         {{ end }}
     config:
       type: string
@@ -92,9 +92,9 @@ values:
     computed:
       template: |
         {{ if eq .Kind "management" }}
-        '"{{.Management.dependencytrack_database_user}}"'
+        "{{.Management.dependencytrack_database_user}}"
         {{ else }}
-        '"{{.Env.dependencytrack_database_user}}"'
+        "{{.Env.dependencytrack_database_user}}"
         {{ end }}
     config:
       type: string
@@ -103,18 +103,18 @@ values:
     computed:
       template: |
         {{ if eq .Kind "management" }}
-        '"{{.Management.dependencytrack_google_service_account_email}}"'
+        "{{.Management.dependencytrack_google_service_account_email}}"
         {{ else }}
-        '"{{.Env.dependencytrack_google_service_account_email}}"'
+        "{{.Env.dependencytrack_google_service_account_email}}"
         {{ end }}
   bootstrap.adminPassword:
     displayName: Bootstrap admin password
     computed:
       template: |
         {{ if eq .Kind "management" }}
-        '"{{.Management.admin_dependencytrack_password}}"'
+        "{{.Management.admin_dependencytrack_password}}"
         {{ else }}
-        '"{{.Env.admin_dependencytrack_password}}"'
+        "{{.Env.admin_dependencytrack_password}}"
         {{ end }}
     config:
       type: string
@@ -147,9 +147,9 @@ values:
     computed:
       template: |
         {{ if eq .Kind "management" }}
-        '"https://dependencytrack-backend.{{.Tenant.Name}}.cloud.nais.io"'
+        "https://dependencytrack-backend.{{.Tenant.Name}}.cloud.nais.io"
         {{ else }}
-        '"https://dependencytrack-backend.{{.Env.name}}.{{.Tenant.Name}}.cloud.nais.io"'
+        "https://dependencytrack-backend.{{.Env.name}}.{{.Tenant.Name}}.cloud.nais.io"
         {{ end }}
   frontend.env.OIDC_CLIENT_ID:
     displayName: Frontend OIDC client ID
@@ -171,7 +171,7 @@ values:
     computed:
       template: |
         {{ if eq .Kind "management" }}
-        '"salsa.{{.Tenant.Name}}.cloud.nais.io"'
+        "salsa.{{.Tenant.Name}}.cloud.nais.io"
         {{ else }}
-        '"salsa.{{.Env.name}}.{{.Tenant.Name}}.cloud.nais.io"'
+        "salsa.{{.Env.name}}.{{.Tenant.Name}}.cloud.nais.io"
         {{ end }}
