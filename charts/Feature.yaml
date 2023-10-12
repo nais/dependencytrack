@@ -138,7 +138,7 @@ values:
         - username: "picante"
           password: "{{.Env.picante_dependencytrack_password}}"
         {{ if eq .Kind "management" }}
-        - username: "picante"
+        - username: "teams"
           password: "{{.Management.teams_dependencytrack_password}}"
         {{ end }}
   frontend.env.API_BASE_URL:
