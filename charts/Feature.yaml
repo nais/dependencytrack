@@ -137,10 +137,10 @@ values:
           password: "{{.Env.console_dependencytrack_password}}"
         - username: "picante"
           password: "{{.Env.picante_dependencytrack_password}}"
-        {{ - if eq .Kind "management" }}
+        {{ if eq .Kind "management" }}
         - username: "picante"
           password: "{{.Env.teams_dependencytrack_password}}"
-        {{ - end }}
+        {{ end }}
   frontend.env.API_BASE_URL:
     description: Frontend Base URL for backend API
     displayName: API base URL
