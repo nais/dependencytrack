@@ -1,4 +1,5 @@
 environmentKinds:
+  - management
   - tenant
   - onprem
   - legacy
@@ -7,7 +8,12 @@ values:
   backend.env.ALPINE_CORS_ALLOW_ORIGIN:
     displayName: Backend CORS allow origin
     computed:
-      template: '"https://salsa.{{.Env.name}}.{{.Tenant.Name}}.cloud.nais.io"'
+      template: |
+        {{ if eq .Kind "management" }}
+        '"https://salsa.{{.Tenant.Name}}.cloud.nais.io"'
+        {{ else }}
+        '"https://salsa.{{.Env.name}}.{{.Tenant.Name}}.cloud.nais.io"'
+        {{ end }}
   backend.env.ALPINE_DATABASE_POOL_MAX_LIFETIME:
     displayName: Backend database pool max lifetime
     computed:
@@ -34,24 +40,49 @@ values:
     description: Backend Ingress for salsa storage
     displayName: Backend Ingress
     computed:
-      template: '"dependencytrack-backend.{{.Env.name}}.{{.Tenant.Name}}.cloud.nais.io"'
+      template: |
+        {{ if eq .Kind "management" }}
+        '"dependencytrack-backend.{{.Tenant.Name}}.cloud.nais.io"'
+        {{ else }}
+        '"dependencytrack-backend.{{.Env.name}}.{{.Tenant.Name}}.cloud.nais.io"'
+        {{ end }}
   backend.postgresql.connectionName:
     displayName: Backend postgresql connection name
     computed:
-      template: '"{{.Env.dependencytrack_database_instance}}"'
+      template: |
+        {{ if eq .Kind "management" }}
+        '"{{.Management.dependencytrack_database_instance}}"'
+        {{ else }}
+        '"{{.Env.dependencytrack_database_instance}}"'
+        {{ end }}
   backend.postgresql.database:
     displayName: Backend postgresql database
     computed:
-      template: '"{{.Env.dependencytrack_database_name}}"'
+      template: |
+        {{ if eq .Kind "management" }}
+        '"{{.Management.dependencytrack_database_name}}"'
+        {{ else }}
+        '"{{.Env.dependencytrack_database_name}}"'
+        {{ end }}
   backend.postgresql.ip:
     displayName: Backend postgresql ip
     computed:
-      template: '"{{.Env.dependencytrack_database_ip}}"'
+      template: |
+        {{ if eq .Kind "management" }}
+        '"{{.Management.dependencytrack_database_ip}}"'
+        {{ else }}
+        '"{{.Env.dependencytrack_database_ip}}"'
+        {{ end }}
   backend.postgresql.password:
     description: Configure this if you want to use a custom postgresql password
     displayName: Backend postgresql password
     computed:
-      template: '"{{.Env.dependencytrack_database_password}}"'
+      template: |
+        {{ if eq .Kind "management" }}
+        '"{{.Management.dependencytrack_database_password}}"'
+        {{ else }}
+        '"{{.Env.dependencytrack_database_password}}"'
+        {{ end }}
     config:
       type: string
       secret: true
@@ -59,17 +90,32 @@ values:
     description: Configure this if you want to use a custom postgresql username
     displayName: Backend postgresql username
     computed:
-      template: '"{{.Env.dependencytrack_database_user}}"'
+      template: |
+        {{ if eq .Kind "management" }}
+        '"{{.Management.dependencytrack_database_user}}"'
+        {{ else }}
+        '"{{.Env.dependencytrack_database_user}}"'
+        {{ end }}
     config:
       type: string
   backend.serviceAccount.googleServiceAccountEmail:
     displayName: Backend Google sa email
     computed:
-      template: '"{{.Env.dependencytrack_google_service_account_email}}"'
+      template: |
+        {{ if eq .Kind "management" }}
+        '"{{.Management.dependencytrack_google_service_account_email}}"'
+        {{ else }}
+        '"{{.Env.dependencytrack_google_service_account_email}}"'
+        {{ end }}
   bootstrap.adminPassword:
     displayName: Bootstrap admin password
     computed:
-      template: '"{{.Env.admin_dependencytrack_password}}"'
+      template: |
+        {{ if eq .Kind "management" }}
+        '"{{.Management.admin_dependencytrack_password}}"'
+        {{ else }}
+        '"{{.Env.admin_dependencytrack_password}}"'
+        {{ end }}
     config:
       type: string
       secret: true
@@ -91,11 +137,20 @@ values:
           password: "{{.Env.console_dependencytrack_password}}"
         - username: "picante"
           password: "{{.Env.picante_dependencytrack_password}}"
+        {{ - if eq .Kind "management" }}
+        - username: "picante"
+          password: "{{.Env.teams_dependencytrack_password}}"
+        {{ - end }}
   frontend.env.API_BASE_URL:
     description: Frontend Base URL for backend API
     displayName: API base URL
     computed:
-      template: '"https://dependencytrack-backend.{{.Env.name}}.{{.Tenant.Name}}.cloud.nais.io"'
+      template: |
+        {{ if eq .Kind "management" }}
+        '"https://dependencytrack-backend.{{.Tenant.Name}}.cloud.nais.io"'
+        {{ else }}
+        '"https://dependencytrack-backend.{{.Env.name}}.{{.Tenant.Name}}.cloud.nais.io"'
+        {{ end }}
   frontend.env.OIDC_CLIENT_ID:
     displayName: Frontend OIDC client ID
     required: true
@@ -114,4 +169,9 @@ values:
     description: Ingress for salsa storage frontend
     displayName: Frontend Ingress
     computed:
-      template: '"salsa.{{.Env.name}}.{{.Tenant.Name}}.cloud.nais.io"'
+      template: |
+        {{ if eq .Kind "management" }}
+        '"salsa.{{.Tenant.Name}}.cloud.nais.io"'
+        {{ else }}
+        '"salsa.{{.Env.name}}.{{.Tenant.Name}}.cloud.nais.io"'
+        {{ end }}
