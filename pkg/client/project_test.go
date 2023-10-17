@@ -23,6 +23,7 @@ func TestClient_CreateProject(t *testing.T) {
 					assert.Equal(t, http.MethodPut, req.Method)
 					var project Project
 					b, err := io.ReadAll(req.Body)
+					assert.NoError(t, err)
 					err = json.Unmarshal(b, &project)
 					if err != nil {
 						assert.Error(t, err, "unmarshalling request body")
@@ -70,6 +71,7 @@ func TestClient_CreateChildProject(t *testing.T) {
 					assert.Equal(t, http.MethodPut, req.Method)
 					var project Project
 					b, err := io.ReadAll(req.Body)
+					assert.NoError(t, err)
 					err = json.Unmarshal(b, &project)
 					if err != nil {
 						assert.Error(t, err, "unmarshalling request body")
@@ -134,6 +136,7 @@ func TestUploadSbom(t *testing.T) {
 				case "/api/v1/bom":
 					assert.Equal(t, http.MethodPut, req.Method)
 					b, err := io.ReadAll(req.Body)
+					assert.NoError(t, err)
 					var p BomSubmitRequest
 					err = json.Unmarshal(b, &p)
 					if err != nil {
@@ -173,6 +176,7 @@ func TestClient_UpdateProjectInfo(t *testing.T) {
 					assert.Equal(t, http.MethodPatch, req.Method)
 					var tag Tags
 					b, err := io.ReadAll(req.Body)
+					assert.NoError(t, err)
 					err = json.Unmarshal(b, &tag)
 					if err != nil {
 						assert.Error(t, err, "unmarshalling request body")

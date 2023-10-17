@@ -72,6 +72,9 @@ func (c *client) GetProject(ctx context.Context, name, version string) (*Project
 func (c *client) GetProjectsByTag(ctx context.Context, tag string) ([]*Project, error) {
 	res, err := c.get(ctx, c.baseUrl+"/api/v1/project/tag/"+tag, c.authSource)
 	if err != nil {
+		if IsNotFound(err) {
+			return nil, nil
+		}
 		return nil, fmt.Errorf("get projects by tag: %w", err)
 	}
 
@@ -108,6 +111,9 @@ func (c *client) CreateProject(ctx context.Context, name, version, group string,
 	}
 
 	body, err := json.Marshal(pp)
+	if err != nil {
+		return nil, fmt.Errorf("marshalling project: %w", err)
+	}
 
 	p, err := c.put(ctx, c.baseUrl+"/api/v1/project", c.authSource, body)
 	if err != nil {
@@ -147,6 +153,9 @@ func (c *client) UpdateProject(ctx context.Context, uuid, name, version, group s
 	}
 
 	body, err := json.Marshal(pp)
+	if err != nil {
+		return nil, fmt.Errorf("marshalling project: %w", err)
+	}
 
 	p, err := c.post(ctx, c.baseUrl+"/api/v1/project", c.authSource, body)
 	if err != nil {
@@ -185,6 +194,9 @@ func (c *client) CreateChildProject(ctx context.Context, parent *Project, name, 
 	}
 
 	body, err := json.Marshal(pp)
+	if err != nil {
+		return nil, fmt.Errorf("marshalling project: %w", err)
+	}
 
 	p, err := c.put(ctx, c.baseUrl+"/api/v1/project", c.authSource, body)
 	if err != nil {
@@ -220,6 +232,9 @@ func (c *client) UpdateProjectInfo(ctx context.Context, uuid, version, group str
 		Group:      group,
 		Tags:       t,
 	})
+	if err != nil {
+		return fmt.Errorf("marshalling project: %w", err)
+	}
 
 	_, err = c.patch(ctx, c.baseUrl+"/api/v1/project/"+uuid, c.authSource, body)
 	if err != nil {

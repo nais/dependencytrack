@@ -4,7 +4,7 @@ bootstrap:
 
 integration_test: fmt vet
 	go test ./... -tags integration_test -run TestIntegration
-test: fmt vet
+test: check fmt vet
 	go test ./... -coverprofile cover.out -short
 fmt:
 	go run mvdan.cc/gofumpt -w ./
@@ -16,3 +16,7 @@ local:
 
 compose:
 	docker-compose build && docker-compose up
+
+check:
+	go run honnef.co/go/tools/cmd/staticcheck ./...
+	go run golang.org/x/vuln/cmd/govulncheck ./...
