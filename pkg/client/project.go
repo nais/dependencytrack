@@ -169,7 +169,7 @@ func (c *client) UpdateProject(ctx context.Context, uuid, name, version, group s
 	return &project, nil
 }
 
-func (c *client) CreateChildProject(ctx context.Context, parent *Project, name, version, group string, tags []string) (*Project, error) {
+func (c *client) CreateChildProject(ctx context.Context, parent *Project, name, version, group, classifier string, tags []string) (*Project, error) {
 	c.log.WithFields(log.Fields{
 		"group": group,
 		"tags":  tags,
@@ -186,7 +186,7 @@ func (c *client) CreateChildProject(ctx context.Context, parent *Project, name, 
 		Name:       name,
 		Publisher:  group,
 		Active:     true,
-		Classifier: "APPLICATION",
+		Classifier: classifier,
 		Version:    version,
 		Group:      group,
 		Tags:       t,
