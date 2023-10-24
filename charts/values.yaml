@@ -7,6 +7,8 @@ bootstrap:
   baseUrl: http://dependencytrack-backend:8080
   defaultAdminPassword: admin
   adminPassword: todo
+  github:
+    advisory_mirroring_token:
   image:
     name: dependencytrack-bootstrap
     repository: europe-north1-docker.pkg.dev/nais-io/nais/images
@@ -52,8 +54,6 @@ backend:
     successThreshold: 1
     failureThreshold: 3
   # VULNERABILITY_SOURCE_GITHUB_ADVISORIES_ACCESS_TOKEN
-  github:
-    advisory_mirroring_token: # from fasit
 
   cloudProxy:
     repository: gcr.io/cloudsql-docker/gce-proxy

@@ -25,6 +25,7 @@ type Config struct {
 	DefaultAdminPassword string `json:"default-admin-password"`
 	LogLevel             string `json:"log-level"`
 	UsersFile            string `json:"users-file"`
+	GithubAdvisoryToken  string `json:"github-advisory-token"`
 }
 
 func init() {
@@ -32,6 +33,7 @@ func init() {
 	flag.StringVar(&cfg.BaseUrl, "base-url", "http://localhost:9001", "base url of dependencytrack")
 	flag.StringVar(&cfg.DefaultAdminPassword, "default-admin-password", "admin", "default admin password")
 	flag.StringVar(&cfg.AdminPassword, "admin-password", cfg.AdminPassword, "new admin password")
+	flag.StringVar(&cfg.GithubAdvisoryToken, "github-advisory-token", cfg.GithubAdvisoryToken, "github advisory mirroring token")
 	flag.StringVar(&cfg.UsersFile, "users-file", "/bootstrap/users.yaml", "file with users to create")
 }
 
@@ -97,6 +99,29 @@ func main() {
 	}
 
 	log.Infof("done: created users and added to Administrators team")
+
+	if cfg.GithubAdvisoryToken != "" {
+		props, err := c.GetConfigProperties(ctx)
+		if err != nil {
+			log.Fatalf("get config properties: %v", err)
+		}
+
+		var cp []client.ConfigProperty
+		for _, prop := range props {
+			switch prop.PropertyName {
+			case "github.advisories.enabled":
+				prop.PropertyValue = "true"
+				cp = append(cp, prop)
+			case "github.advisories.access.token":
+				prop.PropertyValue = cfg.GithubAdvisoryToken
+				cp = append(cp, prop)
+			}
+		}
+		if _, err := c.ConfigPropertyAggregate(ctx, cp); err != nil {
+			log.Fatalf("config property aggregate: %v", err)
+		}
+		log.Infof("done: added github advisory token")
+	}
 }
 
 func parseFlags() {

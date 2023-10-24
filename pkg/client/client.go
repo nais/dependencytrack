@@ -43,6 +43,8 @@ type Client interface {
 	RemoveAdminUsers(ctx context.Context, users *AdminUsers) error
 	UpdateProjectInfo(ctx context.Context, uuid, version, group string, tags []string) error
 	UploadProject(ctx context.Context, name, version string, bom []byte) error
+	ConfigPropertyAggregate(ctx context.Context, properties []ConfigProperty) ([]ConfigProperty, error)
+	GetConfigProperties(ctx context.Context) ([]ConfigProperty, error)
 	auth.Auth
 }
 

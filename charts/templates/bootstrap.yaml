@@ -73,6 +73,7 @@ type: Opaque
 stringData:
   DEFAULT_ADMIN_PASSWORD: {{ .Values.bootstrap.defaultAdminPassword | quote }}
   ADMIN_PASSWORD: {{ .Values.bootstrap.adminPassword | quote }}
+  GITHUB_ADVISORY_TOKEN: {{ .Values.bootstrap.github.advisory_mirroring_token | quote }}
 ---
 apiVersion: v1
 kind: Secret
