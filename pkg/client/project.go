@@ -13,7 +13,7 @@ func (c *client) UploadProject(ctx context.Context, name, version string, bom []
 	c.log.WithFields(log.Fields{
 		"name":    name,
 		"version": version,
-	}).Info("uploading sbom")
+	}).Debug("uploading sbom")
 
 	body, err := json.Marshal(&BomSubmitRequest{
 		ProjectName:    name,

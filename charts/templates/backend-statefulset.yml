@@ -44,6 +44,12 @@ spec:
               drop:
                 - ALL
           env:
+            {{- if .Values.backend.github.advisory_mirroring_token }}
+            - name: VULNERABILITY_SOURCE_GITHUB_ADVISORIES_ENABLED
+              value: "true"
+            - name: VULNERABILITY_SOURCE_GITHUB_ADVISORIES_ACCESS_TOKEN
+              value: {{ .Values.backend.github.advisory_mirroring_token | quote }}
+            {{- end }}
             - name: ALPINE_DATA_DIRECTORY
               value: "/data"
             {{- if .Values.backend.postgresql.enabled }}

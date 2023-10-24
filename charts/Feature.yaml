@@ -107,6 +107,11 @@ values:
         {{ else }}
         "{{.Env.dependencytrack_google_service_account_email}}"
         {{ end }}
+  backend.github.advisory_mirroring_token:
+    displayName: Backend GitHub advisory mirroring token
+    config:
+      type: string
+      secret: true
   bootstrap.adminPassword:
     displayName: Bootstrap admin password
     computed:

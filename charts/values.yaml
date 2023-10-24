@@ -51,6 +51,9 @@ backend:
     timeoutSeconds: 2
     successThreshold: 1
     failureThreshold: 3
+  # VULNERABILITY_SOURCE_GITHUB_ADVISORIES_ACCESS_TOKEN
+  github:
+    advisory_mirroring_token: # from fasit
 
   cloudProxy:
     repository: gcr.io/cloudsql-docker/gce-proxy
