@@ -108,7 +108,7 @@ values:
         "{{.Env.dependencytrack_google_service_account_email}}"
         {{ end }}
   bootstrap.github.advisory_mirroring_token:
-    displayName: Backend GitHub advisory mirroring token
+    displayName: Bootstrap GitHub advisory mirroring token
     config:
       type: string
       secret: true
