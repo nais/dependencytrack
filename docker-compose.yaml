@@ -51,6 +51,7 @@ services:
       - DEFAULT_ADMIN_PASSWORD=Test1234
       - ADMIN_PASSWORD=yolo
       - USERS_FILE=users.yaml
+      - GITHUB_ADVISORY_TOKEN=
     env_file:
       - .env
     volumes:
