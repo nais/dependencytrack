@@ -67,8 +67,9 @@ func (c *client) RemoveAdminUsers(ctx context.Context, users *AdminUsers) error 
 					c.log.Infof("user %s does not exist, nothing to remove", user.Username)
 				}
 			}
+		} else {
+			c.log.Infof("removed user %s", user.Username)
 		}
-		c.log.Infof("removed user %s", user.Username)
 	}
 	return nil
 }

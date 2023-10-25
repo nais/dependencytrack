@@ -6,14 +6,6 @@ import (
 	"fmt"
 )
 
-type ConfigProperty struct {
-	GroupName     string `json:"groupName"`
-	PropertyName  string `json:"propertyName"`
-	PropertyValue string `json:"propertyValue"`
-	PropertyType  string `json:"propertyType"`
-	Description   string `json:"description"`
-}
-
 func (c *client) ConfigPropertyAggregate(ctx context.Context, properties []ConfigProperty) ([]ConfigProperty, error) {
 	body, err := json.Marshal(properties)
 	if err != nil {

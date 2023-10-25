@@ -75,3 +75,11 @@ type Tag struct {
 type Tags struct {
 	Tags []Tag `json:"tags"`
 }
+
+type ConfigProperty struct {
+	GroupName     string `json:"groupName"`
+	PropertyName  string `json:"propertyName"`
+	PropertyValue string `json:"propertyValue"`
+	PropertyType  string `json:"propertyType"`
+	Description   string `json:"description"`
+}

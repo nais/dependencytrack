@@ -124,7 +124,7 @@ values:
     config:
       type: string
       secret: true
-  bootstrap.image.tag:
+  image.tag:
     description: dependency-track bootstrap image
     displayName: Bootstrap image tag
     config:

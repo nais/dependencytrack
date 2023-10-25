@@ -45,6 +45,7 @@ type Client interface {
 	UploadProject(ctx context.Context, name, version string, bom []byte) error
 	ConfigPropertyAggregate(ctx context.Context, properties []ConfigProperty) ([]ConfigProperty, error)
 	GetConfigProperties(ctx context.Context) ([]ConfigProperty, error)
+	GetEcosystems(ctx context.Context) ([]string, error)
 	auth.Auth
 }
 
