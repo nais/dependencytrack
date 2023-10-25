@@ -21,7 +21,7 @@ func TestMain(m *testing.M) {
 	log.SetFormatter(&log.TextFormatter{
 		DisableTimestamp: true,
 	})
-	baseUrl, cleanup := test.DependencyTrackPool()
+	baseUrl, cleanup := test.DependencyTrackPool("4.9.0")
 
 	cwp := New(baseUrl, "admin", "test")
 
@@ -202,5 +202,31 @@ func TestIntegration(t *testing.T) {
 	t.Run("UploadProjectBom", func(t *testing.T) {
 		err := c.UploadProject(ctx, "projectname", "version1", []byte("test"))
 		assert.NoError(t, err)
+	})
+
+	t.Run("GetConfigProperties", func(t *testing.T) {
+		props, err := c.GetConfigProperties(ctx)
+		assert.NoError(t, err)
+		assert.NotEmpty(t, props)
+	})
+
+	t.Run("ConfigPropertyAggregate", func(t *testing.T) {
+		props, err := c.ConfigPropertyAggregate(ctx, []ConfigProperty{
+			{
+				GroupName:     "vuln-source",
+				PropertyName:  "google.osv.enabled",
+				PropertyValue: "false",
+				PropertyType:  "STRING",
+				Description:   "List of enabled ecosystems to mirror OSV",
+			},
+		})
+		assert.NoError(t, err)
+		assert.NotEmpty(t, props)
+	})
+
+	t.Run("GetEcosystems", func(t *testing.T) {
+		ecos, err := c.GetEcosystems(ctx)
+		assert.NoError(t, err)
+		assert.NotEmpty(t, ecos)
 	})
 }

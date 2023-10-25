@@ -10,7 +10,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func DependencyTrackPool() (string, func()) {
+func DependencyTrackPool(version string) (string, func()) {
 	pool, err := dockertest.NewPool("")
 	if err != nil {
 		log.Fatalf("Could not construct pool: %s", err)
@@ -18,7 +18,7 @@ func DependencyTrackPool() (string, func()) {
 
 	opts := &dockertest.RunOptions{
 		Repository:   "dependencytrack/apiserver",
-		Tag:          "4.8.0",
+		Tag:          version,
 		ExposedPorts: []string{"8080"},
 		PortBindings: map[docker.Port][]docker.PortBinding{
 			"8080": {
