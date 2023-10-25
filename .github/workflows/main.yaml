@@ -43,6 +43,14 @@ jobs:
           workload_identity_provider: ${{ secrets.NAIS_IO_WORKLOAD_IDENTITY_PROVIDER }}
           push: true
 
+      - name: Update values.yaml
+        uses: fjogeleit/yaml-update-action@main
+        with:
+          valueFile: 'charts/values.yaml'
+          propertyPath: 'image.tag'
+          value: ${{ steps.build-push-sign.outputs.version }}
+          commitChange: false
+
       - uses: azure/setup-helm@v3
         name: "Setup Helm"
         with:
