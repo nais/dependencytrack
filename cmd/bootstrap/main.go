@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"flag"
-	"fmt"
 	"os"
 	"os/signal"
 	"strings"
@@ -127,7 +126,6 @@ func main() {
 			switch prop.PropertyName {
 			case "google.osv.enabled":
 				eco, err := c.GetEcosystems(ctx)
-				fmt.Println(len(eco))
 				if err != nil {
 					log.Fatalf("get ecosystems: %v", err)
 				}
