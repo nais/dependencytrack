@@ -129,17 +129,23 @@ func main() {
 				if err != nil {
 					log.Fatalf("get ecosystems: %v", err)
 				}
-				prop.PropertyValue = strings.Join(eco, ";")
-				cp = append(cp, prop)
-				log.Infof("done: added github osv integration")
+				// if the list is empty we activated all ecosystems
+				if len(eco) > 0 {
+					prop.PropertyValue = strings.Join(eco, ";")
+					cp = append(cp, prop)
+					log.Infof("done: added github osv integration")
+				}
 			}
 		}
 	}
 
-	if _, err := c.ConfigPropertyAggregate(ctx, cp); err != nil {
-		log.Fatalf("config property aggregate: %v", err)
+	// only update if we have new properties
+	if cp != nil {
+		if _, err := c.ConfigPropertyAggregate(ctx, cp); err != nil {
+			log.Fatalf("config property aggregate: %v", err)
+		}
+		log.Infof("done: added config properties")
 	}
-	log.Infof("done: added config properties")
 }
 
 func parseFlags() {
