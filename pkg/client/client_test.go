@@ -67,8 +67,7 @@ func TestIsHttpStatusCodes(t *testing.T) {
 
 func authenticate(t *testing.T) func(req *http.Request) *http.Response {
 	return func(req *http.Request) *http.Response {
-		switch req.URL.Path {
-		case "/api/v1/user/login":
+		if req.URL.Path == "/api/v1/user/login" {
 			assert.Equal(t, "POST", req.Method)
 			assert.Equal(t, "application/x-www-form-urlencoded", req.Header.Get("Content-Type"))
 			assert.Equal(t, "text/plain", req.Header.Get("Accept"))
@@ -82,8 +81,7 @@ func authenticate(t *testing.T) func(req *http.Request) *http.Response {
 				StatusCode: http.StatusOK,
 				Body:       io.NopCloser(bytes.NewReader([]byte(token))),
 			}
-		case "/api/v1/team":
-			assert.Equal(t, "GET", req.Method)
+		} else if req.URL.Path == "/api/v1/team" && req.Method == "GET" {
 			assert.Equal(t, "Bearer "+token, req.Header.Get("Authorization"))
 			teams := []Team{
 				{
@@ -103,7 +101,7 @@ func authenticate(t *testing.T) func(req *http.Request) *http.Response {
 				StatusCode: http.StatusOK,
 				Body:       io.NopCloser(bytes.NewReader(b)),
 			}
-		default:
+		} else {
 			return &http.Response{
 				StatusCode: http.StatusNotFound,
 				Body:       io.NopCloser(bytes.NewReader([]byte("Not found: " + req.URL.Path))),

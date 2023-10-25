@@ -26,6 +26,7 @@ type Config struct {
 	LogLevel             string `json:"log-level"`
 	UsersFile            string `json:"users-file"`
 	GithubAdvisoryToken  string `json:"github-advisory-token"`
+	GoogleOSVEnabled     bool   `json:"google-osv-enabled"`
 }
 
 func init() {
@@ -35,6 +36,7 @@ func init() {
 	flag.StringVar(&cfg.AdminPassword, "admin-password", cfg.AdminPassword, "new admin password")
 	flag.StringVar(&cfg.GithubAdvisoryToken, "github-advisory-token", cfg.GithubAdvisoryToken, "github advisory mirroring token")
 	flag.StringVar(&cfg.UsersFile, "users-file", "/bootstrap/users.yaml", "file with users to create")
+	flag.BoolVar(&cfg.GoogleOSVEnabled, "google-osv-enabled", cfg.GoogleOSVEnabled, "enable google osv integration")
 }
 
 // TODO: add timer and retry logic to wait for dependencytrack to be ready
@@ -100,28 +102,44 @@ func main() {
 
 	log.Infof("done: created users and added to Administrators team")
 
-	if cfg.GithubAdvisoryToken != "" {
-		props, err := c.GetConfigProperties(ctx)
-		if err != nil {
-			log.Fatalf("get config properties: %v", err)
-		}
+	props, err := c.GetConfigProperties(ctx)
+	if err != nil {
+		log.Fatalf("get config properties: %v", err)
+	}
 
-		var cp []client.ConfigProperty
-		for _, prop := range props {
+	var cp []client.ConfigProperty
+	for _, prop := range props {
+		if cfg.GithubAdvisoryToken != "" {
 			switch prop.PropertyName {
 			case "github.advisories.enabled":
 				prop.PropertyValue = "true"
 				cp = append(cp, prop)
+				log.Infof("done: added github advisory mirroring")
 			case "github.advisories.access.token":
 				prop.PropertyValue = cfg.GithubAdvisoryToken
 				cp = append(cp, prop)
+				log.Infof("done: added github advisory mirroring token")
 			}
 		}
-		if _, err := c.ConfigPropertyAggregate(ctx, cp); err != nil {
-			log.Fatalf("config property aggregate: %v", err)
+
+		if cfg.GoogleOSVEnabled {
+			switch prop.PropertyName {
+			case "google.osv.enabled":
+				eco, err := c.GetEcosystems(ctx)
+				if err != nil {
+					log.Fatalf("get ecosystems: %v", err)
+				}
+				prop.PropertyValue = strings.Join(eco, ";")
+				cp = append(cp, prop)
+				log.Infof("done: added github osv integration")
+			}
 		}
-		log.Infof("done: added github advisory token")
 	}
+
+	if _, err := c.ConfigPropertyAggregate(ctx, cp); err != nil {
+		log.Fatalf("config property aggregate: %v", err)
+	}
+	log.Infof("done: added config properties")
 }
 
 func parseFlags() {

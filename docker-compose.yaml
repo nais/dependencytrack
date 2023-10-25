@@ -52,6 +52,7 @@ services:
       - ADMIN_PASSWORD=yolo
       - USERS_FILE=users.yaml
       - GITHUB_ADVISORY_TOKEN=
+      - GOOGLE_OSV_ENABLED=false
     env_file:
       - .env
     volumes:
