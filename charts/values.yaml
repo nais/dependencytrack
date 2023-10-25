@@ -14,6 +14,8 @@ bootstrap:
   adminPassword: todo
   github:
     advisory_mirroring_token:
+  google:
+    osv_enabled: true
   users:
     - username: console
       password: todo

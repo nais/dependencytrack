@@ -53,6 +53,8 @@ spec:
               value: "{{ .Values.bootstrap.logLevel }}"
             - name: BASE_URL
               value: "{{ .Values.bootstrap.baseUrl }}"
+            - name: GOOGLE_OSV_ENABLED
+              value: "{{ .Values.bootstrap.google.osv_enabled }}"
           envFrom:
             - secretRef:
                 name: "{{ .Release.Name }}-bootstrap-pwd"

@@ -146,6 +146,10 @@ values:
         - username: "teams"
           password: "{{.Management.teams_dependencytrack_password}}"
         {{ end }}
+  bootstrap.google.osv_enabled:
+    displayName: Bootstrap Google OSV enabled
+    config:
+      type: bool
   frontend.env.API_BASE_URL:
     description: Frontend Base URL for backend API
     displayName: API base URL
