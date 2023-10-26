@@ -79,9 +79,9 @@ values:
     computed:
       template: |
         {{ if eq .Kind "management" }}
-        "{{.Management.dependencytrack_database_password}}"
+        {{.Management.dependencytrack_database_password | quote}}
         {{ else }}
-        "{{.Env.dependencytrack_database_password}}"
+        {{.Env.dependencytrack_database_password | quote}}
         {{ end }}
     config:
       type: string
@@ -117,9 +117,9 @@ values:
     computed:
       template: |
         {{ if eq .Kind "management" }}
-        "{{.Management.admin_dependencytrack_password}}"
+        {{.Management.admin_dependencytrack_password | quote}}
         {{ else }}
-        "{{.Env.admin_dependencytrack_password}}"
+        {{.Env.admin_dependencytrack_password | quote}}
         {{ end }}
     config:
       type: string
@@ -139,12 +139,12 @@ values:
     computed:
       template: |
         - username: "console"
-          password: "{{.Env.console_dependencytrack_password}}"
+          password: {{.Env.console_dependencytrack_password | quote}}
         - username: "picante"
-          password: "{{.Env.picante_dependencytrack_password}}"
+          password: {{.Env.picante_dependencytrack_password | quote}}
         {{ if eq .Kind "management" }}
         - username: "teams"
-          password: "{{.Management.teams_dependencytrack_password}}"
+          password: {{.Management.teams_dependencytrack_password | quote}}
         {{ end }}
   bootstrap.google.osv_enabled:
     displayName: Bootstrap Google OSV enabled
