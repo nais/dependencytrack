@@ -11,9 +11,11 @@ spec:
       targetPort: http
       protocol: TCP
       name: http
+    {{- if .Values.frontend.swagger.enabled }}
     - port: 81
       targetPort: http-swag
       protocol: TCP
       name: http-swag
+    {{- end }}
   selector:
     {{- include "dependencytrack-frontend.selectorLabels" . | nindent 4 }}

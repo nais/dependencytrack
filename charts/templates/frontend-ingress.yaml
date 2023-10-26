@@ -17,10 +17,12 @@ spec:
                   number: 80
             path: /
             pathType: Prefix
+        {{- if .Values.frontend.swagger.enabled }}
           - backend:
               service:
                 name: {{ include "dependencytrack-frontend.name" . }}
                 port:
                   number: 81
-            path: /swagger
+            path: {{ .Values.frontend.swagger.path }}
             pathType: Prefix
+        {{- end }}

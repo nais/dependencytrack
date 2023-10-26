@@ -104,6 +104,10 @@ backend:
     #ALPINE_OIDC_TEAM_SYNCHRONIZATION: true
 
 frontend:
+  swagger:
+    enabled: false
+    path: /swagger
+    port: 8181
   image:
     name: frontend
     repository: dependencytrack

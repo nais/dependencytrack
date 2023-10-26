@@ -150,6 +150,12 @@ values:
     displayName: Bootstrap Google OSV enabled
     config:
       type: bool
+  frontend.swagger.enabled:
+    displayName: Swagger UI enabled
+    config:
+      type: bool
+    computed:
+      template: {{ eq .Tenant.Name "dev-nais" }}
   frontend.env.API_BASE_URL:
     description: Frontend Base URL for backend API
     displayName: API base URL
