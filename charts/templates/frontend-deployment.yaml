@@ -60,3 +60,25 @@ spec:
               mountPath: /tmp
           resources:
             {{- toYaml .Values.frontend.resources | nindent 12 }}
+
+        - name: swaggerui
+          image: swaggerapi/swagger-ui
+          env:
+            - name: PORT
+              value: "8181"
+            - name: SWAGGER_JSON_URL
+              value: "{{ .Values.frontend.env.API_BASE_URL }}/api/swagger.json"
+          imagePullPolicy: {{ .Values.frontend.image.pullPolicy }}
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 101
+            runAsGroup: 101
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: false
+            capabilities:
+              drop:
+                - ALL
+          ports:
+            - name: http-swag
+              containerPort: 8181
+              protocol: TCP
