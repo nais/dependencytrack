@@ -3,13 +3,7 @@ name: PR Check
 on:
   pull_request:
     paths-ignore:
-      - 'charts/**'
-      - '.github/workflows/chart.yaml'
       - '*.md'
-
-permissions:
-  contents: write
-  pull-requests: write
 
 jobs:
   test-pr:
