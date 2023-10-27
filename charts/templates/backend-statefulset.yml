@@ -44,6 +44,8 @@ spec:
               drop:
                 - ALL
           env:
+            - name: LOGGING_LEVEL
+              value: "{{ .Values.backend.logLevel }}"
             - name: ALPINE_DATA_DIRECTORY
               value: "/data"
             {{- if .Values.backend.postgresql.enabled }}
