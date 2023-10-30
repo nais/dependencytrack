@@ -8,9 +8,7 @@ NAIS oversees the maintenance of this repository, which includes:
 * pre-installed & post-install bootstrap configuration
 * Stateful set for persistence
 
-## Usage
-
-### Dependencytrack client
+## Dependencytrack client
 
 The repository houses a client for dependencytrack, facilitating its usage for implementations. Please feel free to
 expand the client interface with additional functionality as required. To update to the most recent version of the
@@ -20,9 +18,14 @@ client, execute:
 
 ## Local development
 
+Run your local instance of dependencytrack with the following command:
+`make compose`
+
 A docker-compose file is available for local development. Please duplicate .env.sample as .env and provide the necessary
 values. The users.yaml file allows for the creation of pre-installed users for automated testing purposes. You can
 access the [Dependencytrack UI](http://localhost:9000).
+
+The API is available at [depdendencytrack-api](http://localhost:9001).
 
 ### Swagger
 
