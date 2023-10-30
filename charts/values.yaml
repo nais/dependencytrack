@@ -21,13 +21,13 @@ bootstrap:
       password: todo
 
 backend:
-  logLevel: WARN
+  logLevel: INFO
   image:
     name: apiserver
     repository: dependencytrack
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: 4.9.1
+    tag: 4.9.0
   replicas:
     min: 1
     max: 1
@@ -110,7 +110,7 @@ frontend:
     repository: dependencytrack
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: 4.9.1
+    tag: 4.9.0
   replicas:
     min: 1
     max: 1
