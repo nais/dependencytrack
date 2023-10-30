@@ -5,6 +5,11 @@ environmentKinds:
   - legacy
 timeout: 10m0s
 values:
+  backend.logLevel:
+    description: Log level for backend
+    displayName: Backend log level
+    config:
+      type: string
   backend.env.ALPINE_CORS_ALLOW_ORIGIN:
     displayName: Backend CORS allow origin
     computed:

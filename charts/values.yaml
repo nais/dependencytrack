@@ -21,6 +21,7 @@ bootstrap:
       password: todo
 
 backend:
+  logLevel: WARN
   image:
     name: apiserver
     repository: dependencytrack
@@ -59,7 +60,7 @@ backend:
 
   cloudProxy:
     repository: gcr.io/cloudsql-docker/gce-proxy
-    tag: 1.33.5
+    tag: 1.33.13
 
   postgresql:
     enabled: true
