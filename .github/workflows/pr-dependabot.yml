@@ -5,6 +5,7 @@ on:
     paths-ignore:
       - 'charts/**'
       - '*.md'
+      - 'LICENSE.md'
 
 permissions:
   contents: write

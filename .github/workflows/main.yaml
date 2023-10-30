@@ -6,6 +6,7 @@ on:
     paths-ignore:
       - 'pkg/**'
       - '*.md'
+      - 'LICENSE.md'
 env:
   NAME: dependencytrack
   FEATURE_REPOSITORY: oci://europe-north1-docker.pkg.dev/nais-io/nais/feature
