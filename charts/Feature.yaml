@@ -1,8 +1,5 @@
 environmentKinds:
   - management
-  - tenant
-  - onprem
-  - legacy
 timeout: 10m0s
 values:
   backend.logLevel:
@@ -13,12 +10,7 @@ values:
   backend.env.ALPINE_CORS_ALLOW_ORIGIN:
     displayName: Backend CORS allow origin
     computed:
-      template: |
-        {{ if eq .Kind "management" }}
-        "https://salsa.{{.Tenant.Name}}.cloud.nais.io"
-        {{ else }}
-        "https://salsa.{{.Env.name}}.{{.Tenant.Name}}.cloud.nais.io"
-        {{ end }}
+      template: '"https://salsa.{{.Tenant.Name}}.cloud.nais.io"'
   backend.env.ALPINE_DATABASE_POOL_MAX_LIFETIME:
     displayName: Backend database pool max lifetime
     computed:
@@ -32,10 +24,6 @@ values:
     displayName: Backend OIDC issuer
     computed:
       template: '"https://accounts.google.com"'
-  backend.fqdn.google.internal:
-    displayName: Add fqdn for metadata.google.internal
-    computed:
-      template: '{{ if or (eq .Kind "onprem") (eq .Kind "legacy") }}false{{ else }}true{{ end }}'
   backend.image.tag:
     description: dependency-track backend image
     displayName: Backend image tag
@@ -45,49 +33,24 @@ values:
     description: Backend Ingress for salsa storage
     displayName: Backend Ingress
     computed:
-      template: |
-        {{ if eq .Kind "management" }}
-        "dependencytrack-backend.{{.Tenant.Name}}.cloud.nais.io"
-        {{ else }}
-        "dependencytrack-backend.{{.Env.name}}.{{.Tenant.Name}}.cloud.nais.io"
-        {{ end }}
+      template: '"dependencytrack-backend.{{.Tenant.Name}}.cloud.nais.io"'
   backend.postgresql.connectionName:
     displayName: Backend postgresql connection name
     computed:
-      template: |
-        {{ if eq .Kind "management" }}
-        "{{.Management.dependencytrack_database_instance}}"
-        {{ else }}
-        "{{.Env.dependencytrack_database_instance}}"
-        {{ end }}
+      template: '{{.Management.dependencytrack_database_instance | quote}}'
   backend.postgresql.database:
     displayName: Backend postgresql database
     computed:
-      template: |
-        {{ if eq .Kind "management" }}
-        "{{.Management.dependencytrack_database_name}}"
-        {{ else }}
-        "{{.Env.dependencytrack_database_name}}"
-        {{ end }}
+      template: '{{.Management.dependencytrack_database_name | quote}}'
   backend.postgresql.ip:
     displayName: Backend postgresql ip
     computed:
-      template: |
-        {{ if eq .Kind "management" }}
-        "{{.Management.dependencytrack_database_ip}}"
-        {{ else }}
-        "{{.Env.dependencytrack_database_ip}}"
-        {{ end }}
+      template: '{{.Management.dependencytrack_database_ip | quote}}'
   backend.postgresql.password:
     description: Configure this if you want to use a custom postgresql password
     displayName: Backend postgresql password
     computed:
-      template: |
-        {{ if eq .Kind "management" }}
-        {{.Management.dependencytrack_database_password | quote}}
-        {{ else }}
-        {{.Env.dependencytrack_database_password | quote}}
-        {{ end }}
+      template: '{{.Management.dependencytrack_database_password | quote}}'
     config:
       type: string
       secret: true
@@ -95,23 +58,13 @@ values:
     description: Configure this if you want to use a custom postgresql username
     displayName: Backend postgresql username
     computed:
-      template: |
-        {{ if eq .Kind "management" }}
-        "{{.Management.dependencytrack_database_user}}"
-        {{ else }}
-        "{{.Env.dependencytrack_database_user}}"
-        {{ end }}
+      template: '{{.Management.dependencytrack_database_user | quote}}'
     config:
       type: string
   backend.serviceAccount.googleServiceAccountEmail:
     displayName: Backend Google sa email
     computed:
-      template: |
-        {{ if eq .Kind "management" }}
-        "{{.Management.dependencytrack_google_service_account_email}}"
-        {{ else }}
-        "{{.Env.dependencytrack_google_service_account_email}}"
-        {{ end }}
+      template: '{{.Management.dependencytrack_google_service_account_email | quote}}'
   bootstrap.github.advisory_mirroring_token:
     displayName: Bootstrap GitHub advisory mirroring token
     config:
@@ -120,12 +73,7 @@ values:
   bootstrap.adminPassword:
     displayName: Bootstrap admin password
     computed:
-      template: |
-        {{ if eq .Kind "management" }}
-        {{.Management.admin_dependencytrack_password | quote}}
-        {{ else }}
-        {{.Env.admin_dependencytrack_password | quote}}
-        {{ end }}
+      template: '{{.Management.admin_dependencytrack_password | quote}}'
     config:
       type: string
       secret: true
@@ -144,13 +92,11 @@ values:
     computed:
       template: |
         - username: "console"
-          password: {{.Env.console_dependencytrack_password | quote}}
+          password: {{.Management.console_dependencytrack_password | quote}}
         - username: "picante"
-          password: {{.Env.picante_dependencytrack_password | quote}}
-        {{ if eq .Kind "management" }}
+          password: {{.Management.picante_dependencytrack_password | quote}}
         - username: "teams"
           password: {{.Management.teams_dependencytrack_password | quote}}
-        {{ end }}
   bootstrap.google.osv_enabled:
     displayName: Bootstrap Google OSV enabled
     config:
@@ -165,12 +111,7 @@ values:
     description: Frontend Base URL for backend API
     displayName: API base URL
     computed:
-      template: |
-        {{ if eq .Kind "management" }}
-        "https://dependencytrack-backend.{{.Tenant.Name}}.cloud.nais.io"
-        {{ else }}
-        "https://dependencytrack-backend.{{.Env.name}}.{{.Tenant.Name}}.cloud.nais.io"
-        {{ end }}
+      template: '"https://dependencytrack-backend.{{.Tenant.Name}}.cloud.nais.io"'
   frontend.env.OIDC_CLIENT_ID:
     displayName: Frontend OIDC client ID
     required: true
@@ -189,9 +130,4 @@ values:
     description: Ingress for salsa storage frontend
     displayName: Frontend Ingress
     computed:
-      template: |
-        {{ if eq .Kind "management" }}
-        "salsa.{{.Tenant.Name}}.cloud.nais.io"
-        {{ else }}
-        "salsa.{{.Env.name}}.{{.Tenant.Name}}.cloud.nais.io"
-        {{ end }}
+      template: '"salsa.{{.Tenant.Name}}.cloud.nais.io"'

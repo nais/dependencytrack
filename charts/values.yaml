@@ -76,10 +76,6 @@ backend:
     create: true
     googleServiceAccountEmail:
 
-  fqdn:
-    google:
-      internal:
-
   persistence:
     accessMode: ReadWriteOnce
     size: 10Gi
