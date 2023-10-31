@@ -85,10 +85,19 @@ type ConfigProperty struct {
 	Description   string `json:"description"`
 }
 
+type Component struct {
+	PURL    string `json:"purl"`
+	Project string `json:"project"`
+}
+
+type Vulnerability struct {
+	UUID         string `json:"uuid"`
+	Severity     string `json:"severity"`
+	SeverityRank int    `json:"severityRank"`
+	Name         string `json:"name"`
+}
+
 type Finding struct {
-	ID            string `json:"id"`
-	Severity      string `json:"severity"`
-	SeverityRank  int    `json:"severityRank"`
-	Name          string `json:"name"`
-	ComponentPurl string `json:"componentPurl"`
+	Component     Component     `json:"component"`
+	Vulnerability Vulnerability `json:"vulnerability"`
 }
