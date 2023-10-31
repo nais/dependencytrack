@@ -46,6 +46,8 @@ type Client interface {
 	ConfigPropertyAggregate(ctx context.Context, properties []ConfigProperty) ([]ConfigProperty, error)
 	GetConfigProperties(ctx context.Context) ([]ConfigProperty, error)
 	GetEcosystems(ctx context.Context) ([]string, error)
+	GetFindings(ctx context.Context, projectUuid string) ([]*Finding, error)
+
 	auth.Auth
 }
 

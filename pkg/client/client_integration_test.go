@@ -229,4 +229,12 @@ func TestIntegration(t *testing.T) {
 		assert.NoError(t, err)
 		assert.NotEmpty(t, ecos)
 	})
+
+	t.Run("GetFindings", func(t *testing.T) {
+		p, err := c.CreateProject(context.Background(), "findingproject", "version1", "group1", []string{"tag1", "tag2", "team:app:container"})
+		assert.NoError(t, err)
+		_, err = c.GetFindings(ctx, p.Uuid)
+		assert.NoError(t, err)
+	})
+
 }

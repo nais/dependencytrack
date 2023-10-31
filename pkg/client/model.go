@@ -83,3 +83,11 @@ type ConfigProperty struct {
 	PropertyType  string `json:"propertyType"`
 	Description   string `json:"description"`
 }
+
+type Finding struct {
+	ID            string `json:"id"`
+	Severity      string `json:"severity"`
+	SeverityRank  int    `json:"severityRank"`
+	Name          string `json:"name"`
+	ComponentPurl string `json:"componentPurl"`
+}
