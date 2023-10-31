@@ -47,7 +47,7 @@ type Client interface {
 	GetConfigProperties(ctx context.Context) ([]ConfigProperty, error)
 	GetEcosystems(ctx context.Context) ([]string, error)
 	GetFindings(ctx context.Context, projectUuid string) ([]*Finding, error)
-
+	TriggerAnalysis(ctx context.Context, projectUuid string) error
 	auth.Auth
 }
 

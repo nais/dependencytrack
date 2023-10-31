@@ -8,6 +8,7 @@ import (
 	"os"
 	"strconv"
 	"testing"
+	"time"
 
 	"github.com/nais/dependencytrack/pkg/client/test"
 	log "github.com/sirupsen/logrus"
@@ -231,8 +232,17 @@ func TestIntegration(t *testing.T) {
 	})
 
 	t.Run("GetFindings", func(t *testing.T) {
-		p, err := c.CreateProject(context.Background(), "findingproject", "version1", "group1", []string{"tag1", "tag2", "team:app:container"})
+		b, err := os.ReadFile("testdata/attestation.json")
 		assert.NoError(t, err)
+		p, err := c.CreateProject(context.Background(), "project-with-findings", "version1", "group1", []string{"tag1", "tag2", "team:app:container"})
+		assert.NoError(t, err)
+		err = c.UploadProject(ctx, "project-with-findings", "version1", b)
+		assert.NoError(t, err)
+
+		err = c.TriggerAnalysis(ctx, p.Uuid)
+		assert.NoError(t, err)
+		time.Sleep(2 * time.Second)
+
 		_, err = c.GetFindings(ctx, p.Uuid)
 		assert.NoError(t, err)
 	})

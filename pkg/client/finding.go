@@ -22,3 +22,14 @@ func (c *client) GetFindings(ctx context.Context, projectUuid string) ([]*Findin
 
 	return findings, nil
 }
+
+func (c *client) TriggerAnalysis(ctx context.Context, projectUuid string) error {
+	_, err := c.post(ctx, c.baseUrl+"/api/v1/finding/project/"+projectUuid+"/analyze", c.authSource, nil)
+	if err != nil {
+		if IsNotFound(err) {
+			return nil
+		}
+		return fmt.Errorf("trigger analysis: %w", err)
+	}
+	return nil
+}
