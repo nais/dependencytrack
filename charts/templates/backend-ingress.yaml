@@ -4,6 +4,8 @@ metadata:
   name: {{ include "dependencytrack-backend.name" . }}
   labels:
     {{- include "dependencytrack-backend.labels" . | nindent 4 }}
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: 100m
 spec:
   ingressClassName: {{ .Values.backend.ingressClassName }}
   rules:
