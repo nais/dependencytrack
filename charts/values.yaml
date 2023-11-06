@@ -34,7 +34,7 @@ backend:
   resources:
     limits:
       memory: 8Gi
-      cpu: "2"
+      cpu: "4"
     requests:
       memory: 4608Mi
       cpu: "2"
