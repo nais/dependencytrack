@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/lestrrat-go/jwx/v2/jwt"
@@ -29,6 +30,7 @@ type usernamePasswordSource struct {
 	username    string
 	password    string
 	accessToken string
+	lock        sync.Mutex
 	httpClient  *httpclient.HttpClient
 	log         *logrus.Entry
 }
@@ -45,6 +47,7 @@ type apiKeySource struct {
 	log        *logrus.Entry
 	httpClient *httpclient.HttpClient
 	apiKey     string
+	lock       sync.Mutex
 }
 
 type team struct {
@@ -81,29 +84,32 @@ func NewUsernamePasswordSource(baseUrl BaseUrl, username Username, password Pass
 }
 
 func (c *usernamePasswordSource) Headers(ctx context.Context) (http.Header, error) {
-	expired, err := c.isExpired()
+	c.lock.Lock()
+	t := c.accessToken
+	expired, err := isExpired(t)
 	if err != nil {
 		return nil, err
 	}
-	if c.accessToken == "" || expired {
-		c.log.Debugf("accessToken expired, getting new one")
-		t, err := c.login(ctx)
+	if t == "" || expired {
+		c.log.Debugf("accessToken is blank=%v or expired=%v, getting new one", c.accessToken == "", expired)
+		t, err = c.login(ctx)
 		if err != nil {
 			return nil, err
 		}
 		c.accessToken = t
 	}
-	return map[string][]string{"Authorization": {"Bearer " + c.accessToken}}, nil
+	c.lock.Unlock()
+	return map[string][]string{"Authorization": {"Bearer " + t}}, nil
 }
 
-func (c *usernamePasswordSource) isExpired() (bool, error) {
-	if c.accessToken == "" {
+func isExpired(accessToken string) (bool, error) {
+	if accessToken == "" {
 		return true, nil
 	}
 	parseOpts := []jwt.ParseOption{
 		jwt.WithVerify(false),
 	}
-	token, err := jwt.ParseString(c.accessToken, parseOpts...)
+	token, err := jwt.ParseString(accessToken, parseOpts...)
 	if err != nil {
 		return true, fmt.Errorf("parsing accessToken: %w", err)
 	}
@@ -179,6 +185,7 @@ func (c *apiKeySource) Headers(ctx context.Context) (http.Header, error) {
 }
 
 func (c *apiKeySource) refreshApiKey(ctx context.Context) (string, error) {
+	c.lock.Lock()
 	if c.apiKey == "" {
 		c.log.Debug("Fetching apiKey")
 		key, err := c.getApiKey(ctx)
@@ -187,6 +194,7 @@ func (c *apiKeySource) refreshApiKey(ctx context.Context) (string, error) {
 		}
 		c.apiKey = key
 	}
+	c.lock.Unlock()
 	return c.apiKey, nil
 }
 
