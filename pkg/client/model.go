@@ -56,17 +56,18 @@ type BomSubmitRequest struct {
 }
 
 type Project struct {
-	Active              bool     `json:"active"`
-	Author              string   `json:"author"`
-	Classifier          string   `json:"classifier"`
-	Group               string   `json:"group"`
-	Name                string   `json:"name"`
-	LastBomImportFormat string   `json:"lastBomImportFormat,omitempty"`
-	Publisher           string   `json:"publisher"`
-	Tags                []Tag    `json:"tags"`
-	Uuid                string   `json:"uuid"`
-	Version             string   `json:"version"`
-	Parent              *Project `json:"parent"`
+	Active                 bool     `json:"active"`
+	Author                 string   `json:"author"`
+	Classifier             string   `json:"classifier"`
+	Group                  string   `json:"group"`
+	Name                   string   `json:"name"`
+	LastBomImportFormat    string   `json:"lastBomImportFormat,omitempty"`
+	LastInheritedRiskScore float64  `json:"lastInheritedRiskScore"`
+	Publisher              string   `json:"publisher"`
+	Tags                   []Tag    `json:"tags"`
+	Uuid                   string   `json:"uuid"`
+	Version                string   `json:"version"`
+	Parent                 *Project `json:"parent"`
 }
 
 type Tag struct {
