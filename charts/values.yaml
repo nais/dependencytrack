@@ -20,17 +20,6 @@ bootstrap:
     - username: console
       password: todo
 
-resync:
-  enabled: false
-  logLevel: INFO
-  baseUrl: http://dependencytrack-backend:8080
-  image:
-    name: dptrack-resync
-    repository: europe-north1-docker.pkg.dev/nais-io/nais/images
-    tag: yolo # Fasit
-  schedule: "0 0 * * *"
-  password: todo
-
 backend:
   logLevel: INFO
   image:

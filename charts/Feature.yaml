@@ -97,8 +97,6 @@ values:
           password: {{.Management.picante_dependencytrack_password | quote}}
         - username: "teams"
           password: {{.Management.teams_dependencytrack_password | quote}}
-        - username: "dtrack-resync"
-          password: {{.Management.dtrack_resync_dependencytrack_password | quote}}
   bootstrap.google.osv_enabled:
     displayName: Bootstrap Google OSV enabled
     config:
@@ -133,22 +131,3 @@ values:
     displayName: Frontend Ingress
     computed:
       template: '"salsa.{{.Tenant.Name}}.cloud.nais.io"'
-  resync.enabled:
-    displayName: Resync enabled
-    config:
-      type: bool
-    computed:
-      template: "true"
-  resync.password:
-    displayName: Resync password
-    config:
-      type: string
-      secret: true
-    computed:
-      template: '{{.Management.dtrack_resync_dependencytrack_password | quote}}'
-    resync.schedule:
-      displayName: Resync schedule
-      config:
-        type: string
-      computed:
-        template: '"0 0 * * *"' # every day at midnight
