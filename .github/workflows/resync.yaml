@@ -1,4 +1,4 @@
-name: Build and deploy
+name: Build and deploy Resync job
 on:
   push:
     branches:

@@ -1,4 +1,4 @@
-package resync
+package main
 
 import (
 	"context"
