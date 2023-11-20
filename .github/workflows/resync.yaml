@@ -60,7 +60,7 @@ jobs:
 
   rollout:
     needs:
-      - build_and_push
+      - build_and_push_resync
     runs-on: fasit-deploy
     permissions:
       id-token: write
