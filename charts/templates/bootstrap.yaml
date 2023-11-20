@@ -24,7 +24,6 @@ spec:
         app.kubernetes.io/instance: "{{ .Release.Name }}-bootstrap"
         app.kubernetes.io/name: {{ .Release.Name | quote }}
         helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
-        nais.io/salsa-verify-attestation: "true"
     spec:
       restartPolicy: Never
       securityContext:

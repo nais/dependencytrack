@@ -1,0 +1,54 @@
+{{if .Values.resync.enabled }}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: "{{ .Release.Name }}-resync"
+  labels:
+    app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
+    app.kubernetes.io/instance: "{{ .Release.Name }}-resync"
+    app.kubernetes.io/name: {{ .Release.Name | quote }}
+    helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+spec:
+  schedule: {{ .Values.resync.schedule | quote }}
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: "{{ .Release.Name }}-resync"
+              image: "{{ .Values.resync.image.repository }}/{{ .Values.resync.image.name }}:{{ .Values.resync.image.tag }}"
+              securityContext:
+                runAsNonRoot: true
+                runAsUser: 1000
+                runAsGroup: 1000
+                allowPrivilegeEscalation: false
+                readOnlyRootFilesystem: true
+                capabilities:
+                  drop:
+                    - ALL
+              env:
+                - name: LOG_LEVEL
+                  value: "{{ .Values.resync.logLevel }}"
+                - name: BASE_URL
+                  value: "{{ .Values.resync.baseUrl }}"
+              envFrom:
+                - secretRef:
+                    name: "{{ .Release.Name }}-resync-pwd"
+          restartPolicy: Never
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+            fsGroup: 1000
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: "{{ .Release.Name }}-resync-pwd"
+  labels:
+    app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
+    app.kubernetes.io/instance: "{{ .Release.Name }}-resync"
+    app.kubernetes.io/name: {{ .Release.Name | quote }}
+type: Opaque
+stringData:
+  ADMIN_PASSWORD: {{ .Values.resync.password | quote }}
+  {{- end }}

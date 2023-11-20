@@ -20,6 +20,17 @@ bootstrap:
     - username: console
       password: todo
 
+resync:
+  enabled: false
+  logLevel: INFO
+  baseUrl: http://dependencytrack-backend:8080
+  image:
+    name: dptrack-resync
+    repository: europe-north1-docker.pkg.dev/nais-io/nais/images
+    tag: yolo # Fasit
+  schedule: # Fasit
+  password: todo
+
 backend:
   logLevel: INFO
   image:
@@ -98,6 +109,7 @@ backend:
     ALPINE_CORS_ALLOW_CREDENTIALS: true
     ALPINE_CORS_MAX_AGE: 3600
     ALPINE_METRICS_ENABLED: true
+    LOGGING_CONFIG_PATH: logback-json.xml
     #ALPINE_OIDC_TEAM_SYNCHRONIZATION: true
 
 frontend:

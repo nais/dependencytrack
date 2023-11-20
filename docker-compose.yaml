@@ -34,7 +34,7 @@ services:
     restart: unless-stopped
 
   dtrack-frontend:
-    image: dependencytrack/frontend:4.9.0
+    image: dependencytrack/frontend:4.9.1
     depends_on:
       - dtrack-apiserver
     environment:
@@ -53,6 +53,7 @@ services:
       - USERS_FILE=users.yaml
       - GITHUB_ADVISORY_TOKEN=
       - GOOGLE_OSV_ENABLED=false
+      - LOGGING_CONFIG_PATH=logback-json.xml
     env_file:
       - .env
     volumes:

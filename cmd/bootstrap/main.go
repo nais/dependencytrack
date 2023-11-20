@@ -3,16 +3,13 @@ package main
 import (
 	"context"
 	"flag"
+	"github.com/nais/dependencytrack/cmd/common"
+	"github.com/nais/dependencytrack/pkg/client"
+	"gopkg.in/yaml.v3"
 	"os"
 	"os/signal"
 	"strings"
 	"syscall"
-	"time"
-
-	"github.com/joho/godotenv"
-	"github.com/nais/dependencytrack/pkg/client"
-	"github.com/sirupsen/logrus"
-	"gopkg.in/yaml.v3"
 )
 
 var cfg = &Config{
@@ -41,12 +38,12 @@ func init() {
 
 // TODO: add timer and retry logic to wait for dependencytrack to be ready
 func main() {
-	parseFlags()
+	common.ParseFlags()
 
 	ctx, cancel := signal.NotifyContext(context.Background(), syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)
 	defer cancel()
 
-	log, err := setupLogger()
+	log, err := common.SetupLogger(cfg.LogLevel)
 	if err != nil {
 		log.Fatalf("setup logger: %v", err)
 	}
@@ -146,37 +143,4 @@ func main() {
 		}
 		log.Infof("done: added config properties")
 	}
-}
-
-func parseFlags() {
-	err := godotenv.Load()
-	if err != nil {
-		logrus.Debugf("loading .env file %v", err)
-	}
-
-	flag.VisitAll(func(f *flag.Flag) {
-		name := strings.ToUpper(strings.Replace(f.Name, "-", "_", -1))
-		if value, ok := os.LookupEnv(name); ok {
-			err = flag.Set(f.Name, value)
-			if err != nil {
-				logrus.Fatalf("failed setting flag from environment: %v", err)
-				return
-			}
-		}
-	})
-
-	flag.Parse()
-}
-
-func setupLogger() (*logrus.Logger, error) {
-	log := logrus.StandardLogger()
-	log.SetFormatter(&logrus.JSONFormatter{
-		TimestampFormat: time.RFC3339Nano,
-	})
-	lvl, err := logrus.ParseLevel(cfg.LogLevel)
-	if err != nil {
-		return nil, err
-	}
-	log.SetLevel(lvl)
-	return log, err
 }
