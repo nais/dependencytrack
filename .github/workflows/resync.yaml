@@ -12,7 +12,7 @@ env:
   FEATURE_REPOSITORY: oci://europe-north1-docker.pkg.dev/nais-io/nais/feature
 
 jobs:
-  build_and_push:
+  build_and_push_resync:
     outputs:
       version: ${{ steps.build-push-sign.outputs.version }}
     permissions:
