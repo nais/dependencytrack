@@ -28,7 +28,7 @@ resync:
     name: dptrack-resync
     repository: europe-north1-docker.pkg.dev/nais-io/nais/images
     tag: yolo # Fasit
-  schedule: # Fasit
+  schedule: "0 0 * * *"
   password: todo
 
 backend:
