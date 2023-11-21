@@ -33,11 +33,11 @@ backend:
     max: 1
   resources:
     limits:
-      memory: 12Gi
-      cpu: "4"
+      memory: 16Gi
+      cpu: "2"
     requests:
       memory: 4608Mi
-      cpu: "2"
+      cpu: "1"
   outbound: [ ]
   ingressClassName: nais-ingress
   ingress:
@@ -60,7 +60,7 @@ backend:
 
   cloudProxy:
     repository: gcr.io/cloudsql-docker/gce-proxy
-    tag: 1.33.13
+    tag: 1.33.14
 
   postgresql:
     enabled: true
@@ -86,7 +86,6 @@ backend:
     ALPINE_OIDC_ISSUER:
     ALPINE_OIDC_CLIENT_ID:
     ALPINE_OIDC_USERNAME_CLAIM: email
-    ALPINE_DATABASE_POOL_MAX_LIFETIME: 500000
     #ALPINE_OIDC_TEAMS_CLAIM: groups
     ALPINE_OIDC_USER_PROVISIONING: true
     # Optional Cross-Origin Resource Sharing (CORS) Headers
@@ -99,7 +98,9 @@ backend:
     ALPINE_CORS_MAX_AGE: 3600
     ALPINE_METRICS_ENABLED: true
     LOGGING_CONFIG_PATH: logback-json.xml
-    #ALPINE_OIDC_TEAM_SYNCHRONIZATION: true
+    ALPINE_DATABASE_POOL_IDLE_TIMEOUT: 600000
+    ALPINE_DATABASE_POOL_MAX_LIFETIME: 300000
+    # ALPINE_OIDC_TEAM_SYNCHRONIZATION: true
 
 frontend:
   swagger:
