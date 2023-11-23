@@ -97,7 +97,7 @@ values:
           password: {{.Management.picante_dependencytrack_password | quote}}
         - username: "teams"
           password: {{.Management.teams_dependencytrack_password | quote}}
-        - username: "dptrack-resync"
+        - username: "dtrack-resync"
           password: {{.Management.dtrack_resync_dependencytrack_password | quote}}
   bootstrap.google.osv_enabled:
     displayName: Bootstrap Google OSV enabled
