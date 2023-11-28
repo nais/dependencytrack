@@ -85,6 +85,8 @@ func NewUsernamePasswordSource(baseUrl BaseUrl, username Username, password Pass
 
 func (c *usernamePasswordSource) Headers(ctx context.Context) (http.Header, error) {
 	c.lock.Lock()
+	defer c.lock.Unlock()
+
 	t := c.accessToken
 	expired, err := isExpired(t)
 	if err != nil {
@@ -98,7 +100,6 @@ func (c *usernamePasswordSource) Headers(ctx context.Context) (http.Header, erro
 		}
 		c.accessToken = t
 	}
-	c.lock.Unlock()
 	return map[string][]string{"Authorization": {"Bearer " + t}}, nil
 }
 
@@ -186,6 +187,8 @@ func (c *apiKeySource) Headers(ctx context.Context) (http.Header, error) {
 
 func (c *apiKeySource) refreshApiKey(ctx context.Context) (string, error) {
 	c.lock.Lock()
+	defer c.lock.Unlock()
+
 	if c.apiKey == "" {
 		c.log.Debug("Fetching apiKey")
 		key, err := c.getApiKey(ctx)
@@ -194,7 +197,7 @@ func (c *apiKeySource) refreshApiKey(ctx context.Context) (string, error) {
 		}
 		c.apiKey = key
 	}
-	c.lock.Unlock()
+
 	return c.apiKey, nil
 }
 
