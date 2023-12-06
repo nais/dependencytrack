@@ -33,7 +33,7 @@ backend:
     max: 1
   resources:
     requests:
-      memory: 32Gi
+      memory: 20Gi
       cpu: "4"
   outbound: [ ]
   ingressClassName: nais-ingress

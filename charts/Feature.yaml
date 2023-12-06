@@ -65,6 +65,14 @@ values:
     displayName: Backend Google sa email
     computed:
       template: '{{.Management.dependencytrack_google_service_account_email | quote}}'
+  backend.resources.requests.memory:
+    displayName: Backend memory request
+    config:
+      type: string
+  backend.resources.requests.cpu:
+    displayName: Backend cpu request
+    config:
+      type: string
   bootstrap.github.advisory_mirroring_token:
     displayName: Bootstrap GitHub advisory mirroring token
     config:
@@ -133,3 +141,11 @@ values:
     displayName: Frontend Ingress
     computed:
       template: '"salsa.{{.Tenant.Name}}.cloud.nais.io"'
+  frontend.resources.requests.memory:
+    displayName: Frontend memory request
+    config:
+      type: string
+  frontend.resources.requests.cpu:
+    displayName: Frontend cpu request
+    config:
+      type: string
