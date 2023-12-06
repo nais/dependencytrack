@@ -34,7 +34,7 @@ backend:
   resources:
     requests:
       memory: 16Gi
-      cpu: "2"
+      cpu: "4"
   outbound: [ ]
   ingressClassName: nais-ingress
   ingress:
@@ -112,11 +112,9 @@ frontend:
     min: 1
     max: 1
   resources:
-    limits:
-      memory: 512Mi
     requests:
-      memory: 128Mi
-      cpu: 200m
+      memory: 1G1
+      cpu: "2"
   outbound: [ ]
   ingressClassName: nais-ingress
   ingress:
