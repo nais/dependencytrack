@@ -113,7 +113,7 @@ frontend:
     max: 1
   resources:
     requests:
-      memory: 1G1
+      memory: 1Gi
       cpu: "2"
   outbound: [ ]
   ingressClassName: nais-ingress
