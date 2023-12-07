@@ -246,5 +246,4 @@ func TestIntegration(t *testing.T) {
 		_, err = c.GetFindings(ctx, p.Uuid)
 		assert.NoError(t, err)
 	})
-
 }

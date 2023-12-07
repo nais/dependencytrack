@@ -3,13 +3,14 @@ package main
 import (
 	"context"
 	"flag"
-	"github.com/nais/dependencytrack/cmd/common"
-	"github.com/nais/dependencytrack/pkg/client"
-	"gopkg.in/yaml.v3"
 	"os"
 	"os/signal"
 	"strings"
 	"syscall"
+
+	"github.com/nais/dependencytrack/cmd/common"
+	"github.com/nais/dependencytrack/pkg/client"
+	"gopkg.in/yaml.v3"
 )
 
 var cfg = &Config{

@@ -2,11 +2,12 @@ package common
 
 import (
 	"flag"
-	"github.com/joho/godotenv"
-	"github.com/sirupsen/logrus"
 	"os"
 	"strings"
 	"time"
+
+	"github.com/joho/godotenv"
+	"github.com/sirupsen/logrus"
 )
 
 func ParseFlags() {

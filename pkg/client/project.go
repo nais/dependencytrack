@@ -9,7 +9,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func (c *client) UploadProject(ctx context.Context, name, version string, bom []byte) error {
+func (c *client) UploadProject(ctx context.Context, name, version string, autoCreate bool, bom []byte) error {
 	c.log.WithFields(log.Fields{
 		"name":    name,
 		"version": version,
@@ -18,7 +18,7 @@ func (c *client) UploadProject(ctx context.Context, name, version string, bom []
 	body, err := json.Marshal(&BomSubmitRequest{
 		ProjectName:    name,
 		ProjectVersion: version,
-		AutoCreate:     true,
+		AutoCreate:     autoCreate,
 		Bom:            base64.StdEncoding.EncodeToString(bom),
 	})
 	if err != nil {
