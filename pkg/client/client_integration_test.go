@@ -201,7 +201,7 @@ func TestIntegration(t *testing.T) {
 	})
 
 	t.Run("UploadProjectBom", func(t *testing.T) {
-		err := c.UploadProject(ctx, "projectname", "version1", true, []byte("test"))
+		err := c.UploadProject(ctx, "projectname", "version1", "", true, []byte("test"))
 		assert.NoError(t, err)
 	})
 
@@ -236,7 +236,7 @@ func TestIntegration(t *testing.T) {
 		assert.NoError(t, err)
 		p, err := c.CreateProject(context.Background(), "project-with-findings", "version1", "group1", []string{"tag1", "tag2", "team:app:container"})
 		assert.NoError(t, err)
-		err = c.UploadProject(ctx, "project-with-findings", "version1", true, b)
+		err = c.UploadProject(ctx, "project-with-findings", "version1", "", true, b)
 		assert.NoError(t, err)
 
 		err = c.TriggerAnalysis(ctx, p.Uuid)
