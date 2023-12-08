@@ -19,8 +19,7 @@ func (c *client) UploadProject(ctx context.Context, name, version, parentUuid st
 		ProjectName:    name,
 		ProjectVersion: version,
 		AutoCreate:     autoCreate,
-
-		Bom: base64.StdEncoding.EncodeToString(bom),
+		Bom:            base64.StdEncoding.EncodeToString(bom),
 	}
 
 	if parentUuid != "" {
