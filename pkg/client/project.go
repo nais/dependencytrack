@@ -22,7 +22,7 @@ func (c *client) UploadProject(ctx context.Context, name, version, parentUuid st
 		Bom:            base64.StdEncoding.EncodeToString(bom),
 	}
 
-	if parentUuid != "" {
+	if len(parentUuid) > 0 {
 		bomReq.ParentUuid = parentUuid
 	}
 

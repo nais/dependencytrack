@@ -51,7 +51,7 @@ type ApiKey struct {
 type BomSubmitRequest struct {
 	ProjectName    string `json:"projectName"`
 	ProjectVersion string `json:"projectVersion"`
-	ParentUuid     string `json:"parentUUID"`
+	ParentUuid     string `json:"parentUUID,omitempty"`
 	AutoCreate     bool   `json:"autoCreate"`
 	Bom            string `json:"bom"`
 }
