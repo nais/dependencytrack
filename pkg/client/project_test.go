@@ -166,7 +166,7 @@ func TestUploadSbom(t *testing.T) {
 	)
 
 	c := New("http://localhost", "admin", "admin", WithHttpClient(httpClient), WithApiKeySource("Administrators"))
-	err = c.UploadProject(context.Background(), "project1", "1.0.1", false, att)
+	err = c.UploadProject(context.Background(), "project1", "1.0.1", "", false, att)
 	assert.NoError(t, err)
 }
 

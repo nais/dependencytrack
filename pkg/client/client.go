@@ -42,7 +42,7 @@ type Client interface {
 	PortfolioRefresh(ctx context.Context) error
 	RemoveAdminUsers(ctx context.Context, users *AdminUsers) error
 	UpdateProjectInfo(ctx context.Context, uuid, version, group string, tags []string) error
-	UploadProject(ctx context.Context, name, version string, autoCreate bool, bom []byte) error
+	UploadProject(ctx context.Context, name, version, parentUuid string, autoCreate bool, bom []byte) error
 	ConfigPropertyAggregate(ctx context.Context, properties []ConfigProperty) ([]ConfigProperty, error)
 	GetConfigProperties(ctx context.Context) ([]ConfigProperty, error)
 	GetEcosystems(ctx context.Context) ([]string, error)

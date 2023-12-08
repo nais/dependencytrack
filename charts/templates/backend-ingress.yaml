@@ -6,6 +6,8 @@ metadata:
     {{- include "dependencytrack-backend.labels" . | nindent 4 }}
   annotations:
     nginx.ingress.kubernetes.io/proxy-body-size: 100m
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+    nginx.ingress.kubernetes.io/client_max_body_size: "0"
 spec:
   ingressClassName: {{ .Values.backend.ingressClassName }}
   rules:

@@ -9,18 +9,25 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func (c *client) UploadProject(ctx context.Context, name, version string, autoCreate bool, bom []byte) error {
+func (c *client) UploadProject(ctx context.Context, name, version, parentUuid string, autoCreate bool, bom []byte) error {
 	c.log.WithFields(log.Fields{
 		"name":    name,
 		"version": version,
 	}).Debug("uploading sbom")
 
-	body, err := json.Marshal(&BomSubmitRequest{
+	bomReq := &BomSubmitRequest{
 		ProjectName:    name,
 		ProjectVersion: version,
 		AutoCreate:     autoCreate,
-		Bom:            base64.StdEncoding.EncodeToString(bom),
-	})
+
+		Bom: base64.StdEncoding.EncodeToString(bom),
+	}
+
+	if parentUuid != "" {
+		bomReq.ParentUuid = parentUuid
+	}
+
+	body, err := json.Marshal(bomReq)
 	if err != nil {
 		return fmt.Errorf("marshalling bom submit request: %w", err)
 	}
@@ -30,7 +37,7 @@ func (c *client) UploadProject(ctx context.Context, name, version string, autoCr
 		return fmt.Errorf("uploading bom: %w", err)
 	}
 
-	c.log.Info("sbom uploaded")
+	c.log.Infof("sbom uploaded %s:%s", name, version)
 	return nil
 }
 
