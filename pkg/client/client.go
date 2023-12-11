@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/avast/retry-go/v4"
 	"net/http"
 	"strconv"
 	"strings"
@@ -65,6 +66,7 @@ type Options struct {
 	log              *log.Entry
 	client           *http.Client
 	team             string
+	retryOps         []retry.Option
 	responseCallback func(res *http.Response, err error)
 }
 
@@ -86,6 +88,7 @@ func New(baseUrl, username, password string, opts ...Option) Client {
 		httpclient.WithClient(o.client),
 		httpclient.WithLogger(o.log),
 		httpclient.WithResponseCallback(o.responseCallback),
+		httpclient.WithRetryOptions(o.retryOps...),
 	)
 	if o.team != "" {
 		u := auth.NewUsernamePasswordSource(baseUrl, username, password, httpClient, o.log)

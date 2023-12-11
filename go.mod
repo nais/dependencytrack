@@ -3,6 +3,7 @@ module github.com/nais/dependencytrack
 go 1.21
 
 require (
+	github.com/avast/retry-go/v4 v4.5.1
 	github.com/joho/godotenv v1.5.1
 	github.com/lestrrat-go/jwx/v2 v2.0.18
 	github.com/ory/dockertest/v3 v3.10.0

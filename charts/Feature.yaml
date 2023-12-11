@@ -85,6 +85,11 @@ values:
     config:
       type: string
       secret: true
+  bootstrap.nvd.api_key:
+    displayName: Bootstrap Mirroring NVD api key
+    config:
+      type: string
+      secret: true
   image.tag:
     description: dependency-track bootstrap image
     displayName: Bootstrap image tag
