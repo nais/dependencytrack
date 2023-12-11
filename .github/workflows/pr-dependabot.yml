@@ -30,7 +30,7 @@ jobs:
     if: ${{ github.actor == 'dependabot[bot]' }}
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-go@v4
+      - uses: actions/setup-go@v5
         with:
           go-version: ${{ needs.go_version.outputs.go_version }}
           cache-dependency-path: ./go.sum
