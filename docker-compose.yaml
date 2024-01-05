@@ -10,7 +10,7 @@ services:
       - '9002:8080'
 
   dtrack-apiserver:
-    image: dependencytrack/apiserver:4.9.1
+    image: dependencytrack/apiserver:4.10.1
     deploy:
       resources:
         limits:
@@ -34,7 +34,7 @@ services:
     restart: unless-stopped
 
   dtrack-frontend:
-    image: dependencytrack/frontend:4.9.1
+    image: dependencytrack/frontend:4.10.0
     depends_on:
       - dtrack-apiserver
     environment:
@@ -54,6 +54,7 @@ services:
       - GITHUB_ADVISORY_TOKEN=
       - GOOGLE_OSV_ENABLED=false
       - LOGGING_CONFIG_PATH=logback-json.xml
+      - NVD_API_KEY=my-key
     env_file:
       - .env
     volumes:

@@ -25,6 +25,7 @@ type Config struct {
 	UsersFile            string `json:"users-file"`
 	GithubAdvisoryToken  string `json:"github-advisory-token"`
 	GoogleOSVEnabled     bool   `json:"google-osv-enabled"`
+	NVDApiKey            string `json:"nvd-api-key"`
 }
 
 func init() {
@@ -35,6 +36,7 @@ func init() {
 	flag.StringVar(&cfg.GithubAdvisoryToken, "github-advisory-token", cfg.GithubAdvisoryToken, "github advisory mirroring token")
 	flag.StringVar(&cfg.UsersFile, "users-file", "/bootstrap/users.yaml", "file with users to create")
 	flag.BoolVar(&cfg.GoogleOSVEnabled, "google-osv-enabled", cfg.GoogleOSVEnabled, "enable google osv integration")
+	flag.StringVar(&cfg.NVDApiKey, "nvd-api-key", cfg.NVDApiKey, "nvd api key")
 }
 
 // TODO: add timer and retry logic to wait for dependencytrack to be ready
@@ -117,6 +119,23 @@ func main() {
 				prop.PropertyValue = cfg.GithubAdvisoryToken
 				cp = append(cp, prop)
 				log.Infof("done: added github advisory mirroring token")
+			}
+		}
+
+		if cfg.NVDApiKey != "" {
+			switch prop.PropertyName {
+			case "nvd.api.enabled":
+				prop.PropertyValue = "true"
+				cp = append(cp, prop)
+				log.Infof("done: added nvd api")
+			case "nvd.api.download.feeds":
+				prop.PropertyValue = "true"
+				cp = append(cp, prop)
+				log.Infof("done: added nvd api download feeds")
+			case "nvd.api.key":
+				prop.PropertyValue = cfg.NVDApiKey
+				cp = append(cp, prop)
+				log.Infof("done: added nvd api key")
 			}
 		}
 
