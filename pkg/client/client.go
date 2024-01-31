@@ -48,6 +48,8 @@ type Client interface {
 	GetEcosystems(ctx context.Context) ([]string, error)
 	GetFindings(ctx context.Context, projectUuid string) ([]*Finding, error)
 	TriggerAnalysis(ctx context.Context, projectUuid string) error
+	GetCurrentProjectMetric(ctx context.Context, projectUuid string) (*ProjectMetric, error)
+	GetProjectMetricsByDate(ctx context.Context, projectUuid, date string) ([]*ProjectMetric, error)
 	auth.Auth
 }
 

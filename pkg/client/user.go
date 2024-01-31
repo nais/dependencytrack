@@ -120,7 +120,6 @@ func (c *client) CreateOidcUser(ctx context.Context, email string) error {
 	}
 
 	_, err = c.put(ctx, c.baseUrl+"/api/v1/user/oidc", c.authSource, body)
-
 	if err != nil {
 		e, ok := err.(*httpclient.RequestError)
 		if !ok {

@@ -88,15 +88,23 @@ type ConfigProperty struct {
 }
 
 type Component struct {
+	UUID    string `json:"uuid"`
 	PURL    string `json:"purl"`
 	Project string `json:"project"`
 }
 
 type Vulnerability struct {
-	UUID         string `json:"uuid"`
-	Severity     string `json:"severity"`
-	SeverityRank int    `json:"severityRank"`
-	Name         string `json:"name"`
+	VulnId       string  `json:"vulnId"`
+	Severity     string  `json:"severity"`
+	SeverityRank int     `json:"severityRank"`
+	Name         string  `json:"name"`
+	Source       string  `json:"source"`
+	Aliases      []Alias `json:"aliases"`
+}
+
+type Alias struct {
+	CveId  string `json:"cveId"`
+	GhsaId string `json:"ghsaId"`
 }
 
 type Finding struct {
