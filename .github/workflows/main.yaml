@@ -68,10 +68,10 @@ jobs:
           value: ${{ steps.build-push-sign.outputs.version }}
           commitChange: false
 
-      - uses: azure/setup-helm@v3
+      - uses: azure/setup-helm@v3.5
         name: "Setup Helm"
         with:
-          version: "v3.12.0"
+          version: "v3.14.0"
 
       - name: Build Chart
         run: |-
