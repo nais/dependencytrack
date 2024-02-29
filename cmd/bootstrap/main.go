@@ -26,6 +26,9 @@ type Config struct {
 	GithubAdvisoryToken  string `json:"github-advisory-token"`
 	GoogleOSVEnabled     bool   `json:"google-osv-enabled"`
 	NVDApiKey            string `json:"nvd-api-key"`
+	TrivyApiToken        string `json:"trivy-token"`
+	TrivyBaseURL         string `json:"trivy-base-url"`
+	TrivyIgnoreUnfixed   bool   `json:"trivy-ignore-unfixed"`
 }
 
 func init() {
@@ -37,6 +40,9 @@ func init() {
 	flag.StringVar(&cfg.UsersFile, "users-file", "/bootstrap/users.yaml", "file with users to create")
 	flag.BoolVar(&cfg.GoogleOSVEnabled, "google-osv-enabled", cfg.GoogleOSVEnabled, "enable google osv integration")
 	flag.StringVar(&cfg.NVDApiKey, "nvd-api-key", cfg.NVDApiKey, "nvd api key")
+	flag.StringVar(&cfg.TrivyApiToken, "trivy-api-token", cfg.TrivyApiToken, "trivy api token to use for scanning")
+	flag.StringVar(&cfg.TrivyBaseURL, "trivy-base-url", cfg.TrivyBaseURL, "trivy base url")
+	flag.BoolVar(&cfg.TrivyIgnoreUnfixed, "trivy-ignore-unfixed", cfg.TrivyIgnoreUnfixed, "ignore unfixed vulnerabilities")
 }
 
 // TODO: add timer and retry logic to wait for dependencytrack to be ready
@@ -112,10 +118,18 @@ func main() {
 		if cfg.GithubAdvisoryToken != "" {
 			switch prop.PropertyName {
 			case "github.advisories.enabled":
+				if isAlreadySet(prop.PropertyValue, "true") {
+					log.Infof("done: github advisory mirroring already enabled")
+					continue
+				}
 				prop.PropertyValue = "true"
 				cp = append(cp, prop)
 				log.Infof("done: added github advisory mirroring")
 			case "github.advisories.access.token":
+				if isAlreadySet(prop.PropertyValue, cfg.GithubAdvisoryToken) {
+					log.Infof("done: github advisory mirroring token already set")
+					continue
+				}
 				prop.PropertyValue = cfg.GithubAdvisoryToken
 				cp = append(cp, prop)
 				log.Infof("done: added github advisory mirroring token")
@@ -125,15 +139,27 @@ func main() {
 		if cfg.NVDApiKey != "" {
 			switch prop.PropertyName {
 			case "nvd.api.enabled":
+				if isAlreadySet(prop.PropertyValue, "true") {
+					log.Infof("done: nvd api already enabled")
+					continue
+				}
 				prop.PropertyValue = "true"
 				cp = append(cp, prop)
 				log.Infof("done: added nvd api")
 			case "nvd.api.download.feeds":
+				if isAlreadySet(prop.PropertyValue, "true") {
+					log.Infof("done: nvd api download feeds already enabled")
+					continue
+				}
 				prop.PropertyValue = "true"
 				cp = append(cp, prop)
 				log.Infof("done: added nvd api download feeds")
 			case "nvd.api.key":
 				prop.PropertyValue = cfg.NVDApiKey
+				if isAlreadySet(prop.PropertyValue, cfg.NVDApiKey) {
+					log.Infof("done: nvd api key already set")
+					continue
+				}
 				cp = append(cp, prop)
 				log.Infof("done: added nvd api key")
 			}
@@ -147,6 +173,10 @@ func main() {
 					log.Fatalf("get ecosystems: %v", err)
 				}
 				// if the list is empty we activated all ecosystems
+				if len(eco) == 0 {
+					log.Infof("done: google osv integration already enabled")
+					continue
+				}
 				if len(eco) > 0 {
 					prop.PropertyValue = strings.Join(eco, ";")
 					cp = append(cp, prop)
@@ -154,13 +184,51 @@ func main() {
 				}
 			}
 		}
+
+		if cfg.TrivyApiToken != "" {
+			switch prop.PropertyName {
+			case "trivy.enabled":
+				if isAlreadySet(prop.PropertyValue, "true") {
+					log.Infof("done: trivy integration already enabled")
+					continue
+				}
+				prop.PropertyValue = "true"
+				cp = append(cp, prop)
+				log.Infof("done: added trivy integration")
+			case "trivy.api.token":
+				// we cant check if the token is already set, so we just set it
+				prop.PropertyValue = cfg.TrivyApiToken
+				cp = append(cp, prop)
+				log.Infof("done: added trivy token")
+			case "trivy.base.url":
+				if isAlreadySet(prop.PropertyValue, cfg.TrivyBaseURL) {
+					log.Infof("done: trivy base url already set")
+					continue
+				}
+				prop.PropertyValue = cfg.TrivyBaseURL
+				cp = append(cp, prop)
+				log.Infof("done: added trivy base url")
+			case "trivy.ignore.unfixed":
+				if isAlreadySet(prop.PropertyValue, "true") {
+					log.Infof("done: trivy ignore unfixed already enabled")
+					continue
+				}
+				prop.PropertyValue = "true"
+				cp = append(cp, prop)
+				log.Infof("done: added trivy ignore unfixed")
+			}
+		}
 	}
 
 	// only update if we have new properties
-	if cp != nil {
+	if cp != nil && len(cp) > 0 {
 		if _, err := c.ConfigPropertyAggregate(ctx, cp); err != nil {
 			log.Fatalf("config property aggregate: %v", err)
 		}
 		log.Infof("done: added config properties")
 	}
+}
+
+func isAlreadySet(config, inputValue string) bool {
+	return strings.EqualFold(config, inputValue)
 }

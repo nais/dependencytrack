@@ -63,6 +63,7 @@ type Project struct {
 	Group                  string   `json:"group"`
 	Name                   string   `json:"name"`
 	LastBomImportFormat    string   `json:"lastBomImportFormat,omitempty"`
+	LastBomImport          int64    `json:"lastBomImport,omitempty"`
 	LastInheritedRiskScore float64  `json:"lastInheritedRiskScore,omitempty"`
 	Publisher              string   `json:"publisher"`
 	Tags                   []Tag    `json:"tags"`

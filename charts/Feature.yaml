@@ -2,6 +2,7 @@ environmentKinds:
   - management
 timeout: 10m0s
 values:
+  # Backend Config
   backend.logLevel:
     description: Log level for backend
     displayName: Backend log level
@@ -73,6 +74,7 @@ values:
     displayName: Backend cpu request
     config:
       type: string
+  # Bootstrap Config
   bootstrap.github.advisory_mirroring_token:
     displayName: Bootstrap GitHub advisory mirroring token
     config:
@@ -90,6 +92,19 @@ values:
     config:
       type: string
       secret: true
+  bootstrap.trivy.api_token:
+    displayName: Bootstrap Trivy api token
+    config:
+      type: string
+      secret: true
+  bootstrap.trivy.base_url:
+    displayName: Bootstrap Trivy base url
+    config:
+      type: string
+  bootstrap.trivy.ignore_unfixed:
+    displayName: Bootstrap Trivy ignore unfixed
+    config:
+      type: bool
   image.tag:
     description: dependency-track bootstrap image
     displayName: Bootstrap image tag
@@ -116,6 +131,7 @@ values:
     displayName: Bootstrap Google OSV enabled
     config:
       type: bool
+  # Frontend Config
   frontend.swagger.enabled:
     displayName: Swagger UI enabled
     config:

@@ -21,6 +21,10 @@ bootstrap:
   users:
     - username: console
       password: todo
+  trivy:
+    ignore_unfixed: true
+    api_token:
+    base_url:
 
 backend:
   logLevel: INFO
