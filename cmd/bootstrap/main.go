@@ -221,7 +221,7 @@ func main() {
 	}
 
 	// only update if we have new properties
-	if cp != nil && len(cp) > 0 {
+	if len(cp) > 0 {
 		if _, err := c.ConfigPropertyAggregate(ctx, cp); err != nil {
 			log.Fatalf("config property aggregate: %v", err)
 		}
