@@ -57,19 +57,38 @@ type BomSubmitRequest struct {
 }
 
 type Project struct {
-	Active                 bool     `json:"active"`
-	Author                 string   `json:"author"`
-	Classifier             string   `json:"classifier"`
-	Group                  string   `json:"group"`
-	Name                   string   `json:"name"`
-	LastBomImportFormat    string   `json:"lastBomImportFormat,omitempty"`
-	LastBomImport          int64    `json:"lastBomImport,omitempty"`
-	LastInheritedRiskScore float64  `json:"lastInheritedRiskScore,omitempty"`
-	Publisher              string   `json:"publisher"`
-	Tags                   []Tag    `json:"tags"`
-	Uuid                   string   `json:"uuid"`
-	Version                string   `json:"version"`
-	Parent                 *Project `json:"parent"`
+	Active                 bool           `json:"active"`
+	Author                 string         `json:"author"`
+	Classifier             string         `json:"classifier"`
+	Group                  string         `json:"group"`
+	Name                   string         `json:"name"`
+	LastBomImportFormat    string         `json:"lastBomImportFormat,omitempty"`
+	LastBomImport          int64          `json:"lastBomImport,omitempty"`
+	LastInheritedRiskScore float64        `json:"lastInheritedRiskScore,omitempty"`
+	Publisher              string         `json:"publisher"`
+	Tags                   []Tag          `json:"tags"`
+	Uuid                   string         `json:"uuid"`
+	Version                string         `json:"version"`
+	Parent                 *Project       `json:"parent"`
+	Metrics                *ProjectMetric `json:"metrics,omitempty"`
+}
+
+type ProjectMetric struct {
+	Critical             int     `json:"critical"`
+	High                 int     `json:"high"`
+	Medium               int     `json:"medium"`
+	Low                  int     `json:"low"`
+	Unassigned           int     `json:"unassigned"`
+	Vulnerabilities      int     `json:"vulnerabilities"`
+	VulnerableComponents int     `json:"vulnerableComponents"`
+	Components           int     `json:"components"`
+	Suppressed           int     `json:"suppressed"`
+	FindingsTotal        int     `json:"findingsTotal"`
+	FindingsAudited      int     `json:"findingsAudited"`
+	FindingsUnaudited    int     `json:"findingsUnaudited"`
+	InheritedRiskScore   float64 `json:"inheritedRiskScore"`
+	FirstOccurrence      int64   `json:"firstOccurrence"`
+	LastOccurrence       int64   `json:"lastOccurrence"`
 }
 
 type Tag struct {
