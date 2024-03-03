@@ -75,6 +75,10 @@ values:
     config:
       type: string
   # Bootstrap Config
+  bootstrap.frontendBaseUrl:
+    displayName: Bootstrap frontend base url
+    computed:
+      template: '"https://salsa.{{.Tenant.Name}}.cloud.nais.io"'
   bootstrap.github.advisory_mirroring_token:
     displayName: Bootstrap GitHub advisory mirroring token
     config:

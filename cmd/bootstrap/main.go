@@ -19,6 +19,7 @@ var cfg = &Config{
 
 type Config struct {
 	AdminPassword        string `json:"admin-password"`
+	FrontendBaseUrl      string `json:"frontend-base-url"`
 	BaseUrl              string `json:"base-url"`
 	DefaultAdminPassword string `json:"default-admin-password"`
 	LogLevel             string `json:"log-level"`
@@ -33,6 +34,7 @@ type Config struct {
 
 func init() {
 	flag.StringVar(&cfg.LogLevel, "log-level", cfg.LogLevel, "which log level to use, default 'info'")
+	flag.StringVar(&cfg.FrontendBaseUrl, "frontend-base-url", "http://localhost:9000", "frontend base url")
 	flag.StringVar(&cfg.BaseUrl, "base-url", "http://localhost:9001", "base url of dependencytrack")
 	flag.StringVar(&cfg.DefaultAdminPassword, "default-admin-password", "admin", "default admin password")
 	flag.StringVar(&cfg.AdminPassword, "admin-password", cfg.AdminPassword, "new admin password")
@@ -106,7 +108,7 @@ func main() {
 		log.Fatalf("create users: %v", err)
 	}
 
-	log.Infof("done: created users and added to Administrators team")
+	log.Infof("created: users and added to Administrators team")
 
 	props, err := c.GetConfigProperties(ctx)
 	if err != nil {
@@ -119,20 +121,20 @@ func main() {
 			switch prop.PropertyName {
 			case "github.advisories.enabled":
 				if isAlreadySet(prop.PropertyValue, "true") {
-					log.Infof("done: github advisory mirroring already enabled")
+					log.Infof("github advisory mirroring already enabled")
 					continue
 				}
 				prop.PropertyValue = "true"
 				cp = append(cp, prop)
-				log.Infof("done: added github advisory mirroring")
+				log.Infof("added: github advisory mirroring")
 			case "github.advisories.access.token":
 				if isAlreadySet(prop.PropertyValue, cfg.GithubAdvisoryToken) {
-					log.Infof("done: github advisory mirroring token already set")
+					log.Infof("github advisory mirroring token already set")
 					continue
 				}
 				prop.PropertyValue = cfg.GithubAdvisoryToken
 				cp = append(cp, prop)
-				log.Infof("done: added github advisory mirroring token")
+				log.Infof("added: github advisory mirroring token")
 			}
 		}
 
@@ -140,28 +142,28 @@ func main() {
 			switch prop.PropertyName {
 			case "nvd.api.enabled":
 				if isAlreadySet(prop.PropertyValue, "true") {
-					log.Infof("done: nvd api already enabled")
+					log.Infof("nvd api already enabled")
 					continue
 				}
 				prop.PropertyValue = "true"
 				cp = append(cp, prop)
-				log.Infof("done: added nvd api")
+				log.Infof("added: nvd api")
 			case "nvd.api.download.feeds":
 				if isAlreadySet(prop.PropertyValue, "true") {
-					log.Infof("done: nvd api download feeds already enabled")
+					log.Infof("nvd api download feeds already enabled")
 					continue
 				}
 				prop.PropertyValue = "true"
 				cp = append(cp, prop)
-				log.Infof("done: added nvd api download feeds")
+				log.Infof("added: nvd api download feeds")
 			case "nvd.api.key":
 				prop.PropertyValue = cfg.NVDApiKey
 				if isAlreadySet(prop.PropertyValue, cfg.NVDApiKey) {
-					log.Infof("done: nvd api key already set")
+					log.Infof("nvd api key already set")
 					continue
 				}
 				cp = append(cp, prop)
-				log.Infof("done: added nvd api key")
+				log.Infof("added: nvd api key")
 			}
 		}
 
@@ -174,13 +176,13 @@ func main() {
 				}
 				// if the list is empty we activated all ecosystems
 				if len(eco) == 0 {
-					log.Infof("done: google osv integration already enabled")
+					log.Infof("google osv integration already enabled")
 					continue
 				}
 				if len(eco) > 0 {
 					prop.PropertyValue = strings.Join(eco, ";")
 					cp = append(cp, prop)
-					log.Infof("done: added github osv integration")
+					log.Infof("added: github osv integration")
 				}
 			}
 		}
@@ -189,33 +191,46 @@ func main() {
 			switch prop.PropertyName {
 			case "trivy.enabled":
 				if isAlreadySet(prop.PropertyValue, "true") {
-					log.Infof("done: trivy integration already enabled")
+					log.Infof("trivy integration already enabled")
 					continue
 				}
 				prop.PropertyValue = "true"
 				cp = append(cp, prop)
-				log.Infof("done: added trivy integration")
+				log.Infof("added: trivy integration")
 			case "trivy.api.token":
 				// we cant check if the token is already set, so we just set it
 				prop.PropertyValue = cfg.TrivyApiToken
 				cp = append(cp, prop)
-				log.Infof("done: added trivy token")
+				log.Infof("added: trivy token")
 			case "trivy.base.url":
 				if isAlreadySet(prop.PropertyValue, cfg.TrivyBaseURL) {
-					log.Infof("done: trivy base url already set")
+					log.Infof("trivy base url already set")
 					continue
 				}
 				prop.PropertyValue = cfg.TrivyBaseURL
 				cp = append(cp, prop)
-				log.Infof("done: added trivy base url")
+				log.Infof("added: trivy base url")
 			case "trivy.ignore.unfixed":
 				if isAlreadySet(prop.PropertyValue, "true") {
-					log.Infof("done: trivy ignore unfixed already enabled")
+					log.Infof("trivy ignore unfixed already enabled")
 					continue
 				}
 				prop.PropertyValue = "true"
 				cp = append(cp, prop)
-				log.Infof("done: added trivy ignore unfixed")
+				log.Infof("added: trivy ignore unfixed")
+			}
+		}
+
+		if cfg.FrontendBaseUrl != "" {
+			switch prop.PropertyName {
+			case "base.url":
+				if isAlreadySet(prop.PropertyValue, cfg.FrontendBaseUrl) {
+					log.Infof("general base url already set")
+					continue
+				}
+				prop.PropertyValue = cfg.FrontendBaseUrl
+				cp = append(cp, prop)
+				log.Infof("added: general base url")
 			}
 		}
 	}
@@ -225,7 +240,7 @@ func main() {
 		if _, err := c.ConfigPropertyAggregate(ctx, cp); err != nil {
 			log.Fatalf("config property aggregate: %v", err)
 		}
-		log.Infof("done: added config properties")
+		log.Infof("done: config properties updated")
 	}
 }
 
