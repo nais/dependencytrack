@@ -50,6 +50,12 @@ type Client interface {
 	TriggerAnalysis(ctx context.Context, projectUuid string) error
 	GetCurrentProjectMetric(ctx context.Context, projectUuid string) (*ProjectMetric, error)
 	GetProjectMetricsByDate(ctx context.Context, projectUuid, date string) ([]*ProjectMetric, error)
+	GetNotifications(ctx context.Context) ([]NotificationRule, error)
+	CreateNotification(ctx context.Context, name string, scope NotificationScope, level NotificationLevel) (*NotificationRule, error)
+	UpdateNotification(ctx context.Context, notificationRule *NotificationRule) (*NotificationRule, error)
+	DeleteNotification(ctx context.Context, notificationRule *NotificationRule) error
+	AddProjectToNotification(ctx context.Context, notificationUuid, projectUuid string) (*NotificationRule, error)
+	GetPublishers(ctx context.Context) ([]Publisher, error)
 	auth.Auth
 }
 

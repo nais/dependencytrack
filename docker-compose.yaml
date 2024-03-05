@@ -41,7 +41,7 @@ services:
     environment:
       - API_BASE_URL=http://localhost:9001
     ports:
-      - "9000:8080"
+      - "9010:8080"
     restart: unless-stopped
 
   bootstrap:

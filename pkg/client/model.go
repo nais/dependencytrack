@@ -131,3 +131,45 @@ type Finding struct {
 	Component     Component     `json:"component"`
 	Vulnerability Vulnerability `json:"vulnerability"`
 }
+
+type (
+	NotificationScope     string
+	NotificationLevel     string
+	NotificationNotifyOn  string
+	NotificationPublisher string
+)
+
+const (
+	PortfolioNotificationScope     = NotificationScope("PORTFOLIO")
+	SystemNotificationScope        = NotificationScope("SYSTEM")
+	InformationalNotificationLevel = NotificationLevel("INFORMATIONAL")
+	WarningNotificationLevel       = NotificationLevel("WARNING")
+	ErrorNotificationLevel         = NotificationLevel("ERROR")
+	NewVulnerableDependencyNotify  = NotificationNotifyOn("NEW_VULNERABLE_DEPENDENCY")
+	NewVulnerabilityNotify         = NotificationNotifyOn("NEW_VULNERABILITY")
+)
+
+type Publisher struct {
+	Name             string `json:"name"`
+	Description      string `json:"description"`
+	PublisherClass   string `json:"publisherClass"`
+	Template         string `json:"template"`
+	TemplateMimeType string `json:"templateMimeType"`
+	DefaultPublisher bool   `json:"defaultPublisher"`
+	Uuid             string `json:"uuid"`
+}
+
+type NotificationRule struct {
+	Uuid                 string                 `json:"uuid,omitempty"`
+	Name                 string                 `json:"name"`
+	Enabled              bool                   `json:"enabled"`
+	NotifyChildren       bool                   `json:"notifyChildren"`
+	LogSuccessfulPublish bool                   `json:"logSuccessfulPublish"`
+	Teams                []Team                 `json:"teams,omitempty"`
+	Scope                NotificationScope      `json:"scope"`
+	Level                NotificationLevel      `json:"notificationLevel"`
+	Projects             []*Project             `json:"projects"`
+	NotifyOn             []NotificationNotifyOn `json:"notifyOn"`
+	Publisher            Publisher              `json:"publisher,omitempty"`
+	PublisherConfig      NotificationPublisher  `json:"publisherConfig,omitempty"`
+}
