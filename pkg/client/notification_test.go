@@ -55,7 +55,13 @@ func Test_client_CreateNotification(t *testing.T) {
 			},
 		))
 	c := New("http://localhost", "admin", "admin", WithHttpClient(httpClient), WithApiKeySource("Administrators"))
-	notice, err := c.CreateNotification(context.Background(), "test notification", PortfolioNotificationScope, InformationalNotificationLevel)
+	notice, err := c.CreateNotification(context.Background(),
+		"test notification",
+		PortfolioNotificationScope,
+		InformationalNotificationLevel,
+		Publisher{
+			Name: "test",
+		})
 	assert.NoError(t, err)
 	assert.NotNil(t, notice)
 	assert.Equal(t, "1234", notice.Uuid)

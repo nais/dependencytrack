@@ -18,11 +18,12 @@ func (c *client) GetNotifications(ctx context.Context) ([]NotificationRule, erro
 	return notificationRules, nil
 }
 
-func (c *client) CreateNotification(ctx context.Context, name string, scope NotificationScope, level NotificationLevel) (*NotificationRule, error) {
+func (c *client) CreateNotification(ctx context.Context, name string, scope NotificationScope, level NotificationLevel, publisher Publisher) (*NotificationRule, error) {
 	notificationRule := &NotificationRule{
-		Name:  name,
-		Scope: scope,
-		Level: level,
+		Name:      name,
+		Scope:     scope,
+		Level:     level,
+		Publisher: publisher,
 	}
 
 	body, err := json.Marshal(notificationRule)
