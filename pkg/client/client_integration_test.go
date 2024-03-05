@@ -22,7 +22,7 @@ func TestMain(m *testing.M) {
 	log.SetFormatter(&log.TextFormatter{
 		DisableTimestamp: true,
 	})
-	baseUrl, cleanup := test.DependencyTrackPool("4.9.0")
+	baseUrl, cleanup := test.DependencyTrackPool("4.10.1")
 
 	cwp := New(baseUrl, "admin", "test")
 
@@ -47,7 +47,7 @@ func TestMain(m *testing.M) {
 	os.Exit(code)
 }
 
-func TestIntegration(t *testing.T) {
+func TestClientIntegration(t *testing.T) {
 	ctx := context.Background()
 
 	team, e := c.GetTeam(ctx, "Administrators")
@@ -245,5 +245,90 @@ func TestIntegration(t *testing.T) {
 
 		_, err = c.GetFindings(ctx, p.Uuid)
 		assert.NoError(t, err)
+	})
+
+	t.Run("GetPublishers", func(t *testing.T) {
+		pubs, err := c.GetPublishers(ctx)
+		assert.NoError(t, err)
+		assert.NotEmpty(t, pubs)
+	})
+
+	t.Run("CreateNotification", func(t *testing.T) {
+		pubs, err := c.GetPublishers(ctx)
+		assert.NoError(t, err)
+		assert.NotEmpty(t, pubs)
+		slackPub := Publisher{}
+		for _, p := range pubs {
+			if p.Name == "Slack" {
+				slackPub = p
+				break
+			}
+		}
+		note, err := c.CreateNotification(ctx, "test-notification", PortfolioNotificationScope, InformationalNotificationLevel, slackPub)
+		assert.NoError(t, err)
+		assert.NotEmpty(t, note)
+		assert.Equal(t, "test-notification", note.Name)
+		assert.Equal(t, PortfolioNotificationScope, note.Scope)
+		assert.Equal(t, InformationalNotificationLevel, note.Level)
+	})
+
+	t.Run("GetNotifications", func(t *testing.T) {
+		notes, err := c.GetNotifications(ctx)
+		assert.NoError(t, err)
+		assert.NotEmpty(t, notes)
+	})
+
+	t.Run("UpdateNotification", func(t *testing.T) {
+		notes, err := c.GetNotifications(ctx)
+		assert.NoError(t, err)
+		assert.NotEmpty(t, notes)
+		// we know there is at least one notification
+		note := notes[0]
+		note.Enabled = false
+		note.NotifyChildren = false
+		note.NotifyOn = []NotificationNotifyOn{NewVulnerableDependencyNotify}
+		note.LogSuccessfulPublish = false
+		note.Publisher = Publisher{}
+		retNote, err := c.UpdateNotification(ctx, &note)
+		assert.NoError(t, err)
+		assert.NotEmpty(t, retNote)
+		assert.Equal(t, false, retNote.Enabled)
+		assert.Equal(t, false, retNote.NotifyChildren)
+		assert.Equal(t, []NotificationNotifyOn{NewVulnerableDependencyNotify}, retNote.NotifyOn)
+		assert.Equal(t, false, retNote.LogSuccessfulPublish)
+		assert.Equal(t, true, retNote.Publisher.DefaultPublisher)
+		assert.Equal(t, "Slack", retNote.Publisher.Name)
+		assert.Equal(t, "org.dependencytrack.notification.publisher.SlackPublisher", retNote.Publisher.PublisherClass)
+		assert.Equal(t, "application/json", retNote.Publisher.TemplateMimeType)
+	})
+
+	t.Run("DeleteNotification", func(t *testing.T) {
+		notes, err := c.GetNotifications(ctx)
+		assert.NoError(t, err)
+		assert.NotEmpty(t, notes)
+		// we know there is at least one notification
+		note := notes[0]
+		err = c.DeleteNotification(ctx, &note)
+		assert.NoError(t, err)
+	})
+
+	t.Run("GetCurrentProjectMetric", func(t *testing.T) {
+		projects, err := c.GetProjects(context.Background())
+		assert.NoError(t, err)
+		assert.NotEmpty(t, projects)
+		projectUuid := projects[0].Uuid
+		metrics, err := c.GetCurrentProjectMetric(ctx, projectUuid)
+		assert.NoError(t, err)
+		assert.NotEmpty(t, metrics)
+	})
+
+	t.Run("GetProjectMetricsByDate", func(t *testing.T) {
+		projects, err := c.GetProjects(context.Background())
+		assert.NoError(t, err)
+		assert.NotEmpty(t, projects)
+		projectUuid := projects[0].Uuid
+		metrics, err := c.GetProjectMetricsByDate(ctx, projectUuid, "2021-10-01")
+		assert.NoError(t, err)
+		assert.NotEmpty(t, metrics)
 	})
 }
