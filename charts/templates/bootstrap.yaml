@@ -54,6 +54,12 @@ spec:
               value: "{{ .Values.bootstrap.baseUrl }}"
             - name: GOOGLE_OSV_ENABLED
               value: "{{ .Values.bootstrap.google.osv_enabled }}"
+            - name: FRONTEND_BASE_URL
+              value: "{{ .Values.bootstrap.frontendBaseUrl }}"
+            - name: TRIVY_IGNORE_UNFIXED
+              value: "{{ .Values.bootstrap.trivy.ignore_unfixed }}"
+            - name: TRIVY_BASE_URL
+              value: "{{ .Values.bootstrap.trivy.base_url }}"
           envFrom:
             - secretRef:
                 name: "{{ .Release.Name }}-bootstrap-pwd"
@@ -76,6 +82,7 @@ stringData:
   ADMIN_PASSWORD: {{ .Values.bootstrap.adminPassword | quote }}
   GITHUB_ADVISORY_TOKEN: {{ .Values.bootstrap.github.advisory_mirroring_token | quote }}
   NVD_API_KEY: {{ .Values.bootstrap.nvd.api_key | quote }}
+  TRIVY_API_TOKEN: {{ .Values.bootstrap.trivy.api_token | quote }}
 ---
 apiVersion: v1
 kind: Secret

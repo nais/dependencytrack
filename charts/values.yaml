@@ -10,7 +10,7 @@ image:
 bootstrap:
   logLevel: INFO
   baseUrl: http://dependencytrack-backend:8080
-  frontendBaseUrl: http://dependencytrack-frontend:8080
+  frontendBaseUrl:
   defaultAdminPassword: admin
   adminPassword: todo
   github:
