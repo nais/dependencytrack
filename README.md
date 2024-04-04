@@ -18,6 +18,10 @@ client, execute:
 
 ## Local development
 
+### Prerequisites
+
+First `asdf install`
+
 Run your local instance of dependencytrack with the following command:
 `make compose`
 
