@@ -157,11 +157,11 @@ func main() {
 				cp = append(cp, prop)
 				log.Info("added: nvd api download feeds")
 			case "nvd.api.key":
-				prop.PropertyValue = cfg.NVDApiKey
 				if isAlreadySet(prop.PropertyValue, cfg.NVDApiKey) {
 					log.Info("nvd api key already set")
 					continue
 				}
+				prop.PropertyValue = cfg.NVDApiKey
 				cp = append(cp, prop)
 				log.Info("added: nvd api key")
 			}
