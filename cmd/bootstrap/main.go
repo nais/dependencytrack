@@ -149,11 +149,11 @@ func main() {
 				cp = append(cp, prop)
 				log.Info("added: nvd api")
 			case "nvd.api.download.feeds":
-				if isAlreadySet(prop.PropertyValue, "true") {
-					log.Info("nvd api download feeds already enabled")
+				if isAlreadySet(prop.PropertyValue, "false") {
+					log.Info("nvd api download feeds already disabled")
 					continue
 				}
-				prop.PropertyValue = "true"
+				prop.PropertyValue = "false"
 				cp = append(cp, prop)
 				log.Info("added: nvd api download feeds")
 			case "nvd.api.key":
