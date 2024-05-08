@@ -111,15 +111,16 @@ type Component struct {
 	UUID    string `json:"uuid"`
 	PURL    string `json:"purl"`
 	Project string `json:"project"`
+	Name    string `json:"name"`
 }
 
 type Vulnerability struct {
 	VulnId       string  `json:"vulnId"`
 	Severity     string  `json:"severity"`
 	SeverityRank int     `json:"severityRank"`
-	Name         string  `json:"name"`
 	Source       string  `json:"source"`
 	Aliases      []Alias `json:"aliases"`
+	Title        string  `json:"title"`
 }
 
 type Alias struct {
