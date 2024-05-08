@@ -36,6 +36,7 @@ type Client interface {
 	GetOidcUsers(ctx context.Context) ([]User, error)
 	GetProjects(ctx context.Context) ([]*Project, error)
 	GetProject(ctx context.Context, name, version string) (*Project, error)
+	GetProjectById(ctx context.Context, uuid string) (*Project, error)
 	GetProjectsByTag(ctx context.Context, tag string) ([]*Project, error)
 	GetTeam(ctx context.Context, team string) (*Team, error)
 	GetTeams(ctx context.Context) ([]Team, error)
