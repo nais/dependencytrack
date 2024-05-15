@@ -1,5 +1,7 @@
 package client
 
+import "time"
+
 type Permission string
 
 const (
@@ -130,4 +132,19 @@ type Alias struct {
 type Finding struct {
 	Component     Component     `json:"component"`
 	Vulnerability Vulnerability `json:"vulnerability"`
+}
+
+type AnalysisTrail struct {
+	AnalysisState         string            `json:"analysisState"`
+	AnalysisJustification string            `json:"analysisJustification"`
+	AnalysisResponse      string            `json:"analysisResponse"`
+	AnalysisDetails       string            `json:"analysisDetails"`
+	AnalysisComments      []AnalysisComment `json:"analysisComments"`
+	IsSuppressed          bool              `json:"isSuppressed"`
+}
+
+type AnalysisComment struct {
+	Timestamp time.Time `json:"timestamp"`
+	Comment   string    `json:"comment"`
+	Commenter string    `json:"commenter"`
 }
