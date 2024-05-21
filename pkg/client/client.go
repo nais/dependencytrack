@@ -41,6 +41,7 @@ type Client interface {
 	GetProject(ctx context.Context, name, version string) (*Project, error)
 	GetProjectMetricsByDate(ctx context.Context, projectUuid, date string) ([]*ProjectMetric, error)
 	GetProjects(ctx context.Context) ([]*Project, error)
+	GetProjectById(ctx context.Context, uuid string) (*Project, error)
 	GetProjectsByTag(ctx context.Context, tag string) ([]*Project, error)
 	GetTeam(ctx context.Context, team string) (*Team, error)
 	GetTeams(ctx context.Context) ([]Team, error)
