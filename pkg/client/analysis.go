@@ -6,8 +6,12 @@ import (
 	"fmt"
 )
 
-func (c *client) RecordAnalysis(ctx context.Context, projectUuid string) error {
-	_, err := c.post(ctx, c.baseUrl+"/api/v1/finding/project/"+projectUuid+"/analyze", c.authSource, nil)
+func (c *client) RecordAnalysis(ctx context.Context, analysisRequest *AnalysisRequest) error {
+	body, err := json.Marshal(analysisRequest)
+	if err != nil {
+		return fmt.Errorf("marshalling bom submit request: %w", err)
+	}
+	_, err = c.put(ctx, c.baseUrl+"/api/v1/analysis", c.authSource, body)
 	if err != nil {
 		if IsNotFound(err) {
 			return nil
@@ -17,9 +21,9 @@ func (c *client) RecordAnalysis(ctx context.Context, projectUuid string) error {
 	return nil
 }
 
-func (c *client) GetAnalysisTrail(ctx context.Context, projectUuid string) ([]*AnalysisTrail, error) {
-	var trails []*AnalysisTrail
-	res, err := c.get(ctx, c.baseUrl+"/api/v1/finding/project/"+projectUuid+"/analyze", c.authSource)
+func (c *client) GetAnalysisTrail(ctx context.Context, projectUuid, componentUuid, vulnerabilityUuid string) ([]*Analysis, error) {
+	var trails []*Analysis
+	res, err := c.get(ctx, c.baseUrl+"/api/v1/analysis?project="+projectUuid+"&component="+componentUuid+"&vulnerability="+vulnerabilityUuid, c.authSource)
 	if err != nil {
 		if IsNotFound(err) {
 			return trails, nil

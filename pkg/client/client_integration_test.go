@@ -246,4 +246,55 @@ func TestIntegration(t *testing.T) {
 		_, err = c.GetFindings(ctx, p.Uuid)
 		assert.NoError(t, err)
 	})
+
+	t.Run("GetAnalysisTrail", func(t *testing.T) {
+		b, err := os.ReadFile("testdata/attestation.json")
+		assert.NoError(t, err)
+		p, err := c.CreateProject(context.Background(), "project-with-findings", "version1", "group1", []string{"tag1", "tag2", "team:app:container"})
+		assert.NoError(t, err)
+		err = c.UploadProject(ctx, "project-with-findings", "version1", "", true, b)
+		assert.NoError(t, err)
+
+		findings, err := c.GetFindings(ctx, p.Uuid)
+		assert.NoError(t, err)
+		assert.NotNil(t, findings)
+		for _, f := range findings {
+			trail, err := c.GetAnalysisTrail(ctx, p.Uuid, f.Component.UUID, f.Vulnerability.VulnId)
+			assert.NoError(t, err)
+			assert.NotNil(t, trail)
+		}
+	})
+	t.Run("RecordAnalysis", func(t *testing.T) {
+		b, err := os.ReadFile("testdata/attestation.json")
+		assert.NoError(t, err)
+		p, err := c.CreateProject(context.Background(), "project-with-findings", "version1", "group1", []string{"tag1", "tag2", "team:app:container"})
+		assert.NoError(t, err)
+		err = c.UploadProject(ctx, "project-with-findings", "version1", "", true, b)
+		assert.NoError(t, err)
+
+		findings, err := c.GetFindings(ctx, p.Uuid)
+		if len(findings) == 0 {
+			t.Skip("no findings")
+		}
+		assert.NoError(t, err)
+		assert.NotNil(t, findings)
+		// will never be run if there are no findings
+		err = c.RecordAnalysis(ctx, &AnalysisRequest{
+			Project:               p.Uuid,
+			Component:             findings[0].Component.UUID,
+			Vulnerability:         findings[0].Vulnerability.VulnId,
+			AnalysisState:         "REVIEWED",
+			AnalysisJustification: "Justification",
+			AnalysisResponse:      "Response",
+			AnalysisDetails:       "Details",
+			Comment:               "Comment",
+			IsSuppressed:          true,
+		})
+		assert.NoError(t, err)
+
+		trail, err := c.GetAnalysisTrail(ctx, p.Uuid, findings[0].Component.UUID, findings[0].Vulnerability.VulnId)
+		assert.NoError(t, err)
+		assert.Equal(t, "REVIEWED", trail[0].AnalysisState)
+		assert.Equal(t, "Justification", trail[0].AnalysisJustification)
+	})
 }

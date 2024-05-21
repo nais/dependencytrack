@@ -134,7 +134,19 @@ type Finding struct {
 	Vulnerability Vulnerability `json:"vulnerability"`
 }
 
-type AnalysisTrail struct {
+type AnalysisRequest struct {
+	Project               string `json:"project"`
+	Component             string `json:"component"`
+	Vulnerability         string `json:"vulnerability"`
+	AnalysisState         string `json:"analysisState"`
+	AnalysisJustification string `json:"analysisJustification"`
+	AnalysisResponse      string `json:"analysisResponse"`
+	AnalysisDetails       string `json:"analysisDetails"`
+	Comment               string `json:"comment"`
+	IsSuppressed          bool   `json:"isSuppressed"`
+}
+
+type Analysis struct {
 	AnalysisState         string            `json:"analysisState"`
 	AnalysisJustification string            `json:"analysisJustification"`
 	AnalysisResponse      string            `json:"analysisResponse"`

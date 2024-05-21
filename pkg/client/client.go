@@ -32,7 +32,7 @@ type Client interface {
 	DeleteTeam(ctx context.Context, uuid string) error
 	DeleteUserMembership(ctx context.Context, uuid, username string) error
 	GenerateApiKey(ctx context.Context, uuid string) (string, error)
-	GetAnalysisTrail(ctx context.Context, projectUuid string) ([]*AnalysisTrail, error)
+	GetAnalysisTrail(ctx context.Context, projectUuid, componentUuid, vulnerabilityUuid string) ([]*Analysis, error)
 	GetConfigProperties(ctx context.Context) ([]ConfigProperty, error)
 	GetCurrentProjectMetric(ctx context.Context, projectUuid string) (*ProjectMetric, error)
 	GetEcosystems(ctx context.Context) ([]string, error)
@@ -45,7 +45,7 @@ type Client interface {
 	GetTeam(ctx context.Context, team string) (*Team, error)
 	GetTeams(ctx context.Context) ([]Team, error)
 	PortfolioRefresh(ctx context.Context) error
-	RecordAnalysis(ctx context.Context, projectUuid string) error
+	RecordAnalysis(ctx context.Context, analysis *AnalysisRequest) error
 	RemoveAdminUsers(ctx context.Context, users *AdminUsers) error
 	TriggerAnalysis(ctx context.Context, projectUuid string) error
 	UpdateProject(ctx context.Context, uuid, name, version, group string, tags []string) (*Project, error)

@@ -2,6 +2,8 @@ module github.com/nais/dependencytrack
 
 go 1.22
 
+toolchain go1.22.3
+
 require (
 	github.com/joho/godotenv v1.5.1
 	github.com/lestrrat-go/jwx/v2 v2.0.21
