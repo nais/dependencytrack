@@ -136,6 +136,7 @@ type Component struct {
 }
 
 type Vulnerability struct {
+	UUID         string  `json:"uuid"`
 	VulnId       string  `json:"vulnId"`
 	Severity     string  `json:"severity"`
 	SeverityRank int     `json:"severityRank"`
