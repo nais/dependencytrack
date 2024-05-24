@@ -2,7 +2,10 @@ package client
 
 import "time"
 
-type Permission string
+type (
+	Permission string
+	TagPrefix  string
+)
 
 const (
 	AccessManagementPermission        = Permission("ACCESS_MANAGEMENT")
@@ -12,7 +15,19 @@ const (
 	ViewPolicyViolationPermission     = Permission("VIEW_POLICY_VIOLATION")
 	ViewPortfolioPermission           = Permission("VIEW_PORTFOLIO")
 	ViewVulnerabilityPermission       = Permission("VIEW_VULNERABILITY")
+	WorkloadTagPrefix                 = TagPrefix("workload:")
+	EnvironmentTagPrefix              = TagPrefix("env:")
+	TeamTagPrefix                     = TagPrefix("team:")
+	ProjectTagPrefix                  = TagPrefix("project:")
+	ImageTagPrefix                    = TagPrefix("image:")
+	VersionTagPrefix                  = TagPrefix("version:")
+	RekorTagPrefix                    = TagPrefix("rekor:")
+	DigestTagPrefix                   = TagPrefix("digest:")
 )
+
+func (t TagPrefix) String() string {
+	return string(t)
+}
 
 type User struct {
 	Username string `json:"username,omitempty"`

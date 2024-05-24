@@ -9,7 +9,7 @@ services:
     ports:
       - '9002:8080'
   dtrack-apiserver:
-    image: dependencytrack/apiserver:4.10.1
+    image: dependencytrack/apiserver:4.11.1
     deploy:
       resources:
         limits:
@@ -35,7 +35,7 @@ services:
     restart: unless-stopped
 
   dtrack-frontend:
-    image: dependencytrack/frontend:4.10.0
+    image: dependencytrack/frontend:4.11.1
     depends_on:
       - dtrack-apiserver
     environment:
