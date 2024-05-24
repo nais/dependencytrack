@@ -29,6 +29,10 @@ func (t TagPrefix) String() string {
 	return string(t)
 }
 
+func (t TagPrefix) Add(tag string) string {
+	return t.String() + tag
+}
+
 type User struct {
 	Username string `json:"username,omitempty"`
 	Email    string `json:"email,omitempty"`

@@ -43,7 +43,7 @@ type Client interface {
 	GetProjects(ctx context.Context) ([]*Project, error)
 	GetProjectById(ctx context.Context, uuid string) (*Project, error)
 	GetProjectsByTag(ctx context.Context, tag string) ([]*Project, error)
-	GetProjectsByPrefixedTag(ctx context.Context, prefix, tag string) ([]*Project, error)
+	GetProjectsByPrefixedTag(ctx context.Context, prefix TagPrefix, tag string) ([]*Project, error)
 	GetTeam(ctx context.Context, team string) (*Team, error)
 	GetTeams(ctx context.Context) ([]Team, error)
 	PortfolioRefresh(ctx context.Context) error
