@@ -29,7 +29,7 @@ func (t TagPrefix) String() string {
 	return string(t)
 }
 
-func (t TagPrefix) Add(tag string) string {
+func (t TagPrefix) With(tag string) string {
 	return t.String() + tag
 }
 

@@ -94,7 +94,7 @@ func (c *client) GetProject(ctx context.Context, name, version string) (*Project
 }
 
 func (c *client) GetProjectsByPrefixedTag(ctx context.Context, prefix TagPrefix, tag string) ([]*Project, error) {
-	escapedTag := url.QueryEscape(prefix.Add(tag))
+	escapedTag := url.QueryEscape(prefix.With(tag))
 	res, err := c.get(ctx, c.baseUrl+"/api/v1/project/tag/"+escapedTag, c.authSource)
 	if err != nil {
 		if IsNotFound(err) {
