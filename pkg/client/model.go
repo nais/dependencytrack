@@ -135,14 +135,19 @@ type Component struct {
 	Name    string `json:"name"`
 }
 
+type VulnzAnalysis struct {
+	IsSuppressed bool `json:"isSuppressed"`
+}
+
 type Vulnerability struct {
-	UUID         string  `json:"uuid"`
-	VulnId       string  `json:"vulnId"`
-	Severity     string  `json:"severity"`
-	SeverityRank int     `json:"severityRank"`
-	Source       string  `json:"source"`
-	Aliases      []Alias `json:"aliases"`
-	Title        string  `json:"title"`
+	UUID         string        `json:"uuid"`
+	VulnId       string        `json:"vulnId"`
+	Severity     string        `json:"severity"`
+	SeverityRank int           `json:"severityRank"`
+	Source       string        `json:"source"`
+	Aliases      []Alias       `json:"aliases"`
+	Title        string        `json:"title"`
+	Analysis     VulnzAnalysis `json:"analysis"`
 }
 
 type Alias struct {
