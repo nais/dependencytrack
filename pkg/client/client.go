@@ -36,7 +36,7 @@ type Client interface {
 	GetConfigProperties(ctx context.Context) ([]ConfigProperty, error)
 	GetCurrentProjectMetric(ctx context.Context, projectUuid string) (*ProjectMetric, error)
 	GetEcosystems(ctx context.Context) ([]string, error)
-	GetFindings(ctx context.Context, projectUuid string) ([]*Finding, error)
+	GetFindings(ctx context.Context, projectUuid string, suppressed bool) ([]*Finding, error)
 	GetOidcUsers(ctx context.Context) ([]User, error)
 	GetProject(ctx context.Context, name, version string) (*Project, error)
 	GetProjectMetricsByDate(ctx context.Context, projectUuid, date string) ([]*ProjectMetric, error)
