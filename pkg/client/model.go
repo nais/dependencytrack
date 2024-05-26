@@ -136,7 +136,8 @@ type Component struct {
 }
 
 type VulnzAnalysis struct {
-	IsSuppressed bool `json:"isSuppressed"`
+	IsSuppressed bool   `json:"isSuppressed"`
+	State        string `json:"state"`
 }
 
 type Vulnerability struct {
