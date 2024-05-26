@@ -141,14 +141,13 @@ type VulnzAnalysis struct {
 }
 
 type Vulnerability struct {
-	UUID         string        `json:"uuid"`
-	VulnId       string        `json:"vulnId"`
-	Severity     string        `json:"severity"`
-	SeverityRank int           `json:"severityRank"`
-	Source       string        `json:"source"`
-	Aliases      []Alias       `json:"aliases"`
-	Title        string        `json:"title"`
-	Analysis     VulnzAnalysis `json:"analysis"`
+	UUID         string  `json:"uuid"`
+	VulnId       string  `json:"vulnId"`
+	Severity     string  `json:"severity"`
+	SeverityRank int     `json:"severityRank"`
+	Source       string  `json:"source"`
+	Aliases      []Alias `json:"aliases"`
+	Title        string  `json:"title"`
 }
 
 type Alias struct {
@@ -159,6 +158,7 @@ type Alias struct {
 type Finding struct {
 	Component     Component     `json:"component"`
 	Vulnerability Vulnerability `json:"vulnerability"`
+	Analysis      VulnzAnalysis `json:"analysis"`
 }
 
 type AnalysisRequest struct {
