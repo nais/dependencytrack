@@ -32,7 +32,7 @@ type Client interface {
 	DeleteTeam(ctx context.Context, uuid string) error
 	DeleteUserMembership(ctx context.Context, uuid, username string) error
 	GenerateApiKey(ctx context.Context, uuid string) (string, error)
-	GetAnalysisTrail(ctx context.Context, projectUuid, componentUuid, vulnerabilityUuid string) ([]*Analysis, error)
+	GetAnalysisTrail(ctx context.Context, projectUuid, componentUuid, vulnerabilityUuid string) (*Analysis, error)
 	GetConfigProperties(ctx context.Context) ([]ConfigProperty, error)
 	GetCurrentProjectMetric(ctx context.Context, projectUuid string) (*ProjectMetric, error)
 	GetEcosystems(ctx context.Context) ([]string, error)

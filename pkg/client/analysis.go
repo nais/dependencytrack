@@ -21,8 +21,8 @@ func (c *client) RecordAnalysis(ctx context.Context, analysisRequest *AnalysisRe
 	return nil
 }
 
-func (c *client) GetAnalysisTrail(ctx context.Context, projectUuid, componentUuid, vulnerabilityUuid string) ([]*Analysis, error) {
-	var trails []*Analysis
+func (c *client) GetAnalysisTrail(ctx context.Context, projectUuid, componentUuid, vulnerabilityUuid string) (*Analysis, error) {
+	var trails *Analysis
 	res, err := c.get(ctx, c.baseUrl+"/api/v1/analysis?project="+projectUuid+"&component="+componentUuid+"&vulnerability="+vulnerabilityUuid, c.authSource)
 	if err != nil {
 		if IsNotFound(err) {

@@ -22,15 +22,13 @@ func TestClient_GetAnalysisTrail(t *testing.T) {
 					assert.Equal(t, "GET", req.Method)
 					assert.Equal(t, "application/json", req.Header.Get("Accept"))
 					assert.NotEmpty(t, req.Header.Get("X-Api-Key"), "Authorization header is empty")
-					analysis := []Analysis{
-						{
-							AnalysisState:         "GOOD",
-							AnalysisJustification: "yes",
-							AnalysisResponse:      "yes",
-							AnalysisDetails:       "yes",
-							AnalysisComments:      nil,
-							IsSuppressed:          true,
-						},
+					analysis := Analysis{
+						AnalysisState:         "GOOD",
+						AnalysisJustification: "yes",
+						AnalysisResponse:      "yes",
+						AnalysisDetails:       "yes",
+						AnalysisComments:      nil,
+						IsSuppressed:          true,
 					}
 					b, err := json.Marshal(analysis)
 					assert.NoError(t, err)
@@ -50,10 +48,10 @@ func TestClient_GetAnalysisTrail(t *testing.T) {
 	analysis, err := c.GetAnalysisTrail(context.Background(), "uuid", "0", "10")
 	assert.NoError(t, err)
 	assert.NotEmpty(t, analysis)
-	assert.Equal(t, "GOOD", analysis[0].AnalysisState)
-	assert.Equal(t, "yes", analysis[0].AnalysisJustification)
-	assert.Equal(t, "yes", analysis[0].AnalysisResponse)
-	assert.Equal(t, "yes", analysis[0].AnalysisDetails)
+	assert.Equal(t, "GOOD", analysis.AnalysisState)
+	assert.Equal(t, "yes", analysis.AnalysisJustification)
+	assert.Equal(t, "yes", analysis.AnalysisResponse)
+	assert.Equal(t, "yes", analysis.AnalysisDetails)
 }
 
 func TestClient_RecordAnalysis(t *testing.T) {
