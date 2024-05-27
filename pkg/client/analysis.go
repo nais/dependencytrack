@@ -22,16 +22,16 @@ func (c *client) RecordAnalysis(ctx context.Context, analysisRequest *AnalysisRe
 }
 
 func (c *client) GetAnalysisTrail(ctx context.Context, projectUuid, componentUuid, vulnerabilityUuid string) (*Analysis, error) {
-	var trails *Analysis
+	var trail *Analysis
 	res, err := c.get(ctx, c.baseUrl+"/api/v1/analysis?project="+projectUuid+"&component="+componentUuid+"&vulnerability="+vulnerabilityUuid, c.authSource)
 	if err != nil {
 		if IsNotFound(err) {
-			return trails, nil
+			return trail, nil
 		}
 		return nil, fmt.Errorf("get analysis: %w", err)
 	}
-	if err := json.Unmarshal(res, &trails); err != nil {
+	if err := json.Unmarshal(res, &trail); err != nil {
 		return nil, fmt.Errorf("unmarshal analysis: %w", err)
 	}
-	return trails, nil
+	return trail, nil
 }

@@ -22,7 +22,7 @@ func TestMain(m *testing.M) {
 	log.SetFormatter(&log.TextFormatter{
 		DisableTimestamp: true,
 	})
-	baseUrl, cleanup := test.DependencyTrackPool("4.9.0")
+	baseUrl, cleanup := test.DependencyTrackPool("4.11.1")
 
 	cwp := New(baseUrl, "admin", "test")
 
@@ -201,7 +201,9 @@ func TestIntegration(t *testing.T) {
 	})
 
 	t.Run("UploadProjectBom", func(t *testing.T) {
-		err := c.UploadProject(ctx, "projectname", "version1", "", true, []byte("test"))
+		b, err := os.ReadFile("testdata/attestation.json")
+		assert.NoError(t, err)
+		err = c.UploadProject(ctx, "projectname", "version1", "", true, b)
 		assert.NoError(t, err)
 	})
 
@@ -243,19 +245,19 @@ func TestIntegration(t *testing.T) {
 		assert.NoError(t, err)
 		time.Sleep(2 * time.Second)
 
-		_, err = c.GetFindings(ctx, p.Uuid)
+		_, err = c.GetFindings(ctx, p.Uuid, false)
 		assert.NoError(t, err)
 	})
 
 	t.Run("GetAnalysisTrail", func(t *testing.T) {
 		b, err := os.ReadFile("testdata/attestation.json")
 		assert.NoError(t, err)
-		p, err := c.CreateProject(context.Background(), "project-with-findings", "version1", "group1", []string{"tag1", "tag2", "team:app:container"})
+		p, err := c.CreateProject(context.Background(), "project-with-findings", "version2", "group1", []string{"tag1", "tag2", "team:app:container"})
 		assert.NoError(t, err)
 		err = c.UploadProject(ctx, "project-with-findings", "version1", "", true, b)
 		assert.NoError(t, err)
 
-		findings, err := c.GetFindings(ctx, p.Uuid)
+		findings, err := c.GetFindings(ctx, p.Uuid, false)
 		assert.NoError(t, err)
 		assert.NotNil(t, findings)
 		for _, f := range findings {
@@ -267,12 +269,12 @@ func TestIntegration(t *testing.T) {
 	t.Run("RecordAnalysis", func(t *testing.T) {
 		b, err := os.ReadFile("testdata/attestation.json")
 		assert.NoError(t, err)
-		p, err := c.CreateProject(context.Background(), "project-with-findings", "version1", "group1", []string{"tag1", "tag2", "team:app:container"})
+		p, err := c.CreateProject(context.Background(), "project-with-findings", "version3", "group1", []string{"tag1", "tag2", "team:app:container"})
 		assert.NoError(t, err)
-		err = c.UploadProject(ctx, "project-with-findings", "version1", "", true, b)
+		err = c.UploadProject(ctx, "project-with-findings", "version2", "", true, b)
 		assert.NoError(t, err)
 
-		findings, err := c.GetFindings(ctx, p.Uuid)
+		findings, err := c.GetFindings(ctx, p.Uuid, false)
 		if len(findings) == 0 {
 			t.Skip("no findings")
 		}
@@ -294,7 +296,13 @@ func TestIntegration(t *testing.T) {
 
 		trail, err := c.GetAnalysisTrail(ctx, p.Uuid, findings[0].Component.UUID, findings[0].Vulnerability.VulnId)
 		assert.NoError(t, err)
-		assert.Equal(t, "REVIEWED", trail[0].AnalysisState)
-		assert.Equal(t, "Justification", trail[0].AnalysisJustification)
+		assert.Equal(t, "REVIEWED", trail.AnalysisState)
+		assert.Equal(t, "Justification", trail.AnalysisJustification)
+		assert.Equal(t, "Response", trail.AnalysisResponse)
+		assert.Equal(t, "Details", trail.AnalysisDetails)
+		assert.Len(t, trail.AnalysisComments, 1)
+		assert.Equal(t, "Comment", trail.AnalysisComments[0].Comment)
+		assert.Equal(t, "me", trail.AnalysisComments[0].Commenter)
+		assert.Equal(t, "1716663666574", trail.AnalysisComments[0].Timestamp)
 	})
 }

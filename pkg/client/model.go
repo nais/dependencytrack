@@ -1,7 +1,5 @@
 package client
 
-import "time"
-
 type (
 	Permission string
 	TagPrefix  string
@@ -183,7 +181,7 @@ type Analysis struct {
 }
 
 type AnalysisComment struct {
-	Timestamp time.Time `json:"timestamp"`
-	Comment   string    `json:"comment"`
-	Commenter string    `json:"commenter"`
+	Timestamp string `json:"timestamp"`
+	Comment   string `json:"comment"`
+	Commenter string `json:"commenter"`
 }

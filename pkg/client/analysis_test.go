@@ -27,8 +27,14 @@ func TestClient_GetAnalysisTrail(t *testing.T) {
 						AnalysisJustification: "yes",
 						AnalysisResponse:      "yes",
 						AnalysisDetails:       "yes",
-						AnalysisComments:      nil,
-						IsSuppressed:          true,
+						AnalysisComments: []AnalysisComment{
+							{
+								Comment:   "yes",
+								Commenter: "me",
+								Timestamp: "1716663666574",
+							},
+						},
+						IsSuppressed: true,
 					}
 					b, err := json.Marshal(analysis)
 					assert.NoError(t, err)
@@ -52,6 +58,10 @@ func TestClient_GetAnalysisTrail(t *testing.T) {
 	assert.Equal(t, "yes", analysis.AnalysisJustification)
 	assert.Equal(t, "yes", analysis.AnalysisResponse)
 	assert.Equal(t, "yes", analysis.AnalysisDetails)
+	assert.Len(t, analysis.AnalysisComments, 1)
+	assert.Equal(t, "yes", analysis.AnalysisComments[0].Comment)
+	assert.Equal(t, "me", analysis.AnalysisComments[0].Commenter)
+	assert.Equal(t, "1716663666574", analysis.AnalysisComments[0].Timestamp)
 }
 
 func TestClient_RecordAnalysis(t *testing.T) {
