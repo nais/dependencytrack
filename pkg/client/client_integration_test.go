@@ -267,14 +267,10 @@ func TestIntegration(t *testing.T) {
 		}
 	})
 	t.Run("RecordAnalysis", func(t *testing.T) {
-		b, err := os.ReadFile("testdata/attestation.json")
-		assert.NoError(t, err)
-		p, err := c.CreateProject(context.Background(), "project-with-findings", "version3", "group1", []string{"tag1", "tag2", "team:app:container"})
-		assert.NoError(t, err)
-		err = c.UploadProject(ctx, "project-with-findings", "version2", "", true, b)
+		p, err := c.GetProject(context.Background(), "project-with-findings", "version2")
 		assert.NoError(t, err)
 
-		findings, err := c.GetFindings(ctx, p.Uuid, false)
+		findings, err := c.GetFindings(ctx, p.Uuid, true)
 		if len(findings) == 0 {
 			t.Skip("no findings")
 		}
@@ -303,6 +299,6 @@ func TestIntegration(t *testing.T) {
 		assert.Len(t, trail.AnalysisComments, 1)
 		assert.Equal(t, "Comment", trail.AnalysisComments[0].Comment)
 		assert.Equal(t, "me", trail.AnalysisComments[0].Commenter)
-		assert.Equal(t, "1716663666574", trail.AnalysisComments[0].Timestamp)
+		assert.Equal(t, 1716663666574, trail.AnalysisComments[0].Timestamp)
 	})
 }

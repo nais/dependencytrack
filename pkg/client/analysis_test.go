@@ -31,7 +31,7 @@ func TestClient_GetAnalysisTrail(t *testing.T) {
 							{
 								Comment:   "yes",
 								Commenter: "me",
-								Timestamp: "1716663666574",
+								Timestamp: 1716663666574,
 							},
 						},
 						IsSuppressed: true,
@@ -61,7 +61,7 @@ func TestClient_GetAnalysisTrail(t *testing.T) {
 	assert.Len(t, analysis.AnalysisComments, 1)
 	assert.Equal(t, "yes", analysis.AnalysisComments[0].Comment)
 	assert.Equal(t, "me", analysis.AnalysisComments[0].Commenter)
-	assert.Equal(t, "1716663666574", analysis.AnalysisComments[0].Timestamp)
+	assert.Equal(t, 1716663666574, analysis.AnalysisComments[0].Timestamp)
 }
 
 func TestClient_RecordAnalysis(t *testing.T) {

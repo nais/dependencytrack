@@ -181,7 +181,7 @@ type Analysis struct {
 }
 
 type AnalysisComment struct {
-	Timestamp string `json:"timestamp"`
+	Timestamp int    `json:"timestamp"`
 	Comment   string `json:"comment"`
 	Commenter string `json:"commenter"`
 }
