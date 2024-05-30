@@ -21,6 +21,7 @@ const (
 	VersionTagPrefix                  = TagPrefix("version:")
 	RekorTagPrefix                    = TagPrefix("rekor:")
 	DigestTagPrefix                   = TagPrefix("digest:")
+	RekorIDTagPrefix                  = TagPrefix("rekor-id:")
 )
 
 func (t TagPrefix) String() string {
