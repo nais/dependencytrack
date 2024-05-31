@@ -31,6 +31,7 @@ const (
 	RekorRunnerEnvironmentTagPrefix        = TagPrefix("runner-env:")
 	RekorSourceRepositoryOwnerURITagPrefix = TagPrefix("source-repo-owner-uri:")
 	RekorIntegratedTimeTagPrefix           = TagPrefix("integrated-time:")
+	RekorGitHubWorkflowSHATagPrefix        = TagPrefix("workflow-sha:")
 )
 
 func (t TagPrefix) String() string {
