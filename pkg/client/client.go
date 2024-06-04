@@ -16,15 +16,14 @@ import (
 const EmailPostfix = "@nais.io"
 
 type Client interface {
-	Version(ctx context.Context) (string, error)
 	AddToTeam(ctx context.Context, username, uuid string) error
 	ChangeAdminPassword(ctx context.Context, oldPassword, newPassword string) error
+	ConfigPropertyAggregate(ctx context.Context, properties []ConfigProperty) ([]ConfigProperty, error)
 	CreateAdminUsers(ctx context.Context, users *AdminUsers, teamUuid string) error
+	CreateChildProject(ctx context.Context, project *Project, name, version, group, classifier string, tags []string) (*Project, error)
 	CreateManagedUser(ctx context.Context, username, password string) error
 	CreateOidcUser(ctx context.Context, email string) error
 	CreateProject(ctx context.Context, name, version, group string, tags []string) (*Project, error)
-	UpdateProject(ctx context.Context, uuid, name, version, group string, tags []string) (*Project, error)
-	CreateChildProject(ctx context.Context, project *Project, name, version, group, classifier string, tags []string) (*Project, error)
 	CreateTeam(ctx context.Context, teamName string, permissions []Permission) (*Team, error)
 	DeleteManagedUser(ctx context.Context, username string) error
 	DeleteOidcUser(ctx context.Context, username string) error
@@ -33,24 +32,28 @@ type Client interface {
 	DeleteTeam(ctx context.Context, uuid string) error
 	DeleteUserMembership(ctx context.Context, uuid, username string) error
 	GenerateApiKey(ctx context.Context, uuid string) (string, error)
+	GetAnalysisTrail(ctx context.Context, projectUuid, componentUuid, vulnerabilityUuid string) (*Analysis, error)
+	GetConfigProperties(ctx context.Context) ([]ConfigProperty, error)
+	GetCurrentProjectMetric(ctx context.Context, projectUuid string) (*ProjectMetric, error)
+	GetEcosystems(ctx context.Context) ([]string, error)
+	GetFindings(ctx context.Context, projectUuid string, suppressed bool) ([]*Finding, error)
 	GetOidcUsers(ctx context.Context) ([]User, error)
-	GetProjects(ctx context.Context) ([]*Project, error)
 	GetProject(ctx context.Context, name, version string) (*Project, error)
+	GetProjectMetricsByDate(ctx context.Context, projectUuid, date string) ([]*ProjectMetric, error)
+	GetProjects(ctx context.Context) ([]*Project, error)
 	GetProjectById(ctx context.Context, uuid string) (*Project, error)
 	GetProjectsByTag(ctx context.Context, tag string) ([]*Project, error)
+	GetProjectsByPrefixedTag(ctx context.Context, prefix TagPrefix, tag string) ([]*Project, error)
 	GetTeam(ctx context.Context, team string) (*Team, error)
 	GetTeams(ctx context.Context) ([]Team, error)
 	PortfolioRefresh(ctx context.Context) error
+	RecordAnalysis(ctx context.Context, analysis *AnalysisRequest) error
 	RemoveAdminUsers(ctx context.Context, users *AdminUsers) error
+	TriggerAnalysis(ctx context.Context, projectUuid string) error
+	UpdateProject(ctx context.Context, uuid, name, version, group string, tags []string) (*Project, error)
 	UpdateProjectInfo(ctx context.Context, uuid, version, group string, tags []string) error
 	UploadProject(ctx context.Context, name, version, parentUuid string, autoCreate bool, bom []byte) error
-	ConfigPropertyAggregate(ctx context.Context, properties []ConfigProperty) ([]ConfigProperty, error)
-	GetConfigProperties(ctx context.Context) ([]ConfigProperty, error)
-	GetEcosystems(ctx context.Context) ([]string, error)
-	GetFindings(ctx context.Context, projectUuid string) ([]*Finding, error)
-	TriggerAnalysis(ctx context.Context, projectUuid string) error
-	GetCurrentProjectMetric(ctx context.Context, projectUuid string) (*ProjectMetric, error)
-	GetProjectMetricsByDate(ctx context.Context, projectUuid, date string) ([]*ProjectMetric, error)
+	Version(ctx context.Context) (string, error)
 	auth.Auth
 }
 

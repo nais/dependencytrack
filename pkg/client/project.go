@@ -5,6 +5,7 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"net/url"
 
 	log "github.com/sirupsen/logrus"
 )
@@ -90,6 +91,24 @@ func (c *client) GetProject(ctx context.Context, name, version string) (*Project
 	}
 
 	return &project, nil
+}
+
+func (c *client) GetProjectsByPrefixedTag(ctx context.Context, prefix TagPrefix, tag string) ([]*Project, error) {
+	escapedTag := url.QueryEscape(prefix.With(tag))
+	res, err := c.get(ctx, c.baseUrl+"/api/v1/project/tag/"+escapedTag, c.authSource)
+	if err != nil {
+		if IsNotFound(err) {
+			return nil, nil
+		}
+		return nil, fmt.Errorf("get projects by tag: %w", err)
+	}
+
+	var projects []*Project
+	if err = json.Unmarshal(res, &projects); err != nil {
+		return nil, fmt.Errorf("unmarshalling response body: %w", err)
+	}
+
+	return projects, nil
 }
 
 func (c *client) GetProjectsByTag(ctx context.Context, tag string) ([]*Project, error) {

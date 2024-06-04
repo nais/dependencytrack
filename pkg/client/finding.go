@@ -6,8 +6,8 @@ import (
 	"fmt"
 )
 
-func (c *client) GetFindings(ctx context.Context, projectUuid string) ([]*Finding, error) {
-	res, err := c.get(ctx, c.baseUrl+"/api/v1/finding/project/"+projectUuid, c.authSource)
+func (c *client) GetFindings(ctx context.Context, projectUuid string, suppressed bool) ([]*Finding, error) {
+	res, err := c.get(ctx, c.baseUrl+"/api/v1/finding/project/"+projectUuid+"?suppressed="+fmt.Sprint(suppressed), c.authSource)
 	if err != nil {
 		if IsNotFound(err) {
 			return nil, nil

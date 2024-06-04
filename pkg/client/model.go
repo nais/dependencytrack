@@ -1,16 +1,46 @@
 package client
 
-type Permission string
+type (
+	Permission string
+	TagPrefix  string
+)
 
 const (
-	AccessManagementPermission        = Permission("ACCESS_MANAGEMENT")
-	PolicyManagementPermission        = Permission("POLICY_MANAGEMENT")
-	PolicyViolationAnalysisPermission = Permission("POLICY_VIOLATION_ANALYSIS")
-	SystemConfigurationPermission     = Permission("SYSTEM_CONFIGURATION")
-	ViewPolicyViolationPermission     = Permission("VIEW_POLICY_VIOLATION")
-	ViewPortfolioPermission           = Permission("VIEW_PORTFOLIO")
-	ViewVulnerabilityPermission       = Permission("VIEW_VULNERABILITY")
+	AccessManagementPermission             = Permission("ACCESS_MANAGEMENT")
+	PolicyManagementPermission             = Permission("POLICY_MANAGEMENT")
+	PolicyViolationAnalysisPermission      = Permission("POLICY_VIOLATION_ANALYSIS")
+	SystemConfigurationPermission          = Permission("SYSTEM_CONFIGURATION")
+	ViewPolicyViolationPermission          = Permission("VIEW_POLICY_VIOLATION")
+	ViewPortfolioPermission                = Permission("VIEW_PORTFOLIO")
+	ViewVulnerabilityPermission            = Permission("VIEW_VULNERABILITY")
+	WorkloadTagPrefix                      = TagPrefix("workload:")
+	EnvironmentTagPrefix                   = TagPrefix("env:")
+	TeamTagPrefix                          = TagPrefix("team:")
+	ProjectTagPrefix                       = TagPrefix("project:")
+	ImageTagPrefix                         = TagPrefix("image:")
+	VersionTagPrefix                       = TagPrefix("version:")
+	RekorTagPrefix                         = TagPrefix("rekor:")
+	DigestTagPrefix                        = TagPrefix("digest:")
+	RekorIDTagPrefix                       = TagPrefix("rekor-id:")
+	RekorBuildTriggerTagPrefix             = TagPrefix("build-trigger:")
+	RekorBuildConfigURITagPrefix           = TagPrefix("build-config-uri:")
+	RekorGitHubWorkflowNameTagPrefix       = TagPrefix("workflow-name:")
+	RekorGitHubWorkflowRefTagPrefix        = TagPrefix("workflow-ref:")
+	RekorOIDCIssuerTagPrefix               = TagPrefix("oidc-issuer:")
+	RekorRunInvocationURITagPrefix         = TagPrefix("run-invocation-uri:")
+	RekorRunnerEnvironmentTagPrefix        = TagPrefix("runner-env:")
+	RekorSourceRepositoryOwnerURITagPrefix = TagPrefix("source-repo-owner-uri:")
+	RekorIntegratedTimeTagPrefix           = TagPrefix("integrated-time:")
+	RekorGitHubWorkflowSHATagPrefix        = TagPrefix("workflow-sha:")
 )
+
+func (t TagPrefix) String() string {
+	return string(t)
+}
+
+func (t TagPrefix) With(tag string) string {
+	return t.String() + tag
+}
 
 type User struct {
 	Username string `json:"username,omitempty"`
@@ -114,7 +144,13 @@ type Component struct {
 	Name    string `json:"name"`
 }
 
+type VulnzAnalysis struct {
+	IsSuppressed bool   `json:"isSuppressed"`
+	State        string `json:"state"`
+}
+
 type Vulnerability struct {
+	UUID         string  `json:"uuid"`
 	VulnId       string  `json:"vulnId"`
 	Severity     string  `json:"severity"`
 	SeverityRank int     `json:"severityRank"`
@@ -131,4 +167,32 @@ type Alias struct {
 type Finding struct {
 	Component     Component     `json:"component"`
 	Vulnerability Vulnerability `json:"vulnerability"`
+	Analysis      VulnzAnalysis `json:"analysis"`
+}
+
+type AnalysisRequest struct {
+	Project               string `json:"project"`
+	Component             string `json:"component"`
+	Vulnerability         string `json:"vulnerability"`
+	AnalysisState         string `json:"analysisState"`
+	AnalysisJustification string `json:"analysisJustification"`
+	AnalysisResponse      string `json:"analysisResponse"`
+	AnalysisDetails       string `json:"analysisDetails"`
+	Comment               string `json:"comment"`
+	IsSuppressed          bool   `json:"isSuppressed"`
+}
+
+type Analysis struct {
+	AnalysisState         string            `json:"analysisState"`
+	AnalysisJustification string            `json:"analysisJustification"`
+	AnalysisResponse      string            `json:"analysisResponse"`
+	AnalysisDetails       string            `json:"analysisDetails"`
+	AnalysisComments      []AnalysisComment `json:"analysisComments"`
+	IsSuppressed          bool              `json:"isSuppressed"`
+}
+
+type AnalysisComment struct {
+	Timestamp int    `json:"timestamp"`
+	Comment   string `json:"comment"`
+	Commenter string `json:"commenter"`
 }
