@@ -4,12 +4,14 @@ package client
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"os"
 	"strconv"
 	"testing"
 	"time"
 
+	"github.com/in-toto/in-toto-golang/in_toto"
 	"github.com/nais/dependencytrack/pkg/client/test"
 	log "github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/assert"
@@ -22,8 +24,7 @@ func TestMain(m *testing.M) {
 	log.SetFormatter(&log.TextFormatter{
 		DisableTimestamp: true,
 	})
-	baseUrl, cleanup := test.DependencyTrackPool("4.11.1")
-
+	baseUrl, cleanup := test.DependencyTrackPool("4.11.3")
 	cwp := New(baseUrl, "admin", "test")
 
 	err := cwp.ChangeAdminPassword(context.Background(), "admin", "test")
@@ -201,9 +202,8 @@ func TestIntegration(t *testing.T) {
 	})
 
 	t.Run("UploadProjectBom", func(t *testing.T) {
-		b, err := os.ReadFile("testdata/attestation.json")
-		assert.NoError(t, err)
-		err = c.UploadProject(ctx, "projectname", "version1", "", true, b)
+		sbom, err := getSbom(t)
+		err = c.UploadProject(ctx, "projectname", "version1", "", true, sbom)
 		assert.NoError(t, err)
 	})
 
@@ -234,11 +234,10 @@ func TestIntegration(t *testing.T) {
 	})
 
 	t.Run("GetFindings", func(t *testing.T) {
-		b, err := os.ReadFile("testdata/attestation.json")
-		assert.NoError(t, err)
+		sbom, err := getSbom(t)
 		p, err := c.CreateProject(context.Background(), "project-with-findings", "version1", "group1", []string{"tag1", "tag2", "team:app:container"})
 		assert.NoError(t, err)
-		err = c.UploadProject(ctx, "project-with-findings", "version1", "", true, b)
+		err = c.UploadProject(ctx, "project-with-findings", "version1", "", true, sbom)
 		assert.NoError(t, err)
 
 		err = c.TriggerAnalysis(ctx, p.Uuid)
@@ -250,11 +249,11 @@ func TestIntegration(t *testing.T) {
 	})
 
 	t.Run("GetAnalysisTrail", func(t *testing.T) {
-		b, err := os.ReadFile("testdata/attestation.json")
-		assert.NoError(t, err)
 		p, err := c.CreateProject(context.Background(), "project-with-findings", "version2", "group1", []string{"tag1", "tag2", "team:app:container"})
 		assert.NoError(t, err)
-		err = c.UploadProject(ctx, "project-with-findings", "version1", "", true, b)
+		sbom, err := getSbom(t)
+		assert.NoError(t, err)
+		err = c.UploadProject(ctx, "project-with-findings", "version1", "", true, sbom)
 		assert.NoError(t, err)
 
 		findings, err := c.GetFindings(ctx, p.Uuid, false)
@@ -301,4 +300,17 @@ func TestIntegration(t *testing.T) {
 		assert.Equal(t, "me", trail.AnalysisComments[0].Commenter)
 		assert.Equal(t, 1716663666574, trail.AnalysisComments[0].Timestamp)
 	})
+}
+
+func getSbom(t *testing.T) ([]byte, error) {
+	read, err := os.ReadFile("testdata/attestation.json")
+	assert.NoError(t, err)
+
+	metadata := &in_toto.CycloneDXStatement{}
+	err = json.Unmarshal(read, metadata)
+	assert.NoError(t, err)
+
+	sbom, err := json.Marshal(metadata.Predicate)
+	assert.NoError(t, err)
+	return sbom, nil
 }

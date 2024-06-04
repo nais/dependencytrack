@@ -34,7 +34,7 @@ backend:
     repository: dependencytrack
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: 4.10.1
+    tag: 4.11.3
   replicaCount: 2
   replicas:
     min: 1
@@ -65,7 +65,7 @@ backend:
 
   cloudProxy:
     repository: gcr.io/cloudsql-docker/gce-proxy
-    tag: 1.33.16
+    tag: 1.35.3
 
   postgresql:
     enabled: true
@@ -115,7 +115,7 @@ frontend:
     repository: dependencytrack
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: 4.10.0
+    tag: 4.11.3
   replicas:
     min: 1
     max: 1

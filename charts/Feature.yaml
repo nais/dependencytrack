@@ -43,6 +43,8 @@ values:
     displayName: Backend postgresql database
     computed:
       template: '{{.Management.dependencytrack_database_name | quote}}'
+    config:
+      type: string
   backend.postgresql.ip:
     displayName: Backend postgresql ip
     computed:
