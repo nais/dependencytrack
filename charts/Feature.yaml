@@ -133,6 +133,8 @@ values:
           password: {{.Management.teams_dependencytrack_password | quote}}
         - username: "dtrack-resync"
           password: {{.Management.dtrack_resync_dependencytrack_password | quote}}
+        - username: "slsa-verde"
+          password: {{.Management.slsa_verde_dependencytrack_password | quote}}
   bootstrap.google.osv_enabled:
     displayName: Bootstrap Google OSV enabled
     config:
