@@ -112,20 +112,22 @@ func (c *client) GetProjectsByPrefixedTag(ctx context.Context, prefix TagPrefix,
 }
 
 func (c *client) GetProjectsByTag(ctx context.Context, tag string) ([]*Project, error) {
-	res, err := c.get(ctx, c.baseUrl+"/api/v1/project/tag/"+tag, c.authSource)
+	allProjects := make([]*Project, 0)
+
+	resp, err := c.getAllFrom(ctx, c.baseUrl+"/api/v1/project/tag/"+tag, c.authSource, 0, 100)
 	if err != nil {
-		if IsNotFound(err) {
-			return nil, nil
-		}
 		return nil, fmt.Errorf("get projects by tag: %w", err)
 	}
 
-	var projects []*Project
-	if err = json.Unmarshal(res, &projects); err != nil {
-		return nil, fmt.Errorf("unmarshalling response body: %w", err)
+	for _, r := range resp {
+		projects := make([]*Project, 0)
+		if err = json.Unmarshal(r.Body, &projects); err != nil {
+			return nil, fmt.Errorf("unmarshalling response body: %w", err)
+		}
+		allProjects = append(allProjects, projects...)
 	}
 
-	return projects, nil
+	return allProjects, nil
 }
 
 func (c *client) CreateProject(ctx context.Context, name, version, group string, tags []string) (*Project, error) {
