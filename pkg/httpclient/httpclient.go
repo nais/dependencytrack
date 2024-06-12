@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"time"
 
 	log "github.com/sirupsen/logrus"
 )
@@ -25,6 +26,8 @@ type HttpClient struct {
 	*http.Client
 	log              *log.Entry
 	responseCallback func(res *http.Response, err error)
+	maxRetries       int
+	retryDelay       time.Duration
 }
 
 type Option func(*HttpClient)
@@ -65,6 +68,13 @@ func WithClient(client *http.Client) Option {
 	}
 }
 
+func WithRetry(maxRetries int, retryDelay time.Duration) Option {
+	return func(c *HttpClient) {
+		c.maxRetries = maxRetries
+		c.retryDelay = retryDelay
+	}
+}
+
 func (r *RequestError) Error() string {
 	return fmt.Sprintf("status %d: err %v", r.StatusCode, r.Err)
 }
@@ -78,13 +88,25 @@ func (c *HttpClient) SendRequest(ctx context.Context, httpMethod string, url str
 
 	req.Header = headers
 
-	resp, err := c.Do(req)
-	if err != nil {
-		return nil, err
-	}
-	defer resp.Body.Close()
+	var resp *http.Response
+	for i := 0; i <= c.maxRetries; i++ {
+		resp, err = c.Do(req)
+		if err != nil {
+			return nil, err
+		}
+		defer resp.Body.Close()
 
-	c.responseCallback(resp, err)
+		c.responseCallback(resp, err)
+
+		if resp.StatusCode != 500 {
+			break
+		}
+
+		if i < c.maxRetries {
+			c.log.Debugf("received 500 status, retrying... (%d/%d)", i+1, c.maxRetries)
+			time.Sleep(c.retryDelay)
+		}
+	}
 
 	if resp.StatusCode > 299 {
 		c.log.Debugf("response status: %d", resp.StatusCode)

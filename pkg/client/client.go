@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/nais/dependencytrack/pkg/client/auth"
 	"github.com/nais/dependencytrack/pkg/httpclient"
@@ -72,6 +73,8 @@ type Options struct {
 	client           *http.Client
 	team             string
 	responseCallback func(res *http.Response, err error)
+	maxRetries       int
+	retryDelay       time.Duration
 }
 
 type Option = func(c *Options)
@@ -92,6 +95,7 @@ func New(baseUrl, username, password string, opts ...Option) Client {
 		httpclient.WithClient(o.client),
 		httpclient.WithLogger(o.log),
 		httpclient.WithResponseCallback(o.responseCallback),
+		httpclient.WithRetry(o.maxRetries, o.retryDelay),
 	)
 	if o.team != "" {
 		u := auth.NewUsernamePasswordSource(baseUrl, username, password, httpClient, o.log)
@@ -135,6 +139,13 @@ func WithAuthSource(authSource auth.Auth) Option {
 func WithResponseCallback(callback func(res *http.Response, err error)) Option {
 	return func(o *Options) {
 		o.responseCallback = callback
+	}
+}
+
+func WithRetry(maxRetries int, retryDelay time.Duration) Option {
+	return func(o *Options) {
+		o.maxRetries = maxRetries
+		o.retryDelay = retryDelay
 	}
 }
 
