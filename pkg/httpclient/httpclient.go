@@ -47,6 +47,10 @@ func New(opts ...Option) *HttpClient {
 	if c.responseCallback == nil {
 		c.responseCallback = func(res *http.Response, err error) {}
 	}
+	if c.maxRetries == 0 {
+		c.maxRetries = 1
+		c.retryDelay = 0 * time.Second
+	}
 	return c
 }
 
