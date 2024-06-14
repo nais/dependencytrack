@@ -127,8 +127,6 @@ values:
       template: |
         - username: "console"
           password: {{.Management.console_dependencytrack_password | quote}}
-        - username: "picante"
-          password: {{.Management.picante_dependencytrack_password | quote}}
         - username: "teams"
           password: {{.Management.teams_dependencytrack_password | quote}}
         - username: "dtrack-resync"
