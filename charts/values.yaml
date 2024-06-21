@@ -25,7 +25,7 @@ bootstrap:
   trivy:
     ignore_unfixed: true
     api_token:
-    base_url:
+    base_url: http://trivy-server:4954
 
 backend:
   logLevel: INFO
@@ -133,3 +133,19 @@ frontend:
     API_BASE_URL:
     OIDC_ISSUER:
     OIDC_CLIENT_ID:
+
+trivy:
+  replicaCount: 2
+  image:
+    registry: "ghcr.io"
+    repository: "aquasecurity/trivy"
+    tag: "0.52.2"
+  serverToken: "todo"
+  podSecurityContext:
+    seccompProfile:
+      type: RuntimeDefault
+  securityContext:
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+        - ALL

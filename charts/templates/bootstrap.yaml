@@ -58,8 +58,10 @@ spec:
               value: "{{ .Values.bootstrap.frontendBaseUrl }}"
             - name: TRIVY_IGNORE_UNFIXED
               value: "{{ .Values.bootstrap.trivy.ignore_unfixed }}"
+          {{- if .Values.bootstrap.trivy.base_url }}
             - name: TRIVY_BASE_URL
               value: "{{ .Values.bootstrap.trivy.base_url }}"
+            {{- end }}
           envFrom:
             - secretRef:
                 name: "{{ .Release.Name }}-bootstrap-pwd"

@@ -1,0 +1,13 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: trivy-server
+spec:
+  egress:
+    - {}
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: trivy
+      app.kubernetes.io/instance: trivy-server
+  policyTypes:
+    - Egress
