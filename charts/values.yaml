@@ -25,7 +25,7 @@ bootstrap:
   trivy:
     ignore_unfixed: true
     api_token:
-    base_url: http://trivy-server:4954
+    base_url: http://dependencytrack-trivy:4954
 
 backend:
   logLevel: INFO
