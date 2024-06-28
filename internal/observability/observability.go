@@ -9,7 +9,7 @@ var DependencytrackTotalProjects = prometheus.NewGaugeVec(
 		Name: "dependencytrack_total_projects",
 		Help: "Total number of projects in DependencyTrack",
 	},
-	[]string{"cluster", "namespace"},
+	[]string{"cluster", "team", "workload"},
 )
 
 func init() {

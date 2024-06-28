@@ -197,4 +197,4 @@ values:
   trivy.debugMode:
     displayName: Trivy debug mode
     config:
-      type: bool
+      type: string

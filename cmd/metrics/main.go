@@ -16,7 +16,7 @@ import (
 	"time"
 )
 
-const collectMetricsInterval = 5 * time.Second
+const collectMetricsInterval = 3 * time.Minute
 
 type Config struct {
 	Port               string `envconfig:"PORT" default:"8000"`
@@ -113,7 +113,10 @@ func collectMetrics(ctx context.Context, d time.Duration, c *dependencytrack.Cli
 			ticker.Reset(d) // regular schedule
 			start := time.Now()
 			log.Infof("start scheduled collectMetrics run")
-			// do stuff
+			err := c.UpdateTotalProjects(ctx)
+			if err != nil {
+				log.Errorf("UpdateTotalProjects: %s", err)
+			}
 			log.
 				WithFields(log.Fields{
 					"duration": time.Since(start),

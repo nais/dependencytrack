@@ -19,30 +19,85 @@ func NewClient(baseUrl, username, password string) *Client {
 }
 
 func (c *Client) UpdateTotalProjects(ctx context.Context) error {
-
 	projects, err := c.GetProjects(ctx)
 	if err != nil {
 		return err
 	}
 	for _, project := range projects {
-		cluster := getTag(project, "cluster:")
-		if cluster == "" {
-			log.Errorf("missing cluster tag for project %s, skipping", project.Name)
+		clusters := getTagsWithPrefix(project.Tags, client.EnvironmentTagPrefix.String())
+		if len(clusters) == 0 {
+			log.Warnf("project %s has no cluster tag", project.Name)
 			continue
 		}
-		observability.DependencytrackTotalProjects.WithLabelValues(cluster).Inc()
+		teams := getTagsWithPrefix(project.Tags, client.TeamTagPrefix.String())
+		if len(teams) == 0 {
+			log.Warnf("project %s has no team tag", project.Name)
+			continue
+		}
+
+		workloads := getTagsWithPrefix(project.Tags, client.WorkloadTagPrefix.String())
+		if len(workloads) == 0 {
+			log.Warnf("project %s has no workload tag", project.Name)
+			continue
+		}
+
+		for _, cluster := range clusters {
+			for _, team := range teams {
+				for _, workload := range workloads {
+					// platform projects are not interesting for this metric
+					if strings.Contains(project.Name, "nais-io") {
+						continue
+					}
+
+					// only count projects that are relevant for the cluster and team
+					if !validWorkload(workload, cluster, team) {
+						continue
+					}
+
+					// only count projects that have metrics a.k.a. sbom exists
+					if !hasSbom(project) {
+						log.Warnf("project %s cluster: %s uuid: %s has no metrics", project.Name, cluster, project.Uuid)
+						continue
+					}
+
+					// app or job
+					workloadType := getWorkloadType(workload)
+					if workloadType == "" {
+						log.Warnf("project %s has no workload type", project.Name)
+						continue
+					}
+					observability.DependencytrackTotalProjects.WithLabelValues(cluster, team, workloadType).Inc()
+				}
+			}
+		}
 	}
 
 	return nil
 }
 
-// TODO: fix to get tag with prefix, e.g. cluster:
-func getTag(p *client.Project, t string) string {
-	for _, tag := range p.Tags {
-		if strings.HasPrefix(tag.Name, t) {
-			s, _ := strings.CutPrefix(tag.Name, t)
-			return s
+func hasSbom(project *client.Project) bool {
+	return project.Metrics != nil && project.Metrics.Components > 0
+}
+
+func getWorkloadType(workload string) string {
+	parts := strings.Split(workload, "|")
+	if len(parts) < 3 {
+		return ""
+	}
+	return parts[2]
+}
+
+func validWorkload(workload, cluster, team string) bool {
+	return strings.Contains(workload, cluster) && strings.Contains(workload, team)
+}
+
+func getTagsWithPrefix(tags []client.Tag, prefix string) []string {
+	var result []string
+	for _, tag := range tags {
+		if strings.HasPrefix(tag.Name, prefix) {
+			t, _ := strings.CutPrefix(tag.Name, prefix)
+			result = append(result, t)
 		}
 	}
-	return ""
+	return result
 }
