@@ -5,6 +5,7 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/kelseyhightower/envconfig"
 	"github.com/nais/dependencytrack/internal/dependencytrack"
+	"github.com/nais/dependencytrack/internal/http"
 	log "github.com/sirupsen/logrus"
 	"golang.org/x/sync/errgroup"
 	"os/signal"
@@ -48,7 +49,7 @@ func main() {
 	})
 
 	wg.Go(func() error {
-		return runHttpServer(ctx, cfg.ListenAddress, log.WithField("component", "httpserver"))
+		return http.RunHttpServer(ctx, cfg.ListenAddress, log.WithField("component", "httpserver"))
 	})
 
 	<-ctx.Done()

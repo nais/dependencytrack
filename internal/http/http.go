@@ -1,4 +1,4 @@
-package main
+package http
 
 import (
 	"context"
@@ -11,7 +11,7 @@ import (
 	"time"
 )
 
-func runHttpServer(
+func RunHttpServer(
 	ctx context.Context,
 	listenAddress string,
 	log logrus.FieldLogger,
