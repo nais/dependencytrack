@@ -13,7 +13,10 @@ import (
 	"time"
 )
 
-const collectMetricsInterval = 3 * time.Minute
+const (
+	collectMetricsInterval     = 3 * time.Minute
+	dependencyTrackSyncTimeout = time.Minute
+)
 
 type Config struct {
 	ListenAddress      string `envconfig:"LISTEN_ADDRESS" default:":8000"`
@@ -22,7 +25,6 @@ type Config struct {
 	Password           string `envconfig:"PASSWORD"`
 }
 
-// TODO: review waitgroups, context and signal handling
 func main() {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
@@ -80,6 +82,10 @@ func collectMetrics(ctx context.Context, d time.Duration, c *dependencytrack.Cli
 			return ctx.Err()
 		case <-ticker.C:
 			ticker.Reset(d) // regular schedule
+
+			ctx, cancel := context.WithTimeout(ctx, dependencyTrackSyncTimeout)
+			defer cancel()
+
 			start := time.Now()
 			log.Infof("start scheduled collectMetrics run")
 			err := c.UpdateTotalProjects(ctx)

@@ -56,11 +56,9 @@ func (c *Client) UpdateTotalProjects(ctx context.Context) error {
 						continue
 					}
 					sbom := strconv.FormatBool(hasSbom(project))
-					// platform projects are not interesting for this metric
-					// TODO should be added to a separate metric
 					if strings.Contains(project.Name, "nais-io") {
 						name := platformName(project.Name)
-						observability.DependencytrackTotalPlatformProjects.WithLabelValues(cluster, team, workloadType, name).Inc()
+						observability.DependencytrackTotalPlatformProjects.WithLabelValues(cluster, team, workloadType, name, sbom).Inc()
 					} else {
 						observability.DependencytrackTotalProjects.WithLabelValues(cluster, team, workloadType, sbom).Inc()
 					}

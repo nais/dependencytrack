@@ -17,7 +17,7 @@ var DependencytrackTotalPlatformProjects = prometheus.NewGaugeVec(
 		Name: "dependencytrack_projects_platform_total",
 		Help: "Total number of platform projects in DependencyTrack",
 	},
-	[]string{"cluster", "team", "workload", "platform"},
+	[]string{"cluster", "team", "workload", "platform", "has_sbom"},
 )
 
 func init() {
