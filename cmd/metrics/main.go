@@ -15,7 +15,7 @@ import (
 const collectMetricsInterval = 3 * time.Minute
 
 type Config struct {
-	ListenAddress      string `envconfig:"LISTEN_ADDRESS" default:"localhost:8000"`
+	ListenAddress      string `envconfig:"LISTEN_ADDRESS" default:":8000"`
 	DependencytrackUrl string `envconfig:"DEPENDENCYTRACK_URL" default:"http://localhost:8080"`
 	Username           string `envconfig:"USERNAME" default:"admin"`
 	Password           string `envconfig:"PASSWORD"`

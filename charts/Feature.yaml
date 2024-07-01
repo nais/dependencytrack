@@ -115,7 +115,7 @@ values:
     displayName: Bootstrap Trivy ignore unfixed
     config:
       type: bool
-  image.tag:
+  bootstrap.image.tag:
     description: dependency-track bootstrap image
     displayName: Bootstrap image tag
     config:
