@@ -55,7 +55,7 @@ jobs:
       - uses: nais/platform-build-push-sign@main
         id: build-push-sign-bootstrap
         with:
-          name: dependencytrack-bootstrap
+          name: ${{ env.NAME }}-bootstrap
           google_service_account: gh-${{ env.NAME }}
           workload_identity_provider: ${{ secrets.NAIS_IO_WORKLOAD_IDENTITY_PROVIDER }}
           push: true
@@ -63,7 +63,7 @@ jobs:
       - uses: nais/platform-build-push-sign@main
         id: build-push-sign-metrics
         with:
-          name: dependencytrack-metrics
+          name: ${{ env.NAME }}-metrics
           dockerfile: Dockerfile.metrics
           google_service_account: gh-${{ env.NAME }}
           workload_identity_provider: ${{ secrets.NAIS_IO_WORKLOAD_IDENTITY_PROVIDER }}
@@ -88,7 +88,7 @@ jobs:
       - uses: azure/setup-helm@v4
         name: "Setup Helm"
         with:
-          version: "v3.14.0"
+          version: "v3.15.2"
 
       - name: Build Chart
         run: |-
