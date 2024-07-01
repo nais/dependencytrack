@@ -119,6 +119,9 @@ spec:
             capabilities:
               drop:
                 - ALL
+          ports:
+            - name: http-metrics
+              containerPort: 8000
         - name: cloudsql-proxy
           image: {{ .Values.backend.cloudProxy.repository }}:{{ .Values.backend.cloudProxy.tag }}
           command:
