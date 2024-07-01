@@ -2,15 +2,11 @@ package main
 
 import (
 	"context"
-	"errors"
-	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	"github.com/kelseyhightower/envconfig"
 	"github.com/nais/dependencytrack/internal/dependencytrack"
-	"github.com/prometheus/client_golang/prometheus/promhttp"
 	log "github.com/sirupsen/logrus"
 	"golang.org/x/sync/errgroup"
-	"net/http"
 	"os/signal"
 	"syscall"
 	"time"
@@ -19,7 +15,7 @@ import (
 const collectMetricsInterval = 3 * time.Minute
 
 type Config struct {
-	Port               string `envconfig:"PORT" default:"8000"`
+	ListenAddress      string `envconfig:"LISTEN_ADDRESS" default:"localhost:8000"`
 	DependencytrackUrl string `envconfig:"DEPENDENCYTRACK_URL" default:"http://localhost:8080"`
 	Username           string `envconfig:"USERNAME" default:"admin"`
 	Password           string `envconfig:"PASSWORD"`
@@ -51,36 +47,8 @@ func main() {
 		return collectMetrics(ctx, collectMetricsInterval, c)
 	})
 
-	// TODO: how to do graceful shutdown for gin
-	router := gin.Default()
-	router.GET("/ping", pong())
-	router.GET("/metrics", metrics())
-
-	srv := &http.Server{
-		Addr:    "localhost:" + cfg.Port,
-		Handler: router.Handler(),
-	}
-
 	wg.Go(func() error {
-		log.Infof("HTTP server accepting requests on %q", srv.Addr)
-		if err := srv.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
-			log.WithError(err).Infof("unexpected error from HTTP server")
-			return err
-		}
-		log.Infof("HTTP server finished, terminating...")
-		return nil
-	})
-
-	wg.Go(func() error {
-		<-ctx.Done()
-		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-		defer cancel()
-		log.Infof("HTTP server shutting down...")
-		if err := srv.Shutdown(ctx); err != nil && !errors.Is(err, context.Canceled) {
-			log.WithError(err).Infof("HTTP server shutdown failed")
-			return err
-		}
-		return nil
+		return runHttpServer(ctx, cfg.ListenAddress, log.WithField("component", "httpserver"))
 	})
 
 	<-ctx.Done()
@@ -98,7 +66,7 @@ func main() {
 	case err := <-ch:
 		log.Fatalf("error during shutdown: %s", err)
 	}
-
+	log.Infof("shutdown complete")
 }
 
 func collectMetrics(ctx context.Context, d time.Duration, c *dependencytrack.Client) error {
@@ -123,20 +91,5 @@ func collectMetrics(ctx context.Context, d time.Duration, c *dependencytrack.Cli
 				}).
 				Infof("scheduled collectMetrics run finished")
 		}
-	}
-}
-
-func pong() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "pong",
-		})
-	}
-}
-
-func metrics() gin.HandlerFunc {
-	h := promhttp.Handler()
-	return func(c *gin.Context) {
-		h.ServeHTTP(c.Writer, c.Request)
 	}
 }

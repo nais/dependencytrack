@@ -6,15 +6,15 @@ import (
 
 var DependencytrackTotalProjects = prometheus.NewGaugeVec(
 	prometheus.GaugeOpts{
-		Name: "dependencytrack_total_projects",
+		Name: "dependencytrack_projects_total",
 		Help: "Total number of projects in DependencyTrack",
 	},
-	[]string{"cluster", "team", "workload"},
+	[]string{"cluster", "team", "workload", "has_sbom"},
 )
 
 var DependencytrackTotalPlatformProjects = prometheus.NewGaugeVec(
 	prometheus.GaugeOpts{
-		Name: "dependencytrack_total_platform_projects",
+		Name: "dependencytrack_projects_platform_total",
 		Help: "Total number of platform projects in DependencyTrack",
 	},
 	[]string{"cluster", "team", "workload", "platform"},

@@ -5,6 +5,7 @@ import (
 	"github.com/nais/dependencytrack/internal/observability"
 	"github.com/nais/dependencytrack/pkg/client"
 	log "github.com/sirupsen/logrus"
+	"strconv"
 	"strings"
 )
 
@@ -49,24 +50,19 @@ func (c *Client) UpdateTotalProjects(ctx context.Context) error {
 						continue
 					}
 
-					// only count projects that have metrics a.k.a. sbom exists
-					if !hasSbom(project) {
-						log.Warnf("project %s cluster: %s uuid: %s has no metrics", project.Name, cluster, project.Uuid)
-						continue
-					}
-
 					workloadType := workloadType(workload)
 					if workloadType == "" {
 						log.Warnf("project %s has no workload type", project.Name)
 						continue
 					}
+					sbom := strconv.FormatBool(hasSbom(project))
 					// platform projects are not interesting for this metric
 					// TODO should be added to a separate metric
 					if strings.Contains(project.Name, "nais-io") {
 						name := platformName(project.Name)
 						observability.DependencytrackTotalPlatformProjects.WithLabelValues(cluster, team, workloadType, name).Inc()
 					} else {
-						observability.DependencytrackTotalProjects.WithLabelValues(cluster, team, workloadType).Inc()
+						observability.DependencytrackTotalProjects.WithLabelValues(cluster, team, workloadType, sbom).Inc()
 					}
 				}
 			}
