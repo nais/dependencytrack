@@ -4,23 +4,44 @@ import (
 	"context"
 	"github.com/nais/dependencytrack/internal/observability"
 	"github.com/nais/dependencytrack/pkg/client"
+	"github.com/patrickmn/go-cache"
 	log "github.com/sirupsen/logrus"
 	"strconv"
 	"strings"
+	"time"
+)
+
+const (
+	ProjectsCacheKey = "projects"
 )
 
 type Client struct {
 	client.Client
+	Cache *cache.Cache
 }
 
 func NewClient(baseUrl, username, password string) *Client {
 	return &Client{
 		Client: client.New(baseUrl, username, password),
+		Cache:  cache.New(10*time.Minute, 5*time.Minute),
 	}
 }
 
-func (c *Client) UpdateTotalProjects(ctx context.Context) error {
+func (c *Client) getProjects(ctx context.Context) ([]*client.Project, error) {
+	if v, ok := c.Cache.Get(ProjectsCacheKey); ok {
+		return v.([]*client.Project), nil
+	}
+
 	projects, err := c.GetProjects(ctx)
+	if err != nil {
+		return nil, err
+	}
+	c.Cache.Set(ProjectsCacheKey, projects, cache.DefaultExpiration)
+	return projects, nil
+}
+
+func (c *Client) UpdateTotalProjects(ctx context.Context) error {
+	projects, err := c.getProjects(ctx)
 	if err != nil {
 		return err
 	}
