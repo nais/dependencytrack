@@ -106,7 +106,6 @@ spec:
               mountPath: /tmp
           resources:
             {{- toYaml .Values.backend.resources | nindent 12 }}
-        # TODO: this will run for every replica, should be moved to a separate deployment or job?
         - name: dependencytrack-metrics
           image: "{{ .Values.metrics.image.repository }}/{{ .Values.metrics.image.name }}:{{ .Values.metrics.image.tag }}"
           env:

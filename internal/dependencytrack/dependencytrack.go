@@ -70,10 +70,6 @@ func (c *Client) UpdateTotalProjects(ctx context.Context) error {
 		for _, cluster := range clusters {
 			for _, team := range teams {
 				for _, workload := range workloads {
-					// only count projects that are relevant for the cluster and team
-					if !validWorkload(workload, cluster, team) {
-						continue
-					}
 
 					workloadType := workloadType(workload)
 					if workloadType == "" {
@@ -81,8 +77,8 @@ func (c *Client) UpdateTotalProjects(ctx context.Context) error {
 						continue
 					}
 					sbom := strconv.FormatBool(hasSbom(project))
-					observability.WorkloadRegistered.WithLabelValues(cluster, team, workloadType, sbom).Inc()
-					observability.WorkloadRiskscore.WithLabelValues(cluster, team, workloadType, sbom).Set(project.Metrics.InheritedRiskScore)
+					observability.WorkloadRegistered.WithLabelValues(cluster, team, workloadType, sbom, project.Name).Set(1)
+					observability.WorkloadRiskscore.WithLabelValues(cluster, team, workloadType, sbom, project.Name).Set(project.Metrics.InheritedRiskScore)
 				}
 			}
 		}
@@ -95,20 +91,12 @@ func hasSbom(project *client.Project) bool {
 	return project.Metrics != nil && project.Metrics.Components > 0
 }
 
-func platformName(workload string) string {
-	return workload[strings.LastIndex(workload, "/")+1:]
-}
-
 func workloadType(workload string) string {
 	parts := strings.Split(workload, "|")
 	if len(parts) < 3 {
 		return ""
 	}
 	return parts[2]
-}
-
-func validWorkload(workload, cluster, team string) bool {
-	return strings.Contains(workload, cluster) && strings.Contains(workload, team)
 }
 
 func tagsWithPrefix(tags []client.Tag, prefix string) []string {

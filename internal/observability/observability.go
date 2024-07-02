@@ -8,7 +8,7 @@ const (
 	Namespace = "vuln"
 )
 
-var Labels = []string{"cluster", "team", "workload", "image"}
+var Labels = []string{"cluster", "team", "workload", "has_sbom", "image"}
 
 var WorkloadRegistered = prometheus.NewGaugeVec(
 	prometheus.GaugeOpts{
