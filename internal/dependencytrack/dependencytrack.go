@@ -45,6 +45,10 @@ func (c *Client) UpdateTotalProjects(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
+
+	observability.WorkloadRegistered.Reset()
+	observability.WorkloadRiskscore.Reset()
+
 	for _, project := range projects {
 		clusters := tagsWithPrefix(project.Tags, client.EnvironmentTagPrefix.String())
 		if len(clusters) == 0 {
@@ -77,12 +81,8 @@ func (c *Client) UpdateTotalProjects(ctx context.Context) error {
 						continue
 					}
 					sbom := strconv.FormatBool(hasSbom(project))
-					if strings.Contains(project.Name, "nais-io") {
-						name := platformName(project.Name)
-						observability.DependencytrackTotalPlatformProjects.WithLabelValues(cluster, team, workloadType, name, sbom).Inc()
-					} else {
-						observability.DependencytrackTotalProjects.WithLabelValues(cluster, team, workloadType, sbom).Inc()
-					}
+					observability.WorkloadRegistered.WithLabelValues(cluster, team, workloadType, sbom).Inc()
+					observability.WorkloadRiskscore.WithLabelValues(cluster, team, workloadType, sbom).Set(project.Metrics.InheritedRiskScore)
 				}
 			}
 		}

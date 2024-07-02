@@ -4,23 +4,29 @@ import (
 	"github.com/prometheus/client_golang/prometheus"
 )
 
-var DependencytrackTotalProjects = prometheus.NewGaugeVec(
-	prometheus.GaugeOpts{
-		Name: "dependencytrack_projects_total",
-		Help: "Total number of projects in DependencyTrack",
-	},
-	[]string{"cluster", "team", "workload", "has_sbom"},
+const (
+	Namespace = "vuln"
 )
 
-var DependencytrackTotalPlatformProjects = prometheus.NewGaugeVec(
+var Labels = []string{"cluster", "team", "workload", "image"}
+
+var WorkloadRegistered = prometheus.NewGaugeVec(
 	prometheus.GaugeOpts{
-		Name: "dependencytrack_projects_platform_total",
-		Help: "Total number of platform projects in DependencyTrack",
+		Namespace: Namespace,
+		Name:      "workloads_registered",
 	},
-	[]string{"cluster", "team", "workload", "platform", "has_sbom"},
+	Labels,
+)
+
+var WorkloadRiskscore = prometheus.NewGaugeVec(
+	prometheus.GaugeOpts{
+		Namespace: Namespace,
+		Name:      "workloads_riskscore",
+	},
+	Labels,
 )
 
 func init() {
-	prometheus.MustRegister(DependencytrackTotalProjects)
-	prometheus.MustRegister(DependencytrackTotalPlatformProjects)
+	prometheus.MustRegister(WorkloadRegistered)
+	prometheus.MustRegister(WorkloadRiskscore)
 }
