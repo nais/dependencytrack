@@ -15,7 +15,8 @@ metrics:
       value: admin
     - name: PASSWORD
       value: todo
-
+    - name: TENANT
+      value: nais
 
 bootstrap:
   image:

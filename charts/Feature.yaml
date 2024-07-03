@@ -142,6 +142,19 @@ values:
     config:
       type: bool
 
+  # metrics Config
+  metrics.image.tag:
+    description: Metrics dependency-track image tag
+    displayName: Metrics image tag
+    config:
+      type: string
+  metrics.env:
+    displayName: Metrics env
+    computed:
+      template: |
+        - name: TENANT
+          value: "nais"
+
   # Frontend Config
   frontend.swagger.enabled:
     displayName: Swagger UI enabled

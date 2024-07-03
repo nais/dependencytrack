@@ -23,7 +23,7 @@ type Client struct {
 func NewClient(baseUrl, username, password string) *Client {
 	return &Client{
 		Client: client.New(baseUrl, username, password),
-		Cache:  cache.New(10*time.Minute, 5*time.Minute),
+		Cache:  cache.New(9*time.Minute, 3*time.Minute),
 	}
 }
 
@@ -40,7 +40,7 @@ func (c *Client) getProjects(ctx context.Context) ([]*client.Project, error) {
 	return projects, nil
 }
 
-func (c *Client) UpdateTotalProjects(ctx context.Context) error {
+func (c *Client) UpdateTotalProjects(ctx context.Context, tenant string) error {
 	projects, err := c.getProjects(ctx)
 	if err != nil {
 		return err
@@ -77,8 +77,9 @@ func (c *Client) UpdateTotalProjects(ctx context.Context) error {
 						continue
 					}
 					sbom := strconv.FormatBool(hasSbom(project))
-					observability.WorkloadRegistered.WithLabelValues(cluster, team, workloadType, sbom, project.Name).Set(1)
-					observability.WorkloadRiskscore.WithLabelValues(cluster, team, workloadType, sbom, project.Name).Set(project.Metrics.InheritedRiskScore)
+					tenantCluster := tenant + "-" + cluster
+					observability.WorkloadRegistered.WithLabelValues(tenantCluster, team, workloadType, sbom, project.Name).Set(1)
+					observability.WorkloadRiskscore.WithLabelValues(tenantCluster, team, workloadType, sbom, project.Name).Set(project.Metrics.InheritedRiskScore)
 				}
 			}
 		}

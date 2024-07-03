@@ -19,10 +19,11 @@ const (
 )
 
 type Config struct {
-	ListenAddress      string `envconfig:"LISTEN_ADDRESS" default:":8000"`
 	DependencytrackUrl string `envconfig:"DEPENDENCYTRACK_URL" default:"http://localhost:8080"`
-	Username           string `envconfig:"USERNAME" default:"admin"`
+	ListenAddress      string `envconfig:"LISTEN_ADDRESS" default:":8000"`
 	Password           string `envconfig:"PASSWORD"`
+	Tenant             string `envconfig:"TENANT" default:"test"`
+	Username           string `envconfig:"USERNAME" default:"admin"`
 }
 
 func main() {
@@ -47,7 +48,7 @@ func main() {
 
 	wg, ctx := errgroup.WithContext(ctx)
 	wg.Go(func() error {
-		return collectMetrics(ctx, collectMetricsInterval, c)
+		return collectMetrics(ctx, collectMetricsInterval, c, cfg.Tenant)
 	})
 
 	wg.Go(func() error {
@@ -72,7 +73,7 @@ func main() {
 	log.Infof("shutdown complete")
 }
 
-func collectMetrics(ctx context.Context, d time.Duration, c *dependencytrack.Client) error {
+func collectMetrics(ctx context.Context, d time.Duration, c *dependencytrack.Client, tenant string) error {
 	ticker := time.NewTicker(time.Second) // initial run
 	defer ticker.Stop()
 
@@ -88,7 +89,7 @@ func collectMetrics(ctx context.Context, d time.Duration, c *dependencytrack.Cli
 
 			start := time.Now()
 			log.Infof("start scheduled collectMetrics run")
-			err := c.UpdateTotalProjects(ctx)
+			err := c.UpdateTotalProjects(ctx, tenant)
 			if err != nil {
 				log.Errorf("UpdateTotalProjects: %s", err)
 			}
