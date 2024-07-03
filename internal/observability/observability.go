@@ -26,7 +26,16 @@ var WorkloadRiskscore = prometheus.NewGaugeVec(
 	Labels,
 )
 
+var WorkloadCritical = prometheus.NewGaugeVec(
+	prometheus.GaugeOpts{
+		Namespace: Namespace,
+		Name:      "workloads_critical",
+	},
+	Labels,
+)
+
 func init() {
 	prometheus.MustRegister(WorkloadRegistered)
 	prometheus.MustRegister(WorkloadRiskscore)
+	prometheus.MustRegister(WorkloadCritical)
 }

@@ -48,6 +48,7 @@ func (c *Client) UpdateTotalProjects(ctx context.Context, tenant string) error {
 
 	observability.WorkloadRegistered.Reset()
 	observability.WorkloadRiskscore.Reset()
+	observability.WorkloadCritical.Reset()
 
 	for _, project := range projects {
 		clusters := tagsWithPrefix(project.Tags, client.EnvironmentTagPrefix.String())
@@ -70,7 +71,6 @@ func (c *Client) UpdateTotalProjects(ctx context.Context, tenant string) error {
 		for _, cluster := range clusters {
 			for _, team := range teams {
 				for _, workload := range workloads {
-
 					workloadType := workloadType(workload)
 					if workloadType == "" {
 						log.Warnf("project %s has no workload type", project.Name)
@@ -80,6 +80,7 @@ func (c *Client) UpdateTotalProjects(ctx context.Context, tenant string) error {
 					tenantCluster := tenant + "-" + cluster
 					observability.WorkloadRegistered.WithLabelValues(tenantCluster, team, workloadType, sbom, project.Name).Set(1)
 					observability.WorkloadRiskscore.WithLabelValues(tenantCluster, team, workloadType, sbom, project.Name).Set(project.Metrics.InheritedRiskScore)
+					observability.WorkloadCritical.WithLabelValues(tenantCluster, team, workloadType, sbom, project.Name).Set(float64(project.Metrics.Critical))
 				}
 			}
 		}
