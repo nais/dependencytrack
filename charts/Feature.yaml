@@ -151,7 +151,7 @@ values:
   metrics.tenant:
     displayName: Tenant
     computed:
-      template: '{{ .Tenant.Name }} | quote'
+      template: '{{ .Tenant.Name }}'
 
   # Frontend Config
   frontend.swagger.enabled:
