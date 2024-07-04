@@ -78,9 +78,15 @@ func (c *Client) UpdateTotalProjects(ctx context.Context, tenant string) error {
 					}
 					sbom := strconv.FormatBool(hasSbom(project))
 					tenantCluster := tenant + "-" + cluster
+					riskScore := 0.0
+					critical := 0.0
+					if hasSbom(project) {
+						riskScore = project.Metrics.InheritedRiskScore
+						critical = float64(project.Metrics.Critical)
+					}
 					observability.WorkloadRegistered.WithLabelValues(tenantCluster, team, workloadType, sbom, project.Name).Set(1)
-					observability.WorkloadRiskscore.WithLabelValues(tenantCluster, team, workloadType, sbom, project.Name).Set(project.Metrics.InheritedRiskScore)
-					observability.WorkloadCritical.WithLabelValues(tenantCluster, team, workloadType, sbom, project.Name).Set(float64(project.Metrics.Critical))
+					observability.WorkloadRiskscore.WithLabelValues(tenantCluster, team, workloadType, sbom, project.Name).Set(riskScore)
+					observability.WorkloadCritical.WithLabelValues(tenantCluster, team, workloadType, sbom, project.Name).Set(critical)
 				}
 			}
 		}
