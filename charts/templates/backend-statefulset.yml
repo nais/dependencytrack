@@ -117,6 +117,8 @@ spec:
               value: admin
             - name: TENANT
               value: {{ .Values.metrics.tenant }}
+            - name: IMAGES_IGNORE
+              value: {{ .Values.metrics.imagesIgnore }}
           envFrom:
             - secretRef:
                 name: "{{ .Release.Name }}-metrics"

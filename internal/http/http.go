@@ -3,12 +3,13 @@ package http
 import (
 	"context"
 	"errors"
+	"net/http"
+	"time"
+
 	"github.com/gin-gonic/gin"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/sirupsen/logrus"
 	"golang.org/x/sync/errgroup"
-	"net/http"
-	"time"
 )
 
 func RunHttpServer(

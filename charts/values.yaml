@@ -7,6 +7,7 @@ metrics:
     repository: europe-north1-docker.pkg.dev/nais-io/nais/images
     tag: yolo
   tenant: nais
+  imagesIgnore: "nais-io/nais/images/clamav,nais-io/nais/images/wonderwall,nais-io/nais/images/elector"
 
 bootstrap:
   image:

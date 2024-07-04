@@ -2,13 +2,14 @@ package dependencytrack
 
 import (
 	"context"
+	"strconv"
+	"strings"
+	"time"
+
 	"github.com/nais/dependencytrack/internal/observability"
 	"github.com/nais/dependencytrack/pkg/client"
 	"github.com/patrickmn/go-cache"
 	log "github.com/sirupsen/logrus"
-	"strconv"
-	"strings"
-	"time"
 )
 
 const (
@@ -40,7 +41,7 @@ func (c *Client) getProjects(ctx context.Context) ([]*client.Project, error) {
 	return projects, nil
 }
 
-func (c *Client) UpdateTotalProjects(ctx context.Context, tenant string) error {
+func (c *Client) UpdateTotalProjects(ctx context.Context, tenant string, imagesIgnore string) error {
 	projects, err := c.getProjects(ctx)
 	if err != nil {
 		return err
@@ -84,9 +85,12 @@ func (c *Client) UpdateTotalProjects(ctx context.Context, tenant string) error {
 						riskScore = project.Metrics.InheritedRiskScore
 						critical = float64(project.Metrics.Critical)
 					}
-					teamWorkloads[tenantCluster+":"+team+":"+workloadName(workload)] = hasSbom(project)
-					observability.WorkloadRiskscore.WithLabelValues(tenantCluster, team, w, sbom, project.Name).Set(riskScore)
-					observability.WorkloadCritical.WithLabelValues(tenantCluster, team, w, sbom, project.Name).Set(critical)
+					// TODO: find a better way imagesIgnore for now
+					if !IsInImagesIgnoreList(project.Name, imagesIgnore) {
+						teamWorkloads[tenantCluster+":"+team+":"+workloadName(workload)] = hasSbom(project)
+						observability.WorkloadRiskscore.WithLabelValues(tenantCluster, team, sbom, project.Name, project.Version).Set(riskScore)
+						observability.WorkloadCritical.WithLabelValues(tenantCluster, team, sbom, project.Name, project.Version).Set(critical)
+					}
 				}
 			}
 		}
@@ -101,6 +105,19 @@ func (c *Client) UpdateTotalProjects(ctx context.Context, tenant string) error {
 	}
 
 	return nil
+}
+
+func IsInImagesIgnoreList(image string, imagesIgnore string) bool {
+	if imagesIgnore == "" {
+		return false
+	}
+	images := strings.Split(imagesIgnore, ",")
+	for _, i := range images {
+		if strings.Contains(image, i) {
+			return true
+		}
+	}
+	return false
 }
 
 func hasSbom(project *client.Project) bool {

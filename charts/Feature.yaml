@@ -152,6 +152,10 @@ values:
     displayName: Tenant
     computed:
       template: '{{ .Tenant.Name }}'
+  metrics.imagesIgnore:
+    displayName: Metrics images ignore
+    config:
+      type: string
 
   # Frontend Config
   frontend.swagger.enabled:
@@ -203,9 +207,5 @@ values:
       secret: true
   trivy.image.tag:
     displayName: Trivy image tag
-    config:
-      type: string
-  trivy.debugMode:
-    displayName: Trivy debug mode
     config:
       type: string

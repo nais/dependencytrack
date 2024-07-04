@@ -2,15 +2,16 @@ package main
 
 import (
 	"context"
+	"os/signal"
+	"syscall"
+	"time"
+
 	"github.com/joho/godotenv"
 	"github.com/kelseyhightower/envconfig"
 	"github.com/nais/dependencytrack/internal/dependencytrack"
 	"github.com/nais/dependencytrack/internal/http"
 	log "github.com/sirupsen/logrus"
 	"golang.org/x/sync/errgroup"
-	"os/signal"
-	"syscall"
-	"time"
 )
 
 const (
@@ -24,6 +25,7 @@ type Config struct {
 	Password           string `envconfig:"PASSWORD"`
 	Tenant             string `envconfig:"TENANT" default:"test"`
 	Username           string `envconfig:"USERNAME" default:"admin"`
+	ImagesIgnore       string `envconfig:"IMAGES_IGNORE"`
 }
 
 func main() {
@@ -48,7 +50,7 @@ func main() {
 
 	wg, ctx := errgroup.WithContext(ctx)
 	wg.Go(func() error {
-		return collectMetrics(ctx, collectMetricsInterval, c, cfg.Tenant)
+		return collectMetrics(ctx, collectMetricsInterval, c, cfg.Tenant, cfg.ImagesIgnore)
 	})
 
 	wg.Go(func() error {
@@ -73,7 +75,7 @@ func main() {
 	log.Infof("shutdown complete")
 }
 
-func collectMetrics(ctx context.Context, d time.Duration, c *dependencytrack.Client, tenant string) error {
+func collectMetrics(ctx context.Context, d time.Duration, c *dependencytrack.Client, tenant, imagesIgnore string) error {
 	ticker := time.NewTicker(time.Second) // initial run
 	defer ticker.Stop()
 
@@ -89,7 +91,7 @@ func collectMetrics(ctx context.Context, d time.Duration, c *dependencytrack.Cli
 
 			start := time.Now()
 			log.Infof("start scheduled collectMetrics run")
-			err := c.UpdateTotalProjects(ctx, tenant)
+			err := c.UpdateTotalProjects(ctx, tenant, imagesIgnore)
 			if err != nil {
 				log.Errorf("UpdateTotalProjects: %s", err)
 			}
