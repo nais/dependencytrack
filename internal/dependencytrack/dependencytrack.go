@@ -69,6 +69,11 @@ func (c *Client) UpdateTotalProjects(ctx context.Context, tenant string, imagesI
 			continue
 		}
 
+		// TODO: find a better way imagesIgnore for now
+		if IsInImagesIgnoreList(project.Name, imagesIgnore) {
+			continue
+		}
+
 		for _, cluster := range clusters {
 			for _, team := range teams {
 				for _, workload := range workloads {
@@ -85,12 +90,9 @@ func (c *Client) UpdateTotalProjects(ctx context.Context, tenant string, imagesI
 						riskScore = project.Metrics.InheritedRiskScore
 						critical = float64(project.Metrics.Critical)
 					}
-					// TODO: find a better way imagesIgnore for now
-					if !IsInImagesIgnoreList(project.Name, imagesIgnore) {
-						teamWorkloads[tenantCluster+":"+team+":"+workloadName(workload)] = hasSbom(project)
-						observability.WorkloadRiskscore.WithLabelValues(tenantCluster, team, sbom, project.Name, project.Version).Set(riskScore)
-						observability.WorkloadCritical.WithLabelValues(tenantCluster, team, sbom, project.Name, project.Version).Set(critical)
-					}
+					teamWorkloads[tenantCluster+":"+team+":"+workloadName(workload)] = hasSbom(project)
+					observability.WorkloadRiskscore.WithLabelValues(tenantCluster, team, sbom, project.Name, project.Version).Set(riskScore)
+					observability.WorkloadCritical.WithLabelValues(tenantCluster, team, sbom, project.Name, project.Version).Set(critical)
 				}
 			}
 		}
