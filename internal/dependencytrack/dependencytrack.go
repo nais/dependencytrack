@@ -107,14 +107,6 @@ func hasSbom(project *client.Project) bool {
 	return project.Metrics != nil && project.Metrics.Components > 0
 }
 
-func workloadType(workload string) string {
-	parts := strings.Split(workload, "|")
-	if len(parts) < 3 {
-		return ""
-	}
-	return parts[2]
-}
-
 func workloadName(workload string) string {
 	parts := strings.Split(workload, "|")
 	if len(parts) < 4 {
