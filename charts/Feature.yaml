@@ -115,7 +115,7 @@ values:
     displayName: Bootstrap Trivy ignore unfixed
     config:
       type: bool
-  image.tag:
+  bootstrap.image.tag:
     description: dependency-track bootstrap image
     displayName: Bootstrap image tag
     config:
@@ -141,6 +141,17 @@ values:
     displayName: Bootstrap Google OSV enabled
     config:
       type: bool
+
+  # metrics Config
+  metrics.image.tag:
+    description: Metrics dependency-track image tag
+    displayName: Metrics image tag
+    config:
+      type: string
+  metrics.tenant:
+    displayName: Tenant
+    computed:
+      template: '{{ .Tenant.Name }} | quote'
 
   # Frontend Config
   frontend.swagger.enabled:
@@ -197,4 +208,4 @@ values:
   trivy.debugMode:
     displayName: Trivy debug mode
     config:
-      type: bool
+      type: string

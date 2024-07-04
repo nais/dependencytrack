@@ -8,11 +8,11 @@ RUN go version
 COPY . /src
 WORKDIR /src
 RUN go mod download
-RUN go build -a -installsuffix cgo -o /bin/bootstrap cmd/bootstrap/main.go
+RUN go build -a -installsuffix cgo -o /bin/metrics cmd/metrics/main.go
 
 FROM alpine:3
 RUN export PATH=$PATH:/app
 WORKDIR /app
-COPY --from=builder /bin/bootstrap /app/bootstrap
+COPY --from=builder /bin/metrics /app/metrics
 
-ENTRYPOINT ["/app/bootstrap"]
+ENTRYPOINT ["/app/metrics"]

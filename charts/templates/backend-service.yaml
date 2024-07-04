@@ -9,5 +9,8 @@ spec:
     - port: 8080
       name: http
       targetPort: http
+    - port: 8000
+      name: http-metrics
+      targetPort: http-metrics
   selector:
     app.kubernetes.io/instance: {{ include "dependencytrack-backend.name" . }}
