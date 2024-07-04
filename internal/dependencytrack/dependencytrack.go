@@ -49,7 +49,7 @@ func (c *Client) UpdateTotalProjects(ctx context.Context, tenant string) error {
 	observability.WorkloadRegistered.Reset()
 	observability.WorkloadRiskscore.Reset()
 	observability.WorkloadCritical.Reset()
-
+	teamWorkloads := map[string]bool{}
 	for _, project := range projects {
 		clusters := tagsWithPrefix(project.Tags, client.EnvironmentTagPrefix.String())
 		if len(clusters) == 0 {
@@ -71,9 +71,9 @@ func (c *Client) UpdateTotalProjects(ctx context.Context, tenant string) error {
 		for _, cluster := range clusters {
 			for _, team := range teams {
 				for _, workload := range workloads {
-					workloadType := workloadType(workload)
-					if workloadType == "" {
-						log.Warnf("project %s has no workload type", project.Name)
+					w := workloadName(workload)
+					if w == "" {
+						log.Warnf("project %s has no workload name", project.Name)
 						continue
 					}
 					sbom := strconv.FormatBool(hasSbom(project))
@@ -84,12 +84,20 @@ func (c *Client) UpdateTotalProjects(ctx context.Context, tenant string) error {
 						riskScore = project.Metrics.InheritedRiskScore
 						critical = float64(project.Metrics.Critical)
 					}
-					observability.WorkloadRegistered.WithLabelValues(tenantCluster, team, workloadType, sbom, project.Name).Set(1)
-					observability.WorkloadRiskscore.WithLabelValues(tenantCluster, team, workloadType, sbom, project.Name).Set(riskScore)
-					observability.WorkloadCritical.WithLabelValues(tenantCluster, team, workloadType, sbom, project.Name).Set(critical)
+					teamWorkloads[tenantCluster+":"+team+":"+workloadName(workload)] = hasSbom(project)
+					observability.WorkloadRiskscore.WithLabelValues(tenantCluster, team, w, sbom, project.Name).Set(riskScore)
+					observability.WorkloadCritical.WithLabelValues(tenantCluster, team, w, sbom, project.Name).Set(critical)
 				}
 			}
 		}
+	}
+
+	for teamWorkload, sbom := range teamWorkloads {
+		parts := strings.Split(teamWorkload, ":")
+		tenantCluster := parts[0]
+		team := parts[1]
+		workload := parts[2]
+		observability.WorkloadRegistered.WithLabelValues(tenantCluster, team, workload, strconv.FormatBool(sbom)).Set(1)
 	}
 
 	return nil
@@ -105,6 +113,14 @@ func workloadType(workload string) string {
 		return ""
 	}
 	return parts[2]
+}
+
+func workloadName(workload string) string {
+	parts := strings.Split(workload, "|")
+	if len(parts) < 4 {
+		return ""
+	}
+	return parts[3]
 }
 
 func tagsWithPrefix(tags []client.Tag, prefix string) []string {

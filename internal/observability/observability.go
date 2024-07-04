@@ -15,7 +15,7 @@ var WorkloadRegistered = prometheus.NewGaugeVec(
 		Namespace: Namespace,
 		Name:      "workloads_registered",
 	},
-	Labels,
+	[]string{"cluster", "team", "workload", "has_sbom"},
 )
 
 var WorkloadRiskscore = prometheus.NewGaugeVec(
