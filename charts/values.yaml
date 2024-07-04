@@ -6,17 +6,7 @@ metrics:
     name: dependencytrack-metrics
     repository: europe-north1-docker.pkg.dev/nais-io/nais/images
     tag: yolo
-  env:
-    - name: LOG_LEVEL
-      value: INFO
-    - name: DEPENDENCYTRACK_URL
-      value: http://dependencytrack-backend:8080
-    - name: USERNAME
-      value: admin
-    - name: PASSWORD
-      value: todo
-    - name: TENANT
-      value: nais
+  tenant: nais
 
 bootstrap:
   image:

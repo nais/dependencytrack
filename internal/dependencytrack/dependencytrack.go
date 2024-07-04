@@ -23,7 +23,7 @@ type Client struct {
 func NewClient(baseUrl, username, password string) *Client {
 	return &Client{
 		Client: client.New(baseUrl, username, password),
-		Cache:  cache.New(9*time.Minute, 3*time.Minute),
+		Cache:  cache.New(20*time.Minute, 3*time.Minute),
 	}
 }
 

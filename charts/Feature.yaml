@@ -148,12 +148,10 @@ values:
     displayName: Metrics image tag
     config:
       type: string
-  metrics.env:
-    displayName: Metrics env
+  metrics.tenant:
+    displayName: Tenant
     computed:
-      template: |
-        - name: TENANT
-          value: "nais"
+      template: '{{ .Tenant.Name }} | quote'
 
   # Frontend Config
   frontend.swagger.enabled:

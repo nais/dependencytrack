@@ -109,7 +109,17 @@ spec:
         - name: dependencytrack-metrics
           image: "{{ .Values.metrics.image.repository }}/{{ .Values.metrics.image.name }}:{{ .Values.metrics.image.tag }}"
           env:
-            {{- .Values.metrics.env | toYaml | nindent 12 }}
+            - name: LOG_LEVEL
+              value: INFO
+            - name: DEPENDENCYTRACK_URL
+              value: {{ .Values.bootstrap.baseUrl }}
+            - name: USERNAME
+              value: admin
+            - name: TENANT
+              value: {{ .Values.metrics.tenant }}
+          envFrom:
+            - secretRef:
+                name: "{{ .Release.Name }}-metrics"
           securityContext:
             runAsNonRoot: true
             runAsUser: 1000
