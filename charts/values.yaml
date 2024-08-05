@@ -40,7 +40,7 @@ backend:
     repository: dependencytrack
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: 4.11.4
+    tag: 4.11.5
   replicaCount: 2
   replicas:
     min: 1
@@ -121,7 +121,7 @@ frontend:
     repository: dependencytrack
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: 4.11.4
+    tag: 4.11.5
   replicas:
     min: 1
     max: 1

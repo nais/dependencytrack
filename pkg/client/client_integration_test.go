@@ -24,7 +24,7 @@ func TestMain(m *testing.M) {
 	log.SetFormatter(&log.TextFormatter{
 		DisableTimestamp: true,
 	})
-	baseUrl, cleanup := test.DependencyTrackPool("4.11.4")
+	baseUrl, cleanup := test.DependencyTrackPool("4.11.5")
 	cwp := New(baseUrl, "admin", "test")
 
 	err := cwp.ChangeAdminPassword(context.Background(), "admin", "test")
