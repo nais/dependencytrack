@@ -1,6 +1,6 @@
 services:
   trivy:
-    image: aquasec/trivy:latest
+    image: aquasec/trivy:0.54.0
     command:
       - server
       - --listen
@@ -21,7 +21,7 @@ services:
       - '9002:8080'
 
   dtrack-apiserver:
-    image: dependencytrack/apiserver:4.11.5
+    image: dependencytrack/apiserver:4.11.6
     deploy:
       resources:
         limits:
@@ -47,7 +47,7 @@ services:
     restart: unless-stopped
 
   dtrack-frontend:
-    image: dependencytrack/frontend:4.11.5
+    image: dependencytrack/frontend:4.11.6
     depends_on:
       - dtrack-apiserver
     environment:
