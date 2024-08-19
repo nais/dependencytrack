@@ -16,14 +16,14 @@ require (
 	golang.org/x/sync v0.8.0
 	golang.org/x/vuln v1.1.3
 	gopkg.in/yaml.v3 v3.0.1
-	honnef.co/go/tools v0.4.7
+	honnef.co/go/tools v0.5.1
 	mvdan.cc/gofumpt v0.7.0
 )
 
 require (
 	dario.cat/mergo v1.0.0 // indirect
 	github.com/Azure/go-ansiterm v0.0.0-20230124172434-306776ec8161 // indirect
-	github.com/BurntSushi/toml v1.3.2 // indirect
+	github.com/BurntSushi/toml v1.4.1-0.20240526193622-a339e1f7089c // indirect
 	github.com/Microsoft/go-winio v0.6.2 // indirect
 	github.com/Nvveen/Gotty v0.0.0-20120604004816-cd527374f1e5 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
