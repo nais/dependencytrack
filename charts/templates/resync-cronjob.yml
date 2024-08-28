@@ -15,7 +15,7 @@ spec:
         metadata:
           labels:
             app: {{ include "resync-job.name" . }}
-            {{- include "resync-job.labels" . | nindent 8 }}
+            {{- include "resync-job.labels" . | nindent 12 }}
         spec:
           containers:
             - name: {{ include "resync-job.name" . }}
