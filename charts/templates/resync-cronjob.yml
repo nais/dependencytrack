@@ -44,15 +44,4 @@ spec:
             runAsUser: 1000
             runAsGroup: 1000
             fsGroup: 1000
----
-apiVersion: v1
-kind: Secret
-metadata:
-  name: {{ include "resync-job.name" . }}-pwd"
-  labels:
-    app: {{ include "resync-job.name" . }}
-    {{- include "resync-job.labels" . | nindent 4 }}
-type: Opaque
-stringData:
-  PASSWORD: {{ .Values.resync.password | quote }}
   {{- end }}

@@ -1,3 +1,4 @@
+{{if .Values.resync.enabled }}
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -13,3 +14,4 @@ spec:
       app: "{{ include "resync-job.name" . }}"
   policyTypes:
     - Egress
+  {{- end }}
