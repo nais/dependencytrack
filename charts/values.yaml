@@ -1,14 +1,6 @@
 # Default values for dependencytrack.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
-metrics:
-  image:
-    name: dependencytrack-metrics
-    repository: europe-north1-docker.pkg.dev/nais-io/nais/images
-    tag: yolo
-  tenant: nais
-  imagesIgnore: "nais-io/nais/images/clamav,nais-io/nais/images/wonderwall,nais-io/nais/images/elector"
-
 bootstrap:
   image:
     name: dependencytrack-bootstrap
@@ -155,3 +147,15 @@ trivy:
     capabilities:
       drop:
         - ALL
+
+resync:
+  enabled: true
+  image:
+    name: dependencytrack-resync
+    repository: europe-north1-docker.pkg.dev/nais-io/nais/images
+    tag: yolo
+  logLevel: INFO
+  baseUrl: http://dependencytrack-backend:8080
+  password: todo
+  username: dtrack-resync
+  schedule: "0 23 * * *"

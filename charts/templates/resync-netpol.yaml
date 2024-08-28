@@ -1,0 +1,15 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: "{{ include "resync-job.name" . }}"
+spec:
+  egress:
+    - to:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: "{{ .Release.Name }}"
+  podSelector:
+    matchLabels:
+      app: "{{ include "resync-job.name" . }}"
+  policyTypes:
+    - Egress

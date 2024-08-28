@@ -89,3 +89,34 @@ Create the name of the service account to use
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+{{/*
+Create chart name and version as used by the chart label.
+*/}}
+{{- define "resync-job.chart" -}}
+{{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
+{{- end }}
+
+{{- define "resync-job.name" -}}
+{{- .Chart.Name }}-resync
+{{- end }}
+
+{{/*
+resync job labels
+*/}}
+{{- define "resync-job.labels" -}}
+helm.sh/chart: {{ include "resync-job.chart" . }}
+{{ include "resync-job.selectorLabels" . }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end }}
+
+{{/*
+Selector labels for job
+*/}}
+{{- define "resync-job.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "resync-job.name" . }}
+app.kubernetes.io/instance: {{ include "resync-job.name" . }}
+{{- end }}

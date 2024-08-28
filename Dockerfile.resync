@@ -6,9 +6,9 @@ RUN go version
 COPY . /src
 WORKDIR /src
 RUN go mod download
-RUN go build -a -installsuffix cgo -o /bin/bootstrap cmd/bootstrap/main.go
+RUN go build -a -installsuffix cgo -o /bin/resync cmd/resync/main.go
 
 FROM cgr.dev/chainguard/static:latest
 WORKDIR /app
-COPY --from=builder /bin/bootstrap /app/bootstrap
-ENTRYPOINT ["/app/bootstrap"]
+COPY --from=builder /bin/resync /app/resync
+ENTRYPOINT ["/app/resync"]

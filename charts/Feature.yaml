@@ -142,18 +142,28 @@ values:
     config:
       type: bool
 
-  # metrics Config
-  metrics.image.tag:
-    description: Metrics dependency-track image tag
-    displayName: Metrics image tag
+  # resync config
+  resync.enabled:
+    displayName: Resync enabled
+    config:
+      type: bool
+    computed:
+      template: "true"
+  resync.password:
+    displayName: Resync password
     config:
       type: string
-  metrics.tenant:
-    displayName: Tenant
+      secret: true
     computed:
-      template: '{{ .Tenant.Name }}'
-  metrics.imagesIgnore:
-    displayName: Metrics images ignore
+      template: '{{.Management.dtrack_resync_dependencytrack_password | quote}}'
+  resync.username:
+    displayName: Resync username
+    config:
+      type: string
+    computed:
+      template: 'dtrack-resync'
+  resync.schedule:
+    displayName: Resync schedule
     config:
       type: string
 
