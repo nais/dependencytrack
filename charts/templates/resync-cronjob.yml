@@ -36,7 +36,7 @@ spec:
                   value: "{{ .Values.resync.baseUrl }}"
               envFrom:
                 - secretRef:
-                    name: {{ include "resync-job.name" . }}
+                    name: {{ include "resync-job.name" . }}-pwd
           restartPolicy: Never
           securityContext:
             seccompProfile:
