@@ -77,6 +77,10 @@ values:
     displayName: Backend cpu request
     config:
       type: string
+  backend.replicaCount:
+    displayName: Backend replica count
+    config:
+      type: int
 
   # Bootstrap Config
   bootstrap.frontendBaseUrl:
@@ -219,3 +223,7 @@ values:
     displayName: Trivy image tag
     config:
       type: string
+  trivy.replicaCount:
+    displayName: Trivy replica count
+    config:
+      type: int
