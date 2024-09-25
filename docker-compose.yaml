@@ -65,7 +65,7 @@ services:
       - ADMIN_PASSWORD=yolo
       - USERS_FILE=users.yaml
       - GITHUB_ADVISORY_TOKEN=
-      - GOOGLE_OSV_ENABLED=false
+      - GOOGLE_OSV_ENABLED=true
       - LOGGING_CONFIG_PATH=logback-json.xml
       - NVD_API_KEY=my-key
       - TRIVY_API_TOKEN=my-token

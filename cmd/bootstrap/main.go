@@ -8,6 +8,8 @@ import (
 	"strings"
 	"syscall"
 
+	"github.com/sirupsen/logrus"
+
 	"github.com/nais/dependencytrack/cmd/common"
 	"github.com/nais/dependencytrack/pkg/client"
 	"gopkg.in/yaml.v3"
@@ -47,7 +49,6 @@ func init() {
 	flag.BoolVar(&cfg.TrivyIgnoreUnfixed, "trivy-ignore-unfixed", cfg.TrivyIgnoreUnfixed, "ignore unfixed vulnerabilities")
 }
 
-// TODO: add timer and retry logic to wait for dependencytrack to be ready
 func main() {
 	common.ParseFlags()
 
@@ -179,10 +180,9 @@ func main() {
 					log.Info("google osv integration already enabled")
 					continue
 				}
-				if len(eco) > 0 {
-					prop.PropertyValue = strings.Join(eco, ";")
-					cp = append(cp, prop)
-					log.Info("added: github osv integration")
+
+				if err = updateEcosystems(ctx, c, eco, prop, log); err != nil {
+					log.Fatalf("update ecosystems: %v", err)
 				}
 			}
 		}
@@ -242,6 +242,39 @@ func main() {
 		}
 		log.Info("done: config properties updated")
 	}
+}
+
+func updateEcosystems(ctx context.Context, c client.Client, eco []string, prop client.ConfigProperty, log *logrus.Logger) error {
+	chunkSize := 10
+	var cp []client.ConfigProperty
+
+	for len(eco) > 0 {
+		log.Info("Processing chunk of ecosystems: ", len(eco))
+		// Get the next chunk of eco
+		end := chunkSize
+		if len(eco) < chunkSize {
+			end = len(eco)
+		}
+
+		chunk := eco[:end]
+		eco = eco[end:] // Remove the processed chunk from eco
+
+		p := client.ConfigProperty{
+			GroupName:     prop.GroupName,
+			PropertyName:  prop.PropertyName,
+			PropertyType:  prop.PropertyType,
+			PropertyValue: strings.Join(chunk, ";"),
+			Description:   prop.Description,
+		}
+		cp = append(cp, p)
+
+		if _, err := c.ConfigPropertyAggregate(ctx, cp); err != nil {
+			return err
+		}
+
+		log.Info("Chunk processed and sent. Remaining items:", len(eco))
+	}
+	return nil
 }
 
 func isAlreadySet(config, inputValue string) bool {
