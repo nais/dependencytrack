@@ -9,6 +9,9 @@ spec:
   - interval: 1m
     port: http
     scrapeTimeout: 10s
+  - interval: 1m
+    port: http-metrics
+    scrapeTimeout: 10s
   namespaceSelector:
     matchNames:
     - {{ .Release.Namespace }}

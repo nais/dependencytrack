@@ -171,6 +171,21 @@ values:
     config:
       type: string
 
+  # metrics Config
+  metrics.image.tag:
+    description: Metrics dependency-track image tag
+    displayName: Metrics image tag
+    config:
+      type: string
+  metrics.tenant:
+    displayName: Tenant
+    computed:
+      template: '{{ .Tenant.Name }}'
+  metrics.imagesIgnore:
+    displayName: Metrics images ignore
+    config:
+      type: string
+
   # Frontend Config
   frontend.swagger.enabled:
     displayName: Swagger UI enabled

@@ -5,25 +5,17 @@ import (
 )
 
 const (
-	Namespace = "vuln"
+	Namespace = "dtrack"
 )
 
-var Labels = []string{"cluster", "team", "has_sbom", "image", "version"}
-
-var WorkloadRegistered = prometheus.NewGaugeVec(
-	prometheus.GaugeOpts{
-		Namespace: Namespace,
-		Name:      "workloads_registered",
-	},
-	[]string{"cluster", "team", "workload", "has_sbom"},
-)
+var labels = []string{"cluster", "workload_namespace", "project", "workload_type", "workload", "has_sbom"}
 
 var WorkloadRiskscore = prometheus.NewGaugeVec(
 	prometheus.GaugeOpts{
 		Namespace: Namespace,
 		Name:      "workloads_riskscore",
 	},
-	Labels,
+	labels,
 )
 
 var WorkloadCritical = prometheus.NewGaugeVec(
@@ -31,11 +23,10 @@ var WorkloadCritical = prometheus.NewGaugeVec(
 		Namespace: Namespace,
 		Name:      "workloads_critical",
 	},
-	Labels,
+	labels,
 )
 
 func init() {
-	prometheus.MustRegister(WorkloadRegistered)
 	prometheus.MustRegister(WorkloadRiskscore)
 	prometheus.MustRegister(WorkloadCritical)
 }

@@ -47,10 +47,8 @@ func (c *Client) UpdateTotalProjects(ctx context.Context, tenant string, imagesI
 		return err
 	}
 
-	observability.WorkloadRegistered.Reset()
 	observability.WorkloadRiskscore.Reset()
 	observability.WorkloadCritical.Reset()
-	teamWorkloads := map[string]bool{}
 	for _, project := range projects {
 		clusters := tagsWithPrefix(project.Tags, client.EnvironmentTagPrefix.String())
 		if len(clusters) == 0 {
@@ -77,33 +75,26 @@ func (c *Client) UpdateTotalProjects(ctx context.Context, tenant string, imagesI
 		for _, cluster := range clusters {
 			for _, team := range teams {
 				for _, workload := range workloads {
-					w := workloadName(workload)
-					if w == "" {
-						log.Warnf("project %s has no workload name", project.Name)
-						continue
+					m := map[string]string{
+						"cluster":            tenant + "-" + cluster,
+						"workload_namespace": team,
+						"project":            project.Name,
+						"workload_type":      workloadType(workload),
+						"workload":           workloadName(workload),
+						"has_sbom":           strconv.FormatBool(hasSbom(project)),
 					}
-					sbom := strconv.FormatBool(hasSbom(project))
-					tenantCluster := tenant + "-" + cluster
 					riskScore := 0.0
 					critical := 0.0
 					if hasSbom(project) {
 						riskScore = project.Metrics.InheritedRiskScore
 						critical = float64(project.Metrics.Critical)
 					}
-					teamWorkloads[tenantCluster+":"+team+":"+workloadName(workload)] = hasSbom(project)
-					observability.WorkloadRiskscore.WithLabelValues(tenantCluster, team, sbom, project.Name, project.Version).Set(riskScore)
-					observability.WorkloadCritical.WithLabelValues(tenantCluster, team, sbom, project.Name, project.Version).Set(critical)
+
+					observability.WorkloadRiskscore.With(m).Set(riskScore)
+					observability.WorkloadCritical.With(m).Set(critical)
 				}
 			}
 		}
-	}
-
-	for teamWorkload, sbom := range teamWorkloads {
-		parts := strings.Split(teamWorkload, ":")
-		tenantCluster := parts[0]
-		team := parts[1]
-		workload := parts[2]
-		observability.WorkloadRegistered.WithLabelValues(tenantCluster, team, workload, strconv.FormatBool(sbom)).Set(1)
 	}
 
 	return nil
@@ -123,7 +114,7 @@ func IsInImagesIgnoreList(image string, imagesIgnore string) bool {
 }
 
 func hasSbom(project *client.Project) bool {
-	return project.Metrics != nil && project.Metrics.Components > 0
+	return project.Metrics != nil
 }
 
 func workloadName(workload string) string {
@@ -132,6 +123,14 @@ func workloadName(workload string) string {
 		return ""
 	}
 	return parts[3]
+}
+
+func workloadType(workload string) string {
+	parts := strings.Split(workload, "|")
+	if len(parts) < 3 {
+		return ""
+	}
+	return parts[2]
 }
 
 func tagsWithPrefix(tags []client.Tag, prefix string) []string {

@@ -69,6 +69,15 @@ jobs:
           workload_identity_provider: ${{ secrets.NAIS_IO_WORKLOAD_IDENTITY_PROVIDER }}
           push: true
 
+      - uses: nais/platform-build-push-sign@main
+        id: build-push-sign-metrics
+        with:
+          name: ${{ env.NAME }}-metrics
+          dockerfile: Dockerfile.metrics
+          google_service_account: gh-${{ env.NAME }}
+          workload_identity_provider: ${{ secrets.NAIS_IO_WORKLOAD_IDENTITY_PROVIDER }}
+          push: true
+
       - name: Update values.yaml
         uses: fjogeleit/yaml-update-action@main
         with:
@@ -83,6 +92,14 @@ jobs:
           valueFile: "charts/values.yaml"
           propertyPath: "resync.image.tag"
           value: ${{ steps.build-push-sign-resync.outputs.version }}
+          commitChange: false
+
+      - name: Update values.yaml
+        uses: fjogeleit/yaml-update-action@main
+        with:
+          valueFile: "charts/values.yaml"
+          propertyPath: "metrics.image.tag"
+          value: ${{ steps.build-push-sign-metrics.outputs.version }}
           commitChange: false
 
       - uses: azure/setup-helm@v4

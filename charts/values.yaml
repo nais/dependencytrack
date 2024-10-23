@@ -159,3 +159,11 @@ resync:
   password: todo
   username: dtrack-resync
   schedule: "0 23 * * *"
+
+metrics:
+  image:
+    name: dependencytrack-metrics
+    repository: europe-north1-docker.pkg.dev/nais-io/nais/images
+    tag: latest
+  tenant: nais
+  imagesIgnore: "nais-io/nais/images/clamav,nais-io/nais/images/wonderwall,nais-io/nais/images/elector"
