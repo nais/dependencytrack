@@ -41,6 +41,13 @@ func (c *Client) getProjects(ctx context.Context) ([]*client.Project, error) {
 	return projects, nil
 }
 
+type Workload struct {
+	Cluster           string
+	WorkloadNamespace string
+	WorkloadType      string
+	Workload          string
+}
+
 func (c *Client) UpdateTotalProjects(ctx context.Context, tenant string, imagesIgnore string) error {
 	projects, err := c.getProjects(ctx)
 	if err != nil {
@@ -50,50 +57,31 @@ func (c *Client) UpdateTotalProjects(ctx context.Context, tenant string, imagesI
 	observability.WorkloadRiskscore.Reset()
 	observability.WorkloadCritical.Reset()
 	for _, project := range projects {
-		clusters := tagsWithPrefix(project.Tags, client.EnvironmentTagPrefix.String())
-		if len(clusters) == 0 {
-			log.Warnf("project %s has no cluster tag", project.Name)
-			continue
-		}
-		teams := tagsWithPrefix(project.Tags, client.TeamTagPrefix.String())
-		if len(teams) == 0 {
-			log.Warnf("project %s has no team tag", project.Name)
-			continue
-		}
-
-		workloads := tagsWithPrefix(project.Tags, client.WorkloadTagPrefix.String())
-		if len(workloads) == 0 {
-			log.Warnf("project %s has no workload tag", project.Name)
-			continue
-		}
 
 		// TODO: find a better way imagesIgnore for now
 		if IsInImagesIgnoreList(project.Name, imagesIgnore) {
 			continue
 		}
 
-		for _, cluster := range clusters {
-			for _, team := range teams {
-				for _, workload := range workloads {
-					m := map[string]string{
-						"cluster":            tenant + "-" + cluster,
-						"workload_namespace": team,
-						"project":            project.Name,
-						"workload_type":      workloadType(workload),
-						"workload":           workloadName(workload),
-						"has_sbom":           strconv.FormatBool(hasSbom(project)),
-					}
-					riskScore := 0.0
-					critical := 0.0
-					if hasSbom(project) {
-						riskScore = project.Metrics.InheritedRiskScore
-						critical = float64(project.Metrics.Critical)
-					}
-
-					observability.WorkloadRiskscore.With(m).Set(riskScore)
-					observability.WorkloadCritical.With(m).Set(critical)
-				}
+		workloads := getWorkloads(project)
+		for _, w := range workloads {
+			m := map[string]string{
+				"cluster":            tenant + "-" + w.Cluster,
+				"workload_namespace": w.WorkloadNamespace,
+				"project":            project.Name,
+				"workload_type":      w.WorkloadType,
+				"workload":           w.Workload,
+				"has_sbom":           strconv.FormatBool(hasSbom(project)),
 			}
+			riskScore := 0.0
+			critical := 0.0
+			if hasSbom(project) {
+				riskScore = project.Metrics.InheritedRiskScore
+				critical = float64(project.Metrics.Critical)
+			}
+
+			observability.WorkloadRiskscore.With(m).Set(riskScore)
+			observability.WorkloadCritical.With(m).Set(critical)
 		}
 	}
 
@@ -117,20 +105,24 @@ func hasSbom(project *client.Project) bool {
 	return project.Metrics != nil
 }
 
-func workloadName(workload string) string {
-	parts := strings.Split(workload, "|")
-	if len(parts) < 4 {
-		return ""
+func getWorkloads(p *client.Project) []*Workload {
+	tags := tagsWithPrefix(p.Tags, client.WorkloadTagPrefix.String())
+	workloads := make([]*Workload, 0)
+	for _, tag := range tags {
+		parts := strings.Split(tag, "|")
+		if len(parts) < 4 {
+			log.Warnf("workload tag %s is invalid", tag)
+			continue
+		}
+		workloads = append(workloads, &Workload{
+			Cluster:           parts[0],
+			WorkloadNamespace: parts[1],
+			WorkloadType:      parts[2],
+			Workload:          parts[3],
+		})
 	}
-	return parts[3]
-}
 
-func workloadType(workload string) string {
-	parts := strings.Split(workload, "|")
-	if len(parts) < 3 {
-		return ""
-	}
-	return parts[2]
+	return workloads
 }
 
 func tagsWithPrefix(tags []client.Tag, prefix string) []string {
