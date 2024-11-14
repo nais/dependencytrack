@@ -75,6 +75,7 @@ type Options struct {
 	responseCallback func(res *http.Response, err error)
 	maxRetries       int
 	retryDelay       time.Duration
+	defaultTimeout   time.Duration
 }
 
 type Option = func(c *Options)
@@ -96,6 +97,7 @@ func New(baseUrl, username, password string, opts ...Option) Client {
 		httpclient.WithLogger(o.log),
 		httpclient.WithResponseCallback(o.responseCallback),
 		httpclient.WithRetry(o.maxRetries, o.retryDelay),
+		httpclient.WithDefaultTimeout(o.defaultTimeout),
 	)
 	if o.team != "" {
 		u := auth.NewUsernamePasswordSource(baseUrl, username, password, httpClient, o.log)

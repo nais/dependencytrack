@@ -3,8 +3,10 @@ package httpclient
 import (
 	"bytes"
 	"context"
+	"errors"
 	"fmt"
 	"io"
+	"net"
 	"net/http"
 	"time"
 
@@ -28,6 +30,7 @@ type HttpClient struct {
 	responseCallback func(res *http.Response, err error)
 	maxRetries       int
 	retryDelay       time.Duration
+	defaultTimeout   time.Duration
 }
 
 type Option func(*HttpClient)
@@ -50,6 +53,9 @@ func New(opts ...Option) *HttpClient {
 	if c.maxRetries == 0 {
 		c.maxRetries = 1
 		c.retryDelay = 0 * time.Second
+	}
+	if c.defaultTimeout == 0 {
+		c.defaultTimeout = 5 * time.Second
 	}
 	return c
 }
@@ -79,37 +85,66 @@ func WithRetry(maxRetries int, retryDelay time.Duration) Option {
 	}
 }
 
+func WithDefaultTimeout(timeout time.Duration) Option {
+	return func(c *HttpClient) {
+		c.defaultTimeout = timeout
+	}
+}
+
 func (r *RequestError) Error() string {
 	return fmt.Sprintf("status %d: err %v", r.StatusCode, r.Err)
 }
 
-func (c *HttpClient) SendRequest(ctx context.Context, httpMethod string, url string, headers map[string][]string, body []byte) (*Response, error) {
-	c.log.Debugf("sending request to %s", url)
-	req, err := http.NewRequestWithContext(ctx, httpMethod, url, bytes.NewReader(body))
+func (c *HttpClient) SendRequest(ctx context.Context, httpMethod, requestUrl string, headers map[string][]string, body []byte) (*Response, error) {
+	c.log.Debugf("sending request to %s", requestUrl)
+
+	// Set a default timeout if not already set in the context
+	if _, ok := ctx.Deadline(); !ok {
+		var cancel context.CancelFunc
+		ctx, cancel = context.WithTimeout(ctx, c.defaultTimeout)
+		defer cancel()
+	}
+
+	req, err := http.NewRequestWithContext(ctx, httpMethod, requestUrl, bytes.NewReader(body))
 	if err != nil {
 		return nil, fmt.Errorf("creating request: %w", err)
 	}
-
 	req.Header = headers
 
 	var resp *http.Response
 	for i := 0; i <= c.maxRetries; i++ {
 		resp, err = c.Do(req)
 		if err != nil {
-			return nil, err
+			var netErr net.Error
+			if errors.As(err, &netErr) && (netErr.Timeout()) {
+				if i < c.maxRetries {
+					c.log.Warnf("timeout network error, retrying... (%d/%d)", i+1, c.maxRetries)
+					time.Sleep(c.retryDelay)
+					continue
+				}
+				return nil, fmt.Errorf("request failed after retries due to timeout: %w", err)
+			}
+			return nil, fmt.Errorf("request failed: %w", err)
 		}
-		defer resp.Body.Close()
 
+		// Handle response and exit retry loop if successful
+		defer resp.Body.Close()
 		c.responseCallback(resp, err)
 
-		if resp.StatusCode != 500 {
+		// Retry only on server errors
+		if resp.StatusCode != http.StatusInternalServerError && resp.StatusCode != http.StatusServiceUnavailable {
 			break
 		}
 
 		if i < c.maxRetries {
-			c.log.Debugf("received 500 status, retrying... (%d/%d)", i+1, c.maxRetries)
+			c.log.Warnf("received %d status, retrying... (%d/%d)", resp.StatusCode, i+1, c.maxRetries)
 			time.Sleep(c.retryDelay)
 		}
+	}
+
+	// Check if response was successful or if an error occurred after retries
+	if resp == nil {
+		return nil, fmt.Errorf("failed to obtain a response from server after retries")
 	}
 
 	if resp.StatusCode > 299 {
@@ -125,6 +160,8 @@ func (c *HttpClient) SendRequest(ctx context.Context, httpMethod string, url str
 		}
 		return nil, fail(resp.StatusCode, fmt.Errorf("%s", string(b)))
 	}
+
+	// Read and return the response body
 	respBody, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, fmt.Errorf("reading response body: %w", err)
@@ -133,7 +170,7 @@ func (c *HttpClient) SendRequest(ctx context.Context, httpMethod string, url str
 		Status:  resp.StatusCode,
 		Body:    respBody,
 		Headers: resp.Header,
-	}, err
+	}, nil
 }
 
 func fail(status int, err error) *RequestError {
