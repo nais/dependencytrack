@@ -3,10 +3,8 @@ package httpclient
 import (
 	"bytes"
 	"context"
-	"errors"
 	"fmt"
 	"io"
-	"net"
 	"net/http"
 	"time"
 
@@ -95,40 +93,23 @@ func (r *RequestError) Error() string {
 	return fmt.Sprintf("status %d: err %v", r.StatusCode, r.Err)
 }
 
-func (c *HttpClient) SendRequest(ctx context.Context, httpMethod, requestUrl string, headers map[string][]string, body []byte) (*Response, error) {
-	c.log.Debugf("sending request to %s", requestUrl)
-
-	// Set a default timeout if not already set in the context
-	if _, ok := ctx.Deadline(); !ok {
-		var cancel context.CancelFunc
-		ctx, cancel = context.WithTimeout(ctx, c.defaultTimeout)
-		defer cancel()
-	}
-
-	req, err := http.NewRequestWithContext(ctx, httpMethod, requestUrl, bytes.NewReader(body))
+func (c *HttpClient) SendRequest(ctx context.Context, httpMethod, url string, headers map[string][]string, body []byte) (*Response, error) {
+	c.log.Debugf("sending request to %s", url)
+	req, err := http.NewRequestWithContext(ctx, httpMethod, url, bytes.NewReader(body))
 	if err != nil {
 		return nil, fmt.Errorf("creating request: %w", err)
 	}
+
 	req.Header = headers
 
 	var resp *http.Response
 	for i := 0; i <= c.maxRetries; i++ {
 		resp, err = c.Do(req)
 		if err != nil {
-			var netErr net.Error
-			if errors.As(err, &netErr) && (netErr.Timeout()) {
-				if i < c.maxRetries {
-					c.log.Warnf("timeout network error, retrying... (%d/%d)", i+1, c.maxRetries)
-					time.Sleep(c.retryDelay)
-					continue
-				}
-				return nil, fmt.Errorf("request failed after retries due to timeout: %w", err)
-			}
-			return nil, fmt.Errorf("request failed: %w", err)
+			return nil, err
 		}
-
-		// Handle response and exit retry loop if successful
 		defer resp.Body.Close()
+
 		c.responseCallback(resp, err)
 
 		// Retry only on server errors
@@ -160,8 +141,6 @@ func (c *HttpClient) SendRequest(ctx context.Context, httpMethod, requestUrl str
 		}
 		return nil, fail(resp.StatusCode, fmt.Errorf("%s", string(b)))
 	}
-
-	// Read and return the response body
 	respBody, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, fmt.Errorf("reading response body: %w", err)
