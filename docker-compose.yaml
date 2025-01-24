@@ -1,6 +1,8 @@
 services:
   trivy:
-    image: aquasec/trivy:0.55.0
+    image: aquasec/trivy:0.56.1
+    environment:
+      - TRIVY_DB_REPOSITORY=europe-north1-docker.pkg.dev/nais-io/github-ptc/aquasecurity/trivy-db:2,public.ecr.aws/aquasecurity/trivy-db
     command:
       - server
       - --listen
@@ -14,14 +16,14 @@ services:
   swagger:
     image: swaggerapi/swagger-ui
     environment:
-      SWAGGER_JSON_URL: http://localhost:9001/api/swagger.json
+      API_URL: http://localhost:9010/api/openapi.json
     volumes:
-      - ./swagger.json:/swagger.json
+      - ./openapi.json:/openapi.json
     ports:
       - '9002:8080'
 
   dtrack-apiserver:
-    image: dependencytrack/apiserver:4.11.7
+    image: dependencytrack/apiserver:4.12.2
     deploy:
       resources:
         limits:
@@ -47,7 +49,7 @@ services:
     restart: unless-stopped
 
   dtrack-frontend:
-    image: dependencytrack/frontend:4.11.7
+    image: dependencytrack/frontend:4.12.2
     depends_on:
       - dtrack-apiserver
     environment:

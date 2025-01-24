@@ -37,7 +37,7 @@ func (c *client) UploadProject(ctx context.Context, name, version, parentUuid st
 		return fmt.Errorf("uploading bom: %w", err)
 	}
 
-	c.log.Infof("sbom uploaded %s:%s", name, version)
+	c.log.Debug("sbom uploaded %s:%s", name, version)
 	return nil
 }
 
