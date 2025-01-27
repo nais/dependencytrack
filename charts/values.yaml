@@ -39,8 +39,8 @@ backend:
     max: 1
   resources:
     requests:
-      memory: 20Gi
-      cpu: "4"
+      memory: 4Gi
+      cpu: "1"
   outbound: [ ]
   ingressClassName: nais-ingress
   ingress:
@@ -120,7 +120,7 @@ frontend:
   resources:
     requests:
       memory: 1Gi
-      cpu: "2"
+      cpu: "1"
   outbound: [ ]
   ingressClassName: nais-ingress
   ingress:
@@ -133,7 +133,7 @@ frontend:
     OIDC_CLIENT_ID:
 
 trivy:
-  replicaCount: 2
+  replicaCount: 1
   image:
     registry: "ghcr.io"
     repository: "aquasecurity/trivy"
