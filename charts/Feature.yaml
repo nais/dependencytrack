@@ -225,6 +225,10 @@ values:
     displayName: Frontend cpu request
     config:
       type: string
+  frontend.replicaCount:
+    displayName: Frontend replica count
+    config:
+      type: int
 
   # Trivy Config
   trivy.serverToken:

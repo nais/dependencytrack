@@ -5,7 +5,7 @@ metadata:
   labels:
     {{- include "dependencytrack-frontend.labels" . | nindent 4 }}
 spec:
-  replicas: 1
+  replicas: {{ .Values.frontend.replicaCount }}
   selector:
     matchLabels:
       {{- include "dependencytrack-frontend.selectorLabels" . | nindent 6 }}
