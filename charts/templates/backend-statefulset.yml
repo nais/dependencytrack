@@ -7,6 +7,11 @@ metadata:
 spec:
   serviceName: {{ include "dependencytrack-backend.name" . }}
   replicas: {{ .Values.backend.replicaCount }}
+  {{- if .Values.backend.persistence.enableStatefulSetAutoDeletePVC }}
+  persistentVolumeClaimRetentionPolicy:
+    whenDeleted: {{ .Values.backend.persistence.whenDeleted }}
+    whenScaled: {{ .Values.backend.persistence.whenScaled }}
+    {{- end }}
   selector:
     matchLabels:
       {{- include "dependencytrack-backend.selectorLabels" . | nindent 6 }}

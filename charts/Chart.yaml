@@ -8,5 +8,5 @@ version: 0.5.2
 
 dependencies:
   - name: trivy
-    version: "0.7.0"
+    version: "0.9.0"
     repository: "https://aquasecurity.github.io/helm-charts"

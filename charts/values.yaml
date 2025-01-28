@@ -81,6 +81,9 @@ backend:
     size: 10Gi
     storageClass: "standard"
     existingClaim: ""
+    enableStatefulSetAutoDeletePVC: true
+    whenDeleted: Delete
+    whenScaled: Delete
   env:
     ALPINE_OIDC_ENABLED: true
     ALPINE_OIDC_ISSUER:
