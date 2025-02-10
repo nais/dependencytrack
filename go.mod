@@ -1,6 +1,6 @@
 module github.com/nais/dependencytrack
 
-go 1.23.5
+go 1.23.6
 
 require (
 	github.com/gin-gonic/gin v1.10.0
@@ -13,7 +13,7 @@ require (
 	github.com/prometheus/client_golang v1.20.5
 	github.com/sirupsen/logrus v1.9.3
 	github.com/stretchr/testify v1.10.0
-	golang.org/x/sync v0.10.0
+	golang.org/x/sync v0.11.0
 	golang.org/x/vuln v1.1.4
 	gopkg.in/yaml.v3 v3.0.1
 	honnef.co/go/tools v0.5.1

@@ -105,7 +105,7 @@ jobs:
       - uses: azure/setup-helm@v4
         name: "Setup Helm"
         with:
-          version: "v3.15.2"
+          version: "v3.17.0"
 
       - name: Build Chart
         run: |-
