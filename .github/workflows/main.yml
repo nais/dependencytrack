@@ -135,6 +135,20 @@ jobs:
           sed -i "s/^version: .*/version: ${{ needs.bootstrap.outputs.version }}/g" charts/Chart.yaml
           helm package charts
 
+      - name: "Authenticate to Google Cloud"
+        id: "auth"
+        uses: "google-github-actions/auth@71fee32a0bb7e97b4d33d548e7d957010649d8fa" # ratchet:google-github-actions/auth@v2
+        with:
+          workload_identity_provider: "${{ secrets.NAIS_IO_WORKLOAD_IDENTITY_PROVIDER }}"
+          service_account: "gh-${{ env.NAME }}@nais-io.iam.gserviceaccount.com"
+          token_format: "access_token"
+      - name: "Login to registry"
+        uses: docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567 # ratchet:docker/login-action@v3
+        with:
+          registry: "europe-north1-docker.pkg.dev"
+          username: "oauth2accesstoken"
+          password: "${{ steps.auth.outputs.access_token }}"
+
       - name: Push Chart
         run: |-
           helm push ${{ env.NAME }}*.tgz ${{ env.FEATURE_REPOSITORY }}
