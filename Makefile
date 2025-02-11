@@ -4,7 +4,7 @@ bootstrap:
 
 integration_test: fmt vet
 	go test ./... -tags integration_test -run TestIntegration
-test: check fmt vet
+test: fmt vet
 	go test ./... -coverprofile cover.out -short
 fmt:
 	go run mvdan.cc/gofumpt -w ./
@@ -17,10 +17,21 @@ local:
 compose:
 	docker-compose build && docker-compose up
 
-check:
+check: static deadcode vuln helm-lint
+
+static:
+	@echo "Running staticcheck..."
 	go run honnef.co/go/tools/cmd/staticcheck@latest ./...
+vuln:
+	@echo "Running vulncheck..."
 	go run golang.org/x/vuln/cmd/govulncheck@latest ./...
+deadcode:
+	@echo "Running deadcode..."
 	go run golang.org/x/tools/cmd/deadcode@latest -filter "pkg/client/client" -test ./...
+gosec:
+	@echo "Running gosec..."
+	go run github.com/securego/gosec/v2/cmd/gosec@latest --exclude G404,G101 --exclude-generated -terse ./...
 
 helm-lint:
+	@echo "Running helm lint..."
 	helm lint --strict ./charts
