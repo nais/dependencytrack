@@ -31,9 +31,14 @@ jobs:
         with:
           go-version: ${{ needs.go_version.outputs.go_version }}
           cache-dependency-path: ./go.sum
+
       - name: Run tests
         run: make test
+
       - name: Check for static code and security issues
         run: make check
+
+      - name: Run integration tests
+        run: make integration_test
 
 
