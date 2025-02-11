@@ -1,0 +1,156 @@
+name: Build and deploy Bootstrap
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - "*.md"
+      - "LICENSE.md"
+env:
+  NAME: dependencytrack
+  FEATURE_REPOSITORY: oci://europe-north1-docker.pkg.dev/nais-io/nais/feature
+
+jobs:
+  go_version:
+    outputs:
+      go_version: ${{ steps.go_version.outputs.GO_VERSION }}
+    permissions:
+      contents: read
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # ratchet:actions/checkout@v4
+      - name: Find Go version
+        id: go_version
+        run: |
+          echo "GO_VERSION=$(grep golang .tool-versions | awk '{print $2}')" >> $GITHUB_OUTPUT
+
+  tests:
+    needs:
+      - go_version
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # ratchet:actions/checkout@v4
+      - uses: actions/setup-go@f111f3307d8850f501ac008e886eec1fd1932a34 # ratchet:actions/setup-go@v5
+        with:
+          go-version: ${{ needs.go_version.outputs.go_version }}
+          cache-dependency-path: ./go.sum
+
+      - name: Run unit tests
+        run: make test
+
+      - name: Check for code
+        run: make check
+
+      - name: run integration tests
+        run: make integration_test
+
+  bootstrap:
+    outputs:
+      version: ${{ steps.build-push-sign-bootstrap.outputs.version }}
+    needs:
+      - tests
+    permissions:
+      contents: "read"
+      id-token: "write"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # ratchet:actions/checkout@v4
+      - uses: nais/platform-build-push-sign@main # ratchet:exclude
+        id: build-push-sign-bootstrap
+        with:
+          name: ${{ env.NAME }}-bootstrap
+          google_service_account: gh-${{ env.NAME }}
+          workload_identity_provider: ${{ secrets.NAIS_IO_WORKLOAD_IDENTITY_PROVIDER }}
+          push: true
+
+  resync:
+    outputs:
+      version: ${{ steps.build-push-sign-resync.outputs.version }}
+    needs:
+      - tests
+    permissions:
+      contents: "read"
+      id-token: "write"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # ratchet:actions/checkout@v4
+      - uses: nais/platform-build-push-sign@main # ratchet:exclude
+        id: build-push-sign-resync
+        with:
+          name: ${{ env.NAME }}-resync
+          dockerfile: Dockerfile.resync
+          google_service_account: gh-${{ env.NAME }}
+          workload_identity_provider: ${{ secrets.NAIS_IO_WORKLOAD_IDENTITY_PROVIDER }}
+          push: true
+
+  metrics:
+    outputs:
+      version: ${{ steps.build-push-sign-metrics.outputs.version }}
+    needs:
+      - tests
+    permissions:
+      contents: "read"
+      id-token: "write"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # ratchet:actions/checkout@v4
+      - uses: nais/platform-build-push-sign@main # ratchet:exclude
+        id: build-push-sign-metrics
+        with:
+          name: ${{ env.NAME }}-metrics
+          dockerfile: Dockerfile.metrics
+          google_service_account: gh-${{ env.NAME }}
+          workload_identity_provider: ${{ secrets.NAIS_IO_WORKLOAD_IDENTITY_PROVIDER }}
+          push: true
+
+  helm:
+    runs-on: ubuntu-latest
+    needs:
+      - bootstrap
+      - resync
+      - metrics
+    outputs:
+      version: ${{ steps.chart-version.outputs.version }}
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # ratchet:actions/checkout@v4
+      - uses: azure/setup-helm@fe7b79cd5ee1e45176fcad797de68ecaf3ca4814 # ratchet:azure/setup-helm@v4
+        name: "Setup Helm"
+        with:
+          version: "v3.17.0"
+
+      - name: Update values.yaml with yq
+        run: |
+          yq -i '.bootstrap.image.tag = "${{ needs.bootstrap.outputs.version }}"' charts/values.yaml
+          yq -i '.resync.image.tag = "${{ needs.resync.outputs.version }}"' charts/values.yaml
+          yq -i '.metrics.image.tag = "${{ needs.metrics.outputs.version }}"' charts/values.yaml
+
+      - name: Build Chart
+        run: |-
+          sed -i "s/^version: .*/version: ${{ needs.bootstrap.outputs.version }}/g" charts/Chart.yaml
+          helm package charts
+
+      - name: Push Chart
+        run: |-
+          helm push ${{ env.NAME }}*.tgz ${{ env.FEATURE_REPOSITORY }}
+
+      - name: Output chart version
+        id: chart-version
+        run: echo version=${{ needs.bootstrap.outputs.version }} >> $GITHUB_OUTPUT
+
+  rollout:
+    needs:
+      - helm
+    runs-on: fasit-deploy
+    permissions:
+      id-token: write
+    steps:
+      - uses: nais/fasit-deploy@v2 # ratchet:exclude
+        with:
+          chart: ${{ env.FEATURE_REPOSITORY }}/${{ env.NAME }}
+          version: ${{ needs.helm.outputs.version }}
