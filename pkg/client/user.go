@@ -198,12 +198,16 @@ func (c *client) DeleteUserMembership(ctx context.Context, uuid, username string
 		if !ok {
 			return fmt.Errorf("deleting user membership: %w", err)
 		}
-		if e.StatusCode == http.StatusNotFound {
+		switch e.StatusCode {
+		case http.StatusNotFound:
 			log.Infof("user %s does not exist", username)
 			return nil
+		case http.StatusNotModified:
+			log.Infof("user %s is not a part of the team", username)
+			return nil
+		default:
+			return fmt.Errorf("deleting user membership: %w", err)
 		}
-		return fmt.Errorf("deleting user membership: %w", err)
-
 	}
 	return nil
 }
