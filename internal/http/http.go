@@ -22,8 +22,9 @@ func RunHttpServer(
 	router.GET("/metrics", metrics())
 
 	srv := &http.Server{
-		Addr:    listenAddress,
-		Handler: router,
+		Addr:              listenAddress,
+		Handler:           router,
+		ReadHeaderTimeout: 5 * time.Second,
 	}
 
 	wg, ctx := errgroup.WithContext(ctx)

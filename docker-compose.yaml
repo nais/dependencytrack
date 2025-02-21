@@ -14,9 +14,7 @@ services:
   swagger:
     image: swaggerapi/swagger-ui
     environment:
-      SWAGGER_JSON_URL: http://localhost:9001/api/swagger.json
-    volumes:
-      - ./swagger.json:/swagger.json
+      SWAGGER_JSON_URL: http://localhost:9010/api/swagger.json
     ports:
       - '9002:8080'
 
