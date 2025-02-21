@@ -171,6 +171,8 @@ func TestIntegration(t *testing.T) {
 		assert.NoError(t, err)
 		err = c.DeleteUserMembership(ctx, team.Uuid, "testuser")
 		assert.NoError(t, err)
+		err = c.DeleteUserMembership(ctx, team.Uuid, "testuser")
+		assert.NoError(t, err)
 	})
 
 	t.Run("DeleteManagedUser", func(t *testing.T) {
