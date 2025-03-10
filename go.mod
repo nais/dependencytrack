@@ -16,7 +16,7 @@ require (
 	golang.org/x/sync v0.11.0
 	golang.org/x/vuln v1.1.4
 	gopkg.in/yaml.v3 v3.0.1
-	honnef.co/go/tools v0.6.0
+	honnef.co/go/tools v0.6.1
 	mvdan.cc/gofumpt v0.7.0
 )
 
