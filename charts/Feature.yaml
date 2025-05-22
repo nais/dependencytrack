@@ -19,13 +19,12 @@ values:
       template: '"400000"'
   backend.env.ALPINE_OIDC_CLIENT_ID:
     displayName: Backend OIDC client ID
-    required: true
-    config:
-      type: string
+    computed:
+      template: '{{.Management.dependencytrack_zitadel_client_id | quote}}'
   backend.env.ALPINE_OIDC_ISSUER:
     displayName: Backend OIDC issuer
     computed:
-      template: '"https://accounts.google.com"'
+      template: '"https://auth.nais.io"'
   backend.image.tag:
     description: dependency-track backend image
     displayName: Backend image tag
@@ -202,13 +201,12 @@ values:
       template: '"https://dependencytrack-backend.{{.Tenant.Name}}.cloud.nais.io"'
   frontend.env.OIDC_CLIENT_ID:
     displayName: Frontend OIDC client ID
-    required: true
-    config:
-      type: string
+    computed:
+      template: '{{.Management.dependencytrack_zitadel_client_id | quote}}'
   frontend.env.OIDC_ISSUER:
     displayName: Frontend OIDC issuer
     computed:
-      template: '"https://accounts.google.com"'
+      template: '"https://auth.nais.io"'
   frontend.image.tag:
     description: dependency-track froentend image
     displayName: Frontend image tag

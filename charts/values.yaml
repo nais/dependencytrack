@@ -125,7 +125,7 @@ frontend:
   env:
     # auth code flow without client_secret using pkce not supported by google.
     # https://stackoverflow.com/questions/60724690/using-google-oidc-with-code-flow-and-pkce
-    OIDC_FLOW: implicit
+    # OIDC_FLOW: implicit
     API_BASE_URL:
     OIDC_ISSUER:
     OIDC_CLIENT_ID:
