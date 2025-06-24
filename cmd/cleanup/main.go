@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/joho/godotenv"
 	"github.com/nais/dependencytrack/pkg/client"
@@ -25,7 +26,7 @@ func main() {
 
 	ctx := context.Background()
 	if deleteProjects != "" {
-		projects, err := c.GetProjects(context.Background())
+		projects, err := c.GetProjects(ctx)
 		if err != nil {
 			panic(err)
 		}
@@ -38,7 +39,7 @@ func main() {
 			}
 			projectlog += fmt.Sprintf("Deleted project %s\n", project.Name)
 		}
-		log.Infof(projectlog)
+		log.Info(projectlog)
 
 		err = c.PortfolioRefresh(ctx)
 		if err != nil {
@@ -51,7 +52,6 @@ func main() {
 		if err != nil {
 			panic(err)
 		}
-		ctx := context.Background()
 		var teamlog string
 		log.Infof("Teams to delete: %d", len(teams))
 		for _, team := range teams {
@@ -62,7 +62,7 @@ func main() {
 				teamlog += fmt.Sprintf("Deleted team %s\n", team.Name)
 			}
 		}
-		log.Infof(teamlog)
+		log.Info(teamlog)
 	}
 
 	if deleteOidcUsers != "" {
@@ -70,7 +70,6 @@ func main() {
 		if err != nil {
 			panic(err)
 		}
-		ctx := context.Background()
 		var userlog string
 		log.Infof("Users to delete: %d", len(users))
 		for _, user := range users {
@@ -79,6 +78,6 @@ func main() {
 			}
 			userlog += fmt.Sprintf("Deleted user %s\n", user.Username)
 		}
-		log.Infof(userlog)
+		log.Info(userlog)
 	}
 }
