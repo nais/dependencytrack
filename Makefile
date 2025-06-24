@@ -42,3 +42,13 @@ helm-lint:
 goimport:
 	@echo "Running goimport..."
 	find . -name '*.go' -exec go run golang.org/x/tools/cmd/goimports@latest -l -w {} +
+
+# make connect-db I=dependencytrack-61ed1cda P=nais-management-4203 S=dependencytrack
+# psql -U postgres -h localhost dependencytrack
+connect-db:
+	@CONNECTION_NAME=$$(gcloud sql instances describe $(I) \
+	  --format="get(connectionName)" \
+	  --project $(P)) && \
+	cloud-sql-proxy $$CONNECTION_NAME \
+	    --auto-iam-authn \
+	    --impersonate-service-account="$(S)@$(P).iam.gserviceaccount.com"
