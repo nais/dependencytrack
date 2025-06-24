@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"os"
-	"strings"
 
 	"github.com/joho/godotenv"
 	"github.com/nais/dependencytrack/pkg/client"
