@@ -1,6 +1,6 @@
 services:
   trivy:
-    image: aquasec/trivy:0.55.0
+    image: aquasec/trivy:0.63.0
     command:
       - server
       - --listen
@@ -14,12 +14,12 @@ services:
   swagger:
     image: swaggerapi/swagger-ui
     environment:
-      SWAGGER_JSON_URL: http://localhost:9010/api/swagger.json
+      SWAGGER_JSON_URL: http://localhost:9010/api/openapi.json
     ports:
       - '9002:8080'
 
   dtrack-apiserver:
-    image: dependencytrack/apiserver:4.11.7
+    image: dependencytrack/apiserver:4.13.2
     deploy:
       resources:
         limits:
@@ -45,7 +45,7 @@ services:
     restart: unless-stopped
 
   dtrack-frontend:
-    image: dependencytrack/frontend:4.11.7
+    image: dependencytrack/frontend:4.13.2
     depends_on:
       - dtrack-apiserver
     environment:

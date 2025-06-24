@@ -136,41 +136,12 @@ values:
           password: {{.Management.console_dependencytrack_password | quote}}
         - username: "teams"
           password: {{.Management.teams_dependencytrack_password | quote}}
-        - username: "dtrack-resync"
-          password: {{.Management.dtrack_resync_dependencytrack_password | quote}}
-        - username: "slsa-verde"
-          password: {{.Management.slsa_verde_dependencytrack_password | quote}}
         - username: "v13s"
           password: {{.Management.v13s_dependencytrack_password | quote}}
   bootstrap.google.osv_enabled:
     displayName: Bootstrap Google OSV enabled
     config:
       type: bool
-
-  # resync config
-  resync.enabled:
-    displayName: Resync enabled
-    config:
-      type: bool
-    computed:
-      template: "true"
-  resync.password:
-    displayName: Resync password
-    config:
-      type: string
-      secret: true
-    computed:
-      template: '{{.Management.dtrack_resync_dependencytrack_password | quote}}'
-  resync.username:
-    displayName: Resync username
-    config:
-      type: string
-    computed:
-      template: 'dtrack-resync'
-  resync.schedule:
-    displayName: Resync schedule
-    config:
-      type: string
 
   # metrics Config
   metrics.image.tag:

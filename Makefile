@@ -17,7 +17,7 @@ local:
 compose:
 	docker-compose build && docker-compose up
 
-check: static vuln deadcode gosec helm-lint
+check: static vuln deadcode gosec helm-lint goimport
 
 static:
 	@echo "Running staticcheck..."
@@ -38,3 +38,7 @@ gosec:
 helm-lint:
 	@echo "Running helm lint..."
 	helm lint --strict ./charts
+
+goimport:
+	@echo "Running goimport..."
+	find . -name '*.go' -exec go run golang.org/x/tools/cmd/goimports@latest -l -w {} +

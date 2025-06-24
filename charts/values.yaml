@@ -32,7 +32,7 @@ backend:
     repository: dependencytrack
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: 4.11.7
+    tag: 4.13.2
   replicaCount: 2
   resources:
     requests:
@@ -60,7 +60,7 @@ backend:
 
   cloudProxy:
     repository: gcr.io/cloudsql-docker/gce-proxy
-    tag: 1.37.0
+    tag: 1.37.7
 
   postgresql:
     enabled: true
@@ -113,7 +113,7 @@ frontend:
     repository: dependencytrack
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: 4.11.7
+    tag: 4.13.2
   replicaCount: 1
   resources:
     requests:
@@ -135,7 +135,7 @@ trivy:
   image:
     registry: "ghcr.io"
     repository: "aquasecurity/trivy"
-    tag: "0.55.0"
+    tag: "0.63.0"
   serverToken: "todo"
   podSecurityContext:
     seccompProfile:
@@ -145,18 +145,6 @@ trivy:
     capabilities:
       drop:
         - ALL
-
-resync:
-  enabled: true
-  image:
-    name: dependencytrack-resync
-    repository: europe-north1-docker.pkg.dev/nais-io/nais/images
-    tag: yolo
-  logLevel: INFO
-  baseUrl: http://dependencytrack-backend:8080
-  password: todo
-  username: dtrack-resync
-  schedule: "0 23 * * *"
 
 metrics:
   image:
