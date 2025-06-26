@@ -4,3 +4,6 @@
 /.env
 /cover.out
 /charts/values.json
+/pkg/api/client/git_push.sh
+/pkg/api/client/.openapi-generator-ignore
+/pkg/api/client/.travis.yml

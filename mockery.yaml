@@ -1,0 +1,12 @@
+with-expecter: true
+disable-version-string: true
+inpackage: true
+dir: "{{.InterfaceDir}}"
+filename: "mock_{{.InterfaceNameSnake}}.go"
+packages:
+  github.com/nais/dependencytrack/pkg/dependencytrack:
+    interfaces:
+      Client:
+  github.com/nais/dependencytrack/pkg/dependencytrack/client:
+    config:
+      include-regex: ".*API"

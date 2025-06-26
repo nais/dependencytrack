@@ -52,3 +52,25 @@ connect-db:
 	cloud-sql-proxy $$CONNECTION_NAME \
 	    --auto-iam-authn \
 	    --impersonate-service-account="$(S)@$(P).iam.gserviceaccount.com"
+
+
+generate-client:
+	@echo "Generating Go code from the OpenAPI specification..."
+	@openapi-generator generate \
+        -i schema/dtrack.json \
+        -g go \
+        -o pkg/dependencytrack/client \
+        --global-property apiTests=false,modelTests=false \
+        --package-name client \
+        --additional-properties=withGoMod=false \
+        --additional-properties=generateInterfaces=true \
+        --additional-properties=packageName=client || { \
+			echo "Error: openapi-generator is not installed or failed to execute."; \
+			echo "Please visit https://openapi-generator.tech/docs/installation/ for installation instructions."; \
+			exit 1; \
+		}
+
+generate-mocks:
+	#find pkg -type f -name "mock_*.go" -delete
+	go run github.com/vektra/mockery/v2 --config ./mockery.yaml
+	#find pkg -type f -name "mock_*.go" -exec go run mvdan.cc/gofumpt@latest -w {} \;
