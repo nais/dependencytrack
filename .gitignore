@@ -7,3 +7,5 @@
 /pkg/api/client/git_push.sh
 /pkg/api/client/.openapi-generator-ignore
 /pkg/api/client/.travis.yml
+/pkg/dependencytrack/client/api/
+/pkg/dependencytrack/client/.openapi-generator/

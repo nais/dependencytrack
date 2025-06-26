@@ -51,7 +51,7 @@ type Options struct {
 
 type Option = func(*Options)
 
-func NewClient(url string, username auth.Username, password auth.Password, log logrus.FieldLogger, options ...Option) (Client, error) {
+func NewClient(url string, username auth.Username, password auth.Password, log *logrus.Entry, options ...Option) (Client, error) {
 	if url == "" {
 		return nil, fmt.Errorf("NewClient: URL cannot be empty")
 	}

@@ -1,13 +1,14 @@
+IGNORED_PATH := "pkg/dependencytrack/client"
+GO_PACKAGES := $(shell go list ./... | grep -v $(IGNORED_PATH))
+
 .PHONY: bootstrap
 bootstrap:
 	go build -o bin/bootstrap cmd/bootstrap/*.go
 
-integration_test: fmt vet
+integration_test: vet
 	go test ./... -tags integration_test -run TestIntegration
-test: fmt vet
+test: vet
 	go test ./... -coverprofile cover.out -short
-fmt:
-	go run mvdan.cc/gofumpt -w ./
 vet:
 	go vet ./...
 
@@ -17,11 +18,19 @@ local:
 compose:
 	docker-compose build && docker-compose up
 
-check: static vuln deadcode gosec helm-lint goimport
+check: staticcheck vuln deadcode gosec helm-lint goimport
 
-static:
+goimport:
+	@echo "Running goimport..."
+	find . -type f -name '*.go' ! -path './pkg/dependencytrack/client/*' -exec go run golang.org/x/tools/cmd/goimports@latest -l -w  {} +
+
+fmt:
+	@echo "Running go fmt..."
+	go fmt $(GO_PACKAGES)
+
+staticcheck:
 	@echo "Running staticcheck..."
-	go run honnef.co/go/tools/cmd/staticcheck@latest ./...
+	go run honnef.co/go/tools/cmd/staticcheck@latest -f=stylish  $(GO_PACKAGES)
 
 vuln:
 	@echo "Running vulncheck..."
@@ -33,15 +42,11 @@ deadcode:
 
 gosec:
 	@echo "Running gosec..."
-	go run github.com/securego/gosec/v2/cmd/gosec@latest --exclude G404,G101 --exclude-generated -terse ./...
+	go run github.com/securego/gosec/v2/cmd/gosec@latest --exclude-generated -terse ./...
 
 helm-lint:
 	@echo "Running helm lint..."
 	helm lint --strict ./charts
-
-goimport:
-	@echo "Running goimport..."
-	find . -name '*.go' -exec go run golang.org/x/tools/cmd/goimports@latest -l -w {} +
 
 # make connect-db I=dependencytrack-61ed1cda P=nais-management-4203 S=dependencytrack
 # psql -U postgres -h localhost dependencytrack
@@ -53,6 +58,7 @@ connect-db:
 	    --auto-iam-authn \
 	    --impersonate-service-account="$(S)@$(P).iam.gserviceaccount.com"
 
+generate: generate-client generate-mocks
 
 generate-client:
 	@echo "Generating Go code from the OpenAPI specification..."
