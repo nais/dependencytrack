@@ -16,7 +16,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestUsernamePasswordSource_ContextHeaders(t *testing.T) {
+func TestUsernamePasswordSource_AuthHeaders(t *testing.T) {
 	mockUserAPI := new(client.MockUserAPI)
 	mockTeamAPI := new(client.MockTeamAPI)
 
@@ -36,7 +36,7 @@ func TestUsernamePasswordSource_ContextHeaders(t *testing.T) {
 	authSource := NewUsernamePasswordSource("user", "password", mockClient, log.WithField("subsystem", "test-auth-source"))
 
 	ctx := context.Background()
-	bearerCtx, err := authSource.ContextHeaders(ctx)
+	bearerCtx, err := authSource.AuthContext(ctx)
 	assert.NoError(t, err)
 	assert.Equal(t, token, bearerCtx.Value(client.ContextAccessToken))
 
@@ -50,12 +50,12 @@ func TestUsernamePasswordSource_ContextHeaders(t *testing.T) {
 
 	mockUserAPI.On("ValidateCredentialsExecute", mock.Anything).Return(
 		token, nil, nil).Once()
-	bearerCtx, err = authSource.ContextHeaders(ctx)
+	bearerCtx, err = authSource.AuthContext(ctx)
 	assert.NoError(t, err)
 	assert.Equal(t, token, bearerCtx.Value(client.ContextAccessToken))
 }
 
-func TestUsernamePasswordSource_ContextHeaders_Token_Validation(t *testing.T) {
+func TestUsernamePasswordSource_AuthHeaders_Token_Validation(t *testing.T) {
 	mockUserAPI := new(client.MockUserAPI)
 	mockTeamAPI := new(client.MockTeamAPI)
 
@@ -70,7 +70,7 @@ func TestUsernamePasswordSource_ContextHeaders_Token_Validation(t *testing.T) {
 	ctx := context.Background()
 
 	t.Run("valid token returns context", func(t *testing.T) {
-		bearerCtx, err := authSource.ContextHeaders(ctx)
+		bearerCtx, err := authSource.AuthContext(ctx)
 		require.NoError(t, err)
 		require.Equal(t, token, bearerCtx.Value(client.ContextAccessToken))
 
@@ -90,7 +90,7 @@ func TestUsernamePasswordSource_ContextHeaders_Token_Validation(t *testing.T) {
 		}).Once()
 		mockUserAPI.On("ValidateCredentialsExecute", mock.Anything).Return(token, nil, nil).Once()
 
-		bearerCtx, err := authSource.ContextHeaders(ctx)
+		bearerCtx, err := authSource.AuthContext(ctx)
 		// The first call returns error because the token is malformed, so context should be nil
 		assert.Error(t, err)
 		assert.Contains(t, err.Error(), "failed to decode")
@@ -115,11 +115,11 @@ func TestUsernamePasswordSource_ContextHeaders_Token_Validation(t *testing.T) {
 		}).Once()
 		mockUserAPI.On("ValidateCredentialsExecute", mock.Anything).Return(validToken, nil, nil).Once()
 
-		_, err := authSource.ContextHeaders(ctx)
+		_, err := authSource.AuthContext(ctx)
 		assert.Error(t, err)
 
 		// Next call detects expired token and triggers login to refresh token
-		bearerCtx, err := authSource.ContextHeaders(ctx)
+		bearerCtx, err := authSource.AuthContext(ctx)
 		assert.NoError(t, err)
 		assert.Equal(t, validToken, bearerCtx.Value(client.ContextAccessToken))
 		mockUserAPI.AssertExpectations(t)
@@ -135,8 +135,8 @@ func TestUsernamePasswordSource_ContextHeaders_Token_Validation(t *testing.T) {
 		assert.Error(t, err)
 		assert.Contains(t, err.Error(), "failed to parse access token")
 
-		// ContextHeaders should propagate the error too
-		_, err = authSource.ContextHeaders(ctx)
+		// AuthContext should propagate the error too
+		_, err = authSource.AuthContext(ctx)
 		assert.Error(t, err)
 		assert.Contains(t, err.Error(), "failed to parse access token")
 	})
@@ -155,7 +155,7 @@ func TestUsernamePasswordSource_ContextHeaders_Token_Validation(t *testing.T) {
 			Body:       nil,
 		}, fmt.Errorf("login failed")).Once()
 
-		_, err := authSource.ContextHeaders(ctx)
+		_, err := authSource.AuthContext(ctx)
 		assert.Error(t, err)
 		assert.Contains(t, err.Error(), "failed to validate credentials")
 

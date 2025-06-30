@@ -8,10 +8,10 @@ import (
 	"strings"
 	"syscall"
 
-	"github.com/sirupsen/logrus"
-
 	"github.com/nais/dependencytrack/cmd/common"
-	"github.com/nais/dependencytrack/pkg/client"
+	"github.com/nais/dependencytrack/pkg/dependencytrack"
+	"github.com/nais/dependencytrack/pkg/dependencytrack/client"
+	"github.com/sirupsen/logrus"
 	"gopkg.in/yaml.v3"
 )
 
@@ -60,27 +60,29 @@ func main() {
 		log.Fatalf("setup logger: %v", err)
 	}
 
-	c := client.New(
-		cfg.BaseUrl,
-		"admin",
-		cfg.AdminPassword,
-		client.WithLogger(log.WithField("system", "dependencytrack-bootstrap")),
-	)
-
-	// if auth doesn't fail, it means we have already changed the password
-	_, err = c.Headers(ctx)
+	c, err := dependencytrack.NewClient(cfg.BaseUrl, "admin", cfg.AdminPassword, log.WithField("subsystem", "client"))
 	if err != nil {
-		err := c.ChangeAdminPassword(ctx, cfg.DefaultAdminPassword, cfg.AdminPassword)
-		if err != nil {
-			log.Fatalf("change admin password: %v", err)
-		}
+		log.Fatalf("create dependencytrack client: %v", err)
+	}
+
+	err = c.ChangeAdminPassword(ctx, cfg.DefaultAdminPassword, cfg.AdminPassword)
+	if err != nil {
+		log.Fatalf("change admin password: %v", err)
+	}
+
+	ctx, err = c.AuthContext(ctx)
+	if err != nil {
+		log.Fatalf("login failed: %v", err)
 	}
 
 	file, err := os.ReadFile(cfg.UsersFile)
 	if err != nil {
 		log.Fatalf("read users file: %v", err)
 	}
-	users := &client.AdminUsers{}
+	type Users struct {
+		Users []*dependencytrack.AdminUser `yaml:"users"`
+	}
+	users := &Users{}
 	err = yaml.Unmarshal(file, users)
 	if err != nil {
 		log.Fatalf("unmarshal users file: %v", err)
@@ -99,12 +101,12 @@ func main() {
 	}
 
 	// remove users before adding to ensure passwords in sync
-	err = c.RemoveAdminUsers(ctx, users)
+	err = c.RemoveAdminUsers(ctx, users.Users)
 	if err != nil {
 		log.Fatalf("remove users: %v", err)
 	}
 
-	err = c.CreateAdminUsers(ctx, users, team.Uuid)
+	err = c.CreateAdminUsers(ctx, users.Users, team.Uuid)
 	if err != nil {
 		log.Fatalf("create users: %v", err)
 	}
@@ -119,13 +121,14 @@ func main() {
 	var cp []client.ConfigProperty
 	for _, prop := range props {
 		if cfg.GithubAdvisoryToken != "" {
-			switch prop.PropertyName {
+			switch *prop.PropertyName {
 			case "github.advisories.enabled":
 				if isAlreadySet(prop.PropertyValue, "true") {
 					log.Info("github advisory mirroring already enabled")
 					continue
 				}
-				prop.PropertyValue = "true"
+				token := "true"
+				prop.PropertyValue = &token
 				cp = append(cp, prop)
 				log.Info("added: github advisory mirroring")
 			case "github.advisories.access.token":
@@ -133,20 +136,21 @@ func main() {
 					log.Info("github advisory mirroring token already set")
 					continue
 				}
-				prop.PropertyValue = cfg.GithubAdvisoryToken
+				prop.PropertyValue = &cfg.GithubAdvisoryToken
 				cp = append(cp, prop)
 				log.Info("added: github advisory mirroring token")
 			}
 		}
 
 		if cfg.NVDApiKey != "" {
-			switch prop.PropertyName {
+			switch *prop.PropertyName {
 			case "nvd.api.enabled":
 				if isAlreadySet(prop.PropertyValue, "true") {
 					log.Info("nvd api already enabled")
 					continue
 				}
-				prop.PropertyValue = "true"
+				enabled := "true"
+				prop.PropertyValue = &enabled
 				cp = append(cp, prop)
 				log.Info("added: nvd api")
 			case "nvd.api.download.feeds":
@@ -154,7 +158,8 @@ func main() {
 					log.Info("nvd api download feeds already disabled")
 					continue
 				}
-				prop.PropertyValue = "false"
+				download := "false"
+				prop.PropertyValue = &download
 				cp = append(cp, prop)
 				log.Info("added: nvd api download feeds")
 			case "nvd.api.key":
@@ -162,14 +167,14 @@ func main() {
 					log.Info("nvd api key already set")
 					continue
 				}
-				prop.PropertyValue = cfg.NVDApiKey
+				prop.PropertyValue = &cfg.NVDApiKey
 				cp = append(cp, prop)
 				log.Info("added: nvd api key")
 			}
 		}
 
 		if cfg.GoogleOSVEnabled {
-			switch prop.PropertyName {
+			switch *prop.PropertyName {
 			case "google.osv.enabled":
 				eco, err := c.GetEcosystems(ctx)
 				if err != nil {
@@ -188,18 +193,19 @@ func main() {
 		}
 
 		if cfg.TrivyApiToken != "" {
-			switch prop.PropertyName {
+			switch *prop.PropertyName {
 			case "trivy.enabled":
 				if isAlreadySet(prop.PropertyValue, "true") {
 					log.Info("trivy integration already enabled")
 					continue
 				}
-				prop.PropertyValue = "true"
+				enabled := "true"
+				prop.PropertyValue = &enabled
 				cp = append(cp, prop)
 				log.Info("added: trivy integration")
 			case "trivy.api.token":
 				// we cant check if the token is already set, so we just set it
-				prop.PropertyValue = cfg.TrivyApiToken
+				prop.PropertyValue = &cfg.TrivyApiToken
 				cp = append(cp, prop)
 				log.Info("added: trivy token")
 			case "trivy.base.url":
@@ -207,7 +213,7 @@ func main() {
 					log.Info("trivy base url already set")
 					continue
 				}
-				prop.PropertyValue = cfg.TrivyBaseURL
+				prop.PropertyValue = &cfg.TrivyBaseURL
 				cp = append(cp, prop)
 				log.Info("added: trivy base url")
 			case "trivy.ignore.unfixed":
@@ -215,20 +221,21 @@ func main() {
 					log.Info("trivy ignore unfixed already enabled")
 					continue
 				}
-				prop.PropertyValue = "true"
+				unfixed := "true"
+				prop.PropertyValue = &unfixed
 				cp = append(cp, prop)
 				log.Info("added: trivy ignore unfixed")
 			}
 		}
 
 		if cfg.FrontendBaseUrl != "" {
-			switch prop.PropertyName {
+			switch *prop.PropertyName {
 			case "base.url":
 				if isAlreadySet(prop.PropertyValue, cfg.FrontendBaseUrl) {
 					log.Info("general base url already set")
 					continue
 				}
-				prop.PropertyValue = cfg.FrontendBaseUrl
+				prop.PropertyValue = &cfg.FrontendBaseUrl
 				cp = append(cp, prop)
 				log.Info("added: general base url")
 			}
@@ -237,16 +244,17 @@ func main() {
 
 	// only update if we have new properties
 	if len(cp) > 0 {
-		if _, err := c.ConfigPropertyAggregate(ctx, cp); err != nil {
-			log.Fatalf("config property aggregate: %v", err)
+		for _, p := range cp {
+			if err = c.ConfigPropertyAggregate(ctx, p); err != nil {
+				log.Fatalf("config property aggregate: %v", err)
+			}
 		}
 		log.Info("done: config properties updated")
 	}
 }
 
-func updateEcosystems(ctx context.Context, c client.Client, eco []string, prop client.ConfigProperty, log *logrus.Logger) error {
+func updateEcosystems(ctx context.Context, c dependencytrack.Client, eco []string, prop client.ConfigProperty, log *logrus.Logger) error {
 	chunkSize := 10
-	var cp []client.ConfigProperty
 
 	for len(eco) > 0 {
 		log.Info("Processing chunk of ecosystems: ", len(eco))
@@ -259,16 +267,16 @@ func updateEcosystems(ctx context.Context, c client.Client, eco []string, prop c
 		chunk := eco[:end]
 		eco = eco[end:] // Remove the processed chunk from eco
 
+		propVal := strings.Join(chunk, ";")
 		p := client.ConfigProperty{
 			GroupName:     prop.GroupName,
 			PropertyName:  prop.PropertyName,
 			PropertyType:  prop.PropertyType,
-			PropertyValue: strings.Join(chunk, ";"),
+			PropertyValue: &propVal,
 			Description:   prop.Description,
 		}
-		cp = append(cp, p)
 
-		if _, err := c.ConfigPropertyAggregate(ctx, cp); err != nil {
+		if err := c.ConfigPropertyAggregate(ctx, p); err != nil {
 			return err
 		}
 
@@ -277,6 +285,9 @@ func updateEcosystems(ctx context.Context, c client.Client, eco []string, prop c
 	return nil
 }
 
-func isAlreadySet(config, inputValue string) bool {
-	return strings.EqualFold(config, inputValue)
+func isAlreadySet(config *string, inputValue string) bool {
+	if config == nil {
+		return false
+	}
+	return strings.EqualFold(*config, inputValue)
 }

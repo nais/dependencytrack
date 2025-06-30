@@ -4,6 +4,8 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"io"
+	"net/http"
 	"sync"
 	"time"
 
@@ -17,7 +19,8 @@ var (
 )
 
 type Auth interface {
-	ContextHeaders(ctx context.Context) (context.Context, error)
+	AuthContext(ctx context.Context) (context.Context, error)
+	Login(ctx context.Context, username, password string) (string, error)
 }
 
 type (
@@ -54,7 +57,7 @@ func newUsernamePasswordSourceWithToken(username Username, password Password, to
 	}
 }
 
-func (ups *usernamePasswordSource) ContextHeaders(ctx context.Context) (context.Context, error) {
+func (ups *usernamePasswordSource) AuthContext(ctx context.Context) (context.Context, error) {
 	ups.lock.Lock()
 	defer ups.lock.Unlock()
 
@@ -64,7 +67,7 @@ func (ups *usernamePasswordSource) ContextHeaders(ctx context.Context) (context.
 	}
 
 	if expired {
-		t, err = ups.login(ctx)
+		t, err = ups.Login(ctx, ups.username, ups.password)
 		if err != nil {
 			return nil, err
 		}
@@ -91,21 +94,61 @@ func (ups *usernamePasswordSource) checkAccessToken() (string, bool, error) {
 	return ups.accessToken, expired, nil
 }
 
-func (ups *usernamePasswordSource) login(ctx context.Context) (string, error) {
+func (ups *usernamePasswordSource) Login(ctx context.Context, username Username, password Password) (string, error) {
 	res, resp, err := ups.client.UserAPI.ValidateCredentials(ctx).
-		Username(ups.username).
-		Password(ups.password).
+		Username(username).
+		Password(password).
 		Execute()
 	if err != nil {
-		ups.log.Errorf("failed to validate credentials: %v", resp)
-		return "", fmt.Errorf("failed to validate credentials: %w", err)
+		return "", convertError(err, resp)
 	}
 
 	_, err = jwt.ParseString(res, jwt.WithVerify(false))
 	if err != nil {
-		return "", fmt.Errorf("could not parse token from body after login request: %w (response body: %s)", err, res)
+		return "", convertError(err, resp)
 	}
 
 	ups.log.Info("Successfully logged in with username and password")
 	return res, nil
+}
+
+type ClientError struct {
+	StatusCode          int
+	ForcePasswordChange bool
+	Body                string
+	error
+}
+
+type ServerError struct {
+	StatusCode int
+	Body       string
+	error
+}
+
+func convertError(err error, resp *http.Response) error {
+	body, _ := io.ReadAll(resp.Body)
+	switch {
+	case resp.StatusCode >= 400 && resp.StatusCode < 500:
+		if resp.StatusCode == http.StatusUnauthorized && body != nil && string(body) == "FORCE_PASSWORD_CHANGE" {
+			return ClientError{
+				StatusCode:          resp.StatusCode,
+				ForcePasswordChange: true,
+				Body:                string(body),
+				error:               err,
+			}
+		}
+		return ClientError{
+			StatusCode: resp.StatusCode,
+			Body:       string(body),
+			error:      err,
+		}
+	case resp.StatusCode >= 500:
+		return ServerError{
+			StatusCode: resp.StatusCode,
+			Body:       string(body),
+			error:      err,
+		}
+	default:
+		return nil
+	}
 }

@@ -54,27 +54,27 @@ services:
       - "9020:8080"
     restart: unless-stopped
 
-  bootstrap:
-    build: .
-    environment:
-      - LOG_LEVEL=debug
-      - BASE_URL=http://dtrack-apiserver:8080/
-      - DEFAULT_ADMIN_PASSWORD=admin
-      - ADMIN_PASSWORD=yolo
-      - USERS_FILE=users.yaml
-      - GITHUB_ADVISORY_TOKEN=
-      - GOOGLE_OSV_ENABLED=true
-      - LOGGING_CONFIG_PATH=logback-json.xml
-      - NVD_API_KEY=my-key
-      - TRIVY_API_TOKEN=my-token
-      - TRIVY_BASE_URL=http://trivy:8080
-    env_file:
-      - .env
-    volumes:
-      - ./users.yaml:/app/users.yaml
-    depends_on:
-      dtrack-apiserver:
-        condition: service_healthy
+  #bootstrap:
+  #  build: .
+  #  environment:
+  #    - LOG_LEVEL=debug
+  #    - BASE_URL=http://dtrack-apiserver:8080/
+  #    - DEFAULT_ADMIN_PASSWORD=admin
+  #    - ADMIN_PASSWORD=yolo
+  #    - USERS_FILE=users.yaml
+  #    - GITHUB_ADVISORY_TOKEN=
+  #    - GOOGLE_OSV_ENABLED=true
+  #    - LOGGING_CONFIG_PATH=logback-json.xml
+  #    - NVD_API_KEY=my-key
+  #    - TRIVY_API_TOKEN=my-token
+  #    - TRIVY_BASE_URL=http://trivy:8080
+  #  env_file:
+  #    - .env
+  #  volumes:
+  #    - ./users.yaml:/app/users.yaml
+  #  depends_on:
+  #    dtrack-apiserver:
+  #      condition: service_healthy
 
 volumes:
   dependency-track:
