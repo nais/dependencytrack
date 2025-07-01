@@ -40,7 +40,7 @@ func TestPaginateProjects(t *testing.T) {
 
 	assert.NoError(t, err)
 	assert.Len(t, projects, 2)
-	assert.Equal(t, project1, *projects[0].Name)
+	assert.Equal(t, project1, projects[0].Name)
 	mockClient.AssertExpectations(t)
 
 	mockClient = new(MockClient)
