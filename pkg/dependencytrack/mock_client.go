@@ -5,10 +5,7 @@ package dependencytrack
 import (
 	context "context"
 
-	client "github.com/nais/dependencytrack/pkg/dependencytrack/client"
-
 	in_toto "github.com/in-toto/in-toto-golang/in_toto"
-
 	mock "github.com/stretchr/testify/mock"
 )
 
@@ -23,6 +20,54 @@ type MockClient_Expecter struct {
 
 func (_m *MockClient) EXPECT() *MockClient_Expecter {
 	return &MockClient_Expecter{mock: &_m.Mock}
+}
+
+// AddToTeam provides a mock function with given fields: ctx, username, uuid
+func (_m *MockClient) AddToTeam(ctx context.Context, username string, uuid string) error {
+	ret := _m.Called(ctx, username, uuid)
+
+	if len(ret) == 0 {
+		panic("no return value specified for AddToTeam")
+	}
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(context.Context, string, string) error); ok {
+		r0 = rf(ctx, username, uuid)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
+// MockClient_AddToTeam_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'AddToTeam'
+type MockClient_AddToTeam_Call struct {
+	*mock.Call
+}
+
+// AddToTeam is a helper method to define mock.On call
+//   - ctx context.Context
+//   - username string
+//   - uuid string
+func (_e *MockClient_Expecter) AddToTeam(ctx interface{}, username interface{}, uuid interface{}) *MockClient_AddToTeam_Call {
+	return &MockClient_AddToTeam_Call{Call: _e.mock.On("AddToTeam", ctx, username, uuid)}
+}
+
+func (_c *MockClient_AddToTeam_Call) Run(run func(ctx context.Context, username string, uuid string)) *MockClient_AddToTeam_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(string), args[2].(string))
+	})
+	return _c
+}
+
+func (_c *MockClient_AddToTeam_Call) Return(_a0 error) *MockClient_AddToTeam_Call {
+	_c.Call.Return(_a0)
+	return _c
+}
+
+func (_c *MockClient_AddToTeam_Call) RunAndReturn(run func(context.Context, string, string) error) *MockClient_AddToTeam_Call {
+	_c.Call.Return(run)
+	return _c
 }
 
 // AllMetricsRefresh provides a mock function with given fields: ctx
@@ -178,7 +223,7 @@ func (_c *MockClient_ChangeAdminPassword_Call) RunAndReturn(run func(context.Con
 }
 
 // ConfigPropertyAggregate provides a mock function with given fields: ctx, property
-func (_m *MockClient) ConfigPropertyAggregate(ctx context.Context, property client.ConfigProperty) error {
+func (_m *MockClient) ConfigPropertyAggregate(ctx context.Context, property ConfigProperty) error {
 	ret := _m.Called(ctx, property)
 
 	if len(ret) == 0 {
@@ -186,7 +231,7 @@ func (_m *MockClient) ConfigPropertyAggregate(ctx context.Context, property clie
 	}
 
 	var r0 error
-	if rf, ok := ret.Get(0).(func(context.Context, client.ConfigProperty) error); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, ConfigProperty) error); ok {
 		r0 = rf(ctx, property)
 	} else {
 		r0 = ret.Error(0)
@@ -202,14 +247,14 @@ type MockClient_ConfigPropertyAggregate_Call struct {
 
 // ConfigPropertyAggregate is a helper method to define mock.On call
 //   - ctx context.Context
-//   - property client.ConfigProperty
+//   - property ConfigProperty
 func (_e *MockClient_Expecter) ConfigPropertyAggregate(ctx interface{}, property interface{}) *MockClient_ConfigPropertyAggregate_Call {
 	return &MockClient_ConfigPropertyAggregate_Call{Call: _e.mock.On("ConfigPropertyAggregate", ctx, property)}
 }
 
-func (_c *MockClient_ConfigPropertyAggregate_Call) Run(run func(ctx context.Context, property client.ConfigProperty)) *MockClient_ConfigPropertyAggregate_Call {
+func (_c *MockClient_ConfigPropertyAggregate_Call) Run(run func(ctx context.Context, property ConfigProperty)) *MockClient_ConfigPropertyAggregate_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		run(args[0].(context.Context), args[1].(client.ConfigProperty))
+		run(args[0].(context.Context), args[1].(ConfigProperty))
 	})
 	return _c
 }
@@ -219,7 +264,7 @@ func (_c *MockClient_ConfigPropertyAggregate_Call) Return(_a0 error) *MockClient
 	return _c
 }
 
-func (_c *MockClient_ConfigPropertyAggregate_Call) RunAndReturn(run func(context.Context, client.ConfigProperty) error) *MockClient_ConfigPropertyAggregate_Call {
+func (_c *MockClient_ConfigPropertyAggregate_Call) RunAndReturn(run func(context.Context, ConfigProperty) error) *MockClient_ConfigPropertyAggregate_Call {
 	_c.Call.Return(run)
 	return _c
 }
@@ -369,27 +414,27 @@ func (_c *MockClient_CreateOidcUser_Call) RunAndReturn(run func(context.Context,
 }
 
 // CreateProject provides a mock function with given fields: ctx, imageName, imageTag, tags
-func (_m *MockClient) CreateProject(ctx context.Context, imageName string, imageTag string, tags []client.Tag) (*client.Project, error) {
+func (_m *MockClient) CreateProject(ctx context.Context, imageName string, imageTag string, tags []string) (*Project, error) {
 	ret := _m.Called(ctx, imageName, imageTag, tags)
 
 	if len(ret) == 0 {
 		panic("no return value specified for CreateProject")
 	}
 
-	var r0 *client.Project
+	var r0 *Project
 	var r1 error
-	if rf, ok := ret.Get(0).(func(context.Context, string, string, []client.Tag) (*client.Project, error)); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, string, string, []string) (*Project, error)); ok {
 		return rf(ctx, imageName, imageTag, tags)
 	}
-	if rf, ok := ret.Get(0).(func(context.Context, string, string, []client.Tag) *client.Project); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, string, string, []string) *Project); ok {
 		r0 = rf(ctx, imageName, imageTag, tags)
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(*client.Project)
+			r0 = ret.Get(0).(*Project)
 		}
 	}
 
-	if rf, ok := ret.Get(1).(func(context.Context, string, string, []client.Tag) error); ok {
+	if rf, ok := ret.Get(1).(func(context.Context, string, string, []string) error); ok {
 		r1 = rf(ctx, imageName, imageTag, tags)
 	} else {
 		r1 = ret.Error(1)
@@ -407,24 +452,24 @@ type MockClient_CreateProject_Call struct {
 //   - ctx context.Context
 //   - imageName string
 //   - imageTag string
-//   - tags []client.Tag
+//   - tags []string
 func (_e *MockClient_Expecter) CreateProject(ctx interface{}, imageName interface{}, imageTag interface{}, tags interface{}) *MockClient_CreateProject_Call {
 	return &MockClient_CreateProject_Call{Call: _e.mock.On("CreateProject", ctx, imageName, imageTag, tags)}
 }
 
-func (_c *MockClient_CreateProject_Call) Run(run func(ctx context.Context, imageName string, imageTag string, tags []client.Tag)) *MockClient_CreateProject_Call {
+func (_c *MockClient_CreateProject_Call) Run(run func(ctx context.Context, imageName string, imageTag string, tags []string)) *MockClient_CreateProject_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		run(args[0].(context.Context), args[1].(string), args[2].(string), args[3].([]client.Tag))
+		run(args[0].(context.Context), args[1].(string), args[2].(string), args[3].([]string))
 	})
 	return _c
 }
 
-func (_c *MockClient_CreateProject_Call) Return(_a0 *client.Project, _a1 error) *MockClient_CreateProject_Call {
+func (_c *MockClient_CreateProject_Call) Return(_a0 *Project, _a1 error) *MockClient_CreateProject_Call {
 	_c.Call.Return(_a0, _a1)
 	return _c
 }
 
-func (_c *MockClient_CreateProject_Call) RunAndReturn(run func(context.Context, string, string, []client.Tag) (*client.Project, error)) *MockClient_CreateProject_Call {
+func (_c *MockClient_CreateProject_Call) RunAndReturn(run func(context.Context, string, string, []string) (*Project, error)) *MockClient_CreateProject_Call {
 	_c.Call.Return(run)
 	return _c
 }
@@ -489,27 +534,27 @@ func (_c *MockClient_CreateProjectWithSbom_Call) RunAndReturn(run func(context.C
 }
 
 // CreateTeam provides a mock function with given fields: ctx, teamName, permissions
-func (_m *MockClient) CreateTeam(ctx context.Context, teamName string, permissions []client.Permission) (*client.Team, error) {
+func (_m *MockClient) CreateTeam(ctx context.Context, teamName string, permissions []Permission) (*Team, error) {
 	ret := _m.Called(ctx, teamName, permissions)
 
 	if len(ret) == 0 {
 		panic("no return value specified for CreateTeam")
 	}
 
-	var r0 *client.Team
+	var r0 *Team
 	var r1 error
-	if rf, ok := ret.Get(0).(func(context.Context, string, []client.Permission) (*client.Team, error)); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, string, []Permission) (*Team, error)); ok {
 		return rf(ctx, teamName, permissions)
 	}
-	if rf, ok := ret.Get(0).(func(context.Context, string, []client.Permission) *client.Team); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, string, []Permission) *Team); ok {
 		r0 = rf(ctx, teamName, permissions)
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(*client.Team)
+			r0 = ret.Get(0).(*Team)
 		}
 	}
 
-	if rf, ok := ret.Get(1).(func(context.Context, string, []client.Permission) error); ok {
+	if rf, ok := ret.Get(1).(func(context.Context, string, []Permission) error); ok {
 		r1 = rf(ctx, teamName, permissions)
 	} else {
 		r1 = ret.Error(1)
@@ -526,24 +571,24 @@ type MockClient_CreateTeam_Call struct {
 // CreateTeam is a helper method to define mock.On call
 //   - ctx context.Context
 //   - teamName string
-//   - permissions []client.Permission
+//   - permissions []Permission
 func (_e *MockClient_Expecter) CreateTeam(ctx interface{}, teamName interface{}, permissions interface{}) *MockClient_CreateTeam_Call {
 	return &MockClient_CreateTeam_Call{Call: _e.mock.On("CreateTeam", ctx, teamName, permissions)}
 }
 
-func (_c *MockClient_CreateTeam_Call) Run(run func(ctx context.Context, teamName string, permissions []client.Permission)) *MockClient_CreateTeam_Call {
+func (_c *MockClient_CreateTeam_Call) Run(run func(ctx context.Context, teamName string, permissions []Permission)) *MockClient_CreateTeam_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		run(args[0].(context.Context), args[1].(string), args[2].([]client.Permission))
+		run(args[0].(context.Context), args[1].(string), args[2].([]Permission))
 	})
 	return _c
 }
 
-func (_c *MockClient_CreateTeam_Call) Return(_a0 *client.Team, _a1 error) *MockClient_CreateTeam_Call {
+func (_c *MockClient_CreateTeam_Call) Return(_a0 *Team, _a1 error) *MockClient_CreateTeam_Call {
 	_c.Call.Return(_a0, _a1)
 	return _c
 }
 
-func (_c *MockClient_CreateTeam_Call) RunAndReturn(run func(context.Context, string, []client.Permission) (*client.Team, error)) *MockClient_CreateTeam_Call {
+func (_c *MockClient_CreateTeam_Call) RunAndReturn(run func(context.Context, string, []Permission) (*Team, error)) *MockClient_CreateTeam_Call {
 	_c.Call.Return(run)
 	return _c
 }
@@ -842,23 +887,23 @@ func (_c *MockClient_GenerateApiKey_Call) RunAndReturn(run func(context.Context,
 }
 
 // GetAnalysisTrailForImage provides a mock function with given fields: ctx, projectId, componentId, vulnerabilityId
-func (_m *MockClient) GetAnalysisTrailForImage(ctx context.Context, projectId string, componentId string, vulnerabilityId string) (*client.Analysis, error) {
+func (_m *MockClient) GetAnalysisTrailForImage(ctx context.Context, projectId string, componentId string, vulnerabilityId string) (*Analysis, error) {
 	ret := _m.Called(ctx, projectId, componentId, vulnerabilityId)
 
 	if len(ret) == 0 {
 		panic("no return value specified for GetAnalysisTrailForImage")
 	}
 
-	var r0 *client.Analysis
+	var r0 *Analysis
 	var r1 error
-	if rf, ok := ret.Get(0).(func(context.Context, string, string, string) (*client.Analysis, error)); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, string, string, string) (*Analysis, error)); ok {
 		return rf(ctx, projectId, componentId, vulnerabilityId)
 	}
-	if rf, ok := ret.Get(0).(func(context.Context, string, string, string) *client.Analysis); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, string, string, string) *Analysis); ok {
 		r0 = rf(ctx, projectId, componentId, vulnerabilityId)
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(*client.Analysis)
+			r0 = ret.Get(0).(*Analysis)
 		}
 	}
 
@@ -892,34 +937,34 @@ func (_c *MockClient_GetAnalysisTrailForImage_Call) Run(run func(ctx context.Con
 	return _c
 }
 
-func (_c *MockClient_GetAnalysisTrailForImage_Call) Return(_a0 *client.Analysis, _a1 error) *MockClient_GetAnalysisTrailForImage_Call {
+func (_c *MockClient_GetAnalysisTrailForImage_Call) Return(_a0 *Analysis, _a1 error) *MockClient_GetAnalysisTrailForImage_Call {
 	_c.Call.Return(_a0, _a1)
 	return _c
 }
 
-func (_c *MockClient_GetAnalysisTrailForImage_Call) RunAndReturn(run func(context.Context, string, string, string) (*client.Analysis, error)) *MockClient_GetAnalysisTrailForImage_Call {
+func (_c *MockClient_GetAnalysisTrailForImage_Call) RunAndReturn(run func(context.Context, string, string, string) (*Analysis, error)) *MockClient_GetAnalysisTrailForImage_Call {
 	_c.Call.Return(run)
 	return _c
 }
 
 // GetConfigProperties provides a mock function with given fields: ctx
-func (_m *MockClient) GetConfigProperties(ctx context.Context) ([]client.ConfigProperty, error) {
+func (_m *MockClient) GetConfigProperties(ctx context.Context) ([]ConfigProperty, error) {
 	ret := _m.Called(ctx)
 
 	if len(ret) == 0 {
 		panic("no return value specified for GetConfigProperties")
 	}
 
-	var r0 []client.ConfigProperty
+	var r0 []ConfigProperty
 	var r1 error
-	if rf, ok := ret.Get(0).(func(context.Context) ([]client.ConfigProperty, error)); ok {
+	if rf, ok := ret.Get(0).(func(context.Context) ([]ConfigProperty, error)); ok {
 		return rf(ctx)
 	}
-	if rf, ok := ret.Get(0).(func(context.Context) []client.ConfigProperty); ok {
+	if rf, ok := ret.Get(0).(func(context.Context) []ConfigProperty); ok {
 		r0 = rf(ctx)
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).([]client.ConfigProperty)
+			r0 = ret.Get(0).([]ConfigProperty)
 		}
 	}
 
@@ -950,12 +995,12 @@ func (_c *MockClient_GetConfigProperties_Call) Run(run func(ctx context.Context)
 	return _c
 }
 
-func (_c *MockClient_GetConfigProperties_Call) Return(_a0 []client.ConfigProperty, _a1 error) *MockClient_GetConfigProperties_Call {
+func (_c *MockClient_GetConfigProperties_Call) Return(_a0 []ConfigProperty, _a1 error) *MockClient_GetConfigProperties_Call {
 	_c.Call.Return(_a0, _a1)
 	return _c
 }
 
-func (_c *MockClient_GetConfigProperties_Call) RunAndReturn(run func(context.Context) ([]client.ConfigProperty, error)) *MockClient_GetConfigProperties_Call {
+func (_c *MockClient_GetConfigProperties_Call) RunAndReturn(run func(context.Context) ([]ConfigProperty, error)) *MockClient_GetConfigProperties_Call {
 	_c.Call.Return(run)
 	return _c
 }
@@ -1018,29 +1063,29 @@ func (_c *MockClient_GetEcosystems_Call) RunAndReturn(run func(context.Context) 
 	return _c
 }
 
-// GetFindings provides a mock function with given fields: ctx, uuid, vulnerabilityId, suppressed
-func (_m *MockClient) GetFindings(ctx context.Context, uuid string, vulnerabilityId string, suppressed bool) ([]client.Finding, error) {
-	ret := _m.Called(ctx, uuid, vulnerabilityId, suppressed)
+// GetOidcUser provides a mock function with given fields: ctx, username
+func (_m *MockClient) GetOidcUser(ctx context.Context, username string) (*User, error) {
+	ret := _m.Called(ctx, username)
 
 	if len(ret) == 0 {
-		panic("no return value specified for GetFindings")
+		panic("no return value specified for GetOidcUser")
 	}
 
-	var r0 []client.Finding
+	var r0 *User
 	var r1 error
-	if rf, ok := ret.Get(0).(func(context.Context, string, string, bool) ([]client.Finding, error)); ok {
-		return rf(ctx, uuid, vulnerabilityId, suppressed)
+	if rf, ok := ret.Get(0).(func(context.Context, string) (*User, error)); ok {
+		return rf(ctx, username)
 	}
-	if rf, ok := ret.Get(0).(func(context.Context, string, string, bool) []client.Finding); ok {
-		r0 = rf(ctx, uuid, vulnerabilityId, suppressed)
+	if rf, ok := ret.Get(0).(func(context.Context, string) *User); ok {
+		r0 = rf(ctx, username)
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).([]client.Finding)
+			r0 = ret.Get(0).(*User)
 		}
 	}
 
-	if rf, ok := ret.Get(1).(func(context.Context, string, string, bool) error); ok {
-		r1 = rf(ctx, uuid, vulnerabilityId, suppressed)
+	if rf, ok := ret.Get(1).(func(context.Context, string) error); ok {
+		r1 = rf(ctx, username)
 	} else {
 		r1 = ret.Error(1)
 	}
@@ -1048,60 +1093,58 @@ func (_m *MockClient) GetFindings(ctx context.Context, uuid string, vulnerabilit
 	return r0, r1
 }
 
-// MockClient_GetFindings_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetFindings'
-type MockClient_GetFindings_Call struct {
+// MockClient_GetOidcUser_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetOidcUser'
+type MockClient_GetOidcUser_Call struct {
 	*mock.Call
 }
 
-// GetFindings is a helper method to define mock.On call
+// GetOidcUser is a helper method to define mock.On call
 //   - ctx context.Context
-//   - uuid string
-//   - vulnerabilityId string
-//   - suppressed bool
-func (_e *MockClient_Expecter) GetFindings(ctx interface{}, uuid interface{}, vulnerabilityId interface{}, suppressed interface{}) *MockClient_GetFindings_Call {
-	return &MockClient_GetFindings_Call{Call: _e.mock.On("GetFindings", ctx, uuid, vulnerabilityId, suppressed)}
+//   - username string
+func (_e *MockClient_Expecter) GetOidcUser(ctx interface{}, username interface{}) *MockClient_GetOidcUser_Call {
+	return &MockClient_GetOidcUser_Call{Call: _e.mock.On("GetOidcUser", ctx, username)}
 }
 
-func (_c *MockClient_GetFindings_Call) Run(run func(ctx context.Context, uuid string, vulnerabilityId string, suppressed bool)) *MockClient_GetFindings_Call {
+func (_c *MockClient_GetOidcUser_Call) Run(run func(ctx context.Context, username string)) *MockClient_GetOidcUser_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		run(args[0].(context.Context), args[1].(string), args[2].(string), args[3].(bool))
+		run(args[0].(context.Context), args[1].(string))
 	})
 	return _c
 }
 
-func (_c *MockClient_GetFindings_Call) Return(_a0 []client.Finding, _a1 error) *MockClient_GetFindings_Call {
+func (_c *MockClient_GetOidcUser_Call) Return(_a0 *User, _a1 error) *MockClient_GetOidcUser_Call {
 	_c.Call.Return(_a0, _a1)
 	return _c
 }
 
-func (_c *MockClient_GetFindings_Call) RunAndReturn(run func(context.Context, string, string, bool) ([]client.Finding, error)) *MockClient_GetFindings_Call {
+func (_c *MockClient_GetOidcUser_Call) RunAndReturn(run func(context.Context, string) (*User, error)) *MockClient_GetOidcUser_Call {
 	_c.Call.Return(run)
 	return _c
 }
 
-// GetOidcUsers provides a mock function with given fields: ctx, username
-func (_m *MockClient) GetOidcUsers(ctx context.Context, username string) ([]client.OidcUser, error) {
-	ret := _m.Called(ctx, username)
+// GetOidcUsers provides a mock function with given fields: ctx
+func (_m *MockClient) GetOidcUsers(ctx context.Context) ([]*User, error) {
+	ret := _m.Called(ctx)
 
 	if len(ret) == 0 {
 		panic("no return value specified for GetOidcUsers")
 	}
 
-	var r0 []client.OidcUser
+	var r0 []*User
 	var r1 error
-	if rf, ok := ret.Get(0).(func(context.Context, string) ([]client.OidcUser, error)); ok {
-		return rf(ctx, username)
+	if rf, ok := ret.Get(0).(func(context.Context) ([]*User, error)); ok {
+		return rf(ctx)
 	}
-	if rf, ok := ret.Get(0).(func(context.Context, string) []client.OidcUser); ok {
-		r0 = rf(ctx, username)
+	if rf, ok := ret.Get(0).(func(context.Context) []*User); ok {
+		r0 = rf(ctx)
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).([]client.OidcUser)
+			r0 = ret.Get(0).([]*User)
 		}
 	}
 
-	if rf, ok := ret.Get(1).(func(context.Context, string) error); ok {
-		r1 = rf(ctx, username)
+	if rf, ok := ret.Get(1).(func(context.Context) error); ok {
+		r1 = rf(ctx)
 	} else {
 		r1 = ret.Error(1)
 	}
@@ -1116,46 +1159,45 @@ type MockClient_GetOidcUsers_Call struct {
 
 // GetOidcUsers is a helper method to define mock.On call
 //   - ctx context.Context
-//   - username string
-func (_e *MockClient_Expecter) GetOidcUsers(ctx interface{}, username interface{}) *MockClient_GetOidcUsers_Call {
-	return &MockClient_GetOidcUsers_Call{Call: _e.mock.On("GetOidcUsers", ctx, username)}
+func (_e *MockClient_Expecter) GetOidcUsers(ctx interface{}) *MockClient_GetOidcUsers_Call {
+	return &MockClient_GetOidcUsers_Call{Call: _e.mock.On("GetOidcUsers", ctx)}
 }
 
-func (_c *MockClient_GetOidcUsers_Call) Run(run func(ctx context.Context, username string)) *MockClient_GetOidcUsers_Call {
+func (_c *MockClient_GetOidcUsers_Call) Run(run func(ctx context.Context)) *MockClient_GetOidcUsers_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		run(args[0].(context.Context), args[1].(string))
+		run(args[0].(context.Context))
 	})
 	return _c
 }
 
-func (_c *MockClient_GetOidcUsers_Call) Return(_a0 []client.OidcUser, _a1 error) *MockClient_GetOidcUsers_Call {
+func (_c *MockClient_GetOidcUsers_Call) Return(_a0 []*User, _a1 error) *MockClient_GetOidcUsers_Call {
 	_c.Call.Return(_a0, _a1)
 	return _c
 }
 
-func (_c *MockClient_GetOidcUsers_Call) RunAndReturn(run func(context.Context, string) ([]client.OidcUser, error)) *MockClient_GetOidcUsers_Call {
+func (_c *MockClient_GetOidcUsers_Call) RunAndReturn(run func(context.Context) ([]*User, error)) *MockClient_GetOidcUsers_Call {
 	_c.Call.Return(run)
 	return _c
 }
 
 // GetProject provides a mock function with given fields: ctx, name, version
-func (_m *MockClient) GetProject(ctx context.Context, name string, version string) (*client.Project, error) {
+func (_m *MockClient) GetProject(ctx context.Context, name string, version string) (*Project, error) {
 	ret := _m.Called(ctx, name, version)
 
 	if len(ret) == 0 {
 		panic("no return value specified for GetProject")
 	}
 
-	var r0 *client.Project
+	var r0 *Project
 	var r1 error
-	if rf, ok := ret.Get(0).(func(context.Context, string, string) (*client.Project, error)); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, string, string) (*Project, error)); ok {
 		return rf(ctx, name, version)
 	}
-	if rf, ok := ret.Get(0).(func(context.Context, string, string) *client.Project); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, string, string) *Project); ok {
 		r0 = rf(ctx, name, version)
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(*client.Project)
+			r0 = ret.Get(0).(*Project)
 		}
 	}
 
@@ -1188,34 +1230,34 @@ func (_c *MockClient_GetProject_Call) Run(run func(ctx context.Context, name str
 	return _c
 }
 
-func (_c *MockClient_GetProject_Call) Return(_a0 *client.Project, _a1 error) *MockClient_GetProject_Call {
+func (_c *MockClient_GetProject_Call) Return(_a0 *Project, _a1 error) *MockClient_GetProject_Call {
 	_c.Call.Return(_a0, _a1)
 	return _c
 }
 
-func (_c *MockClient_GetProject_Call) RunAndReturn(run func(context.Context, string, string) (*client.Project, error)) *MockClient_GetProject_Call {
+func (_c *MockClient_GetProject_Call) RunAndReturn(run func(context.Context, string, string) (*Project, error)) *MockClient_GetProject_Call {
 	_c.Call.Return(run)
 	return _c
 }
 
 // GetProjects provides a mock function with given fields: ctx, limit, offset
-func (_m *MockClient) GetProjects(ctx context.Context, limit int32, offset int32) ([]client.Project, error) {
+func (_m *MockClient) GetProjects(ctx context.Context, limit int32, offset int32) ([]Project, error) {
 	ret := _m.Called(ctx, limit, offset)
 
 	if len(ret) == 0 {
 		panic("no return value specified for GetProjects")
 	}
 
-	var r0 []client.Project
+	var r0 []Project
 	var r1 error
-	if rf, ok := ret.Get(0).(func(context.Context, int32, int32) ([]client.Project, error)); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, int32, int32) ([]Project, error)); ok {
 		return rf(ctx, limit, offset)
 	}
-	if rf, ok := ret.Get(0).(func(context.Context, int32, int32) []client.Project); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, int32, int32) []Project); ok {
 		r0 = rf(ctx, limit, offset)
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).([]client.Project)
+			r0 = ret.Get(0).([]Project)
 		}
 	}
 
@@ -1248,34 +1290,34 @@ func (_c *MockClient_GetProjects_Call) Run(run func(ctx context.Context, limit i
 	return _c
 }
 
-func (_c *MockClient_GetProjects_Call) Return(_a0 []client.Project, _a1 error) *MockClient_GetProjects_Call {
+func (_c *MockClient_GetProjects_Call) Return(_a0 []Project, _a1 error) *MockClient_GetProjects_Call {
 	_c.Call.Return(_a0, _a1)
 	return _c
 }
 
-func (_c *MockClient_GetProjects_Call) RunAndReturn(run func(context.Context, int32, int32) ([]client.Project, error)) *MockClient_GetProjects_Call {
+func (_c *MockClient_GetProjects_Call) RunAndReturn(run func(context.Context, int32, int32) ([]Project, error)) *MockClient_GetProjects_Call {
 	_c.Call.Return(run)
 	return _c
 }
 
 // GetTeam provides a mock function with given fields: ctx, team
-func (_m *MockClient) GetTeam(ctx context.Context, team string) (*client.Team, error) {
+func (_m *MockClient) GetTeam(ctx context.Context, team string) (*Team, error) {
 	ret := _m.Called(ctx, team)
 
 	if len(ret) == 0 {
 		panic("no return value specified for GetTeam")
 	}
 
-	var r0 *client.Team
+	var r0 *Team
 	var r1 error
-	if rf, ok := ret.Get(0).(func(context.Context, string) (*client.Team, error)); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, string) (*Team, error)); ok {
 		return rf(ctx, team)
 	}
-	if rf, ok := ret.Get(0).(func(context.Context, string) *client.Team); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, string) *Team); ok {
 		r0 = rf(ctx, team)
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(*client.Team)
+			r0 = ret.Get(0).(*Team)
 		}
 	}
 
@@ -1307,34 +1349,34 @@ func (_c *MockClient_GetTeam_Call) Run(run func(ctx context.Context, team string
 	return _c
 }
 
-func (_c *MockClient_GetTeam_Call) Return(_a0 *client.Team, _a1 error) *MockClient_GetTeam_Call {
+func (_c *MockClient_GetTeam_Call) Return(_a0 *Team, _a1 error) *MockClient_GetTeam_Call {
 	_c.Call.Return(_a0, _a1)
 	return _c
 }
 
-func (_c *MockClient_GetTeam_Call) RunAndReturn(run func(context.Context, string) (*client.Team, error)) *MockClient_GetTeam_Call {
+func (_c *MockClient_GetTeam_Call) RunAndReturn(run func(context.Context, string) (*Team, error)) *MockClient_GetTeam_Call {
 	_c.Call.Return(run)
 	return _c
 }
 
 // GetTeams provides a mock function with given fields: ctx
-func (_m *MockClient) GetTeams(ctx context.Context) ([]client.Team, error) {
+func (_m *MockClient) GetTeams(ctx context.Context) ([]*Team, error) {
 	ret := _m.Called(ctx)
 
 	if len(ret) == 0 {
 		panic("no return value specified for GetTeams")
 	}
 
-	var r0 []client.Team
+	var r0 []*Team
 	var r1 error
-	if rf, ok := ret.Get(0).(func(context.Context) ([]client.Team, error)); ok {
+	if rf, ok := ret.Get(0).(func(context.Context) ([]*Team, error)); ok {
 		return rf(ctx)
 	}
-	if rf, ok := ret.Get(0).(func(context.Context) []client.Team); ok {
+	if rf, ok := ret.Get(0).(func(context.Context) []*Team); ok {
 		r0 = rf(ctx)
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).([]client.Team)
+			r0 = ret.Get(0).([]*Team)
 		}
 	}
 
@@ -1365,12 +1407,73 @@ func (_c *MockClient_GetTeams_Call) Run(run func(ctx context.Context)) *MockClie
 	return _c
 }
 
-func (_c *MockClient_GetTeams_Call) Return(_a0 []client.Team, _a1 error) *MockClient_GetTeams_Call {
+func (_c *MockClient_GetTeams_Call) Return(_a0 []*Team, _a1 error) *MockClient_GetTeams_Call {
 	_c.Call.Return(_a0, _a1)
 	return _c
 }
 
-func (_c *MockClient_GetTeams_Call) RunAndReturn(run func(context.Context) ([]client.Team, error)) *MockClient_GetTeams_Call {
+func (_c *MockClient_GetTeams_Call) RunAndReturn(run func(context.Context) ([]*Team, error)) *MockClient_GetTeams_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// GetVulnerabilities provides a mock function with given fields: ctx, uuid, vulnerabilityId, suppressed
+func (_m *MockClient) GetVulnerabilities(ctx context.Context, uuid string, vulnerabilityId string, suppressed bool) ([]*Vulnerability, error) {
+	ret := _m.Called(ctx, uuid, vulnerabilityId, suppressed)
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetVulnerabilities")
+	}
+
+	var r0 []*Vulnerability
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, string, string, bool) ([]*Vulnerability, error)); ok {
+		return rf(ctx, uuid, vulnerabilityId, suppressed)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, string, string, bool) []*Vulnerability); ok {
+		r0 = rf(ctx, uuid, vulnerabilityId, suppressed)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]*Vulnerability)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, string, string, bool) error); ok {
+		r1 = rf(ctx, uuid, vulnerabilityId, suppressed)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// MockClient_GetVulnerabilities_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetVulnerabilities'
+type MockClient_GetVulnerabilities_Call struct {
+	*mock.Call
+}
+
+// GetVulnerabilities is a helper method to define mock.On call
+//   - ctx context.Context
+//   - uuid string
+//   - vulnerabilityId string
+//   - suppressed bool
+func (_e *MockClient_Expecter) GetVulnerabilities(ctx interface{}, uuid interface{}, vulnerabilityId interface{}, suppressed interface{}) *MockClient_GetVulnerabilities_Call {
+	return &MockClient_GetVulnerabilities_Call{Call: _e.mock.On("GetVulnerabilities", ctx, uuid, vulnerabilityId, suppressed)}
+}
+
+func (_c *MockClient_GetVulnerabilities_Call) Run(run func(ctx context.Context, uuid string, vulnerabilityId string, suppressed bool)) *MockClient_GetVulnerabilities_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(string), args[2].(string), args[3].(bool))
+	})
+	return _c
+}
+
+func (_c *MockClient_GetVulnerabilities_Call) Return(_a0 []*Vulnerability, _a1 error) *MockClient_GetVulnerabilities_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *MockClient_GetVulnerabilities_Call) RunAndReturn(run func(context.Context, string, string, bool) ([]*Vulnerability, error)) *MockClient_GetVulnerabilities_Call {
 	_c.Call.Return(run)
 	return _c
 }
@@ -1621,17 +1724,17 @@ func (_c *MockClient_TriggerAnalysis_Call) RunAndReturn(run func(context.Context
 	return _c
 }
 
-// UpdateFinding provides a mock function with given fields: ctx, suppressedBy, reason, projectId, componentId, vulnerabilityId, state, suppressed
-func (_m *MockClient) UpdateFinding(ctx context.Context, suppressedBy string, reason string, projectId string, componentId string, vulnerabilityId string, state string, suppressed bool) error {
-	ret := _m.Called(ctx, suppressedBy, reason, projectId, componentId, vulnerabilityId, state, suppressed)
+// UpdateFinding provides a mock function with given fields: ctx, request
+func (_m *MockClient) UpdateFinding(ctx context.Context, request AnalysisRequest) error {
+	ret := _m.Called(ctx, request)
 
 	if len(ret) == 0 {
 		panic("no return value specified for UpdateFinding")
 	}
 
 	var r0 error
-	if rf, ok := ret.Get(0).(func(context.Context, string, string, string, string, string, string, bool) error); ok {
-		r0 = rf(ctx, suppressedBy, reason, projectId, componentId, vulnerabilityId, state, suppressed)
+	if rf, ok := ret.Get(0).(func(context.Context, AnalysisRequest) error); ok {
+		r0 = rf(ctx, request)
 	} else {
 		r0 = ret.Error(0)
 	}
@@ -1646,20 +1749,14 @@ type MockClient_UpdateFinding_Call struct {
 
 // UpdateFinding is a helper method to define mock.On call
 //   - ctx context.Context
-//   - suppressedBy string
-//   - reason string
-//   - projectId string
-//   - componentId string
-//   - vulnerabilityId string
-//   - state string
-//   - suppressed bool
-func (_e *MockClient_Expecter) UpdateFinding(ctx interface{}, suppressedBy interface{}, reason interface{}, projectId interface{}, componentId interface{}, vulnerabilityId interface{}, state interface{}, suppressed interface{}) *MockClient_UpdateFinding_Call {
-	return &MockClient_UpdateFinding_Call{Call: _e.mock.On("UpdateFinding", ctx, suppressedBy, reason, projectId, componentId, vulnerabilityId, state, suppressed)}
+//   - request AnalysisRequest
+func (_e *MockClient_Expecter) UpdateFinding(ctx interface{}, request interface{}) *MockClient_UpdateFinding_Call {
+	return &MockClient_UpdateFinding_Call{Call: _e.mock.On("UpdateFinding", ctx, request)}
 }
 
-func (_c *MockClient_UpdateFinding_Call) Run(run func(ctx context.Context, suppressedBy string, reason string, projectId string, componentId string, vulnerabilityId string, state string, suppressed bool)) *MockClient_UpdateFinding_Call {
+func (_c *MockClient_UpdateFinding_Call) Run(run func(ctx context.Context, request AnalysisRequest)) *MockClient_UpdateFinding_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		run(args[0].(context.Context), args[1].(string), args[2].(string), args[3].(string), args[4].(string), args[5].(string), args[6].(string), args[7].(bool))
+		run(args[0].(context.Context), args[1].(AnalysisRequest))
 	})
 	return _c
 }
@@ -1669,7 +1766,63 @@ func (_c *MockClient_UpdateFinding_Call) Return(_a0 error) *MockClient_UpdateFin
 	return _c
 }
 
-func (_c *MockClient_UpdateFinding_Call) RunAndReturn(run func(context.Context, string, string, string, string, string, string, bool) error) *MockClient_UpdateFinding_Call {
+func (_c *MockClient_UpdateFinding_Call) RunAndReturn(run func(context.Context, AnalysisRequest) error) *MockClient_UpdateFinding_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// Version provides a mock function with given fields: ctx
+func (_m *MockClient) Version(ctx context.Context) (string, error) {
+	ret := _m.Called(ctx)
+
+	if len(ret) == 0 {
+		panic("no return value specified for Version")
+	}
+
+	var r0 string
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context) (string, error)); ok {
+		return rf(ctx)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context) string); ok {
+		r0 = rf(ctx)
+	} else {
+		r0 = ret.Get(0).(string)
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context) error); ok {
+		r1 = rf(ctx)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// MockClient_Version_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Version'
+type MockClient_Version_Call struct {
+	*mock.Call
+}
+
+// Version is a helper method to define mock.On call
+//   - ctx context.Context
+func (_e *MockClient_Expecter) Version(ctx interface{}) *MockClient_Version_Call {
+	return &MockClient_Version_Call{Call: _e.mock.On("Version", ctx)}
+}
+
+func (_c *MockClient_Version_Call) Run(run func(ctx context.Context)) *MockClient_Version_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context))
+	})
+	return _c
+}
+
+func (_c *MockClient_Version_Call) Return(_a0 string, _a1 error) *MockClient_Version_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *MockClient_Version_Call) RunAndReturn(run func(context.Context) (string, error)) *MockClient_Version_Call {
 	_c.Call.Return(run)
 	return _c
 }

@@ -32,8 +32,8 @@ type ApiKey struct {
 	Key string `json:"key,omitempty"`
 }
 
-func (c *dependencyTrackClient) GetTeam(ctx context.Context, team string) (*client.Team, error) {
-	return withAuthContextValue(c, ctx, func(tokenCtx context.Context) (*client.Team, error) {
+func (c *dependencyTrackClient) GetTeam(ctx context.Context, team string) (*Team, error) {
+	return withAuthContextValue(c, ctx, func(tokenCtx context.Context) (*Team, error) {
 		teams, resp, err := c.client.TeamAPI.GetTeams(tokenCtx).Execute()
 		if err != nil {
 			return nil, convertError(err, "GetTeam", resp)
@@ -41,20 +41,33 @@ func (c *dependencyTrackClient) GetTeam(ctx context.Context, team string) (*clie
 
 		for _, t := range teams {
 			if *t.Name == team {
-				return &t, nil
+				teamDetails, err := parseTeam(&t)
+				if err != nil {
+					return nil, fmt.Errorf("failed to parse team %s: %w", team, err)
+				}
+				return teamDetails, nil
 			}
 		}
 		return nil, fmt.Errorf("team %s not found", team)
 	})
 }
 
-func (c *dependencyTrackClient) GetTeams(ctx context.Context) ([]client.Team, error) {
-	return withAuthContextValue(c, ctx, func(tokenCtx context.Context) ([]client.Team, error) {
+func (c *dependencyTrackClient) GetTeams(ctx context.Context) ([]*Team, error) {
+	return withAuthContextValue(c, ctx, func(tokenCtx context.Context) ([]*Team, error) {
 		res, resp, err := c.client.TeamAPI.GetTeams(tokenCtx).Execute()
 		if err != nil {
 			return nil, convertError(err, "GetTeams", resp)
 		}
-		return res, nil
+
+		teams := make([]*Team, 0, len(res))
+		for _, team := range res {
+			teamDetails, err := parseTeam(&team)
+			if err != nil {
+				return nil, fmt.Errorf("failed to parse team %s: %w", *team.Name, err)
+			}
+			teams = append(teams, teamDetails)
+		}
+		return teams, nil
 	})
 }
 
@@ -72,27 +85,12 @@ func (c *dependencyTrackClient) CreateTeam(ctx context.Context, teamName string,
 				return nil, convertError(err, "AddPermissionToTeam", resp)
 			}
 		}
-
-		users := make([]User, 0)
-		for _, user := range team.OidcUsers {
-			users = append(users, User{
-				Username: *user.Username,
-				Email:    *user.Email,
-			})
+		teamDetails, err := parseTeam(team)
+		if err != nil {
+			return nil, fmt.Errorf("failed to parse created team %s: %w", teamName, err)
 		}
-		keys := make([]ApiKey, 0)
-		for _, key := range team.ApiKeys {
-			keys = append(keys, ApiKey{
-				Key: *key.Key,
-			})
-		}
-
-		return &Team{
-			Uuid:      team.Uuid,
-			Name:      *team.Name,
-			OidcUsers: users,
-			ApiKeys:   keys,
-		}, nil
+		log.Infof("created team %s with UUID %s", teamDetails.Name, teamDetails.Uuid)
+		return teamDetails, nil
 	})
 }
 
@@ -120,4 +118,32 @@ func (c *dependencyTrackClient) GenerateApiKey(ctx context.Context, uuid string)
 		}
 		return *res.Key, nil
 	})
+}
+
+func parseTeam(team *client.Team) (*Team, error) {
+	if team == nil {
+		return nil, fmt.Errorf("team is nil")
+	}
+
+	parsed := &Team{
+		Uuid:      team.Uuid,
+		Name:      SafeString(team.Name),
+		OidcUsers: make([]User, 0, len(team.OidcUsers)),
+		ApiKeys:   make([]ApiKey, 0, len(team.ApiKeys)),
+	}
+
+	for _, user := range team.OidcUsers {
+		parsed.OidcUsers = append(parsed.OidcUsers, User{
+			Username: SafeString(user.Username),
+			Email:    SafeString(user.Email),
+		})
+	}
+
+	for _, key := range team.ApiKeys {
+		parsed.ApiKeys = append(parsed.ApiKeys, ApiKey{
+			Key: SafeString(key.Key),
+		})
+	}
+
+	return parsed, nil
 }

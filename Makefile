@@ -6,7 +6,7 @@ bootstrap:
 	go build -o bin/bootstrap cmd/bootstrap/*.go
 
 integration_test: vet
-	go test ./... -tags integration_test -run TestIntegration
+	go test -count=1 ./... -tags integration_test -run TestIntegration
 test: vet
 	go test ./... -coverprofile cover.out -short
 vet:

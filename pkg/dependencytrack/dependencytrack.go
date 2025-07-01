@@ -21,11 +21,11 @@ type Client interface {
 	AddToTeam(ctx context.Context, username, uuid string) error
 	AllMetricsRefresh(ctx context.Context) error
 	ChangeAdminPassword(ctx context.Context, oldPassword, newPassword auth.Password) error
-	ConfigPropertyAggregate(ctx context.Context, property client.ConfigProperty) error
+	ConfigPropertyAggregate(ctx context.Context, property ConfigProperty) error
 	CreateAdminUser(ctx context.Context, username string, password auth.Password, teamUuid string) error
 	CreateAdminUsers(ctx context.Context, users []*AdminUser, teamUuid string) error
 	CreateOidcUser(ctx context.Context, email string) error
-	CreateProject(ctx context.Context, imageName, imageTag string, tags []client.Tag) (*client.Project, error)
+	CreateProject(ctx context.Context, imageName, imageTag string, tags []string) (*Project, error)
 	CreateProjectWithSbom(ctx context.Context, sbom *in_toto.CycloneDXStatement, imageName, imageTag string) (string, error)
 	CreateTeam(ctx context.Context, teamName string, permissions []Permission) (*Team, error)
 	DeleteManagedUser(ctx context.Context, username string) error
@@ -34,21 +34,23 @@ type Client interface {
 	DeleteTeam(ctx context.Context, uuid string) error
 	DeleteUserMembership(ctx context.Context, teamUuid, username string) error
 	GenerateApiKey(ctx context.Context, uuid string) (string, error)
-	GetAnalysisTrailForImage(ctx context.Context, projectId, componentId, vulnerabilityId string) (*client.Analysis, error)
-	GetConfigProperties(ctx context.Context) ([]client.ConfigProperty, error)
+	GetAnalysisTrailForImage(ctx context.Context, projectId, componentId, vulnerabilityId string) (*Analysis, error)
+	GetConfigProperties(ctx context.Context) ([]ConfigProperty, error)
 	GetEcosystems(ctx context.Context) ([]string, error)
-	GetFindings(ctx context.Context, uuid, vulnerabilityId string, suppressed bool) ([]client.Finding, error)
-	GetOidcUsers(ctx context.Context, username string) ([]client.OidcUser, error)
-	GetProject(ctx context.Context, name, version string) (*client.Project, error)
-	GetProjects(ctx context.Context, limit, offset int32) ([]client.Project, error)
-	GetTeam(ctx context.Context, team string) (*client.Team, error)
-	GetTeams(ctx context.Context) ([]client.Team, error)
+	GetVulnerabilities(ctx context.Context, uuid, vulnerabilityId string, suppressed bool) ([]*Vulnerability, error)
+	GetOidcUser(ctx context.Context, username string) (*User, error)
+	GetOidcUsers(ctx context.Context) ([]*User, error)
+	GetProject(ctx context.Context, name, version string) (*Project, error)
+	GetProjects(ctx context.Context, limit, offset int32) ([]Project, error)
+	GetTeam(ctx context.Context, team string) (*Team, error)
+	GetTeams(ctx context.Context) ([]*Team, error)
 	ProjectMetricsRefresh(ctx context.Context, uuid string) error
 	RemoveAdminUser(ctx context.Context, username string) error
 	RemoveAdminUsers(ctx context.Context, users []*AdminUser) error
 	TriggerAnalysis(ctx context.Context, uuid string) error
-	UpdateFinding(ctx context.Context, suppressedBy, reason, projectId, componentId, vulnerabilityId, state string, suppressed bool) error
+	UpdateFinding(ctx context.Context, request AnalysisRequest) error
 	Version(ctx context.Context) (string, error)
+
 	auth.Auth
 }
 
@@ -125,8 +127,8 @@ func setupConfig(rawURL string, options *Options) *client.Configuration {
 	return cfg
 }
 
-func (c *dependencyTrackClient) paginateProjects(ctx context.Context, limit, offset int32, callFunc func(ctx context.Context, offset int32) ([]client.Project, error)) ([]client.Project, error) {
-	var allProjects []client.Project
+func (c *dependencyTrackClient) paginateProjects(ctx context.Context, limit, offset int32, callFunc func(ctx context.Context, offset int32) ([]Project, error)) ([]Project, error) {
+	var allProjects []Project
 
 	for {
 		projects, err := callFunc(ctx, offset)
@@ -208,4 +210,18 @@ func boolPtr(b bool) *bool {
 		return nil
 	}
 	return &b
+}
+
+func SafeString(s *string) string {
+	if s == nil {
+		return ""
+	}
+	return *s
+}
+
+func SafeBool(b *bool) bool {
+	if b == nil {
+		return false
+	}
+	return *b
 }

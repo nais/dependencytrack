@@ -135,15 +135,9 @@ func (c *dependencyTrackClient) RemoveAdminUser(ctx context.Context, username st
 func (c *dependencyTrackClient) RemoveAdminUsers(ctx context.Context, users []*AdminUser) error {
 	return c.withAuthContext(ctx, func(tokenCtx context.Context) error {
 		for _, user := range users {
-			resp, err := c.client.UserAPI.DeleteManagedUser(tokenCtx).ManagedUser(client.ManagedUser{
-				Username: stringPtr(user.Username),
-			}).Execute()
+			err := c.RemoveAdminUser(tokenCtx, user.Username)
 			if err != nil {
-				if resp != nil && resp.StatusCode != http.StatusNotFound {
-					return convertError(err, "RemoveAdminUsers", resp)
-				} else {
-					log.Infof("admin user %s does not exist, nothing to remove", user.Username)
-				}
+				return fmt.Errorf("failed to remove admin user %s: %w", user.Username, err)
 			} else {
 				log.Infof("removed admin user %s", user.Username)
 			}
@@ -152,16 +146,39 @@ func (c *dependencyTrackClient) RemoveAdminUsers(ctx context.Context, users []*A
 	})
 }
 
-func (c *dependencyTrackClient) GetOidcUsers(ctx context.Context, username string) ([]client.OidcUser, error) {
-	return withAuthContextValue(c, ctx, func(tokenCtx context.Context) ([]client.OidcUser, error) {
+func (c *dependencyTrackClient) GetOidcUsers(ctx context.Context) ([]*User, error) {
+	return withAuthContextValue(c, ctx, func(tokenCtx context.Context) ([]*User, error) {
+		users, resp, err := c.client.UserAPI.GetOidcUsers(tokenCtx).Execute()
+		if err != nil {
+			return nil, convertError(err, "GetOidcUsers", resp)
+		}
+
+		uu := make([]*User, len(users))
+		for i, u := range users {
+			uu[i] = parseUser(u)
+		}
+		return uu, nil
+	})
+}
+
+func (c *dependencyTrackClient) GetOidcUser(ctx context.Context, email string) (*User, error) {
+	return withAuthContextValue(c, ctx, func(tokenCtx context.Context) (*User, error) {
 		users, resp, err := c.client.UserAPI.GetOidcUsers(tokenCtx).Execute()
 		if err != nil {
 			if resp != nil && resp.StatusCode == http.StatusNotFound {
-				return nil, fmt.Errorf("oidc user %s not found", username)
+				return nil, fmt.Errorf("oidc user %s not found", email)
 			}
-			return nil, convertError(err, "GetOidcUsers", resp)
+			return nil, convertError(err, "GetOidcUser", resp)
 		}
-		return users, nil
+
+		var user *User
+		for _, u := range users {
+			if u.Username != nil && *u.Username == email {
+				user = parseUser(u)
+				break
+			}
+		}
+		return user, nil
 	})
 }
 
@@ -222,7 +239,11 @@ func (c *dependencyTrackClient) DeleteOidcUser(ctx context.Context, email string
 
 func (c *dependencyTrackClient) DeleteUserMembership(ctx context.Context, uuid, username string) error {
 	return c.withAuthContext(ctx, func(tokenCtx context.Context) error {
-		_, resp, err := c.client.UserAPI.RemoveTeamFromUser(tokenCtx, username).Execute()
+		_, resp, err := c.client.UserAPI.RemoveTeamFromUser(tokenCtx, username).
+			IdentifiableObject(client.IdentifiableObject{
+				Uuid: stringPtr(uuid),
+			}).
+			Execute()
 		if err != nil {
 			switch resp.StatusCode {
 			case http.StatusNotFound:
@@ -237,4 +258,14 @@ func (c *dependencyTrackClient) DeleteUserMembership(ctx context.Context, uuid, 
 		}
 		return nil
 	})
+}
+
+func parseUser(users client.OidcUser) *User {
+	if users.Username == nil {
+		return &User{}
+	}
+	return &User{
+		Username: SafeString(users.Username),
+		Email:    SafeString(users.Email),
+	}
 }

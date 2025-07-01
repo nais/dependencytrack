@@ -3,17 +3,47 @@ package dependencytrack
 import (
 	"context"
 	"fmt"
-	"net/http"
 	"strings"
 
 	"github.com/nais/dependencytrack/pkg/dependencytrack/client"
 )
 
-// GetFindings Is this function lacking pagination for all findings in a project or do we not need it?
+type Severity string
+
+const SeverityCritical = Severity("CRITICAL")
+const SeverityHigh = Severity("HIGH")
+const SeverityMedium = Severity("MEDIUM")
+const SeverityLow = Severity("LOW")
+const SeverityUnassigned = Severity("UNASSIGNED")
+
+type Vulnerability struct {
+	Package       string
+	Suppressed    bool
+	Cve           *Cve
+	LatestVersion string
+	Metadata      *VulnMetadata
+}
+
+type Cve struct {
+	Id          string
+	Description string
+	Title       string
+	Link        string
+	Severity    Severity
+	References  map[string]string
+}
+
+type VulnMetadata struct {
+	ProjectId         string
+	ComponentId       string
+	VulnerabilityUuid string
+}
+
+// GetVulnerabilities Is this function lacking pagination for all findings in a project or do we not need it?
 // https://github.com/DependencyTrack/dependency-track/issues/3811
 // https://github.com/DependencyTrack/dependency-track/issues/4677
-func (c *dependencyTrackClient) GetFindings(ctx context.Context, uuid, vulnId string, suppressed bool) ([]client.Finding, error) {
-	return withAuthContextValue(c, ctx, func(tokenCtx context.Context) ([]client.Finding, error) {
+func (c *dependencyTrackClient) GetVulnerabilities(ctx context.Context, uuid, vulnId string, suppressed bool) ([]*Vulnerability, error) {
+	return withAuthContextValue(c, ctx, func(tokenCtx context.Context) ([]*Vulnerability, error) {
 		req := c.client.FindingAPI.GetFindingsByProject(tokenCtx, uuid).Suppressed(suppressed)
 
 		switch {
@@ -33,45 +63,19 @@ func (c *dependencyTrackClient) GetFindings(ctx context.Context, uuid, vulnId st
 
 		findings, resp, err := req.Execute()
 		if err != nil {
-			return nil, convertError(err, "GetFindings", resp)
+			return nil, convertError(err, "GetVulnerabilities", resp)
 		}
 
-		return findings, nil
-	})
-}
-
-// UpdateFinding updates a finding in Dependency-Track.
-func (c *dependencyTrackClient) UpdateFinding(
-	ctx context.Context,
-	suppressedBy, reason string,
-	projectId, componentId, vulnerabilityId, state string,
-	suppressed bool,
-) error {
-	return c.withAuthContext(ctx, func(tokenCtx context.Context) error {
-		comment := fmt.Sprintf("on-behalf-of:%s|suppressed:%t|state:%s|comment:%s", suppressedBy, suppressed, state, reason)
-		analysisJustification := "NOT_SET"
-		analysisResponse := "NOT_SET"
-		analysisRequest := client.AnalysisRequest{
-			Vulnerability:         vulnerabilityId,
-			Component:             componentId,
-			Project:               &projectId,
-			AnalysisState:         &state,
-			AnalysisJustification: &analysisJustification,
-			AnalysisResponse:      &analysisResponse,
-			AnalysisDetails:       &reason,
-			Comment:               &comment,
-			Suppressed:            &suppressed,
+		vulns := make([]*Vulnerability, 0)
+		for _, f := range findings {
+			v, err := parseVulnerability(f)
+			if err != nil {
+				return nil, err
+			}
+			vulns = append(vulns, v)
 		}
 
-		_, resp, err := c.client.AnalysisAPI.UpdateAnalysis(tokenCtx).
-			AnalysisRequest(analysisRequest).
-			Execute()
-
-		if err != nil {
-			return fmt.Errorf("failed to update finding: %v details: %s", err, parseErrorResponseBody(resp))
-		}
-
-		return nil
+		return vulns, nil
 	})
 }
 
@@ -87,24 +91,131 @@ func (c *dependencyTrackClient) TriggerAnalysis(ctx context.Context, uuid string
 	})
 }
 
-// GetAnalysisTrailForImage retrieves the analysis trail for a specific image component and vulnerability.
-func (c *dependencyTrackClient) GetAnalysisTrailForImage(
-	ctx context.Context,
-	projectId, componentID, vulnerabilityId string,
-) (*client.Analysis, error) {
-	return withAuthContextValue(c, ctx, func(tokenCtx context.Context) (*client.Analysis, error) {
-		trail, resp, err := c.client.AnalysisAPI.RetrieveAnalysis(tokenCtx).
-			Project(projectId).
-			Component(componentID).
-			Vulnerability(vulnerabilityId).
-			Execute()
+func parseVulnerability(finding client.Finding) (*Vulnerability, error) {
+	component, componentOk := finding.GetComponentOk()
+	if !componentOk {
+		return nil, fmt.Errorf("missing component for finding")
+	}
 
-		if err != nil {
-			if resp != nil && resp.StatusCode == http.StatusNotFound {
-				return nil, nil
-			}
-			return nil, convertError(err, "GetAnalysisTrailForImage", resp)
+	analysis, analysisOk := finding.GetAnalysisOk()
+	if !analysisOk {
+		return nil, fmt.Errorf("missing analysis for finding")
+	}
+
+	vulnData, vulnOk := finding.GetVulnerabilityOk()
+	if !vulnOk {
+		return nil, fmt.Errorf("missing vulnerability data for finding")
+	}
+
+	var severity Severity
+	if severityStr, ok := vulnData["severity"].(string); ok {
+		switch severityStr {
+		case "CRITICAL":
+			severity = SeverityCritical
+		case "HIGH":
+			severity = SeverityHigh
+		case "MEDIUM":
+			severity = SeverityMedium
+		case "LOW":
+			severity = SeverityLow
+		default:
+			severity = SeverityUnassigned
 		}
-		return trail, nil
-	})
+	} else {
+		// default to unassigned if severity is missing, or it is not a known value
+		severity = SeverityUnassigned
+	}
+
+	var vulnId string
+	if v, ok := vulnData["vulnId"].(string); ok {
+		vulnId = v
+	}
+
+	var projectId string
+	if p, ok := component["project"].(string); ok {
+		projectId = p
+	}
+	var componentId string
+	if c, ok := component["uuid"].(string); ok {
+		componentId = c
+	}
+	var vulnerabilityUuid string
+	if v, ok := vulnData["uuid"].(string); ok {
+		vulnerabilityUuid = v
+	}
+
+	var link string
+	if source, ok := vulnData["source"].(string); ok {
+		switch source {
+		case "NVD":
+			link = fmt.Sprintf("https://nvd.nist.gov/vuln/detail/%s", vulnId)
+		case "GITHUB":
+			link = fmt.Sprintf("https://github.com/advisories/%s", vulnId)
+		case "UBUNTU":
+			link = fmt.Sprintf("https://ubuntu.com/security/CVE-%s", vulnId)
+		case "OSSINDEX":
+			link = fmt.Sprintf("https://ossindex.sonatype.org/vuln/%s", vulnId)
+		case "DEBIAN":
+			link = fmt.Sprintf("https://security-tracker.debian.org/tracker/%s", vulnId)
+		}
+	}
+
+	suppressed := false
+	if s, ok := analysis["isSuppressed"].(bool); ok {
+		suppressed = s
+	}
+
+	title := ""
+	if t, ok := vulnData["title"].(string); ok && t != "" {
+		title = t
+	} else if cwe, ok := vulnData["cweName"].(string); ok {
+		title = cwe
+	}
+
+	desc := "unknown"
+	if d, ok := vulnData["description"].(string); ok {
+		desc = d
+	}
+
+	purl := ""
+	if p, ok := component["purl"].(string); ok {
+		purl = p
+	}
+
+	componentLatestVersion := ""
+	if lv, ok := component["latestVersion"].(string); ok {
+		componentLatestVersion = lv
+	}
+
+	references := map[string]string{}
+	if aliases, ok := vulnData["aliases"].([]interface{}); ok {
+		for _, a := range aliases {
+			if alias, ok := a.(map[string]interface{}); ok {
+				if cveId, ok := alias["cveId"].(string); ok {
+					if ghsaId, ok := alias["ghsaId"].(string); ok {
+						references[cveId] = ghsaId
+					}
+				}
+			}
+		}
+	}
+
+	return &Vulnerability{
+		Package:       purl,
+		Suppressed:    suppressed,
+		LatestVersion: componentLatestVersion,
+		Cve: &Cve{
+			Id:          vulnId,
+			Description: desc,
+			Title:       title,
+			Link:        link,
+			Severity:    severity,
+			References:  references,
+		},
+		Metadata: &VulnMetadata{
+			ProjectId:         projectId,
+			ComponentId:       componentId,
+			VulnerabilityUuid: vulnerabilityUuid,
+		},
+	}, nil
 }
