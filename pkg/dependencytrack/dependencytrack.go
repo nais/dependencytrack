@@ -18,6 +18,7 @@ const EmailPostfix = "@nais.io"
 var _ Client = &dependencyTrackClient{}
 
 type Client interface {
+	AddToTeam(ctx context.Context, username, uuid string) error
 	AllMetricsRefresh(ctx context.Context) error
 	ChangeAdminPassword(ctx context.Context, oldPassword, newPassword auth.Password) error
 	ConfigPropertyAggregate(ctx context.Context, property client.ConfigProperty) error
@@ -26,7 +27,7 @@ type Client interface {
 	CreateOidcUser(ctx context.Context, email string) error
 	CreateProject(ctx context.Context, imageName, imageTag string, tags []client.Tag) (*client.Project, error)
 	CreateProjectWithSbom(ctx context.Context, sbom *in_toto.CycloneDXStatement, imageName, imageTag string) (string, error)
-	CreateTeam(ctx context.Context, teamName string, permissions []client.Permission) (*client.Team, error)
+	CreateTeam(ctx context.Context, teamName string, permissions []Permission) (*Team, error)
 	DeleteManagedUser(ctx context.Context, username string) error
 	DeleteOidcUser(ctx context.Context, username string) error
 	DeleteProject(ctx context.Context, uuid string) error
@@ -47,6 +48,7 @@ type Client interface {
 	RemoveAdminUsers(ctx context.Context, users []*AdminUser) error
 	TriggerAnalysis(ctx context.Context, uuid string) error
 	UpdateFinding(ctx context.Context, suppressedBy, reason, projectId, componentId, vulnerabilityId, state string, suppressed bool) error
+	Version(ctx context.Context) (string, error)
 	auth.Auth
 }
 
@@ -92,6 +94,17 @@ func WithHTTPClient(httpClient *http.Client) Option {
 	return func(opts *Options) {
 		opts.Client = httpClient
 	}
+}
+
+func (c *dependencyTrackClient) Version(ctx context.Context) (string, error) {
+	about, resp, err := c.client.VersionAPI.GetVersion(ctx).Execute()
+	if err != nil {
+		if resp != nil {
+			return "", convertError(err, "GetVersion", resp)
+		}
+		return "", fmt.Errorf("GetVersion failed: %w", err)
+	}
+	return about.GetVersion(), nil
 }
 
 func setupConfig(rawURL string, options *Options) *client.Configuration {

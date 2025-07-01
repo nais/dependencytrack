@@ -16,6 +16,32 @@ type AdminUser struct {
 	Password string `yaml:"password,omitempty"`
 }
 
+type User struct {
+	Username string `json:"username,omitempty"`
+	Email    string `json:"email,omitempty"`
+}
+
+func (c *dependencyTrackClient) AddToTeam(ctx context.Context, username, uuid string) error {
+	return c.withAuthContext(ctx, func(tokenCtx context.Context) error {
+		_, resp, err := c.client.UserAPI.AddTeamToUser(tokenCtx, username).
+			IdentifiableObject(client.IdentifiableObject{Uuid: &uuid}).
+			Execute()
+		if err != nil {
+			switch resp.StatusCode {
+			case http.StatusNotFound:
+				log.Infof("team %s does not exist", uuid)
+				return nil
+			case http.StatusNotModified:
+				log.Infof("username %s is a part of the team", username)
+				return nil
+			default:
+				return convertError(err, "AddToTeam", resp)
+			}
+		}
+		return nil
+	})
+}
+
 func (c *dependencyTrackClient) ChangeAdminPassword(ctx context.Context, oldPassword, newPassword string) error {
 	_, err := c.Login(ctx, "admin", oldPassword)
 	var authErr auth.ClientError

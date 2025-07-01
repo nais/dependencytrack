@@ -9,6 +9,29 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+type Permission string
+
+const (
+	AccessManagementPermission        = Permission("ACCESS_MANAGEMENT")
+	PolicyManagementPermission        = Permission("POLICY_MANAGEMENT")
+	PolicyViolationAnalysisPermission = Permission("POLICY_VIOLATION_ANALYSIS")
+	SystemConfigurationPermission     = Permission("SYSTEM_CONFIGURATION")
+	ViewPolicyViolationPermission     = Permission("VIEW_POLICY_VIOLATION")
+	ViewPortfolioPermission           = Permission("VIEW_PORTFOLIO")
+	ViewVulnerabilityPermission       = Permission("VIEW_VULNERABILITY")
+)
+
+type Team struct {
+	Uuid      string   `json:"uuid,omitempty"`
+	Name      string   `json:"name,omitempty"`
+	OidcUsers []User   `json:"oidcUsers,omitempty"`
+	ApiKeys   []ApiKey `json:"apiKeys,omitempty"`
+}
+
+type ApiKey struct {
+	Key string `json:"key,omitempty"`
+}
+
 func (c *dependencyTrackClient) GetTeam(ctx context.Context, team string) (*client.Team, error) {
 	return withAuthContextValue(c, ctx, func(tokenCtx context.Context) (*client.Team, error) {
 		teams, resp, err := c.client.TeamAPI.GetTeams(tokenCtx).Execute()
@@ -35,8 +58,8 @@ func (c *dependencyTrackClient) GetTeams(ctx context.Context) ([]client.Team, er
 	})
 }
 
-func (c *dependencyTrackClient) CreateTeam(ctx context.Context, teamName string, permissions []client.Permission) (*client.Team, error) {
-	return withAuthContextValue(c, ctx, func(tokenCtx context.Context) (*client.Team, error) {
+func (c *dependencyTrackClient) CreateTeam(ctx context.Context, teamName string, permissions []Permission) (*Team, error) {
+	return withAuthContextValue(c, ctx, func(tokenCtx context.Context) (*Team, error) {
 		team, resp, err := c.client.TeamAPI.CreateTeam(tokenCtx).Team(client.Team{
 			Name: &teamName,
 		}).Execute()
@@ -45,12 +68,31 @@ func (c *dependencyTrackClient) CreateTeam(ctx context.Context, teamName string,
 		}
 
 		for _, p := range permissions {
-			if _, resp, err := c.client.PermissionAPI.AddPermissionToTeam(tokenCtx, team.Uuid, p.GetName()).Execute(); err != nil {
+			if _, resp, err = c.client.PermissionAPI.AddPermissionToTeam(tokenCtx, team.Uuid, string(p)).Execute(); err != nil {
 				return nil, convertError(err, "AddPermissionToTeam", resp)
 			}
 		}
 
-		return team, nil
+		users := make([]User, 0)
+		for _, user := range team.OidcUsers {
+			users = append(users, User{
+				Username: *user.Username,
+				Email:    *user.Email,
+			})
+		}
+		keys := make([]ApiKey, 0)
+		for _, key := range team.ApiKeys {
+			keys = append(keys, ApiKey{
+				Key: *key.Key,
+			})
+		}
+
+		return &Team{
+			Uuid:      team.Uuid,
+			Name:      *team.Name,
+			OidcUsers: users,
+			ApiKeys:   keys,
+		}, nil
 	})
 }
 
