@@ -31,18 +31,18 @@ type Project struct {
 }
 
 type ProjectMetric struct {
-	Critical             int     `json:"critical"`
-	High                 int     `json:"high"`
-	Medium               int     `json:"medium"`
-	Low                  int     `json:"low"`
-	Unassigned           int     `json:"unassigned"`
-	Vulnerabilities      int     `json:"vulnerabilities"`
-	VulnerableComponents int     `json:"vulnerableComponents"`
-	Components           int     `json:"components"`
-	Suppressed           int     `json:"suppressed"`
-	FindingsTotal        int     `json:"findingsTotal"`
-	FindingsAudited      int     `json:"findingsAudited"`
-	FindingsUnaudited    int     `json:"findingsUnaudited"`
+	Critical             int32   `json:"critical"`
+	High                 int32   `json:"high"`
+	Medium               int32   `json:"medium"`
+	Low                  int32   `json:"low"`
+	Unassigned           int32   `json:"unassigned"`
+	Vulnerabilities      int64   `json:"vulnerabilities"`
+	VulnerableComponents int32   `json:"vulnerableComponents"`
+	Components           int32   `json:"components"`
+	Suppressed           int32   `json:"suppressed"`
+	FindingsTotal        int32   `json:"findingsTotal"`
+	FindingsAudited      int32   `json:"findingsAudited"`
+	FindingsUnaudited    int32   `json:"findingsUnaudited"`
 	InheritedRiskScore   float64 `json:"inheritedRiskScore"`
 	FirstOccurrence      int64   `json:"firstOccurrence"`
 	LastOccurrence       int64   `json:"lastOccurrence"`
@@ -238,12 +238,12 @@ func parseMetrics(metrics *client.ProjectMetrics) *ProjectMetric {
 	}
 
 	return &ProjectMetric{
-		Critical:             int(metrics.Critical),
-		High:                 int(metrics.High),
-		Medium:               int(metrics.Medium),
-		Low:                  int(metrics.Low),
+		Critical:             metrics.Critical,
+		High:                 metrics.High,
+		Medium:               metrics.Medium,
+		Low:                  metrics.Low,
 		Unassigned:           safeInt32(metrics.Unassigned),
-		Vulnerabilities:      safeInt64ToInt(metrics.Vulnerabilities),
+		Vulnerabilities:      safeInt64(metrics.Vulnerabilities),
 		VulnerableComponents: safeInt32(metrics.VulnerableComponents),
 		Components:           safeInt32(metrics.Components),
 		Suppressed:           safeInt32(metrics.Suppressed),
@@ -265,18 +265,18 @@ func parseTag(tags *client.Tag) Tag {
 	}
 }
 
-func safeInt32(p *int32) int {
+func safeInt32(p *int32) int32 {
 	if p == nil {
 		return 0
 	}
-	return int(*p)
+	return *p
 }
 
-func safeInt64ToInt(p *int64) int {
+func safeInt64(p *int64) int64 {
 	if p == nil {
 		return 0
 	}
-	return int(*p)
+	return *p
 }
 
 func safeFloat64(p *float64) float64 {

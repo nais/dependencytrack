@@ -39,6 +39,22 @@ type VulnMetadata struct {
 	VulnerabilityUuid string
 }
 
+func (s Severity) ToInt32() int32 {
+	switch s {
+	case SeverityCritical:
+		return 0
+	case SeverityHigh:
+		return 1
+	case SeverityMedium:
+		return 2
+	case SeverityLow:
+		return 3
+	case SeverityUnassigned:
+		return 4
+	}
+	return -1
+}
+
 // GetVulnerabilities Is this function lacking pagination for all findings in a project or do we not need it?
 // https://github.com/DependencyTrack/dependency-track/issues/3811
 // https://github.com/DependencyTrack/dependency-track/issues/4677
