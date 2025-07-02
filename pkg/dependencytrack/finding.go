@@ -16,6 +16,22 @@ const SeverityMedium = Severity("MEDIUM")
 const SeverityLow = Severity("LOW")
 const SeverityUnassigned = Severity("UNASSIGNED")
 
+func (s Severity) ToInt32() int32 {
+	switch s {
+	case SeverityCritical:
+		return 0
+	case SeverityHigh:
+		return 1
+	case SeverityMedium:
+		return 2
+	case SeverityLow:
+		return 3
+	case SeverityUnassigned:
+		return 4
+	}
+	return -1
+}
+
 type Vulnerability struct {
 	Package       string
 	Suppressed    bool
@@ -37,22 +53,6 @@ type VulnMetadata struct {
 	ProjectId         string
 	ComponentId       string
 	VulnerabilityUuid string
-}
-
-func (s Severity) ToInt32() int32 {
-	switch s {
-	case SeverityCritical:
-		return 0
-	case SeverityHigh:
-		return 1
-	case SeverityMedium:
-		return 2
-	case SeverityLow:
-		return 3
-	case SeverityUnassigned:
-		return 4
-	}
-	return -1
 }
 
 // GetVulnerabilities Is this function lacking pagination for all findings in a project or do we not need it?

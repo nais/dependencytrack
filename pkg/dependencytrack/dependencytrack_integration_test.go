@@ -55,6 +55,7 @@ func TestIntegration(t *testing.T) {
 	if e != nil {
 		log.Fatalf("get team uuid: %v", e)
 	}
+	assert.NotEmpty(t, team.Uuid, "Team UUID should not be empty")
 
 	t.Run("Get version", func(t *testing.T) {
 		version, err := c.Version(ctx)
