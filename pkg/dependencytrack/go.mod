@@ -3,6 +3,7 @@ module github.com/nais/dependencytrack/pkg/dependencytrack
 go 1.24.4
 
 require (
+	github.com/google/uuid v1.6.0
 	github.com/in-toto/in-toto-golang v0.9.0
 	github.com/lestrrat-go/jwx/v2 v2.1.6
 	github.com/ory/dockertest/v3 v3.12.0
@@ -23,12 +24,11 @@ require (
 	github.com/docker/docker v27.1.1+incompatible // indirect
 	github.com/docker/go-connections v0.5.0 // indirect
 	github.com/docker/go-units v0.5.0 // indirect
-	github.com/go-viper/mapstructure/v2 v2.1.0 // indirect
+	github.com/go-viper/mapstructure/v2 v2.3.0 // indirect
 	github.com/goccy/go-json v0.10.5 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/google/go-cmp v0.7.0 // indirect
 	github.com/google/shlex v0.0.0-20191202100458-e7afc7fbc510 // indirect
-	github.com/google/uuid v1.6.0 // indirect
 	github.com/kr/pretty v0.3.1 // indirect
 	github.com/lestrrat-go/blackmagic v1.0.4 // indirect
 	github.com/lestrrat-go/httpcc v1.0.1 // indirect
