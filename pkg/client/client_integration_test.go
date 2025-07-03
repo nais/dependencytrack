@@ -235,7 +235,7 @@ func TestIntegration(t *testing.T) {
 		assert.NotEmpty(t, ecos)
 	})
 
-	t.Run("GetFindings", func(t *testing.T) {
+	t.Run("GetVulnerabilities", func(t *testing.T) {
 		sbom, err := getSbom(t)
 		p, err := c.CreateProject(context.Background(), "project-with-findings", "version1", "group1", []string{"tag1", "tag2", "team:app:container"})
 		assert.NoError(t, err)

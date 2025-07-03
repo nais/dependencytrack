@@ -6,17 +6,58 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"net/http"
 	"strconv"
 	"strings"
-
-	"net/http"
 
 	"github.com/in-toto/in-toto-golang/in_toto"
 	"github.com/nais/dependencytrack/pkg/dependencytrack/client"
 )
 
-func (c *dependencyTrackClient) GetProject(ctx context.Context, name, version string) (*client.Project, error) {
-	return withAuthContextValue(c, ctx, func(tokenCtx context.Context) (*client.Project, error) {
+type Project struct {
+	Active                 bool           `json:"active"`
+	Author                 string         `json:"author"`
+	Classifier             string         `json:"classifier"`
+	Group                  string         `json:"group"`
+	Name                   string         `json:"name"`
+	LastBomImportFormat    string         `json:"lastBomImportFormat,omitempty"`
+	LastBomImport          int64          `json:"lastBomImport,omitempty"`
+	LastInheritedRiskScore float64        `json:"lastInheritedRiskScore,omitempty"`
+	Publisher              string         `json:"publisher"`
+	Tags                   []Tag          `json:"tags"`
+	Uuid                   string         `json:"uuid"`
+	Version                string         `json:"version"`
+	Metrics                *ProjectMetric `json:"metrics,omitempty"`
+}
+
+type ProjectMetric struct {
+	Critical             int32   `json:"critical"`
+	High                 int32   `json:"high"`
+	Medium               int32   `json:"medium"`
+	Low                  int32   `json:"low"`
+	Unassigned           int32   `json:"unassigned"`
+	Vulnerabilities      int64   `json:"vulnerabilities"`
+	VulnerableComponents int32   `json:"vulnerableComponents"`
+	Components           int32   `json:"components"`
+	Suppressed           int32   `json:"suppressed"`
+	FindingsTotal        int32   `json:"findingsTotal"`
+	FindingsAudited      int32   `json:"findingsAudited"`
+	FindingsUnaudited    int32   `json:"findingsUnaudited"`
+	InheritedRiskScore   float64 `json:"inheritedRiskScore"`
+	FirstOccurrence      int64   `json:"firstOccurrence"`
+	LastOccurrence       int64   `json:"lastOccurrence"`
+}
+
+type Tag struct {
+	Name string `json:"name"`
+}
+
+type Tags struct {
+	Tags []Tag `json:"tags"`
+}
+
+func (c *dependencyTrackClient) GetProject(ctx context.Context, name, version string) (*Project, error) {
+	return withAuthContextValue(c.auth, ctx, func(tokenCtx context.Context) (*Project, error) {
 		project, resp, err := c.client.ProjectAPI.GetProjectByNameAndVersion(tokenCtx).
 			Name(name).
 			Version(version).
@@ -35,20 +76,27 @@ func (c *dependencyTrackClient) GetProject(ctx context.Context, name, version st
 			return nil, convertError(err, "GetProject", resp)
 		}
 
-		return project, err
+		return parseProject(project), err
 	})
 }
 
-func (c *dependencyTrackClient) GetProjects(ctx context.Context, limit, offset int32) ([]client.Project, error) {
-	return withAuthContextValue(c, ctx, func(tokenCtx context.Context) ([]client.Project, error) {
-		return c.paginateProjects(tokenCtx, limit, offset, func(ctx context.Context, offset int32) ([]client.Project, error) {
+func (c *dependencyTrackClient) GetProjects(ctx context.Context, limit, offset int32) ([]Project, error) {
+	return withAuthContextValue(c.auth, ctx, func(tokenCtx context.Context) ([]Project, error) {
+		return c.paginateProjects(tokenCtx, limit, offset, func(ctx context.Context, offset int32) ([]Project, error) {
 			pageNumber := (offset / limit) + 1
 			// convert to string from int32
 			projects, resp, err := c.client.ProjectAPI.GetProjects(ctx).
 				PageSize(strconv.Itoa(int(limit))).
 				PageNumber(strconv.Itoa(int(pageNumber))).
 				Execute()
-			return projects, convertError(err, "GetProjects", resp)
+			pp := make([]Project, 0)
+			if len(projects) > 0 {
+				pp = make([]Project, len(projects))
+				for i, project := range projects {
+					pp[i] = *parseProject(&project)
+				}
+			}
+			return pp, convertError(err, "GetProjects", resp)
 		})
 	})
 }
@@ -112,18 +160,28 @@ func (c *dependencyTrackClient) DeleteProject(ctx context.Context, uuid string) 
 	})
 }
 
-func (c *dependencyTrackClient) CreateProject(ctx context.Context, name, version string, tags []client.Tag) (*client.Project, error) {
+func (c *dependencyTrackClient) CreateProject(ctx context.Context, name, version string, tags []string) (*Project, error) {
 	c.log.Debugf("creating project: %s", name+":"+version)
-	p, err := withAuthContextValue(c, ctx, func(tokenCtx context.Context) (*client.Project, error) {
+	p, err := withAuthContextValue(c.auth, ctx, func(tokenCtx context.Context) (*Project, error) {
 		active := true
 		classifier := "APPLICATION"
+
+		var clientTags []client.Tag
+		if tags != nil {
+			clientTags = make([]client.Tag, len(tags))
+			for i, tag := range tags {
+				clientTags[i] = client.Tag{Name: &tag}
+			}
+		} else {
+			clientTags = nil
+		}
 
 		req := c.client.ProjectAPI.CreateProject(tokenCtx).Project(client.Project{
 			Name:       &name,
 			Active:     &active,
 			Classifier: &classifier,
 			Version:    &version,
-			Tags:       tags,
+			Tags:       clientTags,
 			Parent:     nil,
 		})
 
@@ -135,10 +193,95 @@ func (c *dependencyTrackClient) CreateProject(ctx context.Context, name, version
 			return nil, convertError(err, "CreateProject", resp)
 		}
 
-		return project, nil
+		return parseProject(project), nil
 	})
 	if err != nil {
 		return nil, err
 	}
 	return p, nil
+}
+
+func parseProject(project *client.Project) *Project {
+	if project == nil {
+		return nil
+	}
+
+	var tags []Tag
+	if project.Tags != nil {
+		tags = make([]Tag, len(project.Tags))
+		for i, tag := range project.Tags {
+			tags[i] = parseTag(&tag)
+		}
+	}
+
+	return &Project{
+		Active:                 SafeBool(project.Active),
+		Author:                 SafeString(project.Author),
+		Classifier:             SafeString(project.Classifier),
+		Group:                  SafeString(project.Group),
+		Name:                   SafeString(project.Name),
+		LastBomImportFormat:    SafeString(project.LastBomImportFormat),
+		LastBomImport:          project.LastBomImport,
+		LastInheritedRiskScore: safeFloat64(project.LastInheritedRiskScore),
+		Publisher:              SafeString(project.Publisher),
+		Tags:                   tags,
+		Uuid:                   project.Uuid,
+		Version:                SafeString(project.Version),
+		Metrics:                parseMetrics(project.Metrics),
+	}
+
+}
+
+func parseMetrics(metrics *client.ProjectMetrics) *ProjectMetric {
+	if metrics == nil {
+		return nil
+	}
+
+	return &ProjectMetric{
+		Critical:             metrics.Critical,
+		High:                 metrics.High,
+		Medium:               metrics.Medium,
+		Low:                  metrics.Low,
+		Unassigned:           safeInt32(metrics.Unassigned),
+		Vulnerabilities:      safeInt64(metrics.Vulnerabilities),
+		VulnerableComponents: safeInt32(metrics.VulnerableComponents),
+		Components:           safeInt32(metrics.Components),
+		Suppressed:           safeInt32(metrics.Suppressed),
+		FindingsTotal:        safeInt32(metrics.FindingsTotal),
+		FindingsAudited:      safeInt32(metrics.FindingsAudited),
+		FindingsUnaudited:    safeInt32(metrics.FindingsUnaudited),
+		InheritedRiskScore:   safeFloat64(metrics.InheritedRiskScore),
+		FirstOccurrence:      metrics.FirstOccurrence,
+		LastOccurrence:       metrics.LastOccurrence,
+	}
+}
+
+func parseTag(tags *client.Tag) Tag {
+	if tags == nil {
+		return Tag{}
+	}
+	return Tag{
+		Name: SafeString(tags.Name),
+	}
+}
+
+func safeInt32(p *int32) int32 {
+	if p == nil {
+		return 0
+	}
+	return *p
+}
+
+func safeInt64(p *int64) int64 {
+	if p == nil {
+		return 0
+	}
+	return *p
+}
+
+func safeFloat64(p *float64) float64 {
+	if p == nil {
+		return 0
+	}
+	return *p
 }

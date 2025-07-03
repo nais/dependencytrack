@@ -88,10 +88,9 @@ func (ups *usernamePasswordSource) checkAccessToken() (string, bool, error) {
 			ups.log.Debug("access token is expired, will re-login")
 			return "", true, nil
 		}
-		return "", true, fmt.Errorf("checkAccessToken: failed to parse access token: %w", err)
+		return "", false, fmt.Errorf("checkAccessToken: failed to parse access token: %w", err)
 	}
-	expired := token.Expiration().Before(time.Now().Add(1 * time.Minute))
-	return ups.accessToken, expired, nil
+	return ups.accessToken, token.Expiration().Before(time.Now().Add(1 * time.Minute)), nil
 }
 
 func (ups *usernamePasswordSource) Login(ctx context.Context, username Username, password Password) (string, error) {
@@ -126,6 +125,9 @@ type ServerError struct {
 }
 
 func convertError(err error, resp *http.Response) error {
+	if resp == nil || resp.Body == nil {
+		return err
+	}
 	body, _ := io.ReadAll(resp.Body)
 	switch {
 	case resp.StatusCode >= 400 && resp.StatusCode < 500:
