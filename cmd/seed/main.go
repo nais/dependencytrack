@@ -11,7 +11,10 @@ import (
 )
 
 func main() {
-	seedDependencyTrack(context.Background())
+	err := seedDependencyTrack(context.Background())
+	if err != nil {
+		log.Fatalf("Failed to seed DependencyTrack: %v", err)
+	}
 }
 
 func seedDependencyTrack(ctx context.Context) error {
