@@ -2,7 +2,6 @@ package dependencytrack
 
 import (
 	"context"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
@@ -10,7 +9,6 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/in-toto/in-toto-golang/in_toto"
 	"github.com/nais/dependencytrack/pkg/dependencytrack/client"
 )
 
@@ -101,7 +99,7 @@ func (c *dependencyTrackClient) GetProjects(ctx context.Context, limit, offset i
 	})
 }
 
-func (c *dependencyTrackClient) CreateProjectWithSbom(ctx context.Context, sbom *in_toto.CycloneDXStatement, imageName, imageTag string) (string, error) {
+func (c *dependencyTrackClient) CreateProjectWithSbom(ctx context.Context, imageName, imageTag string, sbom []byte) (string, error) {
 	p, err := c.GetProject(ctx, imageName, imageTag)
 	if err != nil {
 		return "", fmt.Errorf("failed to lookup project: %w", err)
@@ -134,14 +132,9 @@ func (c *dependencyTrackClient) CreateProjectWithSbom(ctx context.Context, sbom 
 	return p.Uuid, nil
 }
 
-func (c *dependencyTrackClient) uploadSbom(ctx context.Context, projectId string, sbom *in_toto.CycloneDXStatement) error {
-	b, err := json.Marshal(sbom.Predicate)
-	if err != nil {
-		return fmt.Errorf("failed to marshal sbom: %w", err)
-	}
-
+func (c *dependencyTrackClient) uploadSbom(ctx context.Context, projectId string, sbom []byte) error {
 	return c.withAuthContext(ctx, func(tokenCtx context.Context) error {
-		req := c.client.BomAPI.UploadBom(tokenCtx).Bom(string(b)).Project(projectId).AutoCreate(false)
+		req := c.client.BomAPI.UploadBom(tokenCtx).Bom(string(sbom)).Project(projectId).AutoCreate(false)
 		_, resp, err := req.Execute()
 		if err != nil {
 			return convertError(err, "uploadSbom", resp)

@@ -1,12 +1,13 @@
 //go:build integration_test
 // +build integration_test
 
-package dependencytrack_test
+package dependencytracktest_test
 
 import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/in-toto/in-toto-golang/in_toto"
 	"net/http"
 	"os"
 	"strconv"
@@ -14,7 +15,6 @@ import (
 	"time"
 
 	uuid "github.com/google/uuid"
-	"github.com/in-toto/in-toto-golang/in_toto"
 	"github.com/nais/dependencytrack/pkg/dependencytrack"
 	"github.com/ory/dockertest/v3"
 	"github.com/ory/dockertest/v3/docker"
@@ -217,7 +217,7 @@ func TestIntegration(t *testing.T) {
 
 	t.Run("CreateProjectWithSbom", func(t *testing.T) {
 		sbom, err := getSbom(t)
-		pWithSbom, err := c.CreateProjectWithSbom(ctx, sbom, "project-with-sbom", "version1")
+		pWithSbom, err := c.CreateProjectWithSbom(ctx, "project-with-sbom", "version1", sbom)
 		assert.NoError(t, err)
 		assert.NotEmpty(t, pWithSbom)
 		p, err := c.GetProject(ctx, "project-with-sbom", "version1")
@@ -256,7 +256,7 @@ func TestIntegration(t *testing.T) {
 	t.Run("CreateProjectWithSbom, GetFindings, TriggerAnalysis", func(t *testing.T) {
 		sbom, err := getSbom(t)
 		assert.NoError(t, err)
-		p, err := c.CreateProjectWithSbom(ctx, sbom, "project-with-findings", "version1")
+		p, err := c.CreateProjectWithSbom(ctx, "project-with-findings", "version1", sbom)
 		assert.NoError(t, err)
 		assert.NotNil(t, p)
 
@@ -273,7 +273,7 @@ func TestIntegration(t *testing.T) {
 		sbom, err := getSbom(t)
 		assert.NoError(t, err)
 
-		p, err := c.CreateProjectWithSbom(ctx, sbom, "project-with-findings", "version2")
+		p, err := c.CreateProjectWithSbom(ctx, "project-with-findings", "version2", sbom)
 		assert.NoError(t, err)
 		assert.NotNil(t, p)
 
@@ -324,15 +324,17 @@ func TestIntegration(t *testing.T) {
 	})
 }
 
-func getSbom(t *testing.T) (*in_toto.CycloneDXStatement, error) {
+func getSbom(t *testing.T) ([]byte, error) {
 	read, err := os.ReadFile("testdata/attestation.json")
 	assert.NoError(t, err)
 
 	metadata := &in_toto.CycloneDXStatement{}
 	err = json.Unmarshal(read, metadata)
 	assert.NoError(t, err)
+	sbom, err := json.Marshal(metadata.Predicate)
+	assert.NoError(t, err)
 
-	return metadata, nil
+	return sbom, nil
 }
 
 func DependencyTrackPool(version string) (string, func()) {

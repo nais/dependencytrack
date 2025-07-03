@@ -1,13 +1,20 @@
-with-expecter: true
-disable-version-string: true
-inpackage: true
-dir: "{{.InterfaceDir}}"
-filename: "mock_{{.InterfaceNameSnake}}.go"
+filename: "mock.go"
+template: testify
+force-file-write: true
+template-data:
+  unroll-variadic: true
 packages:
-  github.com/nais/dependencytrack/pkg/dependencytrack:
-    interfaces:
-      Client:
-      ManagementClient:
   github.com/nais/dependencytrack/pkg/dependencytrack/client:
     config:
-      include-regex: ".*API"
+      dir: ./pkg/dependencytracktest/clientmock
+      pkgname: clientmock
+      include-interface-regex: .*API
+      include-auto-generated: true
+
+  github.com/nais/dependencytrack/pkg/dependencytrack:
+    config:
+      dir: ./pkg/dependencytracktest
+      pkgname: dependencytracktest
+    interfaces:
+      Client: {}
+      ManagementClient: {}

@@ -78,5 +78,5 @@ generate-client:
 
 generate-mocks:
 	#find pkg -type f -name "mock_*.go" -delete
-	go run github.com/vektra/mockery/v2 --config ./mockery.yaml
+	go run github.com/vektra/mockery/v3 --config ./mockery.yaml
 	#find pkg -type f -name "mock_*.go" -exec go run mvdan.cc/gofumpt@latest -w {} \;

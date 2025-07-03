@@ -87,7 +87,7 @@ func (c *dependencyTrackClient) GetFindings(ctx context.Context, uuid string, su
 
 		vulns := make([]*Vulnerability, 0)
 		for _, f := range findings {
-			v, err := parseVulnerability(f)
+			v, err := ParseFinding(f)
 			if err != nil {
 				return nil, err
 			}
@@ -110,7 +110,7 @@ func (c *dependencyTrackClient) TriggerAnalysis(ctx context.Context, uuid string
 	})
 }
 
-func parseVulnerability(finding client.Finding) (*Vulnerability, error) {
+func ParseFinding(finding client.Finding) (*Vulnerability, error) {
 	component, componentOk := finding.GetComponentOk()
 	if !componentOk {
 		return nil, fmt.Errorf("missing component for finding")

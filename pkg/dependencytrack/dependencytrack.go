@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"net/url"
 
-	"github.com/in-toto/in-toto-golang/in_toto"
 	"github.com/nais/dependencytrack/pkg/dependencytrack/auth"
 	"github.com/nais/dependencytrack/pkg/dependencytrack/client"
 	"github.com/sirupsen/logrus"
@@ -19,7 +18,7 @@ var _ Client = &dependencyTrackClient{}
 
 type Client interface {
 	CreateProject(ctx context.Context, imageName, imageTag string, tags []string) (*Project, error)
-	CreateProjectWithSbom(ctx context.Context, sbom *in_toto.CycloneDXStatement, imageName, imageTag string) (string, error)
+	CreateProjectWithSbom(ctx context.Context, imageName, imageTag string, sbom []byte) (string, error)
 	DeleteProject(ctx context.Context, uuid string) error
 	GetAnalysisTrailForImage(ctx context.Context, projectId, componentId, vulnerabilityId string) (*Analysis, error)
 	GetFindings(ctx context.Context, uuid string, suppressed bool, filterSource ...string) ([]*Vulnerability, error)

@@ -1,10 +1,11 @@
-package dependencytrack
+package dependencytracktest
 
 import (
 	"context"
 	"errors"
 	"testing"
 
+	"github.com/nais/dependencytrack/pkg/dependencytrack"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -12,7 +13,7 @@ func TestGetFindings(t *testing.T) {
 	mockClient := new(MockClient)
 	ctx := context.Background()
 	uuid := "test-uuid"
-	var sampleFindings []*Vulnerability
+	var sampleFindings []*dependencytrack.Vulnerability
 
 	mockClient.On("GetFindings", ctx, uuid, false).Return(sampleFindings, nil)
 
@@ -32,7 +33,7 @@ func TestPaginateProjects(t *testing.T) {
 	project1 := "Project1"
 	project2 := "Project2"
 
-	page1 := []Project{{Name: project1}, {Name: project2}}
+	page1 := []dependencytrack.Project{{Name: project1}, {Name: project2}}
 	mockClient.On("GetProjects", ctx, limit, offset).Return(page1, nil)
 
 	projects, err := mockClient.GetProjects(ctx, limit, offset)
@@ -43,7 +44,7 @@ func TestPaginateProjects(t *testing.T) {
 	mockClient.AssertExpectations(t)
 
 	mockClient = new(MockClient)
-	mockClient.On("GetProjects", ctx, limit, offset).Return([]Project{}, nil)
+	mockClient.On("GetProjects", ctx, limit, offset).Return([]dependencytrack.Project{}, nil)
 
 	projects, err = mockClient.GetProjects(ctx, limit, offset)
 

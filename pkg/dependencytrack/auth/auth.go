@@ -47,7 +47,7 @@ func NewUsernamePasswordSource(username Username, password Password, c *client.A
 	}
 }
 
-func newUsernamePasswordSourceWithToken(username Username, password Password, token string, c *client.APIClient, log *logrus.Entry) *usernamePasswordSource {
+func NewUsernamePasswordSourceWithToken(username Username, password Password, token string, c *client.APIClient, log *logrus.Entry) Auth {
 	return &usernamePasswordSource{
 		username:    username,
 		password:    password,
