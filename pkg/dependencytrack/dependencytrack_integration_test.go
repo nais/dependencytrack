@@ -23,6 +23,7 @@ import (
 )
 
 var c dependencytrack.Client
+var mc dependencytrack.ManagementClient
 
 func TestMain(m *testing.M) {
 	log.SetLevel(log.DebugLevel)
@@ -34,13 +35,18 @@ func TestMain(m *testing.M) {
 	if err != nil {
 		log.Fatalf("Failed to create DependencyTrack client: %v", err)
 	}
+	c = cwp
 
-	err = cwp.ChangeAdminPassword(context.Background(), "admin", "test")
+	mc, err = dependencytrack.NewManagementClient(baseUrl, "admin", "test", log.WithField("test", "management_client_integration_test"))
+	if err != nil {
+		log.Fatalf("Failed to create DependencyTrack management client: %v", err)
+	}
+
+	err = mc.ChangeAdminPassword(context.Background(), "admin", "test")
 	if err != nil {
 		log.Fatalf("Could not change admin password: %s", err)
 	}
 
-	c = cwp
 	code := m.Run()
 
 	cleanup()
@@ -51,14 +57,14 @@ func TestMain(m *testing.M) {
 func TestIntegration(t *testing.T) {
 	ctx := context.Background()
 
-	team, e := c.GetTeam(ctx, "Administrators")
+	team, e := mc.GetTeam(ctx, "Administrators")
 	if e != nil {
 		log.Fatalf("get team uuid: %v", e)
 	}
 	assert.NotEmpty(t, team.Uuid, "Team UUID should not be empty")
 
 	t.Run("Get version", func(t *testing.T) {
-		version, err := c.Version(ctx)
+		version, err := mc.Version(ctx)
 		assert.NoError(t, err)
 		assert.NotEmpty(t, version)
 	})
@@ -68,24 +74,24 @@ func TestIntegration(t *testing.T) {
 			Users []*dependencytrack.AdminUser `json:"users"`
 		}
 		a := &AdminUsers{Users: []*dependencytrack.AdminUser{{"u1", "p1"}}}
-		err := c.CreateAdminUsers(ctx, a.Users, team.Uuid)
+		err := mc.CreateAdminUsers(ctx, a.Users, team.Uuid)
 		assert.NoError(t, err)
-		err = c.RemoveAdminUsers(ctx, a.Users)
+		err = mc.RemoveAdminUsers(ctx, a.Users)
 		assert.NoError(t, err)
 	})
 
 	t.Run("Create, get and delete team", func(t *testing.T) {
-		team, err := c.CreateTeam(ctx, "test-team", []dependencytrack.Permission{dependencytrack.ViewPortfolioPermission})
+		team, err := mc.CreateTeam(ctx, "test-team", []dependencytrack.Permission{dependencytrack.ViewPortfolioPermission})
 		assert.NoError(t, err)
 		assert.Equal(t, "test-team", team.Name)
 
 		// dependencytrack allows creating teams with the same name
-		team, err = c.CreateTeam(ctx, "test-team", []dependencytrack.Permission{dependencytrack.ViewPortfolioPermission})
+		team, err = mc.CreateTeam(ctx, "test-team", []dependencytrack.Permission{dependencytrack.ViewPortfolioPermission})
 		assert.NoError(t, err)
 		assert.Equal(t, "test-team", team.Name)
 
 		// dependencytrack comes with 4 teams by default, so we expect 5 teams after creating 2 new teams
-		teams, err := c.GetTeams(ctx)
+		teams, err := mc.GetTeams(ctx)
 		assert.NoError(t, err)
 		for _, t := range teams {
 			log.Debugf("Team: %s, UUID: %s", t.Name, t.Uuid)
@@ -93,9 +99,9 @@ func TestIntegration(t *testing.T) {
 		// created 2 new teams, so we expect 6 teams in total
 		assert.Len(t, teams, 6)
 
-		err = c.DeleteTeam(ctx, team.Uuid)
+		err = mc.DeleteTeam(ctx, team.Uuid)
 		assert.NoError(t, err)
-		teams, err = c.GetTeams(ctx)
+		teams, err = mc.GetTeams(ctx)
 		assert.NoError(t, err)
 		assert.Len(t, teams, 5) // should be back to 5 teams after deletion
 	})
@@ -162,39 +168,39 @@ func TestIntegration(t *testing.T) {
 	})
 
 	t.Run("AddToTeam, add existing member and delete membership", func(t *testing.T) {
-		err := c.AddToTeam(ctx, "testuser", team.Uuid)
+		err := mc.AddToTeam(ctx, "testuser", team.Uuid)
 		assert.NoError(t, err)
-		err = c.AddToTeam(ctx, "testuser", team.Uuid)
+		err = mc.AddToTeam(ctx, "testuser", team.Uuid)
 		assert.NoError(t, err)
-		err = c.DeleteUserMembership(ctx, team.Uuid, "testuser")
+		err = mc.DeleteUserMembership(ctx, team.Uuid, "testuser")
 		assert.NoError(t, err)
-		err = c.DeleteUserMembership(ctx, team.Uuid, "testuser")
+		err = mc.DeleteUserMembership(ctx, team.Uuid, "testuser")
 		assert.NoError(t, err)
 	})
 
 	t.Run("DeleteManagedUser", func(t *testing.T) {
-		err := c.DeleteManagedUser(ctx, "testuser")
+		err := mc.DeleteManagedUser(ctx, "testuser")
 		assert.NoError(t, err)
 	})
 
 	t.Run("CreateOidcUser", func(t *testing.T) {
-		err := c.CreateOidcUser(ctx, "email@nav.no")
+		err := mc.CreateOidcUser(ctx, "email@nav.no")
 		assert.NoError(t, err)
 	})
 
 	t.Run("GetOidcUsers, GetOidcUser", func(t *testing.T) {
-		users, err := c.GetOidcUsers(ctx)
+		users, err := mc.GetOidcUsers(ctx)
 		assert.NoError(t, err)
 		assert.Len(t, users, 1)
 		assert.Equal(t, "email@nav.no", users[0].Username)
 
-		user, err := c.GetOidcUser(ctx, users[0].Username)
+		user, err := mc.GetOidcUser(ctx, users[0].Username)
 		assert.NoError(t, err)
 		assert.NotNil(t, user)
 	})
 
 	t.Run("DeleteOidcUser", func(t *testing.T) {
-		err := c.DeleteOidcUser(ctx, "email@nav.no")
+		err := mc.DeleteOidcUser(ctx, "email@nav.no")
 		assert.NoError(t, err)
 	})
 
@@ -202,10 +208,10 @@ func TestIntegration(t *testing.T) {
 		p, err := c.CreateProject(ctx, "projectname", "version1", nil)
 		assert.NoError(t, err)
 		assert.NotNil(t, p)
-		err = c.ProjectMetricsRefresh(ctx, p.Uuid)
+		err = mc.ProjectMetricsRefresh(ctx, p.Uuid)
 		assert.NoError(t, err)
 
-		err = c.AllMetricsRefresh(ctx)
+		err = mc.AllMetricsRefresh(ctx)
 		assert.NoError(t, err)
 	})
 
@@ -221,7 +227,7 @@ func TestIntegration(t *testing.T) {
 	})
 
 	t.Run("GetConfigProperties", func(t *testing.T) {
-		props, err := c.GetConfigProperties(ctx)
+		props, err := mc.GetConfigProperties(ctx)
 		assert.NoError(t, err)
 		assert.NotEmpty(t, props)
 	})
@@ -231,7 +237,7 @@ func TestIntegration(t *testing.T) {
 		propertyName := "google.osv.enabled"
 		propertyValue := "false"
 		description := "List of enabled ecosystems to mirror OSV"
-		err := c.ConfigPropertyAggregate(ctx, dependencytrack.ConfigProperty{
+		err := mc.ConfigPropertyAggregate(ctx, dependencytrack.ConfigProperty{
 			GroupName:     &groupName,
 			PropertyName:  &propertyName,
 			PropertyValue: &propertyValue,
@@ -242,12 +248,12 @@ func TestIntegration(t *testing.T) {
 	})
 
 	t.Run("GetEcosystems", func(t *testing.T) {
-		ecos, err := c.GetEcosystems(ctx)
+		ecos, err := mc.GetEcosystems(ctx)
 		assert.NoError(t, err)
 		assert.NotEmpty(t, ecos)
 	})
 
-	t.Run("CreateProjectWithSbom, GetVulnerabilities, TriggerAnalysis", func(t *testing.T) {
+	t.Run("CreateProjectWithSbom, GetFindings, TriggerAnalysis", func(t *testing.T) {
 		sbom, err := getSbom(t)
 		assert.NoError(t, err)
 		p, err := c.CreateProjectWithSbom(ctx, sbom, "project-with-findings", "version1")
@@ -258,7 +264,7 @@ func TestIntegration(t *testing.T) {
 		assert.NoError(t, err)
 		time.Sleep(3 * time.Second) // wait for analysis to complete
 
-		v, err := c.GetVulnerabilities(ctx, p, "", true)
+		v, err := c.GetFindings(ctx, p, true)
 		assert.NoError(t, err)
 		assert.NotEmpty(t, v)
 	})
@@ -271,7 +277,7 @@ func TestIntegration(t *testing.T) {
 		assert.NoError(t, err)
 		assert.NotNil(t, p)
 
-		findings, err := c.GetVulnerabilities(ctx, p, "", true)
+		findings, err := c.GetFindings(ctx, p, true)
 		assert.NoError(t, err)
 		assert.NotNil(t, findings)
 	})
@@ -281,12 +287,12 @@ func TestIntegration(t *testing.T) {
 		assert.NoError(t, err)
 		assert.NotNil(t, p)
 
-		vulnerabilities, err := c.GetVulnerabilities(ctx, p.Uuid, "", true)
+		vulnerabilities, err := c.GetFindings(ctx, p.Uuid, true)
 		assert.NoError(t, err)
 
 		err = c.TriggerAnalysis(ctx, p.Uuid)
 		assert.NoError(t, err)
-		err = c.ProjectMetricsRefresh(ctx, p.Uuid)
+		err = mc.ProjectMetricsRefresh(ctx, p.Uuid)
 		assert.NoError(t, err)
 		time.Sleep(2 * time.Second) // wait for analysis to complete
 

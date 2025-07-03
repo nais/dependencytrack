@@ -59,7 +59,7 @@ func main() {
 		log.Fatalf("setup logger: %v", err)
 	}
 
-	c, err := dependencytrack.NewClient(cfg.BaseUrl, "admin", cfg.AdminPassword, log.WithField("subsystem", "client"))
+	c, err := dependencytrack.NewManagementClient(cfg.BaseUrl, "admin", cfg.AdminPassword, log.WithField("subsystem", "client"))
 	if err != nil {
 		log.Fatalf("create dependencytrack client: %v", err)
 	}
@@ -67,11 +67,6 @@ func main() {
 	err = c.ChangeAdminPassword(ctx, cfg.DefaultAdminPassword, cfg.AdminPassword)
 	if err != nil {
 		log.Fatalf("change admin password: %v", err)
-	}
-
-	ctx, err = c.AuthContext(ctx)
-	if err != nil {
-		log.Fatalf("login failed: %v", err)
 	}
 
 	file, err := os.ReadFile(cfg.UsersFile)
@@ -252,7 +247,7 @@ func main() {
 	}
 }
 
-func updateEcosystems(ctx context.Context, c dependencytrack.Client, eco []string, prop dependencytrack.ConfigProperty, log *logrus.Logger) error {
+func updateEcosystems(ctx context.Context, c dependencytrack.ManagementClient, eco []string, prop dependencytrack.ConfigProperty, log *logrus.Logger) error {
 	chunkSize := 10
 
 	for len(eco) > 0 {

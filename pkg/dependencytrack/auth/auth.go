@@ -125,6 +125,9 @@ type ServerError struct {
 }
 
 func convertError(err error, resp *http.Response) error {
+	if resp == nil || resp.Body == nil {
+		return err
+	}
 	body, _ := io.ReadAll(resp.Body)
 	switch {
 	case resp.StatusCode >= 400 && resp.StatusCode < 500:

@@ -5,7 +5,7 @@ import (
 )
 
 // ProjectMetricsRefresh refreshes the metrics for a specific project identified by its UUID.
-func (c *dependencyTrackClient) ProjectMetricsRefresh(ctx context.Context, uuid string) error {
+func (c *managementClient) ProjectMetricsRefresh(ctx context.Context, uuid string) error {
 	return c.withAuthContext(ctx, func(tokenCtx context.Context) error {
 		resp, err := c.client.MetricsAPI.RefreshProjectMetrics(tokenCtx, uuid).Execute()
 		if err != nil {
@@ -16,7 +16,7 @@ func (c *dependencyTrackClient) ProjectMetricsRefresh(ctx context.Context, uuid 
 }
 
 // AllMetricsRefresh refreshes all portfolio metrics.
-func (c *dependencyTrackClient) AllMetricsRefresh(ctx context.Context) error {
+func (c *managementClient) AllMetricsRefresh(ctx context.Context) error {
 	return c.withAuthContext(ctx, func(tokenCtx context.Context) error {
 		resp, err := c.client.MetricsAPI.RefreshPortfolioMetrics(tokenCtx).Execute()
 		if err != nil {

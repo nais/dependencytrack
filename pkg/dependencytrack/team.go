@@ -32,8 +32,8 @@ type ApiKey struct {
 	Key string `json:"key,omitempty"`
 }
 
-func (c *dependencyTrackClient) GetTeam(ctx context.Context, team string) (*Team, error) {
-	return withAuthContextValue(c, ctx, func(tokenCtx context.Context) (*Team, error) {
+func (c *managementClient) GetTeam(ctx context.Context, team string) (*Team, error) {
+	return withAuthContextValue(c.auth, ctx, func(tokenCtx context.Context) (*Team, error) {
 		teams, resp, err := c.client.TeamAPI.GetTeams(tokenCtx).Execute()
 		if err != nil {
 			return nil, convertError(err, "GetTeam", resp)
@@ -52,8 +52,8 @@ func (c *dependencyTrackClient) GetTeam(ctx context.Context, team string) (*Team
 	})
 }
 
-func (c *dependencyTrackClient) GetTeams(ctx context.Context) ([]*Team, error) {
-	return withAuthContextValue(c, ctx, func(tokenCtx context.Context) ([]*Team, error) {
+func (c *managementClient) GetTeams(ctx context.Context) ([]*Team, error) {
+	return withAuthContextValue(c.auth, ctx, func(tokenCtx context.Context) ([]*Team, error) {
 		res, resp, err := c.client.TeamAPI.GetTeams(tokenCtx).Execute()
 		if err != nil {
 			return nil, convertError(err, "GetTeams", resp)
@@ -71,8 +71,8 @@ func (c *dependencyTrackClient) GetTeams(ctx context.Context) ([]*Team, error) {
 	})
 }
 
-func (c *dependencyTrackClient) CreateTeam(ctx context.Context, teamName string, permissions []Permission) (*Team, error) {
-	return withAuthContextValue(c, ctx, func(tokenCtx context.Context) (*Team, error) {
+func (c *managementClient) CreateTeam(ctx context.Context, teamName string, permissions []Permission) (*Team, error) {
+	return withAuthContextValue(c.auth, ctx, func(tokenCtx context.Context) (*Team, error) {
 		team, resp, err := c.client.TeamAPI.CreateTeam(tokenCtx).Team(client.Team{
 			Name: &teamName,
 		}).Execute()
@@ -94,7 +94,7 @@ func (c *dependencyTrackClient) CreateTeam(ctx context.Context, teamName string,
 	})
 }
 
-func (c *dependencyTrackClient) DeleteTeam(ctx context.Context, uuid string) error {
+func (c *managementClient) DeleteTeam(ctx context.Context, uuid string) error {
 	return c.withAuthContext(ctx, func(tokenCtx context.Context) error {
 		resp, err := c.client.TeamAPI.DeleteTeam(tokenCtx).Team(client.Team{
 			Uuid: uuid,
@@ -110,8 +110,8 @@ func (c *dependencyTrackClient) DeleteTeam(ctx context.Context, uuid string) err
 	})
 }
 
-func (c *dependencyTrackClient) GenerateApiKey(ctx context.Context, uuid string) (string, error) {
-	return withAuthContextValue(c, ctx, func(tokenCtx context.Context) (string, error) {
+func (c *managementClient) GenerateApiKey(ctx context.Context, uuid string) (string, error) {
+	return withAuthContextValue(c.auth, ctx, func(tokenCtx context.Context) (string, error) {
 		res, resp, err := c.client.TeamAPI.GenerateApiKey(tokenCtx, uuid).Execute()
 		if err != nil {
 			return "", convertError(err, "GenerateApiKey", resp)

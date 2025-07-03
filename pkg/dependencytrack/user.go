@@ -21,7 +21,7 @@ type User struct {
 	Email    string `json:"email,omitempty"`
 }
 
-func (c *dependencyTrackClient) AddToTeam(ctx context.Context, username, uuid string) error {
+func (c *managementClient) AddToTeam(ctx context.Context, username, uuid string) error {
 	return c.withAuthContext(ctx, func(tokenCtx context.Context) error {
 		_, resp, err := c.client.UserAPI.AddTeamToUser(tokenCtx, username).
 			IdentifiableObject(client.IdentifiableObject{Uuid: &uuid}).
@@ -42,7 +42,7 @@ func (c *dependencyTrackClient) AddToTeam(ctx context.Context, username, uuid st
 	})
 }
 
-func (c *dependencyTrackClient) ChangeAdminPassword(ctx context.Context, oldPassword, newPassword string) error {
+func (c *managementClient) ChangeAdminPassword(ctx context.Context, oldPassword, newPassword string) error {
 	_, err := c.Login(ctx, "admin", oldPassword)
 	var authErr auth.ClientError
 	if errors.As(err, &authErr) {
@@ -63,7 +63,7 @@ func (c *dependencyTrackClient) ChangeAdminPassword(ctx context.Context, oldPass
 	return nil
 }
 
-func (c *dependencyTrackClient) CreateAdminUser(ctx context.Context, username, password string, teamUuid string) error {
+func (c *managementClient) CreateAdminUser(ctx context.Context, username, password string, teamUuid string) error {
 	return c.withAuthContext(ctx, func(tokenCtx context.Context) error {
 		user := client.ManagedUser{
 			Username:            stringPtr(username),
@@ -103,7 +103,7 @@ func (c *dependencyTrackClient) CreateAdminUser(ctx context.Context, username, p
 	})
 }
 
-func (c *dependencyTrackClient) CreateAdminUsers(ctx context.Context, users []*AdminUser, teamUuid string) error {
+func (c *managementClient) CreateAdminUsers(ctx context.Context, users []*AdminUser, teamUuid string) error {
 	return c.withAuthContext(ctx, func(tokenCtx context.Context) error {
 		for _, user := range users {
 			if err := c.CreateAdminUser(tokenCtx, user.Username, user.Password, teamUuid); err != nil {
@@ -115,7 +115,7 @@ func (c *dependencyTrackClient) CreateAdminUsers(ctx context.Context, users []*A
 	})
 }
 
-func (c *dependencyTrackClient) RemoveAdminUser(ctx context.Context, username string) error {
+func (c *managementClient) RemoveAdminUser(ctx context.Context, username string) error {
 	return c.withAuthContext(ctx, func(tokenCtx context.Context) error {
 		resp, err := c.client.UserAPI.DeleteManagedUser(tokenCtx).ManagedUser(client.ManagedUser{
 			Username: stringPtr(username),
@@ -132,7 +132,7 @@ func (c *dependencyTrackClient) RemoveAdminUser(ctx context.Context, username st
 	})
 }
 
-func (c *dependencyTrackClient) RemoveAdminUsers(ctx context.Context, users []*AdminUser) error {
+func (c *managementClient) RemoveAdminUsers(ctx context.Context, users []*AdminUser) error {
 	return c.withAuthContext(ctx, func(tokenCtx context.Context) error {
 		for _, user := range users {
 			err := c.RemoveAdminUser(tokenCtx, user.Username)
@@ -146,8 +146,8 @@ func (c *dependencyTrackClient) RemoveAdminUsers(ctx context.Context, users []*A
 	})
 }
 
-func (c *dependencyTrackClient) GetOidcUsers(ctx context.Context) ([]*User, error) {
-	return withAuthContextValue(c, ctx, func(tokenCtx context.Context) ([]*User, error) {
+func (c *managementClient) GetOidcUsers(ctx context.Context) ([]*User, error) {
+	return withAuthContextValue(c.auth, ctx, func(tokenCtx context.Context) ([]*User, error) {
 		users, resp, err := c.client.UserAPI.GetOidcUsers(tokenCtx).Execute()
 		if err != nil {
 			return nil, convertError(err, "GetOidcUsers", resp)
@@ -161,8 +161,8 @@ func (c *dependencyTrackClient) GetOidcUsers(ctx context.Context) ([]*User, erro
 	})
 }
 
-func (c *dependencyTrackClient) GetOidcUser(ctx context.Context, email string) (*User, error) {
-	return withAuthContextValue(c, ctx, func(tokenCtx context.Context) (*User, error) {
+func (c *managementClient) GetOidcUser(ctx context.Context, email string) (*User, error) {
+	return withAuthContextValue(c.auth, ctx, func(tokenCtx context.Context) (*User, error) {
 		users, resp, err := c.client.UserAPI.GetOidcUsers(tokenCtx).Execute()
 		if err != nil {
 			if resp != nil && resp.StatusCode == http.StatusNotFound {
@@ -182,7 +182,7 @@ func (c *dependencyTrackClient) GetOidcUser(ctx context.Context, email string) (
 	})
 }
 
-func (c *dependencyTrackClient) CreateOidcUser(ctx context.Context, email string) error {
+func (c *managementClient) CreateOidcUser(ctx context.Context, email string) error {
 	return c.withAuthContext(ctx, func(tokenCtx context.Context) error {
 		user := client.OidcUser{
 			Username: stringPtr(email),
@@ -203,7 +203,7 @@ func (c *dependencyTrackClient) CreateOidcUser(ctx context.Context, email string
 	})
 }
 
-func (c *dependencyTrackClient) DeleteManagedUser(ctx context.Context, username string) error {
+func (c *managementClient) DeleteManagedUser(ctx context.Context, username string) error {
 	return c.withAuthContext(ctx, func(tokenCtx context.Context) error {
 		resp, err := c.client.UserAPI.DeleteManagedUser(tokenCtx).ManagedUser(client.ManagedUser{
 			Username: stringPtr(username),
@@ -220,7 +220,7 @@ func (c *dependencyTrackClient) DeleteManagedUser(ctx context.Context, username 
 	})
 }
 
-func (c *dependencyTrackClient) DeleteOidcUser(ctx context.Context, email string) error {
+func (c *managementClient) DeleteOidcUser(ctx context.Context, email string) error {
 	return c.withAuthContext(ctx, func(tokenCtx context.Context) error {
 		resp, err := c.client.UserAPI.DeleteOidcUser(tokenCtx).OidcUser(client.OidcUser{
 			Username: stringPtr(email),
@@ -237,7 +237,7 @@ func (c *dependencyTrackClient) DeleteOidcUser(ctx context.Context, email string
 	})
 }
 
-func (c *dependencyTrackClient) DeleteUserMembership(ctx context.Context, uuid, username string) error {
+func (c *managementClient) DeleteUserMembership(ctx context.Context, uuid, username string) error {
 	return c.withAuthContext(ctx, func(tokenCtx context.Context) error {
 		_, resp, err := c.client.UserAPI.RemoveTeamFromUser(tokenCtx, username).
 			IdentifiableObject(client.IdentifiableObject{

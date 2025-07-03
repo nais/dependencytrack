@@ -18,6 +18,18 @@ const EmailPostfix = "@nais.io"
 var _ Client = &dependencyTrackClient{}
 
 type Client interface {
+	CreateProject(ctx context.Context, imageName, imageTag string, tags []string) (*Project, error)
+	CreateProjectWithSbom(ctx context.Context, sbom *in_toto.CycloneDXStatement, imageName, imageTag string) (string, error)
+	DeleteProject(ctx context.Context, uuid string) error
+	GetAnalysisTrailForImage(ctx context.Context, projectId, componentId, vulnerabilityId string) (*Analysis, error)
+	GetFindings(ctx context.Context, uuid string, suppressed bool, filterSource ...string) ([]*Vulnerability, error)
+	GetProject(ctx context.Context, name, version string) (*Project, error)
+	GetProjects(ctx context.Context, limit, offset int32) ([]Project, error)
+	TriggerAnalysis(ctx context.Context, uuid string) error
+	UpdateFinding(ctx context.Context, request AnalysisRequest) error
+}
+
+type ManagementClient interface {
 	AddToTeam(ctx context.Context, username, uuid string) error
 	AllMetricsRefresh(ctx context.Context) error
 	ChangeAdminPassword(ctx context.Context, oldPassword, newPassword auth.Password) error
@@ -25,33 +37,22 @@ type Client interface {
 	CreateAdminUser(ctx context.Context, username string, password auth.Password, teamUuid string) error
 	CreateAdminUsers(ctx context.Context, users []*AdminUser, teamUuid string) error
 	CreateOidcUser(ctx context.Context, email string) error
-	CreateProject(ctx context.Context, imageName, imageTag string, tags []string) (*Project, error)
-	CreateProjectWithSbom(ctx context.Context, sbom *in_toto.CycloneDXStatement, imageName, imageTag string) (string, error)
 	CreateTeam(ctx context.Context, teamName string, permissions []Permission) (*Team, error)
 	DeleteManagedUser(ctx context.Context, username string) error
 	DeleteOidcUser(ctx context.Context, username string) error
-	DeleteProject(ctx context.Context, uuid string) error
 	DeleteTeam(ctx context.Context, uuid string) error
 	DeleteUserMembership(ctx context.Context, teamUuid, username string) error
 	GenerateApiKey(ctx context.Context, uuid string) (string, error)
-	GetAnalysisTrailForImage(ctx context.Context, projectId, componentId, vulnerabilityId string) (*Analysis, error)
 	GetConfigProperties(ctx context.Context) ([]ConfigProperty, error)
 	GetEcosystems(ctx context.Context) ([]string, error)
-	GetVulnerabilities(ctx context.Context, uuid, vulnerabilityId string, suppressed bool) ([]*Vulnerability, error)
 	GetOidcUser(ctx context.Context, username string) (*User, error)
 	GetOidcUsers(ctx context.Context) ([]*User, error)
-	GetProject(ctx context.Context, name, version string) (*Project, error)
-	GetProjects(ctx context.Context, limit, offset int32) ([]Project, error)
 	GetTeam(ctx context.Context, team string) (*Team, error)
 	GetTeams(ctx context.Context) ([]*Team, error)
 	ProjectMetricsRefresh(ctx context.Context, uuid string) error
 	RemoveAdminUser(ctx context.Context, username string) error
 	RemoveAdminUsers(ctx context.Context, users []*AdminUser) error
-	TriggerAnalysis(ctx context.Context, uuid string) error
-	UpdateFinding(ctx context.Context, request AnalysisRequest) error
 	Version(ctx context.Context) (string, error)
-
-	auth.Auth
 }
 
 type ClientError struct {
@@ -63,6 +64,12 @@ type ServerError struct {
 }
 
 type dependencyTrackClient struct {
+	client *client.APIClient
+	auth   auth.Auth
+	log    logrus.FieldLogger
+}
+
+type managementClient struct {
 	client *client.APIClient
 	auth   auth.Auth
 	log    logrus.FieldLogger
@@ -92,13 +99,31 @@ func NewClient(url string, username auth.Username, password auth.Password, log *
 	}, nil
 }
 
+func NewManagementClient(url string, username auth.Username, password auth.Password, log *logrus.Entry, options ...Option) (ManagementClient, error) {
+	if url == "" {
+		return nil, fmt.Errorf("NewClient: URL cannot be empty")
+	}
+	opts := &Options{}
+	for _, opt := range options {
+		opt(opts)
+	}
+
+	clientConfig := setupConfig(url, opts)
+	apiClient := client.NewAPIClient(clientConfig)
+	return &managementClient{
+		client: apiClient,
+		auth:   auth.NewUsernamePasswordSource(username, password, apiClient, log),
+		log:    log,
+	}, nil
+}
+
 func WithHTTPClient(httpClient *http.Client) Option {
 	return func(opts *Options) {
 		opts.Client = httpClient
 	}
 }
 
-func (c *dependencyTrackClient) Version(ctx context.Context) (string, error) {
+func (c *managementClient) Version(ctx context.Context) (string, error) {
 	about, resp, err := c.client.VersionAPI.GetVersion(ctx).Execute()
 	if err != nil {
 		if resp != nil {
@@ -160,8 +185,20 @@ func (c *dependencyTrackClient) AuthContext(ctx context.Context) (context.Contex
 	return c.auth.AuthContext(ctx)
 }
 
-func (c *dependencyTrackClient) Login(ctx context.Context, username, password string) (string, error) {
+func (c *managementClient) Login(ctx context.Context, username, password string) (string, error) {
 	return c.auth.Login(ctx, username, password)
+}
+
+func (c *managementClient) withAuthContext(ctx context.Context, fn func(ctx context.Context) error) error {
+	tokenCtx, err := c.auth.AuthContext(ctx)
+	if err != nil {
+		return fmt.Errorf("auth error: %w", err)
+	}
+	return fn(tokenCtx)
+}
+
+func (c *managementClient) AuthContext(ctx context.Context) (context.Context, error) {
+	return c.auth.AuthContext(ctx)
 }
 
 func convertError(err error, msg string, resp *http.Response) error {
@@ -189,8 +226,8 @@ func parseErrorResponseBody(resp *http.Response) string {
 	return string(body)
 }
 
-func withAuthContextValue[T any](c *dependencyTrackClient, ctx context.Context, fn func(ctx context.Context) (T, error)) (T, error) {
-	tokenCtx, err := c.auth.AuthContext(ctx)
+func withAuthContextValue[T any](auth auth.Auth, ctx context.Context, fn func(ctx context.Context) (T, error)) (T, error) {
+	tokenCtx, err := auth.AuthContext(ctx)
 	if err != nil {
 		var zero T
 		return zero, fmt.Errorf("auth error: %w", err)

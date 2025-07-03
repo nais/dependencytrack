@@ -57,7 +57,7 @@ type Tags struct {
 }
 
 func (c *dependencyTrackClient) GetProject(ctx context.Context, name, version string) (*Project, error) {
-	return withAuthContextValue(c, ctx, func(tokenCtx context.Context) (*Project, error) {
+	return withAuthContextValue(c.auth, ctx, func(tokenCtx context.Context) (*Project, error) {
 		project, resp, err := c.client.ProjectAPI.GetProjectByNameAndVersion(tokenCtx).
 			Name(name).
 			Version(version).
@@ -81,7 +81,7 @@ func (c *dependencyTrackClient) GetProject(ctx context.Context, name, version st
 }
 
 func (c *dependencyTrackClient) GetProjects(ctx context.Context, limit, offset int32) ([]Project, error) {
-	return withAuthContextValue(c, ctx, func(tokenCtx context.Context) ([]Project, error) {
+	return withAuthContextValue(c.auth, ctx, func(tokenCtx context.Context) ([]Project, error) {
 		return c.paginateProjects(tokenCtx, limit, offset, func(ctx context.Context, offset int32) ([]Project, error) {
 			pageNumber := (offset / limit) + 1
 			// convert to string from int32
@@ -162,7 +162,7 @@ func (c *dependencyTrackClient) DeleteProject(ctx context.Context, uuid string) 
 
 func (c *dependencyTrackClient) CreateProject(ctx context.Context, name, version string, tags []string) (*Project, error) {
 	c.log.Debugf("creating project: %s", name+":"+version)
-	p, err := withAuthContextValue(c, ctx, func(tokenCtx context.Context) (*Project, error) {
+	p, err := withAuthContextValue(c.auth, ctx, func(tokenCtx context.Context) (*Project, error) {
 		active := true
 		classifier := "APPLICATION"
 

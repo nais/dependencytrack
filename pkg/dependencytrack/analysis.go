@@ -65,7 +65,7 @@ func (c *dependencyTrackClient) GetAnalysisTrailForImage(
 	ctx context.Context,
 	projectId, componentID, vulnerabilityId string,
 ) (*Analysis, error) {
-	return withAuthContextValue(c, ctx, func(tokenCtx context.Context) (*Analysis, error) {
+	return withAuthContextValue(c.auth, ctx, func(tokenCtx context.Context) (*Analysis, error) {
 		trail, resp, err := c.client.AnalysisAPI.RetrieveAnalysis(tokenCtx).
 			Project(projectId).
 			Component(componentID).

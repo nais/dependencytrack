@@ -33,11 +33,12 @@ func (s Severity) ToInt32() int32 {
 }
 
 type Vulnerability struct {
-	Package       string
-	Suppressed    bool
-	Cve           *Cve
-	LatestVersion string
-	Metadata      *VulnMetadata
+	Package         string
+	Suppressed      bool
+	SuppressedState string
+	Cve             *Cve
+	LatestVersion   string
+	Metadata        *VulnMetadata
 }
 
 type Cve struct {
@@ -58,28 +59,30 @@ type VulnMetadata struct {
 // GetVulnerabilities Is this function lacking pagination for all findings in a project or do we not need it?
 // https://github.com/DependencyTrack/dependency-track/issues/3811
 // https://github.com/DependencyTrack/dependency-track/issues/4677
-func (c *dependencyTrackClient) GetVulnerabilities(ctx context.Context, uuid, vulnId string, suppressed bool) ([]*Vulnerability, error) {
-	return withAuthContextValue(c, ctx, func(tokenCtx context.Context) ([]*Vulnerability, error) {
+func (c *dependencyTrackClient) GetFindings(ctx context.Context, uuid string, suppressed bool, filterSource ...string) ([]*Vulnerability, error) {
+	return withAuthContextValue(c.auth, ctx, func(tokenCtx context.Context) ([]*Vulnerability, error) {
 		req := c.client.FindingAPI.GetFindingsByProject(tokenCtx, uuid).Suppressed(suppressed)
 
-		switch {
-		case strings.Contains(vulnId, "CVE-"):
-			req.Source("NVD")
-		case strings.Contains(vulnId, "GHSA-"):
-			req.Source("GITHUB")
-		case strings.Contains(vulnId, "TRIVY-"):
-			req.Source("TRIVY")
-		case strings.Contains(vulnId, "NPM-"):
-			req.Source("NPM")
-		case strings.Contains(vulnId, "UBUNTU-"):
-			req.Source("UBUNTU")
-		case strings.Contains(vulnId, "OSSINDEX-"):
-			req.Source("OSSINDEX")
+		for _, filter := range filterSource {
+			switch {
+			case strings.Contains(filter, "CVE-"):
+				req.Source("NVD")
+			case strings.Contains(filter, "GHSA-"):
+				req.Source("GITHUB")
+			case strings.Contains(filter, "TRIVY-"):
+				req.Source("TRIVY")
+			case strings.Contains(filter, "NPM-"):
+				req.Source("NPM")
+			case strings.Contains(filter, "UBUNTU-"):
+				req.Source("UBUNTU")
+			case strings.Contains(filter, "OSSINDEX-"):
+				req.Source("OSSINDEX")
+			}
 		}
 
 		findings, resp, err := req.Execute()
 		if err != nil {
-			return nil, convertError(err, "GetVulnerabilities", resp)
+			return nil, convertError(err, "GetFindings", resp)
 		}
 
 		vulns := make([]*Vulnerability, 0)
@@ -181,6 +184,11 @@ func parseVulnerability(finding client.Finding) (*Vulnerability, error) {
 		suppressed = s
 	}
 
+	suppressedState := ""
+	if s, ok := analysis["state"].(string); ok {
+		suppressedState = s
+	}
+
 	title := ""
 	if t, ok := vulnData["title"].(string); ok && t != "" {
 		title = t
@@ -217,9 +225,10 @@ func parseVulnerability(finding client.Finding) (*Vulnerability, error) {
 	}
 
 	return &Vulnerability{
-		Package:       purl,
-		Suppressed:    suppressed,
-		LatestVersion: componentLatestVersion,
+		Package:         purl,
+		Suppressed:      suppressed,
+		SuppressedState: suppressedState,
+		LatestVersion:   componentLatestVersion,
 		Cve: &Cve{
 			Id:          vulnId,
 			Description: desc,

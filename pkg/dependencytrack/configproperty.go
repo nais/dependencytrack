@@ -15,7 +15,7 @@ type ConfigProperty struct {
 	Description   *string `json:"description,omitempty"`
 }
 
-func (c *dependencyTrackClient) ConfigPropertyAggregate(ctx context.Context, property ConfigProperty) error {
+func (c *managementClient) ConfigPropertyAggregate(ctx context.Context, property ConfigProperty) error {
 	return c.withAuthContext(ctx, func(tokenCtx context.Context) error {
 		_, resp, err := c.client.ConfigPropertyAPI.UpdateConfigProperty(tokenCtx).ConfigProperty(client.ConfigProperty{
 			GroupName:     property.GroupName,
@@ -34,8 +34,8 @@ func (c *dependencyTrackClient) ConfigPropertyAggregate(ctx context.Context, pro
 	})
 }
 
-func (c *dependencyTrackClient) GetConfigProperties(ctx context.Context) ([]ConfigProperty, error) {
-	return withAuthContextValue(c, ctx, func(tokenCtx context.Context) ([]ConfigProperty, error) {
+func (c *managementClient) GetConfigProperties(ctx context.Context) ([]ConfigProperty, error) {
+	return withAuthContextValue(c.auth, ctx, func(tokenCtx context.Context) ([]ConfigProperty, error) {
 		res, resp, err := c.client.ConfigPropertyAPI.GetConfigProperties(tokenCtx).Execute()
 		if err != nil {
 			return nil, convertError(err, "GetConfigProperties", resp)
