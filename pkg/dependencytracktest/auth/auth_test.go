@@ -18,11 +18,9 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-// TODO: fix test after refactoring
 func TestUsernamePasswordSource_AuthHeaders(t *testing.T) {
-	t.Skip("Skipping test after refactoring, fix once finished")
-	mockUserAPI := clientmock.NewMockUserAPI(t)
-	mockTeamAPI := clientmock.NewMockTeamAPI(t)
+	mockUserAPI := new(clientmock.MockUserAPI)
+	mockTeamAPI := new(clientmock.MockTeamAPI)
 
 	mockClient := &client.APIClient{
 		UserAPI: mockUserAPI,
@@ -60,8 +58,8 @@ func TestUsernamePasswordSource_AuthHeaders(t *testing.T) {
 }
 
 func TestUsernamePasswordSource_AuthHeaders_Token_Validation(t *testing.T) {
-	mockUserAPI := clientmock.NewMockUserAPI(t)
-	mockTeamAPI := clientmock.NewMockTeamAPI(t)
+	mockUserAPI := new(clientmock.MockUserAPI)
+	mockTeamAPI := new(clientmock.MockTeamAPI)
 
 	mockClient := &client.APIClient{
 		UserAPI: mockUserAPI,
@@ -140,8 +138,6 @@ func TestUsernamePasswordSource_AuthHeaders_Token_Validation(t *testing.T) {
 		assert.Contains(t, err.Error(), "failed to parse access token")
 	})
 
-	// TODO: fix test after refactoring
-	t.Skip("Skipping test after refactoring, fix once finished")
 	t.Run("login fails with error", func(t *testing.T) {
 		expiredToken := generateSignedTestToken(t, -1*time.Hour)
 		authSource = auth.NewUsernamePasswordSourceWithToken("user", "password", expiredToken, mockClient, log.WithField("subsystem", "test-auth-source"))
@@ -158,7 +154,7 @@ func TestUsernamePasswordSource_AuthHeaders_Token_Validation(t *testing.T) {
 
 		_, err := authSource.AuthContext(ctx)
 		assert.Error(t, err)
-		assert.Contains(t, err.Error(), "failed to validate credentials")
+		assert.Contains(t, err.Error(), "login failed")
 
 		mockUserAPI.AssertExpectations(t)
 	})
