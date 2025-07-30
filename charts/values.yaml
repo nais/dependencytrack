@@ -60,7 +60,7 @@ backend:
 
   cloudProxy:
     repository: gcr.io/cloudsql-docker/gce-proxy
-    tag: 1.37.7
+    tag: 1.37.8
 
   postgresql:
     enabled: true
