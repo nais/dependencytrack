@@ -3,9 +3,10 @@ package dependencytracktest
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/nais/dependencytrack/pkg/dependencytrack"
 	"os"
 	"testing"
+
+	"github.com/nais/dependencytrack/pkg/dependencytrack"
 
 	"github.com/nais/dependencytrack/pkg/dependencytrack/client"
 	"github.com/stretchr/testify/assert"

@@ -1,5 +1,4 @@
 //go:build integration_test
-// +build integration_test
 
 package dependencytracktest_test
 
@@ -7,7 +6,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/in-toto/in-toto-golang/in_toto"
 	"net/http"
 	"os"
 	"strconv"
@@ -15,6 +13,7 @@ import (
 	"time"
 
 	uuid "github.com/google/uuid"
+	"github.com/in-toto/in-toto-golang/in_toto"
 	"github.com/nais/dependencytrack/pkg/dependencytrack"
 	"github.com/ory/dockertest/v3"
 	"github.com/ory/dockertest/v3/docker"
@@ -30,7 +29,7 @@ func TestMain(m *testing.M) {
 	log.SetFormatter(&log.TextFormatter{
 		DisableTimestamp: true,
 	})
-	baseUrl, cleanup := DependencyTrackPool("4.13.2")
+	baseUrl, cleanup := DependencyTrackPool("4.13.3")
 	cwp, err := dependencytrack.NewClient(baseUrl, "admin", "test", log.WithField("test", "client_integration_test"))
 	if err != nil {
 		log.Fatalf("Failed to create DependencyTrack client: %v", err)

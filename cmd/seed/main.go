@@ -3,9 +3,10 @@ package main
 import (
 	"context"
 	"fmt"
+	"os"
+
 	"github.com/nais/dependencytrack/pkg/dependencytrack"
 	log "github.com/sirupsen/logrus"
-	"os"
 )
 
 func main() {

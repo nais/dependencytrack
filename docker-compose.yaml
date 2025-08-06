@@ -4,7 +4,7 @@ services:
     command:
       - server
       - --listen
-      - :8080
+      - :4005
       - --token
       - my-token
     volumes:
@@ -19,7 +19,7 @@ services:
       - '9002:8080'
 
   dtrack-apiserver:
-    image: dependencytrack/apiserver:4.13.2
+    image: dependencytrack/apiserver:4.13.3
     deploy:
       resources:
         limits:
@@ -45,7 +45,7 @@ services:
     restart: unless-stopped
 
   dtrack-frontend:
-    image: dependencytrack/frontend:4.13.2
+    image: dependencytrack/frontend:4.13.3
     depends_on:
       - dtrack-apiserver
     environment:
@@ -54,27 +54,21 @@ services:
       - "9020:8080"
     restart: unless-stopped
 
-  #bootstrap:
-  #  build: .
-  #  environment:
-  #    - LOG_LEVEL=debug
-  #    - BASE_URL=http://dtrack-apiserver:8080/
-  #    - DEFAULT_ADMIN_PASSWORD=admin
-  #    - ADMIN_PASSWORD=yolo
-  #    - USERS_FILE=users.yaml
-  #    - GITHUB_ADVISORY_TOKEN=
-  #    - GOOGLE_OSV_ENABLED=true
-  #    - LOGGING_CONFIG_PATH=logback-json.xml
-  #    - NVD_API_KEY=my-key
-  #    - TRIVY_API_TOKEN=my-token
-  #    - TRIVY_BASE_URL=http://trivy:8080
-  #  env_file:
-  #    - .env
-  #  volumes:
-  #    - ./users.yaml:/app/users.yaml
-  #  depends_on:
-  #    dtrack-apiserver:
-  #      condition: service_healthy
+  bootstrap:
+    platform: linux/amd64
+    image: europe-north1-docker.pkg.dev/nais-io/nais/images/dependencytrack-bootstrap:latest
+    environment:
+      - BASE_URL=http://dtrack-apiserver:8080/
+      - DEFAULT_ADMIN_PASSWORD=admin
+      - ADMIN_PASSWORD=yolo
+      - TRIVY_API_TOKEN=my-token
+      - USERS_FILE=users.yaml
+      - TRIVY_BASE_URL=http://trivy:4005
+    depends_on:
+      dtrack-apiserver:
+        condition: service_healthy
+    volumes:
+      - ./local/users.yaml:/app/users.yaml
 
 volumes:
   dependency-track:

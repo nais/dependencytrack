@@ -32,7 +32,7 @@ backend:
     repository: dependencytrack
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: 4.13.2
+    tag: 4.13.3
   replicaCount: 2
   resources:
     requests:
@@ -113,7 +113,7 @@ frontend:
     repository: dependencytrack
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: 4.13.2
+    tag: 4.13.3
   replicaCount: 1
   resources:
     requests:
@@ -135,7 +135,7 @@ trivy:
   image:
     registry: "ghcr.io"
     repository: "aquasecurity/trivy"
-    tag: "0.63.0"
+    tag: "0.65.0"
   serverToken: "todo"
   podSecurityContext:
     seccompProfile:

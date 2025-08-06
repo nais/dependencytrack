@@ -5,12 +5,10 @@ GO_PACKAGES := $(shell go list ./... | grep -v $(IGNORED_PATH))
 bootstrap:
 	go build -o bin/bootstrap cmd/bootstrap/*.go
 
-integration_test: vet
+integration_test:
 	go test -count=1 ./... -tags integration_test -run TestIntegration
-test: vet
+test:
 	go test ./... -coverprofile cover.out -short
-vet:
-	go vet ./...
 
 local:
 	go run cmd/bootstrap/main.go
@@ -18,7 +16,10 @@ local:
 compose:
 	docker-compose build && docker-compose up
 
-check: staticcheck vuln deadcode gosec helm-lint goimport
+check: vet staticcheck vuln deadcode gosec helm-lint goimport
+
+vet:
+	go vet ./...
 
 goimport:
 	@echo "Running goimport..."
