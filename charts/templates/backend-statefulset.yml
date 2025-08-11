@@ -142,10 +142,12 @@ spec:
         - name: cloudsql-proxy
           image: {{ .Values.backend.cloudProxy.repository }}:{{ .Values.backend.cloudProxy.tag }}
           command:
-            - "/cloud_sql_proxy"
-            - "-log_debug_stdout"
-            - "-instances={{ .Values.backend.postgresql.connectionName }}=tcp:5432"
-            - "-enable_iam_login"
+            - /cloud-sql-proxy
+            - "{{ .Values.backend.postgresql.connectionName }}"
+            - --private-ip
+            - --debug-logs
+            - --port=5432
+            - --auto-iam-authn
           securityContext:
             runAsNonRoot: true
             runAsUser: 1000

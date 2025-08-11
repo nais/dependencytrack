@@ -38,7 +38,7 @@ backend:
     requests:
       memory: 4Gi
       cpu: "1"
-  outbound: [ ]
+  outbound: []
   ingressClassName: nais-ingress
   ingress:
   livenessProbe:
@@ -59,8 +59,8 @@ backend:
     failureThreshold: 3
 
   cloudProxy:
-    repository: gcr.io/cloudsql-docker/gce-proxy
-    tag: 1.37.8
+    repository: eu.gcr.io/cloud-sql-connectors/cloud-sql-proxy
+    tag: 2.18.0
 
   postgresql:
     enabled: true
@@ -119,7 +119,7 @@ frontend:
     requests:
       memory: 256Mi
       cpu: "1"
-  outbound: [ ]
+  outbound: []
   ingressClassName: nais-ingress
   ingress:
   env:
