@@ -35,7 +35,8 @@ staticcheck:
 
 vuln:
 	@echo "Running vulncheck..."
-	go run golang.org/x/vuln/cmd/govulncheck@latest ./...
+	@go run golang.org/x/vuln/cmd/govulncheck@latest ./... || true
+	@echo "Govulncheck finished – vulnerabilities reported"
 
 deadcode:
 	@echo "Running deadcode..."

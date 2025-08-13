@@ -1,6 +1,6 @@
 module github.com/nais/dependencytrack
 
-go 1.24.4
+go 1.24.6
 
 require (
 	github.com/gin-gonic/gin v1.10.1
@@ -9,7 +9,7 @@ require (
 	github.com/joho/godotenv v1.5.1
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/lestrrat-go/jwx/v2 v2.1.6
-	github.com/nais/dependencytrack/pkg/dependencytrack v0.0.0-20250630114639-8efe42d2c991
+	github.com/nais/dependencytrack/pkg/dependencytrack v0.0.0-20250811102944-8defc6aacab2
 	github.com/ory/dockertest/v3 v3.12.0
 	github.com/patrickmn/go-cache v2.1.0+incompatible
 	github.com/prometheus/client_golang v1.23.0
@@ -123,4 +123,7 @@ require (
 	gotest.tools/v3 v3.5.2 // indirect
 )
 
-replace github.com/nais/dependencytrack/pkg/dependencytrack => ./pkg/dependencytrack
+// Replace the dependencytrack package with a local version for development
+// This is useful when you want to test changes in the dependencytrack package without pushing to a remote repository
+// This line should be removed or commented out when building for production
+// replace github.com/nais/dependencytrack/pkg/dependencytrack => ./pkg/dependencytrack
