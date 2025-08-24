@@ -128,4 +128,4 @@ require (
 // Replace the dependencytrack package with a local version for development
 // This is useful when you want to test changes in the dependencytrack package without pushing to a remote repository
 // This line should be removed or commented out when building for production
-replace github.com/nais/dependencytrack/pkg/dependencytrack => ./pkg/dependencytrack
+// replace github.com/nais/dependencytrack/pkg/dependencytrack => ./pkg/dependencytrack
