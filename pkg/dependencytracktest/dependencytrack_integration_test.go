@@ -259,11 +259,11 @@ func TestIntegration(t *testing.T) {
 		assert.NoError(t, err)
 		assert.NotNil(t, p)
 
-		err = c.TriggerAnalysis(ctx, p)
+		err = c.TriggerAnalysis(ctx, p.Uuid)
 		assert.NoError(t, err)
 		time.Sleep(3 * time.Second) // wait for analysis to complete
 
-		v, err := c.GetFindings(ctx, p, true)
+		v, err := c.GetFindings(ctx, p.Uuid, true)
 		assert.NoError(t, err)
 		assert.NotEmpty(t, v)
 	})
@@ -276,7 +276,7 @@ func TestIntegration(t *testing.T) {
 		assert.NoError(t, err)
 		assert.NotNil(t, p)
 
-		findings, err := c.GetFindings(ctx, p, true)
+		findings, err := c.GetFindings(ctx, p.Uuid, true)
 		assert.NoError(t, err)
 		assert.NotNil(t, findings)
 	})
@@ -320,6 +320,22 @@ func TestIntegration(t *testing.T) {
 		assert.Len(t, trail.AnalysisComments, 4)
 		assert.Equal(t, "Analysis: NOT_SET → NOT_AFFECTED", trail.AnalysisComments[0].Comment)
 		assert.Equal(t, "admin", *trail.AnalysisComments[0].Commenter)
+	})
+
+	t.Run("IsTaskInProgress", func(t *testing.T) {
+		p, err := c.CreateProject(ctx, "project-with-task", "version1", nil)
+		assert.NoError(t, err)
+		assert.NotNil(t, p)
+		err = c.TriggerAnalysis(ctx, p.Uuid)
+		assert.NoError(t, err)
+		time.Sleep(2 * time.Second) // wait for analysis to complete
+		inProgress, err := c.IsTaskInProgress(ctx, p.Uuid)
+		assert.NoError(t, err)
+		if inProgress {
+			assert.True(t, inProgress, "Task should be in progress")
+		} else {
+			assert.False(t, inProgress, "Task should not be in progress")
+		}
 	})
 }
 

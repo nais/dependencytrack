@@ -18,12 +18,13 @@ var _ Client = &dependencyTrackClient{}
 
 type Client interface {
 	CreateProject(ctx context.Context, imageName, imageTag string, tags []string) (*Project, error)
-	CreateProjectWithSbom(ctx context.Context, imageName, imageTag string, sbom []byte) (string, error)
+	CreateProjectWithSbom(ctx context.Context, imageName, imageTag string, sbom []byte) (*UploadSbomResponse, error)
 	DeleteProject(ctx context.Context, uuid string) error
 	GetAnalysisTrailForImage(ctx context.Context, projectId, componentId, vulnerabilityId string) (*Analysis, error)
 	GetFindings(ctx context.Context, uuid string, suppressed bool, filterSource ...string) ([]*Vulnerability, error)
 	GetProject(ctx context.Context, name, version string) (*Project, error)
 	GetProjects(ctx context.Context, limit, offset int32) ([]Project, error)
+	IsTaskInProgress(ctx context.Context, uuid string) (bool, error)
 	TriggerAnalysis(ctx context.Context, uuid string) error
 	UpdateFinding(ctx context.Context, request AnalysisRequest) error
 }

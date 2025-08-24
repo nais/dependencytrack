@@ -54,6 +54,11 @@ type Tags struct {
 	Tags []Tag `json:"tags"`
 }
 
+type UploadSbomResponse struct {
+	Token string `json:"token"`
+	Uuid  string `json:"uuid"`
+}
+
 func (c *dependencyTrackClient) GetProject(ctx context.Context, name, version string) (*Project, error) {
 	return withAuthContextValue(c.auth, ctx, func(tokenCtx context.Context) (*Project, error) {
 		project, resp, err := c.client.ProjectAPI.GetProjectByNameAndVersion(tokenCtx).
@@ -99,47 +104,51 @@ func (c *dependencyTrackClient) GetProjects(ctx context.Context, limit, offset i
 	})
 }
 
-func (c *dependencyTrackClient) CreateProjectWithSbom(ctx context.Context, imageName, imageTag string, sbom []byte) (string, error) {
+func (c *dependencyTrackClient) CreateProjectWithSbom(ctx context.Context, imageName, imageTag string, sbom []byte) (*UploadSbomResponse, error) {
 	p, err := c.GetProject(ctx, imageName, imageTag)
 	if err != nil {
-		return "", fmt.Errorf("failed to lookup project: %w", err)
+		return nil, fmt.Errorf("failed to lookup project: %w", err)
 	}
 
 	if p == nil {
 		p, err = c.CreateProject(ctx, imageName, imageTag, nil)
 		if err != nil {
-			return "", fmt.Errorf("failed to create project: %w", err)
+			return nil, fmt.Errorf("failed to create project: %w", err)
 		}
 		if p == nil {
-			return "", fmt.Errorf("created project is unexpectedly nil")
+			return nil, fmt.Errorf("created project is unexpectedly nil")
 		}
 	}
 
 	if p.Uuid == "" {
-		return "", fmt.Errorf("project UUID is empty")
+		return nil, fmt.Errorf("project UUID is empty")
 	}
 
-	if err = c.uploadSbom(ctx, p.Uuid, sbom); err != nil {
+	token, err := c.uploadSbom(ctx, p.Uuid, sbom)
+	if err != nil {
 		var clientErr *ClientError
 		if errors.As(err, &clientErr) {
 			if deleteErr := c.DeleteProject(ctx, p.Uuid); deleteErr != nil {
-				return "", fmt.Errorf("upload failed: %w (also failed to delete project: %v)", err, deleteErr)
+				return nil, fmt.Errorf("upload failed: %w (also failed to delete project: %v)", err, deleteErr)
 			}
 		}
-		return "", fmt.Errorf("failed to upload SBOM: %w", err)
+		return nil, fmt.Errorf("failed to upload SBOM: %w", err)
 	}
 
-	return p.Uuid, nil
+	return &UploadSbomResponse{
+		Token: token,
+		Uuid:  p.Uuid,
+	}, nil
 }
 
-func (c *dependencyTrackClient) uploadSbom(ctx context.Context, projectId string, sbom []byte) error {
-	return c.withAuthContext(ctx, func(tokenCtx context.Context) error {
+func (c *dependencyTrackClient) uploadSbom(ctx context.Context, projectId string, sbom []byte) (string, error) {
+	return withAuthContextValue(c.auth, ctx, func(tokenCtx context.Context) (string, error) {
 		req := c.client.BomAPI.UploadBom(tokenCtx).Bom(string(sbom)).Project(projectId).AutoCreate(false)
-		_, resp, err := req.Execute()
+		token, resp, err := req.Execute()
 		if err != nil {
-			return convertError(err, "uploadSbom", resp)
+			return "", convertError(err, "uploadSbom", resp)
 		}
-		return nil
+		return token.GetToken(), nil
 	})
 }
 
