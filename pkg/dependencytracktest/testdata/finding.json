@@ -12,6 +12,7 @@
     "source": "GITHUB",
     "vulnId": "GHSA-79v4-65xg-pq4g",
     "title": "Vulnerable OpenSSL included in cryptography wheels",
+    "cvssV3BaseScore": 2.5,
     "severity": "LOW",
     "severityRank": 3,
     "cweId": 392,

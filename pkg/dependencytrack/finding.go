@@ -37,6 +37,7 @@ type Vulnerability struct {
 	Suppressed      bool
 	SuppressedState string
 	Cve             *Cve
+	Cvss            float64
 	LatestVersion   string
 	Metadata        *VulnMetadata
 }
@@ -162,6 +163,10 @@ func ParseFinding(finding client.Finding) (*Vulnerability, error) {
 	if v, ok := vulnData["uuid"].(string); ok {
 		vulnerabilityUuid = v
 	}
+	var cvssV3BaseScore float64
+	if cvss, ok := vulnData["cvssV3BaseScore"].(float64); ok {
+		cvssV3BaseScore = cvss
+	}
 
 	var link string
 	if source, ok := vulnData["source"].(string); ok {
@@ -237,6 +242,7 @@ func ParseFinding(finding client.Finding) (*Vulnerability, error) {
 			Severity:    severity,
 			References:  references,
 		},
+		Cvss: cvssV3BaseScore,
 		Metadata: &VulnMetadata{
 			ProjectId:         projectId,
 			ComponentId:       componentId,
