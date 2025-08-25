@@ -9,12 +9,12 @@ require (
 	github.com/joho/godotenv v1.5.1
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/lestrrat-go/jwx/v2 v2.1.6
-	github.com/nais/dependencytrack/pkg/dependencytrack v0.0.0-20250818063749-e1dfc25c529b
+	github.com/nais/dependencytrack/pkg/dependencytrack v0.0.0-20250821145925-f87d4def12a7
 	github.com/ory/dockertest/v3 v3.12.0
 	github.com/patrickmn/go-cache v2.1.0+incompatible
 	github.com/prometheus/client_golang v1.23.0
 	github.com/sirupsen/logrus v1.9.3
-	github.com/stretchr/testify v1.10.0
+	github.com/stretchr/testify v1.11.0
 	github.com/vektra/mockery/v3 v3.5.3
 	golang.org/x/sync v0.16.0
 	golang.org/x/vuln v1.1.4
@@ -128,4 +128,4 @@ require (
 // Replace the dependencytrack package with a local version for development
 // This is useful when you want to test changes in the dependencytrack package without pushing to a remote repository
 // This line should be removed or commented out when building for production
-// replace github.com/nais/dependencytrack/pkg/dependencytrack => ./pkg/dependencytrack
+replace github.com/nais/dependencytrack/pkg/dependencytrack => ./pkg/dependencytrack
