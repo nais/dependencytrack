@@ -126,11 +126,12 @@ func (c *dependencyTrackClient) CreateProjectWithSbom(ctx context.Context, image
 
 	token, err := c.uploadSbom(ctx, p.Uuid, sbom)
 	if err != nil {
-		var clientErr *ClientError
+		var clientErr ClientError
 		if errors.As(err, &clientErr) {
 			if deleteErr := c.DeleteProject(ctx, p.Uuid); deleteErr != nil {
 				return nil, fmt.Errorf("upload failed: %w (also failed to delete project: %v)", err, deleteErr)
 			}
+			c.log.Debugf("deleted project %s:%s due to upload failure", imageName, imageTag)
 		}
 		return nil, fmt.Errorf("failed to upload SBOM: %w", err)
 	}

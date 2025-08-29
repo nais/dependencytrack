@@ -9,13 +9,13 @@ require (
 	github.com/joho/godotenv v1.5.1
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/lestrrat-go/jwx/v2 v2.1.6
-	github.com/nais/dependencytrack/pkg/dependencytrack v0.0.0-20250821145925-f87d4def12a7
+	github.com/nais/dependencytrack/pkg/dependencytrack v0.0.0-20250825063347-9004910e056c
 	github.com/ory/dockertest/v3 v3.12.0
 	github.com/patrickmn/go-cache v2.1.0+incompatible
 	github.com/prometheus/client_golang v1.23.0
 	github.com/sirupsen/logrus v1.9.3
-	github.com/stretchr/testify v1.11.0
-	github.com/vektra/mockery/v3 v3.5.3
+	github.com/stretchr/testify v1.11.1
+	github.com/vektra/mockery/v3 v3.5.4
 	golang.org/x/sync v0.16.0
 	golang.org/x/vuln v1.1.4
 	gopkg.in/yaml.v3 v3.0.1
