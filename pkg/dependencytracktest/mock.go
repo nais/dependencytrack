@@ -120,22 +120,24 @@ func (_c *MockClient_CreateProject_Call) RunAndReturn(run func(ctx context.Conte
 }
 
 // CreateProjectWithSbom provides a mock function for the type MockClient
-func (_mock *MockClient) CreateProjectWithSbom(ctx context.Context, imageName string, imageTag string, sbom []byte) (string, error) {
+func (_mock *MockClient) CreateProjectWithSbom(ctx context.Context, imageName string, imageTag string, sbom []byte) (*dependencytrack.UploadSbomResponse, error) {
 	ret := _mock.Called(ctx, imageName, imageTag, sbom)
 
 	if len(ret) == 0 {
 		panic("no return value specified for CreateProjectWithSbom")
 	}
 
-	var r0 string
+	var r0 *dependencytrack.UploadSbomResponse
 	var r1 error
-	if returnFunc, ok := ret.Get(0).(func(context.Context, string, string, []byte) (string, error)); ok {
+	if returnFunc, ok := ret.Get(0).(func(context.Context, string, string, []byte) (*dependencytrack.UploadSbomResponse, error)); ok {
 		return returnFunc(ctx, imageName, imageTag, sbom)
 	}
-	if returnFunc, ok := ret.Get(0).(func(context.Context, string, string, []byte) string); ok {
+	if returnFunc, ok := ret.Get(0).(func(context.Context, string, string, []byte) *dependencytrack.UploadSbomResponse); ok {
 		r0 = returnFunc(ctx, imageName, imageTag, sbom)
 	} else {
-		r0 = ret.Get(0).(string)
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*dependencytrack.UploadSbomResponse)
+		}
 	}
 	if returnFunc, ok := ret.Get(1).(func(context.Context, string, string, []byte) error); ok {
 		r1 = returnFunc(ctx, imageName, imageTag, sbom)
@@ -187,12 +189,12 @@ func (_c *MockClient_CreateProjectWithSbom_Call) Run(run func(ctx context.Contex
 	return _c
 }
 
-func (_c *MockClient_CreateProjectWithSbom_Call) Return(s string, err error) *MockClient_CreateProjectWithSbom_Call {
-	_c.Call.Return(s, err)
+func (_c *MockClient_CreateProjectWithSbom_Call) Return(uploadSbomResponse *dependencytrack.UploadSbomResponse, err error) *MockClient_CreateProjectWithSbom_Call {
+	_c.Call.Return(uploadSbomResponse, err)
 	return _c
 }
 
-func (_c *MockClient_CreateProjectWithSbom_Call) RunAndReturn(run func(ctx context.Context, imageName string, imageTag string, sbom []byte) (string, error)) *MockClient_CreateProjectWithSbom_Call {
+func (_c *MockClient_CreateProjectWithSbom_Call) RunAndReturn(run func(ctx context.Context, imageName string, imageTag string, sbom []byte) (*dependencytrack.UploadSbomResponse, error)) *MockClient_CreateProjectWithSbom_Call {
 	_c.Call.Return(run)
 	return _c
 }
@@ -571,6 +573,72 @@ func (_c *MockClient_GetProjects_Call) Return(projects []dependencytrack.Project
 }
 
 func (_c *MockClient_GetProjects_Call) RunAndReturn(run func(ctx context.Context, limit int32, offset int32) ([]dependencytrack.Project, error)) *MockClient_GetProjects_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// IsTaskInProgress provides a mock function for the type MockClient
+func (_mock *MockClient) IsTaskInProgress(ctx context.Context, uuid string) (bool, error) {
+	ret := _mock.Called(ctx, uuid)
+
+	if len(ret) == 0 {
+		panic("no return value specified for IsTaskInProgress")
+	}
+
+	var r0 bool
+	var r1 error
+	if returnFunc, ok := ret.Get(0).(func(context.Context, string) (bool, error)); ok {
+		return returnFunc(ctx, uuid)
+	}
+	if returnFunc, ok := ret.Get(0).(func(context.Context, string) bool); ok {
+		r0 = returnFunc(ctx, uuid)
+	} else {
+		r0 = ret.Get(0).(bool)
+	}
+	if returnFunc, ok := ret.Get(1).(func(context.Context, string) error); ok {
+		r1 = returnFunc(ctx, uuid)
+	} else {
+		r1 = ret.Error(1)
+	}
+	return r0, r1
+}
+
+// MockClient_IsTaskInProgress_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'IsTaskInProgress'
+type MockClient_IsTaskInProgress_Call struct {
+	*mock.Call
+}
+
+// IsTaskInProgress is a helper method to define mock.On call
+//   - ctx context.Context
+//   - uuid string
+func (_e *MockClient_Expecter) IsTaskInProgress(ctx interface{}, uuid interface{}) *MockClient_IsTaskInProgress_Call {
+	return &MockClient_IsTaskInProgress_Call{Call: _e.mock.On("IsTaskInProgress", ctx, uuid)}
+}
+
+func (_c *MockClient_IsTaskInProgress_Call) Run(run func(ctx context.Context, uuid string)) *MockClient_IsTaskInProgress_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		var arg0 context.Context
+		if args[0] != nil {
+			arg0 = args[0].(context.Context)
+		}
+		var arg1 string
+		if args[1] != nil {
+			arg1 = args[1].(string)
+		}
+		run(
+			arg0,
+			arg1,
+		)
+	})
+	return _c
+}
+
+func (_c *MockClient_IsTaskInProgress_Call) Return(b bool, err error) *MockClient_IsTaskInProgress_Call {
+	_c.Call.Return(b, err)
+	return _c
+}
+
+func (_c *MockClient_IsTaskInProgress_Call) RunAndReturn(run func(ctx context.Context, uuid string) (bool, error)) *MockClient_IsTaskInProgress_Call {
 	_c.Call.Return(run)
 	return _c
 }

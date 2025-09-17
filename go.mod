@@ -9,13 +9,13 @@ require (
 	github.com/joho/godotenv v1.5.1
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/lestrrat-go/jwx/v2 v2.1.6
-	github.com/nais/dependencytrack/pkg/dependencytrack v0.0.0-20250825063347-9004910e056c
+	github.com/nais/dependencytrack/pkg/dependencytrack v0.0.0-20250908041136-1b5861385ddf
 	github.com/ory/dockertest/v3 v3.12.0
 	github.com/patrickmn/go-cache v2.1.0+incompatible
 	github.com/prometheus/client_golang v1.23.2
 	github.com/sirupsen/logrus v1.9.3
 	github.com/stretchr/testify v1.11.1
-	github.com/vektra/mockery/v3 v3.5.4
+	github.com/vektra/mockery/v3 v3.5.5
 	golang.org/x/sync v0.17.0
 	golang.org/x/vuln v1.1.4
 	gopkg.in/yaml.v3 v3.0.1
@@ -68,7 +68,7 @@ require (
 	github.com/knadh/koanf/providers/file v1.1.2 // indirect
 	github.com/knadh/koanf/providers/posflag v0.1.0 // indirect
 	github.com/knadh/koanf/providers/structs v0.1.0 // indirect
-	github.com/knadh/koanf/v2 v2.2.1 // indirect
+	github.com/knadh/koanf/v2 v2.3.0 // indirect
 	github.com/leodido/go-urn v1.4.0 // indirect
 	github.com/lestrrat-go/blackmagic v1.0.4 // indirect
 	github.com/lestrrat-go/httpcc v1.0.1 // indirect
@@ -129,4 +129,4 @@ require (
 // Replace the dependencytrack package with a local version for development
 // This is useful when you want to test changes in the dependencytrack package without pushing to a remote repository
 // This line should be removed or commented out when building for production
-replace github.com/nais/dependencytrack/pkg/dependencytrack => ./pkg/dependencytrack
+//replace github.com/nais/dependencytrack/pkg/dependencytrack => ./pkg/dependencytrack
