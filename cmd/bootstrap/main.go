@@ -27,7 +27,6 @@ type Config struct {
 	UsersFile            string `json:"users-file"`
 	GithubAdvisoryToken  string `json:"github-advisory-token"`
 	GoogleOSVEnabled     bool   `json:"google-osv-enabled"`
-	NVDApiKey            string `json:"nvd-api-key"`
 	TrivyApiToken        string `json:"trivy-token"`
 	TrivyBaseURL         string `json:"trivy-base-url"`
 	TrivyIgnoreUnfixed   bool   `json:"trivy-ignore-unfixed"`
@@ -42,7 +41,6 @@ func init() {
 	flag.StringVar(&cfg.GithubAdvisoryToken, "github-advisory-token", cfg.GithubAdvisoryToken, "github advisory mirroring token")
 	flag.StringVar(&cfg.UsersFile, "users-file", "/bootstrap/users.yaml", "file with users to create")
 	flag.BoolVar(&cfg.GoogleOSVEnabled, "google-osv-enabled", cfg.GoogleOSVEnabled, "enable google osv integration")
-	flag.StringVar(&cfg.NVDApiKey, "nvd-api-key", cfg.NVDApiKey, "nvd api key")
 	flag.StringVar(&cfg.TrivyApiToken, "trivy-api-token", cfg.TrivyApiToken, "trivy api token to use for scanning")
 	flag.StringVar(&cfg.TrivyBaseURL, "trivy-base-url", cfg.TrivyBaseURL, "trivy base url")
 	flag.BoolVar(&cfg.TrivyIgnoreUnfixed, "trivy-ignore-unfixed", cfg.TrivyIgnoreUnfixed, "ignore unfixed vulnerabilities")
@@ -136,35 +134,26 @@ func main() {
 			}
 		}
 
-		if cfg.NVDApiKey != "" {
-			switch *prop.PropertyName {
-			case "nvd.api.enabled":
-				if isAlreadySet(prop.PropertyValue, "true") {
-					log.Info("nvd api already enabled")
-					continue
-				}
-				enabled := "true"
-				prop.PropertyValue = &enabled
-				cp = append(cp, prop)
-				log.Info("added: nvd api")
-			case "nvd.api.download.feeds":
-				if isAlreadySet(prop.PropertyValue, "false") {
-					log.Info("nvd api download feeds already disabled")
-					continue
-				}
-				download := "false"
-				prop.PropertyValue = &download
-				cp = append(cp, prop)
-				log.Info("added: nvd api download feeds")
-			case "nvd.api.key":
-				if isAlreadySet(prop.PropertyValue, cfg.NVDApiKey) {
-					log.Info("nvd api key already set")
-					continue
-				}
-				prop.PropertyValue = &cfg.NVDApiKey
-				cp = append(cp, prop)
-				log.Info("added: nvd api key")
+		switch *prop.PropertyName {
+		case "nvd.api.enabled":
+			if isAlreadySet(prop.PropertyValue, "false") {
+				log.Info("nvd api already disabled")
+				continue
 			}
+			enabled := "false"
+			prop.PropertyValue = &enabled
+			cp = append(cp, prop)
+			log.Info("disabled: nvd api")
+
+		case "nvd.api.download.feeds":
+			if isAlreadySet(prop.PropertyValue, "true") {
+				log.Info("nvd api download feeds already enabled")
+				continue
+			}
+			download := "true"
+			prop.PropertyValue = &download
+			cp = append(cp, prop)
+			log.Info("added: nvd api download feeds")
 		}
 
 		if cfg.GoogleOSVEnabled {

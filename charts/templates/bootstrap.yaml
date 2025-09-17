@@ -83,7 +83,6 @@ stringData:
   DEFAULT_ADMIN_PASSWORD: {{ .Values.bootstrap.defaultAdminPassword | quote }}
   ADMIN_PASSWORD: {{ .Values.bootstrap.adminPassword | quote }}
   GITHUB_ADVISORY_TOKEN: {{ .Values.bootstrap.github.advisory_mirroring_token | quote }}
-  NVD_API_KEY: {{ .Values.bootstrap.nvd.api_key | quote }}
   TRIVY_API_TOKEN: {{ .Values.bootstrap.trivy.api_token | quote }}
 ---
 apiVersion: v1

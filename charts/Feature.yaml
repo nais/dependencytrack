@@ -98,11 +98,6 @@ values:
     config:
       type: string
       secret: true
-  bootstrap.nvd.api_key:
-    displayName: Bootstrap Mirroring NVD api key
-    config:
-      type: string
-      secret: true
   bootstrap.trivy.api_token:
     displayName: Bootstrap Trivy api token
     computed:

@@ -15,8 +15,6 @@ bootstrap:
     advisory_mirroring_token:
   google:
     osv_enabled: true
-  nvd:
-    api_key:
   users:
     - username: console
       password: todo
