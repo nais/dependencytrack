@@ -30,6 +30,8 @@ type Config struct {
 	TrivyApiToken        string `json:"trivy-token"`
 	TrivyBaseURL         string `json:"trivy-base-url"`
 	TrivyIgnoreUnfixed   bool   `json:"trivy-ignore-unfixed"`
+	OssIndexApiUsername  string `json:"oss-index-api-username"`
+	OssIndexApiToken     string `json:"oss-index-api-token"`
 }
 
 func init() {
@@ -44,6 +46,8 @@ func init() {
 	flag.StringVar(&cfg.TrivyApiToken, "trivy-api-token", cfg.TrivyApiToken, "trivy api token to use for scanning")
 	flag.StringVar(&cfg.TrivyBaseURL, "trivy-base-url", cfg.TrivyBaseURL, "trivy base url")
 	flag.BoolVar(&cfg.TrivyIgnoreUnfixed, "trivy-ignore-unfixed", cfg.TrivyIgnoreUnfixed, "ignore unfixed vulnerabilities")
+	flag.StringVar(&cfg.OssIndexApiUsername, "oss-index-api-username", cfg.OssIndexApiUsername, "oss index username")
+	flag.StringVar(&cfg.OssIndexApiToken, "oss-index-api-token", cfg.OssIndexApiToken, "oss index token")
 }
 
 func main() {
@@ -221,6 +225,33 @@ func main() {
 				prop.PropertyValue = &cfg.FrontendBaseUrl
 				cp = append(cp, prop)
 				log.Info("added: general base url")
+			}
+		}
+
+		if cfg.OssIndexApiUsername != "" && cfg.OssIndexApiToken != "" {
+			switch *prop.PropertyName {
+			case "ossindex.enabled":
+				if isAlreadySet(prop.PropertyValue, "true") {
+					log.Info("oss index integration already enabled")
+					continue
+				}
+				enabled := "true"
+				prop.PropertyValue = &enabled
+				cp = append(cp, prop)
+				log.Info("added: oss index integration")
+			case "ossindex.api.username":
+				if isAlreadySet(prop.PropertyValue, cfg.OssIndexApiUsername) {
+					log.Info("oss index username already set")
+					continue
+				}
+				prop.PropertyValue = &cfg.OssIndexApiUsername
+				cp = append(cp, prop)
+				log.Info("added: oss index username")
+			case "ossindex.api.token":
+				// we cant check if the token is already set, so we just set it
+				prop.PropertyValue = &cfg.OssIndexApiToken
+				cp = append(cp, prop)
+				log.Info("added: oss index token")
 			}
 		}
 	}

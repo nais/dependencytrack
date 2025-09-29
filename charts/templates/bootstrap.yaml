@@ -84,6 +84,8 @@ stringData:
   ADMIN_PASSWORD: {{ .Values.bootstrap.adminPassword | quote }}
   GITHUB_ADVISORY_TOKEN: {{ .Values.bootstrap.github.advisory_mirroring_token | quote }}
   TRIVY_API_TOKEN: {{ .Values.bootstrap.trivy.api_token | quote }}
+  OSS_INDEX_API_USERNAME: {{ .Values.bootstrap.oss_index.username | quote }}
+  OSS_INDEX_API_TOKEN: {{ .Values.bootstrap.oss_index.token | quote }}
 ---
 apiVersion: v1
 kind: Secret

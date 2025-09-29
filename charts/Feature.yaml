@@ -137,6 +137,15 @@ values:
     displayName: Bootstrap Google OSV enabled
     config:
       type: bool
+  bootstrap.oss_index.username:
+    displayName: Bootstrap OSS Index username
+    config:
+      type: string
+  bootstrap.oss_index.token:
+    displayName: Bootstrap OSS Index token
+    config:
+      type: string
+      secret: true
 
   # metrics Config
   metrics.image.tag:

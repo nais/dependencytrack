@@ -22,6 +22,9 @@ bootstrap:
     ignore_unfixed: true
     api_token:
     base_url: http://dependencytrack-trivy:4954
+  oss_index:
+    username:
+    token:
 
 backend:
   logLevel: INFO
