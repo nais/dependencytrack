@@ -5,15 +5,15 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Project** | **string** |  | 
-**ProjectName** | Pointer to **string** |  | [optional] 
-**ProjectVersion** | Pointer to **string** |  | [optional] 
+**ProjectName** | **string** |  | 
+**ProjectVersion** | **string** |  | 
 **Vex** | **string** |  | 
 
 ## Methods
 
 ### NewVexSubmitRequest
 
-`func NewVexSubmitRequest(project string, vex string, ) *VexSubmitRequest`
+`func NewVexSubmitRequest(project string, projectName string, projectVersion string, vex string, ) *VexSubmitRequest`
 
 NewVexSubmitRequest instantiates a new VexSubmitRequest object
 This constructor will assign default values to properties that have it defined,
@@ -67,11 +67,6 @@ and a boolean to check if the value has been set.
 
 SetProjectName sets ProjectName field to given value.
 
-### HasProjectName
-
-`func (o *VexSubmitRequest) HasProjectName() bool`
-
-HasProjectName returns a boolean if a field has been set.
 
 ### GetProjectVersion
 
@@ -92,11 +87,6 @@ and a boolean to check if the value has been set.
 
 SetProjectVersion sets ProjectVersion field to given value.
 
-### HasProjectVersion
-
-`func (o *VexSubmitRequest) HasProjectVersion() bool`
-
-HasProjectVersion returns a boolean if a field has been set.
 
 ### GetVex
 

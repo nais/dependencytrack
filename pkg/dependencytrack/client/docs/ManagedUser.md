@@ -4,7 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Username** | Pointer to **string** |  | [optional] 
+**Username** | **string** |  | 
 **LastPasswordChange** | **int64** |  | 
 **Fullname** | Pointer to **string** |  | [optional] 
 **Email** | Pointer to **string** |  | [optional] 
@@ -20,7 +20,7 @@ Name | Type | Description | Notes
 
 ### NewManagedUser
 
-`func NewManagedUser(lastPasswordChange int64, ) *ManagedUser`
+`func NewManagedUser(username string, lastPasswordChange int64, ) *ManagedUser`
 
 NewManagedUser instantiates a new ManagedUser object
 This constructor will assign default values to properties that have it defined,
@@ -54,11 +54,6 @@ and a boolean to check if the value has been set.
 
 SetUsername sets Username field to given value.
 
-### HasUsername
-
-`func (o *ManagedUser) HasUsername() bool`
-
-HasUsername returns a boolean if a field has been set.
 
 ### GetLastPasswordChange
 

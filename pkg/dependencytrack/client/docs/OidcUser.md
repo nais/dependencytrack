@@ -4,7 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Username** | Pointer to **string** |  | [optional] 
+**Username** | **string** |  | 
 **SubjectIdentifier** | Pointer to **string** |  | [optional] 
 **Email** | Pointer to **string** |  | [optional] 
 **Teams** | Pointer to [**[]Team**](Team.md) |  | [optional] 
@@ -14,7 +14,7 @@ Name | Type | Description | Notes
 
 ### NewOidcUser
 
-`func NewOidcUser() *OidcUser`
+`func NewOidcUser(username string, ) *OidcUser`
 
 NewOidcUser instantiates a new OidcUser object
 This constructor will assign default values to properties that have it defined,
@@ -48,11 +48,6 @@ and a boolean to check if the value has been set.
 
 SetUsername sets Username field to given value.
 
-### HasUsername
-
-`func (o *OidcUser) HasUsername() bool`
-
-HasUsername returns a boolean if a field has been set.
 
 ### GetSubjectIdentifier
 

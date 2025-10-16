@@ -6,7 +6,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Provider** | Pointer to [**OrganizationalEntity**](OrganizationalEntity.md) |  | [optional] 
 **Group** | Pointer to **string** |  | [optional] 
-**Name** | Pointer to **string** |  | [optional] 
+**Name** | **string** |  | 
 **Version** | Pointer to **string** |  | [optional] 
 **Description** | Pointer to **string** |  | [optional] 
 **Endpoints** | Pointer to **[]string** |  | [optional] 
@@ -27,7 +27,7 @@ Name | Type | Description | Notes
 
 ### NewServiceComponent
 
-`func NewServiceComponent(project Project, uuid string, ) *ServiceComponent`
+`func NewServiceComponent(name string, project Project, uuid string, ) *ServiceComponent`
 
 NewServiceComponent instantiates a new ServiceComponent object
 This constructor will assign default values to properties that have it defined,
@@ -111,11 +111,6 @@ and a boolean to check if the value has been set.
 
 SetName sets Name field to given value.
 
-### HasName
-
-`func (o *ServiceComponent) HasName() bool`
-
-HasName returns a boolean if a field has been set.
 
 ### GetVersion
 

@@ -117,7 +117,7 @@ import (
 )
 
 func main() {
-	ldapUser := *openapiclient.NewLdapUser() // LdapUser |  (optional)
+	ldapUser := *openapiclient.NewLdapUser("Username_example", "Dn_example") // LdapUser |  (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
@@ -183,7 +183,7 @@ import (
 )
 
 func main() {
-	managedUser := *openapiclient.NewManagedUser(int64(123)) // ManagedUser |  (optional)
+	managedUser := *openapiclient.NewManagedUser("Username_example", int64(123)) // ManagedUser |  (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
@@ -249,7 +249,7 @@ import (
 )
 
 func main() {
-	oidcUser := *openapiclient.NewOidcUser() // OidcUser |  (optional)
+	oidcUser := *openapiclient.NewOidcUser("Username_example") // OidcUser |  (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
@@ -315,7 +315,7 @@ import (
 )
 
 func main() {
-	ldapUser := *openapiclient.NewLdapUser() // LdapUser |  (optional)
+	ldapUser := *openapiclient.NewLdapUser("Username_example", "Dn_example") // LdapUser |  (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
@@ -379,7 +379,7 @@ import (
 )
 
 func main() {
-	managedUser := *openapiclient.NewManagedUser(int64(123)) // ManagedUser |  (optional)
+	managedUser := *openapiclient.NewManagedUser("Username_example", int64(123)) // ManagedUser |  (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
@@ -443,7 +443,7 @@ import (
 )
 
 func main() {
-	oidcUser := *openapiclient.NewOidcUser() // OidcUser |  (optional)
+	oidcUser := *openapiclient.NewOidcUser("Username_example") // OidcUser |  (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
@@ -891,7 +891,7 @@ import (
 )
 
 func main() {
-	managedUser := *openapiclient.NewManagedUser(int64(123)) // ManagedUser |  (optional)
+	managedUser := *openapiclient.NewManagedUser("Username_example", int64(123)) // ManagedUser |  (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
@@ -955,7 +955,7 @@ import (
 )
 
 func main() {
-	managedUser := *openapiclient.NewManagedUser(int64(123)) // ManagedUser |  (optional)
+	managedUser := *openapiclient.NewManagedUser("Username_example", int64(123)) // ManagedUser |  (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)

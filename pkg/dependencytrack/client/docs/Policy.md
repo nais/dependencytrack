@@ -4,9 +4,9 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Name** | Pointer to **string** |  | [optional] 
-**Operator** | Pointer to **string** |  | [optional] 
-**ViolationState** | Pointer to **string** |  | [optional] 
+**Name** | **string** |  | 
+**Operator** | **string** |  | 
+**ViolationState** | **string** |  | 
 **PolicyConditions** | Pointer to [**[]PolicyCondition**](PolicyCondition.md) |  | [optional] 
 **Projects** | Pointer to [**[]Project**](Project.md) |  | [optional] 
 **Tags** | Pointer to [**[]Tag**](Tag.md) |  | [optional] 
@@ -19,7 +19,7 @@ Name | Type | Description | Notes
 
 ### NewPolicy
 
-`func NewPolicy(uuid string, ) *Policy`
+`func NewPolicy(name string, operator string, violationState string, uuid string, ) *Policy`
 
 NewPolicy instantiates a new Policy object
 This constructor will assign default values to properties that have it defined,
@@ -53,11 +53,6 @@ and a boolean to check if the value has been set.
 
 SetName sets Name field to given value.
 
-### HasName
-
-`func (o *Policy) HasName() bool`
-
-HasName returns a boolean if a field has been set.
 
 ### GetOperator
 
@@ -78,11 +73,6 @@ and a boolean to check if the value has been set.
 
 SetOperator sets Operator field to given value.
 
-### HasOperator
-
-`func (o *Policy) HasOperator() bool`
-
-HasOperator returns a boolean if a field has been set.
 
 ### GetViolationState
 
@@ -103,11 +93,6 @@ and a boolean to check if the value has been set.
 
 SetViolationState sets ViolationState field to given value.
 
-### HasViolationState
-
-`func (o *Policy) HasViolationState() bool`
-
-HasViolationState returns a boolean if a field has been set.
 
 ### GetPolicyConditions
 

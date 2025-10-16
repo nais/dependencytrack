@@ -228,7 +228,19 @@ func main() {
 			}
 		}
 
-		if cfg.OssIndexApiUsername != "" && cfg.OssIndexApiToken != "" {
+		if cfg.OssIndexApiUsername == "" || cfg.OssIndexApiToken == "" {
+			switch *prop.PropertyName {
+			case "ossindex.enabled":
+				if isAlreadySet(prop.PropertyValue, "false") {
+					log.Info("oss index integration already disabled")
+					continue
+				}
+				enabled := "false"
+				prop.PropertyValue = &enabled
+				cp = append(cp, prop)
+				log.Info("disabled: oss index integration")
+			}
+		} else {
 			switch *prop.PropertyName {
 			case "ossindex.enabled":
 				if isAlreadySet(prop.PropertyValue, "true") {

@@ -5,8 +5,8 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Type** | **string** |  | 
-**Identifier** | Pointer to **string** |  | [optional] 
-**Url** | Pointer to **string** |  | [optional] 
+**Identifier** | **string** |  | 
+**Url** | **string** |  | 
 **ResolutionOrder** | **int32** |  | 
 **Enabled** | **bool** |  | 
 **Internal** | **bool** |  | 
@@ -19,7 +19,7 @@ Name | Type | Description | Notes
 
 ### NewRepository
 
-`func NewRepository(type_ string, resolutionOrder int32, enabled bool, internal bool, uuid string, ) *Repository`
+`func NewRepository(type_ string, identifier string, url string, resolutionOrder int32, enabled bool, internal bool, uuid string, ) *Repository`
 
 NewRepository instantiates a new Repository object
 This constructor will assign default values to properties that have it defined,
@@ -73,11 +73,6 @@ and a boolean to check if the value has been set.
 
 SetIdentifier sets Identifier field to given value.
 
-### HasIdentifier
-
-`func (o *Repository) HasIdentifier() bool`
-
-HasIdentifier returns a boolean if a field has been set.
 
 ### GetUrl
 
@@ -98,11 +93,6 @@ and a boolean to check if the value has been set.
 
 SetUrl sets Url field to given value.
 
-### HasUrl
-
-`func (o *Repository) HasUrl() bool`
-
-HasUrl returns a boolean if a field has been set.
 
 ### GetResolutionOrder
 
