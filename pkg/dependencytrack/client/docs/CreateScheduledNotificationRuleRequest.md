@@ -4,7 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Name** | Pointer to **string** |  | [optional] 
+**Name** | **string** |  | 
 **Scope** | **string** |  | 
 **NotificationLevel** | **string** |  | 
 **Publisher** | [**Publisher**](Publisher.md) |  | 
@@ -13,7 +13,7 @@ Name | Type | Description | Notes
 
 ### NewCreateScheduledNotificationRuleRequest
 
-`func NewCreateScheduledNotificationRuleRequest(scope string, notificationLevel string, publisher Publisher, ) *CreateScheduledNotificationRuleRequest`
+`func NewCreateScheduledNotificationRuleRequest(name string, scope string, notificationLevel string, publisher Publisher, ) *CreateScheduledNotificationRuleRequest`
 
 NewCreateScheduledNotificationRuleRequest instantiates a new CreateScheduledNotificationRuleRequest object
 This constructor will assign default values to properties that have it defined,
@@ -47,11 +47,6 @@ and a boolean to check if the value has been set.
 
 SetName sets Name field to given value.
 
-### HasName
-
-`func (o *CreateScheduledNotificationRuleRequest) HasName() bool`
-
-HasName returns a boolean if a field has been set.
 
 ### GetScope
 

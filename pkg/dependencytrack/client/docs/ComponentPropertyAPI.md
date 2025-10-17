@@ -32,7 +32,7 @@ import (
 
 func main() {
 	uuid := "38400000-8cf0-11bd-b23e-10b96e4ef00d" // string | The UUID of the component to create a property for
-	componentProperty := *openapiclient.NewComponentProperty("PropertyType_example", "Uuid_example") // ComponentProperty |  (optional)
+	componentProperty := *openapiclient.NewComponentProperty("PropertyName_example", "PropertyType_example", "Uuid_example") // ComponentProperty |  (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)

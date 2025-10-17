@@ -34,7 +34,7 @@ import (
 )
 
 func main() {
-	repository := *openapiclient.NewRepository("Type_example", int32(123), false, false, "Uuid_example") // Repository |  (optional)
+	repository := *openapiclient.NewRepository("Type_example", "Identifier_example", "Url_example", int32(123), false, false, "Uuid_example") // Repository |  (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
@@ -390,7 +390,7 @@ import (
 )
 
 func main() {
-	repository := *openapiclient.NewRepository("Type_example", int32(123), false, false, "Uuid_example") // Repository |  (optional)
+	repository := *openapiclient.NewRepository("Type_example", "Identifier_example", "Url_example", int32(123), false, false, "Uuid_example") // Repository |  (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)

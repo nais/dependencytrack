@@ -5,7 +5,7 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **GroupName** | Pointer to **string** |  | [optional] 
-**PropertyName** | Pointer to **string** |  | [optional] 
+**PropertyName** | **string** |  | 
 **PropertyValue** | Pointer to **string** |  | [optional] 
 **PropertyType** | **string** |  | 
 **Description** | Pointer to **string** |  | [optional] 
@@ -15,7 +15,7 @@ Name | Type | Description | Notes
 
 ### NewComponentProperty
 
-`func NewComponentProperty(propertyType string, uuid string, ) *ComponentProperty`
+`func NewComponentProperty(propertyName string, propertyType string, uuid string, ) *ComponentProperty`
 
 NewComponentProperty instantiates a new ComponentProperty object
 This constructor will assign default values to properties that have it defined,
@@ -74,11 +74,6 @@ and a boolean to check if the value has been set.
 
 SetPropertyName sets PropertyName field to given value.
 
-### HasPropertyName
-
-`func (o *ComponentProperty) HasPropertyName() bool`
-
-HasPropertyName returns a boolean if a field has been set.
 
 ### GetPropertyValue
 

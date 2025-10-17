@@ -5,7 +5,7 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Uuid** | **string** |  | 
-**Name** | Pointer to **string** |  | [optional] 
+**Name** | **string** |  | 
 **ApiKeys** | Pointer to [**[]ApiKey**](ApiKey.md) |  | [optional] 
 **LdapUsers** | Pointer to [**[]LdapUser**](LdapUser.md) |  | [optional] 
 **ManagedUsers** | Pointer to [**[]ManagedUser**](ManagedUser.md) |  | [optional] 
@@ -18,7 +18,7 @@ Name | Type | Description | Notes
 
 ### NewTeam
 
-`func NewTeam(uuid string, ) *Team`
+`func NewTeam(uuid string, name string, ) *Team`
 
 NewTeam instantiates a new Team object
 This constructor will assign default values to properties that have it defined,
@@ -72,11 +72,6 @@ and a boolean to check if the value has been set.
 
 SetName sets Name field to given value.
 
-### HasName
-
-`func (o *Team) HasName() bool`
-
-HasName returns a boolean if a field has been set.
 
 ### GetApiKeys
 

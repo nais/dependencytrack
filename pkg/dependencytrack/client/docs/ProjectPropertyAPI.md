@@ -33,7 +33,7 @@ import (
 
 func main() {
 	uuid := "38400000-8cf0-11bd-b23e-10b96e4ef00d" // string | The UUID of the project to create a property for
-	projectProperty := *openapiclient.NewProjectProperty("PropertyType_example") // ProjectProperty |  (optional)
+	projectProperty := *openapiclient.NewProjectProperty("GroupName_example", "PropertyName_example", "PropertyType_example") // ProjectProperty |  (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
@@ -105,7 +105,7 @@ import (
 
 func main() {
 	uuid := "38400000-8cf0-11bd-b23e-10b96e4ef00d" // string | The UUID of the project to delete a property from
-	projectProperty := *openapiclient.NewProjectProperty("PropertyType_example") // ProjectProperty |  (optional)
+	projectProperty := *openapiclient.NewProjectProperty("GroupName_example", "PropertyName_example", "PropertyType_example") // ProjectProperty |  (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
@@ -245,7 +245,7 @@ import (
 
 func main() {
 	uuid := "38400000-8cf0-11bd-b23e-10b96e4ef00d" // string | The UUID of the project to create a property for
-	projectProperty := *openapiclient.NewProjectProperty("PropertyType_example") // ProjectProperty |  (optional)
+	projectProperty := *openapiclient.NewProjectProperty("GroupName_example", "PropertyName_example", "PropertyType_example") // ProjectProperty |  (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)

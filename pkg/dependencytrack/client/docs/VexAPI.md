@@ -103,7 +103,7 @@ import (
 )
 
 func main() {
-	vexSubmitRequest := *openapiclient.NewVexSubmitRequest("Project_example", "Vex_example") // VexSubmitRequest |  (optional)
+	vexSubmitRequest := *openapiclient.NewVexSubmitRequest("Project_example", "ProjectName_example", "ProjectVersion_example", "Vex_example") // VexSubmitRequest |  (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)

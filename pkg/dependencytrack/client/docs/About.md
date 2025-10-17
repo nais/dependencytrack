@@ -10,6 +10,7 @@ Name | Type | Description | Notes
 **Uuid** | Pointer to **string** |  | [optional] 
 **Application** | Pointer to **string** |  | [optional] 
 **Framework** | Pointer to [**Framework**](Framework.md) |  | [optional] 
+**ProviderData** | Pointer to **map[string]map[string]interface{}** |  | [optional] 
 
 ## Methods
 
@@ -179,6 +180,31 @@ SetFramework sets Framework field to given value.
 `func (o *About) HasFramework() bool`
 
 HasFramework returns a boolean if a field has been set.
+
+### GetProviderData
+
+`func (o *About) GetProviderData() map[string]map[string]interface{}`
+
+GetProviderData returns the ProviderData field if non-nil, zero value otherwise.
+
+### GetProviderDataOk
+
+`func (o *About) GetProviderDataOk() (*map[string]map[string]interface{}, bool)`
+
+GetProviderDataOk returns a tuple with the ProviderData field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetProviderData
+
+`func (o *About) SetProviderData(v map[string]map[string]interface{})`
+
+SetProviderData sets ProviderData field to given value.
+
+### HasProviderData
+
+`func (o *About) HasProviderData() bool`
+
+HasProviderData returns a boolean if a field has been set.
 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

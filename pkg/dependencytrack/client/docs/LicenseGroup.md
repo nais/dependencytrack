@@ -4,7 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Name** | Pointer to **string** |  | [optional] 
+**Name** | **string** |  | 
 **Licenses** | Pointer to [**[]License**](License.md) |  | [optional] 
 **RiskWeight** | Pointer to **int32** |  | [optional] 
 **Uuid** | **string** |  | 
@@ -13,7 +13,7 @@ Name | Type | Description | Notes
 
 ### NewLicenseGroup
 
-`func NewLicenseGroup(uuid string, ) *LicenseGroup`
+`func NewLicenseGroup(name string, uuid string, ) *LicenseGroup`
 
 NewLicenseGroup instantiates a new LicenseGroup object
 This constructor will assign default values to properties that have it defined,
@@ -47,11 +47,6 @@ and a boolean to check if the value has been set.
 
 SetName sets Name field to given value.
 
-### HasName
-
-`func (o *LicenseGroup) HasName() bool`
-
-HasName returns a boolean if a field has been set.
 
 ### GetLicenses
 

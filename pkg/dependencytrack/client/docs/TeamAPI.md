@@ -100,7 +100,7 @@ import (
 )
 
 func main() {
-	team := *openapiclient.NewTeam("Uuid_example") // Team |  (optional)
+	team := *openapiclient.NewTeam("Uuid_example", "Name_example") // Team |  (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
@@ -234,7 +234,7 @@ import (
 )
 
 func main() {
-	team := *openapiclient.NewTeam("Uuid_example") // Team |  (optional)
+	team := *openapiclient.NewTeam("Uuid_example", "Name_example") // Team |  (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
@@ -700,7 +700,7 @@ import (
 )
 
 func main() {
-	team := *openapiclient.NewTeam("Uuid_example") // Team |  (optional)
+	team := *openapiclient.NewTeam("Uuid_example", "Name_example") // Team |  (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)

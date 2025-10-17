@@ -66,7 +66,7 @@ func (c *managementClient) ChangeAdminPassword(ctx context.Context, oldPassword,
 func (c *managementClient) CreateAdminUser(ctx context.Context, username, password string, teamUuid string) error {
 	return c.withAuthContext(ctx, func(tokenCtx context.Context) error {
 		user := client.ManagedUser{
-			Username:            stringPtr(username),
+			Username:            username,
 			NewPassword:         stringPtr(password),
 			ConfirmPassword:     stringPtr(password),
 			Fullname:            stringPtr(username),
@@ -86,7 +86,7 @@ func (c *managementClient) CreateAdminUser(ctx context.Context, username, passwo
 			}
 		}
 
-		_, resp, err = c.client.UserAPI.AddTeamToUser(tokenCtx, *mu.Username).IdentifiableObject(
+		_, resp, err = c.client.UserAPI.AddTeamToUser(tokenCtx, mu.Username).IdentifiableObject(
 			client.IdentifiableObject{
 				Uuid: stringPtr(teamUuid),
 			}).Execute()
@@ -118,7 +118,7 @@ func (c *managementClient) CreateAdminUsers(ctx context.Context, users []*AdminU
 func (c *managementClient) RemoveAdminUser(ctx context.Context, username string) error {
 	return c.withAuthContext(ctx, func(tokenCtx context.Context) error {
 		resp, err := c.client.UserAPI.DeleteManagedUser(tokenCtx).ManagedUser(client.ManagedUser{
-			Username: stringPtr(username),
+			Username: username,
 		}).Execute()
 		if err != nil {
 			if resp != nil && resp.StatusCode != http.StatusNotFound {
@@ -173,7 +173,7 @@ func (c *managementClient) GetOidcUser(ctx context.Context, email string) (*User
 
 		var user *User
 		for _, u := range users {
-			if u.Username != nil && *u.Username == email {
+			if u.Username != "" && u.Username == email {
 				user = parseUser(u)
 				break
 			}
@@ -185,7 +185,7 @@ func (c *managementClient) GetOidcUser(ctx context.Context, email string) (*User
 func (c *managementClient) CreateOidcUser(ctx context.Context, email string) error {
 	return c.withAuthContext(ctx, func(tokenCtx context.Context) error {
 		user := client.OidcUser{
-			Username: stringPtr(email),
+			Username: email,
 			Email:    stringPtr(email),
 		}
 
@@ -206,7 +206,7 @@ func (c *managementClient) CreateOidcUser(ctx context.Context, email string) err
 func (c *managementClient) DeleteManagedUser(ctx context.Context, username string) error {
 	return c.withAuthContext(ctx, func(tokenCtx context.Context) error {
 		resp, err := c.client.UserAPI.DeleteManagedUser(tokenCtx).ManagedUser(client.ManagedUser{
-			Username: stringPtr(username),
+			Username: username,
 		}).Execute()
 		if err != nil {
 			if resp != nil && resp.StatusCode != http.StatusNotFound {
@@ -223,7 +223,7 @@ func (c *managementClient) DeleteManagedUser(ctx context.Context, username strin
 func (c *managementClient) DeleteOidcUser(ctx context.Context, email string) error {
 	return c.withAuthContext(ctx, func(tokenCtx context.Context) error {
 		resp, err := c.client.UserAPI.DeleteOidcUser(tokenCtx).OidcUser(client.OidcUser{
-			Username: stringPtr(email),
+			Username: email,
 		}).Execute()
 		if err != nil {
 			if resp != nil && resp.StatusCode != http.StatusNotFound {
@@ -261,11 +261,11 @@ func (c *managementClient) DeleteUserMembership(ctx context.Context, uuid, usern
 }
 
 func parseUser(users client.OidcUser) *User {
-	if users.Username == nil {
+	if users.Username == "" {
 		return &User{}
 	}
 	return &User{
-		Username: SafeString(users.Username),
+		Username: users.Username,
 		Email:    SafeString(users.Email),
 	}
 }

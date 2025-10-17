@@ -32,7 +32,7 @@ import (
 
 func main() {
 	uuid := "38400000-8cf0-11bd-b23e-10b96e4ef00d" // string | The UUID of the policy
-	policyCondition := *openapiclient.NewPolicyCondition("Uuid_example") // PolicyCondition |  (optional)
+	policyCondition := *openapiclient.NewPolicyCondition("Operator_example", "Subject_example", "Value_example", "Uuid_example") // PolicyCondition |  (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
@@ -171,7 +171,7 @@ import (
 )
 
 func main() {
-	policyCondition := *openapiclient.NewPolicyCondition("Uuid_example") // PolicyCondition |  (optional)
+	policyCondition := *openapiclient.NewPolicyCondition("Operator_example", "Subject_example", "Value_example", "Uuid_example") // PolicyCondition |  (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)

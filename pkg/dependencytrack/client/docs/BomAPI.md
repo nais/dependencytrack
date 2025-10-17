@@ -335,7 +335,7 @@ import (
 )
 
 func main() {
-	bomSubmitRequest := *openapiclient.NewBomSubmitRequest("38640b33-4ba9-4733-bdab-cbfc40c6f8aa", "ewogICJib21Gb3JtYXQiOiAiQ3ljbG9uZURYIiwKICAic3BlY1ZlcnNpb24iOiAiMS40IiwKICAiY29tcG9uZW50cyI6IFsKICAgIHsKICAgICAgInR5cGUiOiAibGlicmFyeSIsCiAgICAgICJuYW1lIjogImFjbWUtbGliIiwKICAgICAgInZlcnNpb24iOiAiMS4wLjAiCiAgICB9CiAgXQp9") // BomSubmitRequest | 
+	bomSubmitRequest := *openapiclient.NewBomSubmitRequest("38640b33-4ba9-4733-bdab-cbfc40c6f8aa", "Example Application", "1.0.0", "ewogICJib21Gb3JtYXQiOiAiQ3ljbG9uZURYIiwKICAic3BlY1ZlcnNpb24iOiAiMS40IiwKICAiY29tcG9uZW50cyI6IFsKICAgIHsKICAgICAgInR5cGUiOiAibGlicmFyeSIsCiAgICAgICJuYW1lIjogImFjbWUtbGliIiwKICAgICAgInZlcnNpb24iOiAiMS4wLjAiCiAgICB9CiAgXQp9") // BomSubmitRequest | 
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)

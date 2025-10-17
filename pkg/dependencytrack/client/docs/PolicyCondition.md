@@ -5,16 +5,16 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Policy** | Pointer to [**Policy**](Policy.md) |  | [optional] 
-**Operator** | Pointer to **string** |  | [optional] 
-**Subject** | Pointer to **string** |  | [optional] 
-**Value** | Pointer to **string** |  | [optional] 
+**Operator** | **string** |  | 
+**Subject** | **string** |  | 
+**Value** | **string** |  | 
 **Uuid** | **string** |  | 
 
 ## Methods
 
 ### NewPolicyCondition
 
-`func NewPolicyCondition(uuid string, ) *PolicyCondition`
+`func NewPolicyCondition(operator string, subject string, value string, uuid string, ) *PolicyCondition`
 
 NewPolicyCondition instantiates a new PolicyCondition object
 This constructor will assign default values to properties that have it defined,
@@ -73,11 +73,6 @@ and a boolean to check if the value has been set.
 
 SetOperator sets Operator field to given value.
 
-### HasOperator
-
-`func (o *PolicyCondition) HasOperator() bool`
-
-HasOperator returns a boolean if a field has been set.
 
 ### GetSubject
 
@@ -98,11 +93,6 @@ and a boolean to check if the value has been set.
 
 SetSubject sets Subject field to given value.
 
-### HasSubject
-
-`func (o *PolicyCondition) HasSubject() bool`
-
-HasSubject returns a boolean if a field has been set.
 
 ### GetValue
 
@@ -123,11 +113,6 @@ and a boolean to check if the value has been set.
 
 SetValue sets Value field to given value.
 
-### HasValue
-
-`func (o *PolicyCondition) HasValue() bool`
-
-HasValue returns a boolean if a field has been set.
 
 ### GetUuid
 

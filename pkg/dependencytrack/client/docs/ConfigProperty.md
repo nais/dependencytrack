@@ -4,8 +4,8 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**GroupName** | Pointer to **string** |  | [optional] 
-**PropertyName** | Pointer to **string** |  | [optional] 
+**GroupName** | **string** |  | 
+**PropertyName** | **string** |  | 
 **PropertyValue** | Pointer to **string** |  | [optional] 
 **PropertyType** | **string** |  | 
 **Description** | Pointer to **string** |  | [optional] 
@@ -14,7 +14,7 @@ Name | Type | Description | Notes
 
 ### NewConfigProperty
 
-`func NewConfigProperty(propertyType string, ) *ConfigProperty`
+`func NewConfigProperty(groupName string, propertyName string, propertyType string, ) *ConfigProperty`
 
 NewConfigProperty instantiates a new ConfigProperty object
 This constructor will assign default values to properties that have it defined,
@@ -48,11 +48,6 @@ and a boolean to check if the value has been set.
 
 SetGroupName sets GroupName field to given value.
 
-### HasGroupName
-
-`func (o *ConfigProperty) HasGroupName() bool`
-
-HasGroupName returns a boolean if a field has been set.
 
 ### GetPropertyName
 
@@ -73,11 +68,6 @@ and a boolean to check if the value has been set.
 
 SetPropertyName sets PropertyName field to given value.
 
-### HasPropertyName
-
-`func (o *ConfigProperty) HasPropertyName() bool`
-
-HasPropertyName returns a boolean if a field has been set.
 
 ### GetPropertyValue
 

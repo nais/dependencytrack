@@ -5,8 +5,8 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Project** | **string** |  | 
-**ProjectName** | Pointer to **string** |  | [optional] 
-**ProjectVersion** | Pointer to **string** |  | [optional] 
+**ProjectName** | **string** |  | 
+**ProjectVersion** | **string** |  | 
 **ProjectTags** | Pointer to [**[]Tag**](Tag.md) | Overwrite project tags. Modifying the tags of an existing project requires the PORTFOLIO_MANAGEMENT permission. | [optional] 
 **AutoCreate** | Pointer to **bool** |  | [optional] 
 **ParentUUID** | Pointer to **string** |  | [optional] 
@@ -19,7 +19,7 @@ Name | Type | Description | Notes
 
 ### NewBomSubmitRequest
 
-`func NewBomSubmitRequest(project string, bom string, ) *BomSubmitRequest`
+`func NewBomSubmitRequest(project string, projectName string, projectVersion string, bom string, ) *BomSubmitRequest`
 
 NewBomSubmitRequest instantiates a new BomSubmitRequest object
 This constructor will assign default values to properties that have it defined,
@@ -73,11 +73,6 @@ and a boolean to check if the value has been set.
 
 SetProjectName sets ProjectName field to given value.
 
-### HasProjectName
-
-`func (o *BomSubmitRequest) HasProjectName() bool`
-
-HasProjectName returns a boolean if a field has been set.
 
 ### GetProjectVersion
 
@@ -98,11 +93,6 @@ and a boolean to check if the value has been set.
 
 SetProjectVersion sets ProjectVersion field to given value.
 
-### HasProjectVersion
-
-`func (o *BomSubmitRequest) HasProjectVersion() bool`
-
-HasProjectVersion returns a boolean if a field has been set.
 
 ### GetProjectTags
 

@@ -4,8 +4,8 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Username** | Pointer to **string** |  | [optional] 
-**Dn** | Pointer to **string** |  | [optional] 
+**Username** | **string** |  | 
+**Dn** | **string** |  | 
 **Teams** | Pointer to [**[]Team**](Team.md) |  | [optional] 
 **Email** | Pointer to **string** |  | [optional] 
 **Permissions** | Pointer to [**[]Permission**](Permission.md) |  | [optional] 
@@ -14,7 +14,7 @@ Name | Type | Description | Notes
 
 ### NewLdapUser
 
-`func NewLdapUser() *LdapUser`
+`func NewLdapUser(username string, dn string, ) *LdapUser`
 
 NewLdapUser instantiates a new LdapUser object
 This constructor will assign default values to properties that have it defined,
@@ -48,11 +48,6 @@ and a boolean to check if the value has been set.
 
 SetUsername sets Username field to given value.
 
-### HasUsername
-
-`func (o *LdapUser) HasUsername() bool`
-
-HasUsername returns a boolean if a field has been set.
 
 ### GetDn
 
@@ -73,11 +68,6 @@ and a boolean to check if the value has been set.
 
 SetDn sets Dn field to given value.
 
-### HasDn
-
-`func (o *LdapUser) HasDn() bool`
-
-HasDn returns a boolean if a field has been set.
 
 ### GetTeams
 

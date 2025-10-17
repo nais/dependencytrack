@@ -8,7 +8,7 @@ Name | Type | Description | Notes
 **Publisher** | Pointer to **string** |  | [optional] 
 **Supplier** | Pointer to [**OrganizationalEntity**](OrganizationalEntity.md) |  | [optional] 
 **Group** | Pointer to **string** |  | [optional] 
-**Name** | Pointer to **string** |  | [optional] 
+**Name** | **string** |  | 
 **Version** | Pointer to **string** |  | [optional] 
 **Classifier** | **string** |  | 
 **Filename** | Pointer to **string** |  | [optional] 
@@ -56,7 +56,7 @@ Name | Type | Description | Notes
 
 ### NewComponent
 
-`func NewComponent(classifier string, project Project, uuid string, ) *Component`
+`func NewComponent(name string, classifier string, project Project, uuid string, ) *Component`
 
 NewComponent instantiates a new Component object
 This constructor will assign default values to properties that have it defined,
@@ -190,11 +190,6 @@ and a boolean to check if the value has been set.
 
 SetName sets Name field to given value.
 
-### HasName
-
-`func (o *Component) HasName() bool`
-
-HasName returns a boolean if a field has been set.
 
 ### GetVersion
 

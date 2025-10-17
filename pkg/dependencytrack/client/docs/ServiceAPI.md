@@ -34,7 +34,7 @@ import (
 
 func main() {
 	uuid := "38400000-8cf0-11bd-b23e-10b96e4ef00d" // string | The UUID of the project
-	serviceComponent := *openapiclient.NewServiceComponent(*openapiclient.NewProject("Uuid_example", int64(123)), "Uuid_example") // ServiceComponent |  (optional)
+	serviceComponent := *openapiclient.NewServiceComponent("Name_example", *openapiclient.NewProject("Name_example", "Uuid_example", int64(123)), "Uuid_example") // ServiceComponent |  (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
@@ -325,7 +325,7 @@ import (
 )
 
 func main() {
-	serviceComponent := *openapiclient.NewServiceComponent(*openapiclient.NewProject("Uuid_example", int64(123)), "Uuid_example") // ServiceComponent |  (optional)
+	serviceComponent := *openapiclient.NewServiceComponent("Name_example", *openapiclient.NewProject("Name_example", "Uuid_example", int64(123)), "Uuid_example") // ServiceComponent |  (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
