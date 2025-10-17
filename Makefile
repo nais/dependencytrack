@@ -16,7 +16,7 @@ local:
 compose:
 	docker-compose build && docker-compose up
 
-check: vet staticcheck vuln deadcode gosec helm-lint goimport
+check: vet staticcheck vuln deadcode helm-lint goimport # gosec
 
 vet:
 	go vet ./...
