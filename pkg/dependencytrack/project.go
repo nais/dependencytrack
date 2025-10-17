@@ -173,14 +173,14 @@ func (c *dependencyTrackClient) CreateProject(ctx context.Context, name, version
 		if tags != nil {
 			clientTags = make([]client.Tag, len(tags))
 			for i, tag := range tags {
-				clientTags[i] = client.Tag{Name: &tag}
+				clientTags[i] = client.Tag{Name: tag}
 			}
 		} else {
 			clientTags = nil
 		}
 
 		req := c.client.ProjectAPI.CreateProject(tokenCtx).Project(client.Project{
-			Name:       &name,
+			Name:       name,
 			Active:     &active,
 			Classifier: &classifier,
 			Version:    &version,
@@ -222,7 +222,7 @@ func parseProject(project *client.Project) *Project {
 		Author:                 SafeString(project.Author),
 		Classifier:             SafeString(project.Classifier),
 		Group:                  SafeString(project.Group),
-		Name:                   SafeString(project.Name),
+		Name:                   project.Name,
 		LastBomImportFormat:    SafeString(project.LastBomImportFormat),
 		LastBomImport:          project.LastBomImport,
 		LastInheritedRiskScore: safeFloat64(project.LastInheritedRiskScore),
@@ -264,7 +264,7 @@ func parseTag(tags *client.Tag) Tag {
 		return Tag{}
 	}
 	return Tag{
-		Name: SafeString(tags.Name),
+		Name: tags.Name,
 	}
 }
 
