@@ -5,14 +5,14 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Type** | Pointer to **string** |  | [optional] 
-**Url** | Pointer to **string** |  | [optional] 
+**Url** | **string** |  | 
 **Comment** | Pointer to **string** |  | [optional] 
 
 ## Methods
 
 ### NewExternalReference
 
-`func NewExternalReference() *ExternalReference`
+`func NewExternalReference(url string, ) *ExternalReference`
 
 NewExternalReference instantiates a new ExternalReference object
 This constructor will assign default values to properties that have it defined,
@@ -71,11 +71,6 @@ and a boolean to check if the value has been set.
 
 SetUrl sets Url field to given value.
 
-### HasUrl
-
-`func (o *ExternalReference) HasUrl() bool`
-
-HasUrl returns a boolean if a field has been set.
 
 ### GetComment
 

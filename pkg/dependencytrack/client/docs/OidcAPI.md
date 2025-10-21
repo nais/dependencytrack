@@ -103,7 +103,7 @@ import (
 )
 
 func main() {
-	oidcGroup := *openapiclient.NewOidcGroup("Uuid_example") // OidcGroup |  (optional)
+	oidcGroup := *openapiclient.NewOidcGroup("Uuid_example", "Name_example") // OidcGroup |  (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
@@ -566,7 +566,7 @@ import (
 )
 
 func main() {
-	oidcGroup := *openapiclient.NewOidcGroup("Uuid_example") // OidcGroup |  (optional)
+	oidcGroup := *openapiclient.NewOidcGroup("Uuid_example", "Name_example") // OidcGroup |  (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)

@@ -18,8 +18,8 @@ type ConfigProperty struct {
 func (c *managementClient) ConfigPropertyAggregate(ctx context.Context, property ConfigProperty) error {
 	return c.withAuthContext(ctx, func(tokenCtx context.Context) error {
 		_, resp, err := c.client.ConfigPropertyAPI.UpdateConfigProperty(tokenCtx).ConfigProperty(client.ConfigProperty{
-			GroupName:     property.GroupName,
-			PropertyName:  property.PropertyName,
+			GroupName:     *property.GroupName,
+			PropertyName:  *property.PropertyName,
 			PropertyValue: property.PropertyValue,
 			PropertyType:  property.PropertyType,
 			Description:   property.Description,
@@ -51,8 +51,8 @@ func (c *managementClient) GetConfigProperties(ctx context.Context) ([]ConfigPro
 
 func parseConfigProperty(res client.ConfigProperty) ConfigProperty {
 	return ConfigProperty{
-		GroupName:     res.GroupName,
-		PropertyName:  res.PropertyName,
+		GroupName:     &res.GroupName,
+		PropertyName:  &res.PropertyName,
 		PropertyValue: res.PropertyValue,
 		PropertyType:  res.PropertyType,
 		Description:   res.Description,

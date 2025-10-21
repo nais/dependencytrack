@@ -322,7 +322,7 @@ import (
 )
 
 func main() {
-	createScheduledNotificationRuleRequest := *openapiclient.NewCreateScheduledNotificationRuleRequest("Scope_example", "NotificationLevel_example", *openapiclient.NewPublisher("Uuid_example")) // CreateScheduledNotificationRuleRequest |  (optional)
+	createScheduledNotificationRuleRequest := *openapiclient.NewCreateScheduledNotificationRuleRequest("Name_example", "Scope_example", "NotificationLevel_example", *openapiclient.NewPublisher("Uuid_example")) // CreateScheduledNotificationRuleRequest |  (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)

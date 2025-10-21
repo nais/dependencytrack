@@ -6,12 +6,12 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **LicenseGroups** | Pointer to [**[]LicenseGroup**](LicenseGroup.md) |  | [optional] 
 **Uuid** | **string** |  | 
-**Name** | Pointer to **string** |  | [optional] 
+**Name** | **string** |  | 
 **LicenseText** | Pointer to **string** |  | [optional] 
 **StandardLicenseTemplate** | Pointer to **string** |  | [optional] 
 **StandardLicenseHeader** | Pointer to **string** |  | [optional] 
 **LicenseComments** | Pointer to **string** |  | [optional] 
-**LicenseId** | Pointer to **string** |  | [optional] 
+**LicenseId** | **string** |  | 
 **IsOsiApproved** | Pointer to **bool** |  | [optional] 
 **IsFsfLibre** | Pointer to **bool** |  | [optional] 
 **IsDeprecatedLicenseId** | Pointer to **bool** |  | [optional] 
@@ -22,7 +22,7 @@ Name | Type | Description | Notes
 
 ### NewLicense
 
-`func NewLicense(uuid string, ) *License`
+`func NewLicense(uuid string, name string, licenseId string, ) *License`
 
 NewLicense instantiates a new License object
 This constructor will assign default values to properties that have it defined,
@@ -101,11 +101,6 @@ and a boolean to check if the value has been set.
 
 SetName sets Name field to given value.
 
-### HasName
-
-`func (o *License) HasName() bool`
-
-HasName returns a boolean if a field has been set.
 
 ### GetLicenseText
 
@@ -226,11 +221,6 @@ and a boolean to check if the value has been set.
 
 SetLicenseId sets LicenseId field to given value.
 
-### HasLicenseId
-
-`func (o *License) HasLicenseId() bool`
-
-HasLicenseId returns a boolean if a field has been set.
 
 ### GetIsOsiApproved
 

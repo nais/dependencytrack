@@ -40,7 +40,7 @@ func (c *managementClient) GetTeam(ctx context.Context, team string) (*Team, err
 		}
 
 		for _, t := range teams {
-			if *t.Name == team {
+			if t.Name == team {
 				teamDetails, err := parseTeam(&t)
 				if err != nil {
 					return nil, fmt.Errorf("failed to parse team %s: %w", team, err)
@@ -63,7 +63,7 @@ func (c *managementClient) GetTeams(ctx context.Context) ([]*Team, error) {
 		for _, team := range res {
 			teamDetails, err := parseTeam(&team)
 			if err != nil {
-				return nil, fmt.Errorf("failed to parse team %s: %w", *team.Name, err)
+				return nil, fmt.Errorf("failed to parse team %s: %w", team.Name, err)
 			}
 			teams = append(teams, teamDetails)
 		}
@@ -74,7 +74,7 @@ func (c *managementClient) GetTeams(ctx context.Context) ([]*Team, error) {
 func (c *managementClient) CreateTeam(ctx context.Context, teamName string, permissions []Permission) (*Team, error) {
 	return withAuthContextValue(c.auth, ctx, func(tokenCtx context.Context) (*Team, error) {
 		team, resp, err := c.client.TeamAPI.CreateTeam(tokenCtx).Team(client.Team{
-			Name: &teamName,
+			Name: teamName,
 		}).Execute()
 		if err != nil {
 			return nil, convertError(err, "CreateTeam", resp)
@@ -127,14 +127,14 @@ func parseTeam(team *client.Team) (*Team, error) {
 
 	parsed := &Team{
 		Uuid:      team.Uuid,
-		Name:      SafeString(team.Name),
+		Name:      team.Name,
 		OidcUsers: make([]User, 0, len(team.OidcUsers)),
 		ApiKeys:   make([]ApiKey, 0, len(team.ApiKeys)),
 	}
 
 	for _, user := range team.OidcUsers {
 		parsed.OidcUsers = append(parsed.OidcUsers, User{
-			Username: SafeString(user.Username),
+			Username: user.Username,
 			Email:    SafeString(user.Email),
 		})
 	}

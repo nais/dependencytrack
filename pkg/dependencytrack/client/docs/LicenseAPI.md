@@ -33,7 +33,7 @@ import (
 )
 
 func main() {
-	license := *openapiclient.NewLicense("Uuid_example") // License |  (optional)
+	license := *openapiclient.NewLicense("Uuid_example", "Name_example", "LicenseId_example") // License |  (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)

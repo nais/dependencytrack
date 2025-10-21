@@ -183,7 +183,7 @@ import (
 )
 
 func main() {
-	policy := *openapiclient.NewPolicy("Uuid_example") // Policy |  (optional)
+	policy := *openapiclient.NewPolicy("Name_example", "Operator_example", "ViolationState_example", "Uuid_example") // Policy |  (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
@@ -609,7 +609,7 @@ import (
 )
 
 func main() {
-	policy := *openapiclient.NewPolicy("Uuid_example") // Policy |  (optional)
+	policy := *openapiclient.NewPolicy("Name_example", "Operator_example", "ViolationState_example", "Uuid_example") // Policy |  (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)

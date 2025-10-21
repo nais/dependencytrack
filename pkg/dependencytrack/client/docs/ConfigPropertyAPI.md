@@ -166,7 +166,7 @@ import (
 )
 
 func main() {
-	configProperty := *openapiclient.NewConfigProperty("PropertyType_example") // ConfigProperty |  (optional)
+	configProperty := *openapiclient.NewConfigProperty("GroupName_example", "PropertyName_example", "PropertyType_example") // ConfigProperty |  (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
@@ -232,7 +232,7 @@ import (
 )
 
 func main() {
-	configProperty := []openapiclient.ConfigProperty{*openapiclient.NewConfigProperty("PropertyType_example")} // []ConfigProperty |  (optional)
+	configProperty := []openapiclient.ConfigProperty{*openapiclient.NewConfigProperty("GroupName_example", "PropertyName_example", "PropertyType_example")} // []ConfigProperty |  (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)

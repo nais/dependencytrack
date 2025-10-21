@@ -110,7 +110,7 @@ import (
 )
 
 func main() {
-	project := *openapiclient.NewProject("Uuid_example", int64(123)) // Project |  (optional)
+	project := *openapiclient.NewProject("Name_example", "Uuid_example", int64(123)) // Project |  (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
@@ -1117,7 +1117,7 @@ import (
 
 func main() {
 	uuid := "38400000-8cf0-11bd-b23e-10b96e4ef00d" // string | The UUID of the project to modify
-	project := *openapiclient.NewProject("Uuid_example", int64(123)) // Project |  (optional)
+	project := *openapiclient.NewProject("Name_example", "Uuid_example", int64(123)) // Project |  (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
@@ -1188,7 +1188,7 @@ import (
 )
 
 func main() {
-	project := *openapiclient.NewProject("Uuid_example", int64(123)) // Project |  (optional)
+	project := *openapiclient.NewProject("Name_example", "Uuid_example", int64(123)) // Project |  (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)

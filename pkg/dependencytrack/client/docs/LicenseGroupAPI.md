@@ -108,7 +108,7 @@ import (
 )
 
 func main() {
-	licenseGroup := *openapiclient.NewLicenseGroup("Uuid_example") // LicenseGroup |  (optional)
+	licenseGroup := *openapiclient.NewLicenseGroup("Name_example", "Uuid_example") // LicenseGroup |  (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
@@ -461,7 +461,7 @@ import (
 )
 
 func main() {
-	licenseGroup := *openapiclient.NewLicenseGroup("Uuid_example") // LicenseGroup |  (optional)
+	licenseGroup := *openapiclient.NewLicenseGroup("Name_example", "Uuid_example") // LicenseGroup |  (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
