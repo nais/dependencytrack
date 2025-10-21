@@ -80,6 +80,14 @@ spec:
           ports:
             - name: http
               containerPort: 8080
+          startupProbe:
+            httpGet:
+              path: /api/version
+              port: http
+              scheme: HTTP
+            periodSeconds: 15
+            failureThreshold: 40
+            timeoutSeconds: 5
           {{- if .Values.backend.livenessProbe.enabled }}
           livenessProbe:
             httpGet:
