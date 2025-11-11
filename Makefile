@@ -18,6 +18,10 @@ compose:
 
 check: vet staticcheck vuln deadcode helm-lint goimport # gosec
 
+tidy:
+	@echo "Running go mod tidy for all modules..."
+	find . -name go.mod -execdir go mod tidy \;
+
 vet:
 	go vet ./...
 
