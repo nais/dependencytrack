@@ -111,6 +111,17 @@ func (c *dependencyTrackClient) TriggerAnalysis(ctx context.Context, uuid string
 	})
 }
 
+// TriggerAnalysisToken triggers an analysis for a project in Dependency-Track and returns the analysis token.
+func (c *dependencyTrackClient) TriggerAnalysisToken(ctx context.Context, uuid string) (string, error) {
+	return withAuthContextValue(c.auth, ctx, func(tokenCtx context.Context) (string, error) {
+		token, resp, err := c.client.FindingAPI.AnalyzeProject(tokenCtx, uuid).Execute()
+		if err != nil {
+			return "", convertError(err, "TriggerAnalysis", resp)
+		}
+		return token.GetToken(), nil
+	})
+}
+
 func ParseFinding(finding client.Finding) (*Vulnerability, error) {
 	component, componentOk := finding.GetComponentOk()
 	if !componentOk {
@@ -183,6 +194,10 @@ func ParseFinding(finding client.Finding) (*Vulnerability, error) {
 			link = fmt.Sprintf("https://security-tracker.debian.org/tracker/%s", vulnId)
 		case "OSV":
 			link = fmt.Sprintf("https://osv.dev/vulnerability/%s", vulnId)
+		case "NPM":
+			link = fmt.Sprintf("https://www.npmjs.com/advisories/%s", vulnId)
+		case "RETIREJS":
+			link = fmt.Sprintf("https://retirejs.github.io/retire.js/%s.html", vulnId)
 		case "UNKNOWN":
 			link = fmt.Sprintf("https://security-tracker.debian.org/tracker/%s", vulnId)
 

@@ -26,6 +26,7 @@ type Client interface {
 	GetProjects(ctx context.Context, limit, offset int32) ([]Project, error)
 	IsTaskInProgress(ctx context.Context, uuid string) (bool, error)
 	TriggerAnalysis(ctx context.Context, uuid string) error
+	TriggerAnalysisToken(ctx context.Context, uuid string) (string, error)
 	UpdateFinding(ctx context.Context, request AnalysisRequest) error
 }
 
