@@ -1,6 +1,6 @@
 module github.com/nais/dependencytrack/pkg/dependencytrack
 
-go 1.25.3
+go 1.25.4
 
 require (
 	github.com/lestrrat-go/jwx/v2 v2.1.6
@@ -13,7 +13,7 @@ require (
 	github.com/goccy/go-json v0.10.5 // indirect
 	github.com/lestrrat-go/blackmagic v1.0.4 // indirect
 	github.com/lestrrat-go/httpcc v1.0.1 // indirect
-	github.com/lestrrat-go/httprc v1.0.6 // indirect
+	github.com/lestrrat-go/httprc v1.0.6 // indirect; indirectdoc
 	github.com/lestrrat-go/iter v1.0.2 // indirect
 	github.com/lestrrat-go/option v1.0.1 // indirect
 	github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2 // indirect

@@ -29,7 +29,7 @@ func TestMain(m *testing.M) {
 	log.SetFormatter(&log.TextFormatter{
 		DisableTimestamp: true,
 	})
-	baseUrl, cleanup := DependencyTrackPool("4.13.4")
+	baseUrl, cleanup := DependencyTrackPool("4.13.6-alpine")
 	cwp, err := dependencytrack.NewClient(baseUrl, "admin", "test", log.WithField("test", "client_integration_test"))
 	if err != nil {
 		log.Fatalf("Failed to create DependencyTrack client: %v", err)
@@ -365,7 +365,7 @@ func DependencyTrackPool(version string) (string, func()) {
 	}
 
 	opts := &dockertest.RunOptions{
-		Repository:   "dependencytrack/apiserver",
+		Repository:   "docker.io/dependencytrack/bundled",
 		Tag:          version,
 		ExposedPorts: []string{"8080"},
 		PortBindings: map[docker.Port][]docker.PortBinding{

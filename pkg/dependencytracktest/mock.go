@@ -700,6 +700,72 @@ func (_c *MockClient_TriggerAnalysis_Call) RunAndReturn(run func(ctx context.Con
 	return _c
 }
 
+// TriggerAnalysisToken provides a mock function for the type MockClient
+func (_mock *MockClient) TriggerAnalysisToken(ctx context.Context, uuid string) (string, error) {
+	ret := _mock.Called(ctx, uuid)
+
+	if len(ret) == 0 {
+		panic("no return value specified for TriggerAnalysisToken")
+	}
+
+	var r0 string
+	var r1 error
+	if returnFunc, ok := ret.Get(0).(func(context.Context, string) (string, error)); ok {
+		return returnFunc(ctx, uuid)
+	}
+	if returnFunc, ok := ret.Get(0).(func(context.Context, string) string); ok {
+		r0 = returnFunc(ctx, uuid)
+	} else {
+		r0 = ret.Get(0).(string)
+	}
+	if returnFunc, ok := ret.Get(1).(func(context.Context, string) error); ok {
+		r1 = returnFunc(ctx, uuid)
+	} else {
+		r1 = ret.Error(1)
+	}
+	return r0, r1
+}
+
+// MockClient_TriggerAnalysisToken_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'TriggerAnalysisToken'
+type MockClient_TriggerAnalysisToken_Call struct {
+	*mock.Call
+}
+
+// TriggerAnalysisToken is a helper method to define mock.On call
+//   - ctx context.Context
+//   - uuid string
+func (_e *MockClient_Expecter) TriggerAnalysisToken(ctx interface{}, uuid interface{}) *MockClient_TriggerAnalysisToken_Call {
+	return &MockClient_TriggerAnalysisToken_Call{Call: _e.mock.On("TriggerAnalysisToken", ctx, uuid)}
+}
+
+func (_c *MockClient_TriggerAnalysisToken_Call) Run(run func(ctx context.Context, uuid string)) *MockClient_TriggerAnalysisToken_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		var arg0 context.Context
+		if args[0] != nil {
+			arg0 = args[0].(context.Context)
+		}
+		var arg1 string
+		if args[1] != nil {
+			arg1 = args[1].(string)
+		}
+		run(
+			arg0,
+			arg1,
+		)
+	})
+	return _c
+}
+
+func (_c *MockClient_TriggerAnalysisToken_Call) Return(s string, err error) *MockClient_TriggerAnalysisToken_Call {
+	_c.Call.Return(s, err)
+	return _c
+}
+
+func (_c *MockClient_TriggerAnalysisToken_Call) RunAndReturn(run func(ctx context.Context, uuid string) (string, error)) *MockClient_TriggerAnalysisToken_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // UpdateFinding provides a mock function for the type MockClient
 func (_mock *MockClient) UpdateFinding(ctx context.Context, request dependencytrack.AnalysisRequest) error {
 	ret := _mock.Called(ctx, request)

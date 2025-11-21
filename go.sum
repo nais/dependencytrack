@@ -170,8 +170,8 @@ github.com/modern-go/reflect2 v1.0.2 h1:xBagoLtFs94CBntxluKeaWgTMpvLxC4ur3nMaC9G
 github.com/modern-go/reflect2 v1.0.2/go.mod h1:yWuevngMOJpCy52FWWMvUC8ws7m/LJsjYzDa0/r8luk=
 github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822 h1:C3w9PqII01/Oq1c1nUAm88MOHcQC9l5mIlSMApZMrHA=
 github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822/go.mod h1:+n7T8mK8HuQTcFwEeznm/DIxMOiR9yIdICNftLE1DvQ=
-github.com/nais/dependencytrack/pkg/dependencytrack v0.0.0-20251110040821-bcbd2680db78 h1:+lPTOFiL+jU7VtiHbcDzJSC2pUcpas5wQ7KGWKjT+gs=
-github.com/nais/dependencytrack/pkg/dependencytrack v0.0.0-20251110040821-bcbd2680db78/go.mod h1:5FyW5p54cOHFmXNXXeIrQV8rYEhS24MW0TfCN79z0Lg=
+github.com/nais/dependencytrack/pkg/dependencytrack v0.0.0-20251120132527-e19fc9486843 h1:l8eyoHHMfwpjiKCgPd6Do97QhEumI1LU095tl5ePaFs=
+github.com/nais/dependencytrack/pkg/dependencytrack v0.0.0-20251120132527-e19fc9486843/go.mod h1:msEMtE+ZYcEwccTSTdXKo3USgBbwjLmw8LyrfbbM7y8=
 github.com/opencontainers/go-digest v1.0.0 h1:apOUWs51W5PlhuyGyz9FCeeBIOUDA/6nW8Oi/yOhh5U=
 github.com/opencontainers/go-digest v1.0.0/go.mod h1:0JzlMkj0TRzQZfJkVvzbP0HBR3IKzErnv2BNG4W4MAM=
 github.com/opencontainers/image-spec v1.1.1 h1:y0fUlFfIZhPF1W537XOLg0/fcx6zcHCJwooC2xJA040=
@@ -239,8 +239,8 @@ github.com/twitchyliquid64/golang-asm v0.15.1 h1:SU5vSMR7hnwNxj24w34ZyCi/FmDZTkS
 github.com/twitchyliquid64/golang-asm v0.15.1/go.mod h1:a1lVb/DtPvCB8fslRZhAngC2+aY1QWCk3Cedj/Gdt08=
 github.com/ugorji/go/codec v1.3.0 h1:Qd2W2sQawAfG8XSvzwhBeoGq71zXOC/Q1E9y/wUcsUA=
 github.com/ugorji/go/codec v1.3.0/go.mod h1:pRBVtBSKl77K30Bv8R2P+cLSGaTtex6fsA2Wjqmfxj4=
-github.com/vektra/mockery/v3 v3.5.5 h1:1ExE+yqz3ytvEOe7pUH5VWIwmsYlSq+FjWPVVLdE8O4=
-github.com/vektra/mockery/v3 v3.5.5/go.mod h1:Oti3Df0WP8wwT31yuVri3QNsDeMUQU5Q4QEg8EabaBw=
+github.com/vektra/mockery/v3 v3.6.1 h1:YyqAXihdNML8y6SJnvPKYr+2HAHvBjdvqFu/fMYlX8g=
+github.com/vektra/mockery/v3 v3.6.1/go.mod h1:Oti3Df0WP8wwT31yuVri3QNsDeMUQU5Q4QEg8EabaBw=
 github.com/xeipuuv/gojsonpointer v0.0.0-20180127040702-4e3ac2762d5f/go.mod h1:N2zxlSyiKSe5eX1tZViRH5QA0qijqEDrYZiPEAiq3wU=
 github.com/xeipuuv/gojsonpointer v0.0.0-20190905194746-02993c407bfb h1:zGWFAtiMcyryUHoUjUJX0/lt1H2+i2Ka2n+D3DImSNo=
 github.com/xeipuuv/gojsonpointer v0.0.0-20190905194746-02993c407bfb/go.mod h1:N2zxlSyiKSe5eX1tZViRH5QA0qijqEDrYZiPEAiq3wU=
