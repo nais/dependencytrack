@@ -9,7 +9,7 @@ require (
 	github.com/joho/godotenv v1.5.1
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/lestrrat-go/jwx/v2 v2.1.6
-	github.com/nais/dependencytrack/pkg/dependencytrack v0.0.0-20251120132527-e19fc9486843
+	github.com/nais/dependencytrack/pkg/dependencytrack v0.0.0-20251124040753-6d7145a31dc1
 	github.com/ory/dockertest/v3 v3.12.0
 	github.com/patrickmn/go-cache v2.1.0+incompatible
 	github.com/prometheus/client_golang v1.23.2
