@@ -66,31 +66,10 @@ jobs:
           workload_identity_provider: ${{ secrets.NAIS_IO_WORKLOAD_IDENTITY_PROVIDER }}
           push: true
 
-  metrics:
-    outputs:
-      version: ${{ steps.build-push-sign-metrics.outputs.version }}
-    needs:
-      - tests
-    permissions:
-      contents: "read"
-      id-token: "write"
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # ratchet:actions/checkout@v4
-      - uses: nais/platform-build-push-sign@main # ratchet:exclude
-        id: build-push-sign-metrics
-        with:
-          name: ${{ env.NAME }}-metrics
-          dockerfile: Dockerfile.metrics
-          google_service_account: gh-${{ env.NAME }}
-          workload_identity_provider: ${{ secrets.NAIS_IO_WORKLOAD_IDENTITY_PROVIDER }}
-          push: true
-
   helm:
     runs-on: ubuntu-latest
     needs:
       - bootstrap
-      - metrics
     outputs:
       version: ${{ steps.chart-version.outputs.version }}
     permissions:
@@ -106,7 +85,6 @@ jobs:
       - name: Update values.yaml with yq
         run: |-
           yq -i '.bootstrap.image.tag = "${{ needs.bootstrap.outputs.version }}"' charts/values.yaml
-          yq -i '.metrics.image.tag = "${{ needs.metrics.outputs.version }}"' charts/values.yaml
       - name: Build Chart
         run: |-
           sed -i "s/^version: .*/version: ${{ needs.bootstrap.outputs.version }}/g" charts/Chart.yaml
