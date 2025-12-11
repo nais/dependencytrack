@@ -119,34 +119,6 @@ spec:
               mountPath: /tmp
           resources:
             {{- toYaml .Values.backend.resources | nindent 12 }}
-        - name: dependencytrack-metrics
-          image: "{{ .Values.metrics.image.repository }}/{{ .Values.metrics.image.name }}:{{ .Values.metrics.image.tag }}"
-          env:
-            - name: LOG_LEVEL
-              value: INFO
-            - name: DEPENDENCYTRACK_URL
-              value: {{ .Values.bootstrap.baseUrl }}
-            - name: USERNAME
-              value: admin
-            - name: TENANT
-              value: {{ .Values.metrics.tenant }}
-            - name: IMAGES_IGNORE
-              value: {{ .Values.metrics.imagesIgnore }}
-          envFrom:
-            - secretRef:
-                name: "{{ .Release.Name }}-metrics"
-          securityContext:
-            runAsNonRoot: true
-            runAsUser: 1000
-            runAsGroup: 1000
-            allowPrivilegeEscalation: false
-            readOnlyRootFilesystem: true
-            capabilities:
-              drop:
-                - ALL
-          ports:
-            - name: http-metrics
-              containerPort: 8000
         - name: cloudsql-proxy
           image: {{ .Values.backend.cloudProxy.repository }}:{{ .Values.backend.cloudProxy.tag }}
           command:
