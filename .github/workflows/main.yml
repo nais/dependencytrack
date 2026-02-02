@@ -98,7 +98,7 @@ jobs:
           service_account: "gh-${{ env.NAME }}@nais-io.iam.gserviceaccount.com"
           token_format: "access_token"
       - name: "Login to registry"
-        uses: docker/login-action@5e57cd118135c172c3672efd75eb46360885c0ef # ratchet:docker/login-action@v3
+        uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9 # ratchet:docker/login-action@v3
         with:
           registry: "europe-north1-docker.pkg.dev"
           username: "oauth2accesstoken"
