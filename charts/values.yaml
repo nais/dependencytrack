@@ -61,7 +61,7 @@ backend:
 
   cloudProxy:
     repository: eu.gcr.io/cloud-sql-connectors/cloud-sql-proxy
-    tag: 2.19.0
+    tag: 2.21.1
 
   postgresql:
     enabled: true
@@ -136,7 +136,7 @@ trivy:
   image:
     registry: "ghcr.io"
     repository: "aquasecurity/trivy"
-    tag: "0.67.2"
+    tag: "0.69.1"
   serverToken: "todo"
   podSecurityContext:
     seccompProfile:

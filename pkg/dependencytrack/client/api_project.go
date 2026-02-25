@@ -847,16 +847,16 @@ func (a *ProjectAPIService) GetChildrenProjectsExecute(r ApiGetChildrenProjectsR
 	if r.pageNumber != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "pageNumber", r.pageNumber, "form", "")
 	} else {
-        var defaultValue string = "1"
-        parameterAddToHeaderOrQuery(localVarQueryParams, "pageNumber", defaultValue, "form", "")
-        r.pageNumber = &defaultValue
+		var defaultValue string = "1"
+		parameterAddToHeaderOrQuery(localVarQueryParams, "pageNumber", defaultValue, "form", "")
+		r.pageNumber = &defaultValue
 	}
 	if r.pageSize != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "pageSize", r.pageSize, "form", "")
 	} else {
-        var defaultValue string = "100"
-        parameterAddToHeaderOrQuery(localVarQueryParams, "pageSize", defaultValue, "form", "")
-        r.pageSize = &defaultValue
+		var defaultValue string = "100"
+		parameterAddToHeaderOrQuery(localVarQueryParams, "pageSize", defaultValue, "form", "")
+		r.pageSize = &defaultValue
 	}
 	if r.offset != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "offset", r.offset, "form", "")
@@ -1046,16 +1046,16 @@ func (a *ProjectAPIService) GetChildrenProjectsByClassifierExecute(r ApiGetChild
 	if r.pageNumber != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "pageNumber", r.pageNumber, "form", "")
 	} else {
-        var defaultValue string = "1"
-        parameterAddToHeaderOrQuery(localVarQueryParams, "pageNumber", defaultValue, "form", "")
-        r.pageNumber = &defaultValue
+		var defaultValue string = "1"
+		parameterAddToHeaderOrQuery(localVarQueryParams, "pageNumber", defaultValue, "form", "")
+		r.pageNumber = &defaultValue
 	}
 	if r.pageSize != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "pageSize", r.pageSize, "form", "")
 	} else {
-        var defaultValue string = "100"
-        parameterAddToHeaderOrQuery(localVarQueryParams, "pageSize", defaultValue, "form", "")
-        r.pageSize = &defaultValue
+		var defaultValue string = "100"
+		parameterAddToHeaderOrQuery(localVarQueryParams, "pageSize", defaultValue, "form", "")
+		r.pageSize = &defaultValue
 	}
 	if r.offset != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "offset", r.offset, "form", "")
@@ -1245,16 +1245,16 @@ func (a *ProjectAPIService) GetChildrenProjectsByTagExecute(r ApiGetChildrenProj
 	if r.pageNumber != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "pageNumber", r.pageNumber, "form", "")
 	} else {
-        var defaultValue string = "1"
-        parameterAddToHeaderOrQuery(localVarQueryParams, "pageNumber", defaultValue, "form", "")
-        r.pageNumber = &defaultValue
+		var defaultValue string = "1"
+		parameterAddToHeaderOrQuery(localVarQueryParams, "pageNumber", defaultValue, "form", "")
+		r.pageNumber = &defaultValue
 	}
 	if r.pageSize != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "pageSize", r.pageSize, "form", "")
 	} else {
-        var defaultValue string = "100"
-        parameterAddToHeaderOrQuery(localVarQueryParams, "pageSize", defaultValue, "form", "")
-        r.pageSize = &defaultValue
+		var defaultValue string = "100"
+		parameterAddToHeaderOrQuery(localVarQueryParams, "pageSize", defaultValue, "form", "")
+		r.pageSize = &defaultValue
 	}
 	if r.offset != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "offset", r.offset, "form", "")
@@ -1826,16 +1826,16 @@ func (a *ProjectAPIService) GetProjectsExecute(r ApiGetProjectsRequest) ([]Proje
 	if r.pageNumber != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "pageNumber", r.pageNumber, "form", "")
 	} else {
-        var defaultValue string = "1"
-        parameterAddToHeaderOrQuery(localVarQueryParams, "pageNumber", defaultValue, "form", "")
-        r.pageNumber = &defaultValue
+		var defaultValue string = "1"
+		parameterAddToHeaderOrQuery(localVarQueryParams, "pageNumber", defaultValue, "form", "")
+		r.pageNumber = &defaultValue
 	}
 	if r.pageSize != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "pageSize", r.pageSize, "form", "")
 	} else {
-        var defaultValue string = "100"
-        parameterAddToHeaderOrQuery(localVarQueryParams, "pageSize", defaultValue, "form", "")
-        r.pageSize = &defaultValue
+		var defaultValue string = "100"
+		parameterAddToHeaderOrQuery(localVarQueryParams, "pageSize", defaultValue, "form", "")
+		r.pageSize = &defaultValue
 	}
 	if r.offset != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "offset", r.offset, "form", "")
@@ -2037,16 +2037,16 @@ func (a *ProjectAPIService) GetProjectsByClassifierExecute(r ApiGetProjectsByCla
 	if r.pageNumber != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "pageNumber", r.pageNumber, "form", "")
 	} else {
-        var defaultValue string = "1"
-        parameterAddToHeaderOrQuery(localVarQueryParams, "pageNumber", defaultValue, "form", "")
-        r.pageNumber = &defaultValue
+		var defaultValue string = "1"
+		parameterAddToHeaderOrQuery(localVarQueryParams, "pageNumber", defaultValue, "form", "")
+		r.pageNumber = &defaultValue
 	}
 	if r.pageSize != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "pageSize", r.pageSize, "form", "")
 	} else {
-        var defaultValue string = "100"
-        parameterAddToHeaderOrQuery(localVarQueryParams, "pageSize", defaultValue, "form", "")
-        r.pageSize = &defaultValue
+		var defaultValue string = "100"
+		parameterAddToHeaderOrQuery(localVarQueryParams, "pageSize", defaultValue, "form", "")
+		r.pageSize = &defaultValue
 	}
 	if r.offset != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "offset", r.offset, "form", "")
@@ -2242,16 +2242,16 @@ func (a *ProjectAPIService) GetProjectsByTagExecute(r ApiGetProjectsByTagRequest
 	if r.pageNumber != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "pageNumber", r.pageNumber, "form", "")
 	} else {
-        var defaultValue string = "1"
-        parameterAddToHeaderOrQuery(localVarQueryParams, "pageNumber", defaultValue, "form", "")
-        r.pageNumber = &defaultValue
+		var defaultValue string = "1"
+		parameterAddToHeaderOrQuery(localVarQueryParams, "pageNumber", defaultValue, "form", "")
+		r.pageNumber = &defaultValue
 	}
 	if r.pageSize != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "pageSize", r.pageSize, "form", "")
 	} else {
-        var defaultValue string = "100"
-        parameterAddToHeaderOrQuery(localVarQueryParams, "pageSize", defaultValue, "form", "")
-        r.pageSize = &defaultValue
+		var defaultValue string = "100"
+		parameterAddToHeaderOrQuery(localVarQueryParams, "pageSize", defaultValue, "form", "")
+		r.pageSize = &defaultValue
 	}
 	if r.offset != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "offset", r.offset, "form", "")
@@ -2447,16 +2447,16 @@ func (a *ProjectAPIService) GetProjectsWithoutDescendantsOfExecute(r ApiGetProje
 	if r.pageNumber != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "pageNumber", r.pageNumber, "form", "")
 	} else {
-        var defaultValue string = "1"
-        parameterAddToHeaderOrQuery(localVarQueryParams, "pageNumber", defaultValue, "form", "")
-        r.pageNumber = &defaultValue
+		var defaultValue string = "1"
+		parameterAddToHeaderOrQuery(localVarQueryParams, "pageNumber", defaultValue, "form", "")
+		r.pageNumber = &defaultValue
 	}
 	if r.pageSize != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "pageSize", r.pageSize, "form", "")
 	} else {
-        var defaultValue string = "100"
-        parameterAddToHeaderOrQuery(localVarQueryParams, "pageSize", defaultValue, "form", "")
-        r.pageSize = &defaultValue
+		var defaultValue string = "100"
+		parameterAddToHeaderOrQuery(localVarQueryParams, "pageSize", defaultValue, "form", "")
+		r.pageSize = &defaultValue
 	}
 	if r.offset != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "offset", r.offset, "form", "")

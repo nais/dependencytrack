@@ -1,60 +1,91 @@
-# dependencytrack
+# Dependencytrack
 
 [Dependencytrack](https://dependencytrack.org/) is a tool for scanning dependencies for vulnerabilities.
 
-NAIS oversees the maintenance of this repository, which includes:
+## Overview
 
-* helm charts
-* pre-installed & post-install bootstrap configuration
-* Stateful set for persistence and no down-time deployments
+NAIS maintains this repository, which includes:
 
-## Dependencytrack client
+- 📦 Helm charts for Kubernetes deployments
+- 🔧 Pre-install and post-install bootstrap configuration
+- 🗄️ StatefulSet configuration for persistence and zero-downtime deployments
 
-The repository houses a client for dependencytrack, facilitating its usage for implementations. Please feel free to
-expand the client interface with additional functionality as required. To update to the most recent version of the
-client, execute:
+## Table of Contents
 
-`go get -u github.com/nais/dependencytrack@HEAD`
+- [Dependencytrack Client](#dependencytrack-client)
+- [Local Development](#local-development)
+- [Image Verification](#image-verification)
+- [License](#license)
 
-## Local development
+## Dependencytrack Client
+
+This repository includes a Go client for Dependencytrack, making it easy to integrate with your implementations. The client is designed to be extensible—feel free to expand the interface with additional functionality as needed.
+
+### Using the Client
+
+To use the client in your projects, import it as follows:
+
+```bash
+go get -u github.com/nais/dependencytrack@HEAD
+```
+
+## Local Development
 
 ### Prerequisites
 
-First `asdf install`
+Install the required tools:
 
-Run your local instance of dependencytrack with the following command:
-`make compose`
-
-A docker-compose file is available for local development. Please duplicate .env.sample as .env and provide the necessary
-values. The users.yaml file allows for the creation of pre-installed users for automated testing purposes. You can
-access the [dependencytrack UI](http://localhost:9000).
-
-The API is available at [depdendencytrack-api](http://localhost:9001).
-
-### Swagger
-
-The [swagger UI](http://localhost:9002) is bundled with the docker-compose file.
-
-## Verifying the image and its contents
-
-The image is signed "keylessly" (is that a word?) using Sigstore cosign. To verify its authenticity run
-
+```bash
+asdf install
 ```
+
+### Getting Started
+
+1. **Start Dependencytrack locally:**
+
+   ```bash
+   make compose
+   ```
+
+2. **Configure environment variables:**
+
+   - Copy `.env.sample` to `.env`
+   - Fill in the necessary configuration values
+
+3. **Access the services:**
+
+   - **Dependencytrack UI:** http://localhost:9000
+   - **API:** http://localhost:9001
+   - **Swagger UI:** http://localhost:9002
+
+### Test Users
+
+The `users.yaml` file contains pre-configured users for automated testing. You can modify this file to add or update test users as needed.
+
+## Image Verification
+
+The container images are signed using Sigstore cosign for authenticity verification.
+
+### Verify Image Signature
+
+```bash
 cosign verify \
---certificate-identity "https://github.com/nais/depedencytrack/.github/workflows/main.yaml@refs/heads/main" \
---certificate-oidc-issuer "https://token.actions.githubusercontent.com" \
-europe-north1-docker.pkg.dev/nais-io/nais/images/dependencytrack@sha256:<shasum>
+  --certificate-identity "https://github.com/nais/depedencytrack/.github/workflows/main.yaml@refs/heads/main" \
+  --certificate-oidc-issuer "https://token.actions.githubusercontent.com" \
+  europe-north1-docker.pkg.dev/nais-io/nais/images/dependencytrack@sha256:<shasum>
 ```
 
-The images are also attested with SBOMs in the CycloneDX format. You can verify these by running
+### Verify Image Attestation (SBOM)
 
-```
+Images are attested with CycloneDX SBOMs. To verify the attestation:
+
+```bash
 cosign verify-attestation --type cyclonedx \
---certificate-identity "https://github.com/nais/depedencytrack/.github/workflows/main.yaml@refs/heads/main" \
---certificate-oidc-issuer "https://token.actions.githubusercontent.com" \
-europe-north1-docker.pkg.dev/nais-io/nais/images/dependencytrack@sha256:<shasum>
+  --certificate-identity "https://github.com/nais/depedencytrack/.github/workflows/main.yaml@refs/heads/main" \
+  --certificate-oidc-issuer "https://token.actions.githubusercontent.com" \
+  europe-north1-docker.pkg.dev/nais-io/nais/images/dependencytrack@sha256:<shasum>
 ```
 
 ## License
 
-nais/Dependencytrack is licensed under the MIT License, see [LICENSE.md](/LICENSE.md).
+nais/Dependencytrack is licensed under the MIT License. See [LICENSE.md](/LICENSE.md) for details.

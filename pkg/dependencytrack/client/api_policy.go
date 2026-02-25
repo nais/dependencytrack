@@ -735,16 +735,16 @@ func (a *PolicyAPIService) GetPoliciesExecute(r ApiGetPoliciesRequest) ([]Policy
 	if r.pageNumber != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "pageNumber", r.pageNumber, "form", "")
 	} else {
-        var defaultValue string = "1"
-        parameterAddToHeaderOrQuery(localVarQueryParams, "pageNumber", defaultValue, "form", "")
-        r.pageNumber = &defaultValue
+		var defaultValue string = "1"
+		parameterAddToHeaderOrQuery(localVarQueryParams, "pageNumber", defaultValue, "form", "")
+		r.pageNumber = &defaultValue
 	}
 	if r.pageSize != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "pageSize", r.pageSize, "form", "")
 	} else {
-        var defaultValue string = "100"
-        parameterAddToHeaderOrQuery(localVarQueryParams, "pageSize", defaultValue, "form", "")
-        r.pageSize = &defaultValue
+		var defaultValue string = "100"
+		parameterAddToHeaderOrQuery(localVarQueryParams, "pageSize", defaultValue, "form", "")
+		r.pageSize = &defaultValue
 	}
 	if r.offset != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "offset", r.offset, "form", "")
