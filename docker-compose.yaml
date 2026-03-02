@@ -1,6 +1,6 @@
 services:
   trivy:
-    image: aquasec/trivy:0.69.1
+    image: aquasec/trivy:0.69.2
     command:
       - server
       - --listen
