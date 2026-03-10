@@ -1,6 +1,6 @@
 module github.com/nais/dependencytrack
 
-go 1.25.7
+go 1.26.1
 
 tool (
 	github.com/nais/dependencytrack/pkg/dependencytrack
@@ -16,13 +16,13 @@ require (
 	github.com/in-toto/in-toto-golang v0.10.0
 	github.com/joho/godotenv v1.5.1
 	github.com/lestrrat-go/jwx/v2 v2.1.6
-	github.com/nais/dependencytrack/pkg/dependencytrack v0.0.0-20260216044158-80a9bf8f34e5
+	github.com/nais/dependencytrack/pkg/dependencytrack v0.0.0-20260309043603-7377a3ed74d1
 	github.com/ory/dockertest/v3 v3.12.0
 	github.com/patrickmn/go-cache v2.1.0+incompatible
 	github.com/prometheus/client_golang v1.23.2
 	github.com/sirupsen/logrus v1.9.4
 	github.com/stretchr/testify v1.11.1
-	golang.org/x/sync v0.19.0
+	golang.org/x/sync v0.20.0
 	gopkg.in/yaml.v3 v3.0.1
 )
 

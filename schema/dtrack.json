@@ -11,7 +11,7 @@
       "name": "Apache-2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "version": "4.13.6"
+    "version": "4.14.0"
   },
   "servers": [
     {
@@ -626,7 +626,15 @@
           {
             "name": "format",
             "in": "query",
-            "description": "The format to output (defaults to JSON)",
+            "description": "The format to output (defaults to 'JSON')",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "version",
+            "in": "query",
+            "description": "The CycloneDX Spec variant exported (defaults to: '1.5')",
             "schema": {
               "type": "string"
             }
@@ -690,7 +698,7 @@
           {
             "name": "format",
             "in": "query",
-            "description": "The format to output (defaults to JSON)",
+            "description": "The format to output (defaults to 'JSON')",
             "schema": {
               "type": "string"
             }
@@ -709,6 +717,14 @@
             "description": "Force the resulting BOM to be downloaded as a file (defaults to 'false')",
             "schema": {
               "type": "boolean"
+            }
+          },
+          {
+            "name": "version",
+            "in": "query",
+            "description": "The CycloneDX Spec variant exported (defaults to: '1.5')",
+            "schema": {
+              "type": "string"
             }
           }
         ],
@@ -805,7 +821,7 @@
           "bom"
         ],
         "summary": "Upload a supported bill of material format document",
-        "description": "\u003Cp\u003E\n  Expects CycloneDX and a valid project UUID. If a UUID is not specified,\n  then the \u003Ccode\u003EprojectName\u003C/code\u003E and \u003Ccode\u003EprojectVersion\u003C/code\u003E must be specified.\n  Optionally, if \u003Ccode\u003EautoCreate\u003C/code\u003E is specified and \u003Ccode\u003Etrue\u003C/code\u003E and the project does not exist,\n  the project will be created. In this scenario, the principal making the request will\n  additionally need the \u003Cstrong\u003EPORTFOLIO_MANAGEMENT\u003C/strong\u003E or\n  \u003Cstrong\u003EPROJECT_CREATION_UPLOAD\u003C/strong\u003E permission.\n\u003C/p\u003E\n\u003Cp\u003E\n  The BOM will be validated against the CycloneDX schema. If schema validation fails,\n  a response with problem details in RFC 9457 format will be returned. In this case,\n  the response's content type will be \u003Ccode\u003Eapplication/problem+json\u003C/code\u003E.\n\u003C/p\u003E\n\u003Cp\u003E\n  The maximum allowed length of the \u003Ccode\u003Ebom\u003C/code\u003E value is 20'000'000 characters.\n  When uploading large BOMs, the \u003Ccode\u003EPOST\u003C/code\u003E endpoint is preferred,\n  as it does not have this limit.\n\u003C/p\u003E\n\u003Cp\u003ERequires permission \u003Cstrong\u003EBOM_UPLOAD\u003C/strong\u003E\u003C/p\u003E",
+        "description": "\u003Cp\u003E\n  Expects CycloneDX and a valid project UUID. If a UUID is not specified,\n  then the \u003Ccode\u003EprojectName\u003C/code\u003E and \u003Ccode\u003EprojectVersion\u003C/code\u003E must be specified.\n  Optionally, if \u003Ccode\u003EautoCreate\u003C/code\u003E is specified and \u003Ccode\u003Etrue\u003C/code\u003E and the project does not exist,\n  the project will be created. In this scenario, the principal making the request will\n  additionally need the \u003Cstrong\u003EPORTFOLIO_MANAGEMENT\u003C/strong\u003E or\n  \u003Cstrong\u003EPROJECT_CREATION_UPLOAD\u003C/strong\u003E permission.\n\u003C/p\u003E\n\u003Cp\u003E\n   The bom upload replaces all existing components. The analysis decisions are kept for components that were\n   linked to the project before and are included in the uploaded BOM. Any components previously linked to the project\n   that are not included in the uploaded BOM will be dropped from the project.\n\u003C/p\u003E\n\u003Cp\u003E\n  The BOM will be validated against the CycloneDX schema. If schema validation fails,\n  a response with problem details in RFC 9457 format will be returned. In this case,\n  the response's content type will be \u003Ccode\u003Eapplication/problem+json\u003C/code\u003E.\n\u003C/p\u003E\n\u003Cp\u003E\n  The maximum allowed length of the \u003Ccode\u003Ebom\u003C/code\u003E value is 20'000'000 characters.\n  When uploading large BOMs, the \u003Ccode\u003EPOST\u003C/code\u003E endpoint is preferred,\n  as it does not have this limit.\n\u003C/p\u003E\n\u003Cp\u003ERequires permission \u003Cstrong\u003EBOM_UPLOAD\u003C/strong\u003E\u003C/p\u003E",
         "operationId": "UploadBomBase64Encoded",
         "requestBody": {
           "content": {
@@ -862,7 +878,7 @@
           "bom"
         ],
         "summary": "Upload a supported bill of material format document",
-        "description": "\u003Cp\u003E\n   Expects CycloneDX and a valid project UUID. If a UUID is not specified,\n   then the \u003Ccode\u003EprojectName\u003C/code\u003E and \u003Ccode\u003EprojectVersion\u003C/code\u003E must be specified.\n   Optionally, if \u003Ccode\u003EautoCreate\u003C/code\u003E is specified and \u003Ccode\u003Etrue\u003C/code\u003E and the project does not exist,\n   the project will be created. In this scenario, the principal making the request will\n   additionally need the \u003Cstrong\u003EPORTFOLIO_MANAGEMENT\u003C/strong\u003E or\n   \u003Cstrong\u003EPROJECT_CREATION_UPLOAD\u003C/strong\u003E permission.\n \u003C/p\u003E\n \u003Cp\u003E\n   The BOM will be validated against the CycloneDX schema. If schema validation fails,\n   a response with problem details in RFC 9457 format will be returned. In this case,\n   the response's content type will be \u003Ccode\u003Eapplication/problem+json\u003C/code\u003E.\n \u003C/p\u003E\n \u003Cp\u003ERequires permission \u003Cstrong\u003EBOM_UPLOAD\u003C/strong\u003E\u003C/p\u003E",
+        "description": "\u003Cp\u003E\n   Expects CycloneDX and a valid project UUID. If a UUID is not specified,\n   then the \u003Ccode\u003EprojectName\u003C/code\u003E and \u003Ccode\u003EprojectVersion\u003C/code\u003E must be specified.\n   Optionally, if \u003Ccode\u003EautoCreate\u003C/code\u003E is specified and \u003Ccode\u003Etrue\u003C/code\u003E and the project does not exist,\n   the project will be created. In this scenario, the principal making the request will\n   additionally need the \u003Cstrong\u003EPORTFOLIO_MANAGEMENT\u003C/strong\u003E or\n   \u003Cstrong\u003EPROJECT_CREATION_UPLOAD\u003C/strong\u003E permission.\n \u003C/p\u003E\n \u003Cp\u003E\n    The bom upload replaces all existing components. The analysis decisions are kept for components that were\n    linked to the project before and are included in the uploaded BOM. Any components previously linked to the project\n    that are not included in the uploaded BOM will be dropped from the project.\n \u003C/p\u003E\n \u003Cp\u003E\n   The BOM will be validated against the CycloneDX schema. If schema validation fails,\n   a response with problem details in RFC 9457 format will be returned. In this case,\n   the response's content type will be \u003Ccode\u003Eapplication/problem+json\u003C/code\u003E.\n \u003C/p\u003E\n \u003Cp\u003ERequires permission \u003Cstrong\u003EBOM_UPLOAD\u003C/strong\u003E\u003C/p\u003E",
         "operationId": "UploadBom",
         "requestBody": {
           "content": {
@@ -959,7 +975,7 @@
           {
             "name": "vector",
             "in": "query",
-            "description": "A valid CVSSv2 or CVSSv3 vector",
+            "description": "A valid CVSSv2, CVSSv3, or CVSSv4 vector",
             "required": true,
             "schema": {
               "type": "string"
@@ -976,6 +992,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Invalid or incomplete CVSS vector"
           },
           "401": {
             "description": "Unauthorized"
@@ -2568,6 +2587,54 @@
             }
           },
           {
+            "name": "cvssv4From",
+            "in": "query",
+            "description": "Filter CVSSv4 from this value",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "cvssv4To",
+            "in": "query",
+            "description": "Filter CVSSv4 to this value",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "epssFrom",
+            "in": "query",
+            "description": "Filter EPSS from this value",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "epssTo",
+            "in": "query",
+            "description": "Filter EPSS to this value",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "epssPercentileFrom",
+            "in": "query",
+            "description": "Filter EPSS Percentile from this value",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "epssPercentileTo",
+            "in": "query",
+            "description": "Filter EPSS Percentile to this value",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
             "name": "occurrencesFrom",
             "in": "query",
             "description": "Filter occurrences in projects from this value",
@@ -2745,7 +2812,55 @@
           {
             "name": "cvssv3To",
             "in": "query",
-            "description": "Filter CVSSv3 from this Value",
+            "description": "Filter CVSSv3 to this value",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "cvssv4From",
+            "in": "query",
+            "description": "Filter CVSSv4 from this value",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "cvssv4To",
+            "in": "query",
+            "description": "Filter CVSSv4 to this value",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "epssFrom",
+            "in": "query",
+            "description": "Filter EPSS from this value",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "epssTo",
+            "in": "query",
+            "description": "Filter EPSS to this value",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "epssPercentileFrom",
+            "in": "query",
+            "description": "Filter EPSS Percentile from this value",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "epssPercentileTo",
+            "in": "query",
+            "description": "Filter EPSS Percentile to this value",
             "schema": {
               "type": "string"
             }
@@ -12130,6 +12245,14 @@
             "schema": {
               "type": "boolean"
             }
+          },
+          {
+            "name": "version",
+            "in": "query",
+            "description": "The CycloneDX Spec variant exported (defaults to: '1.5')",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -13269,11 +13392,8 @@
       "About": {
         "type": "object",
         "properties": {
-          "version": {
-            "type": "string"
-          },
-          "timestamp": {
-            "type": "string"
+          "framework": {
+            "$ref": "#/components/schemas/Framework"
           },
           "systemUuid": {
             "type": "string"
@@ -13281,33 +13401,30 @@
           "uuid": {
             "type": "string"
           },
-          "application": {
+          "timestamp": {
             "type": "string"
           },
-          "framework": {
-            "$ref": "#/components/schemas/Framework"
+          "version": {
+            "type": "string"
           },
-          "providerData": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "object"
-            }
+          "application": {
+            "type": "string"
           }
         }
       },
       "Framework": {
         "type": "object",
         "properties": {
-          "name": {
-            "type": "string"
-          },
-          "version": {
+          "uuid": {
             "type": "string"
           },
           "timestamp": {
             "type": "string"
           },
-          "uuid": {
+          "version": {
+            "type": "string"
+          },
+          "name": {
             "type": "string"
           }
         }
@@ -13350,13 +13467,13 @@
             "minLength": 5,
             "type": "string"
           },
-          "key": {
-            "type": "string"
-          },
           "legacy": {
             "type": "boolean"
           },
           "maskedKey": {
+            "type": "string"
+          },
+          "key": {
             "type": "string"
           }
         }
@@ -13702,6 +13819,8 @@
             "type": "string"
           },
           "description": {
+            "maxLength": 255,
+            "minLength": 0,
             "pattern": "^[\\p{IsWhite_Space}\\p{L}\\p{M}\\p{S}\\p{N}\\p{P}]*$",
             "type": "string"
           },
@@ -14414,7 +14533,7 @@
             "type": "string",
             "example": "1.0.0"
           },
-          "isLatestProjectVersion": {
+          "isLatest": {
             "type": "boolean"
           },
           "bom": {
@@ -14645,6 +14764,16 @@
             "pattern": "^[\\p{IsWhite_Space}\\p{L}\\p{M}\\p{S}\\p{N}\\p{P}]*$",
             "type": "string"
           },
+          "scope": {
+            "maxLength": 255,
+            "minLength": 0,
+            "type": "string",
+            "enum": [
+              "REQUIRED",
+              "OPTIONAL",
+              "EXCLUDED"
+            ]
+          },
           "classifier": {
             "type": "string",
             "enum": [
@@ -14821,15 +14950,6 @@
             "type": "string",
             "format": "uuid"
           },
-          "author": {
-            "type": "string"
-          },
-          "metrics": {
-            "$ref": "#/components/schemas/DependencyMetrics"
-          },
-          "repositoryMeta": {
-            "$ref": "#/components/schemas/RepositoryMetaComponent"
-          },
           "dependencyGraph": {
             "uniqueItems": true,
             "type": "array",
@@ -14839,6 +14959,15 @@
           },
           "expandDependencyGraph": {
             "type": "boolean"
+          },
+          "author": {
+            "type": "string"
+          },
+          "repositoryMeta": {
+            "$ref": "#/components/schemas/RepositoryMetaComponent"
+          },
+          "metrics": {
+            "$ref": "#/components/schemas/DependencyMetrics"
           },
           "isInternal": {
             "type": "boolean"
@@ -15379,6 +15508,13 @@
             "pattern": "^[\\p{IsWhite_Space}\\p{L}\\p{M}\\p{S}\\p{N}\\p{P}\\n\\r\\t]*$",
             "type": "string"
           },
+          "cvssV4Score": {
+            "type": "number"
+          },
+          "cvssV4Vector": {
+            "pattern": "^[\\p{IsWhite_Space}\\p{L}\\p{M}\\p{S}\\p{N}\\p{P}\\n\\r\\t]*$",
+            "type": "string"
+          },
           "owaspRRLikelihoodScore": {
             "type": "number"
           },
@@ -15434,14 +15570,18 @@
             "type": "string",
             "format": "uuid"
           },
+          "affectedInactiveProjectCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "normalizedCvssV2Vector": {
+            "type": "string"
+          },
           "aliases": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/VulnerabilityAlias"
             }
-          },
-          "findingAttribution": {
-            "$ref": "#/components/schemas/FindingAttribution"
           },
           "affectedProjectCount": {
             "type": "integer",
@@ -15451,9 +15591,8 @@
             "type": "integer",
             "format": "int32"
           },
-          "affectedInactiveProjectCount": {
-            "type": "integer",
-            "format": "int32"
+          "findingAttribution": {
+            "$ref": "#/components/schemas/FindingAttribution"
           },
           "affectedComponents": {
             "type": "array",
@@ -16122,19 +16261,6 @@
       "UserPrincipal": {
         "type": "object",
         "properties": {
-          "name": {
-            "type": "string"
-          },
-          "permissions": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Permission"
-            }
-          },
-          "id": {
-            "type": "integer",
-            "format": "int64"
-          },
           "username": {
             "type": "string"
           },
@@ -16145,6 +16271,19 @@
             }
           },
           "email": {
+            "type": "string"
+          },
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "permissions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Permission"
+            }
+          },
+          "name": {
             "type": "string"
           }
         }
@@ -16266,6 +16405,7 @@
               "SEVERITY",
               "SWID_TAGID",
               "VERSION",
+              "IS_INTERNAL",
               "COMPONENT_HASH",
               "CWE",
               "VULNERABILITY_ID",

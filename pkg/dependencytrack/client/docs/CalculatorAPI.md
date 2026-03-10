@@ -28,7 +28,7 @@ import (
 )
 
 func main() {
-	vector := "vector_example" // string | A valid CVSSv2 or CVSSv3 vector
+	vector := "vector_example" // string | A valid CVSSv2, CVSSv3, or CVSSv4 vector
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
@@ -53,7 +53,7 @@ Other parameters are passed through a pointer to a apiGetCvssScoresRequest struc
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **vector** | **string** | A valid CVSSv2 or CVSSv3 vector | 
+ **vector** | **string** | A valid CVSSv2, CVSSv3, or CVSSv4 vector | 
 
 ### Return type
 

@@ -14,7 +14,7 @@ Method | HTTP request | Description
 
 ## ExportComponentAsCycloneDx
 
-> string ExportComponentAsCycloneDx(ctx, uuid).Format(format).Execute()
+> string ExportComponentAsCycloneDx(ctx, uuid).Format(format).Version(version).Execute()
 
 Returns dependency metadata for a specific component in CycloneDX format
 
@@ -34,11 +34,12 @@ import (
 
 func main() {
 	uuid := "38400000-8cf0-11bd-b23e-10b96e4ef00d" // string | The UUID of the component to export
-	format := "format_example" // string | The format to output (defaults to JSON) (optional)
+	format := "format_example" // string | The format to output (defaults to 'JSON') (optional)
+	version := "version_example" // string | The CycloneDX Spec variant exported (defaults to: '1.5') (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.BomAPI.ExportComponentAsCycloneDx(context.Background(), uuid).Format(format).Execute()
+	resp, r, err := apiClient.BomAPI.ExportComponentAsCycloneDx(context.Background(), uuid).Format(format).Version(version).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `BomAPI.ExportComponentAsCycloneDx``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -64,7 +65,8 @@ Other parameters are passed through a pointer to a apiExportComponentAsCycloneDx
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **format** | **string** | The format to output (defaults to JSON) | 
+ **format** | **string** | The format to output (defaults to &#39;JSON&#39;) | 
+ **version** | **string** | The CycloneDX Spec variant exported (defaults to: &#39;1.5&#39;) | 
 
 ### Return type
 
@@ -86,7 +88,7 @@ Name | Type | Description  | Notes
 
 ## ExportProjectAsCycloneDx
 
-> string ExportProjectAsCycloneDx(ctx, uuid).Format(format).Variant(variant).Download(download).Execute()
+> string ExportProjectAsCycloneDx(ctx, uuid).Format(format).Variant(variant).Download(download).Version(version).Execute()
 
 Returns dependency metadata for a project in CycloneDX format
 
@@ -106,13 +108,14 @@ import (
 
 func main() {
 	uuid := "38400000-8cf0-11bd-b23e-10b96e4ef00d" // string | The UUID of the project to export
-	format := "format_example" // string | The format to output (defaults to JSON) (optional)
+	format := "format_example" // string | The format to output (defaults to 'JSON') (optional)
 	variant := "variant_example" // string | Specifies the CycloneDX variant to export. Value options are 'inventory' and 'withVulnerabilities'. (defaults to 'inventory') (optional)
 	download := true // bool | Force the resulting BOM to be downloaded as a file (defaults to 'false') (optional)
+	version := "version_example" // string | The CycloneDX Spec variant exported (defaults to: '1.5') (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.BomAPI.ExportProjectAsCycloneDx(context.Background(), uuid).Format(format).Variant(variant).Download(download).Execute()
+	resp, r, err := apiClient.BomAPI.ExportProjectAsCycloneDx(context.Background(), uuid).Format(format).Variant(variant).Download(download).Version(version).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `BomAPI.ExportProjectAsCycloneDx``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -138,9 +141,10 @@ Other parameters are passed through a pointer to a apiExportProjectAsCycloneDxRe
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **format** | **string** | The format to output (defaults to JSON) | 
+ **format** | **string** | The format to output (defaults to &#39;JSON&#39;) | 
  **variant** | **string** | Specifies the CycloneDX variant to export. Value options are &#39;inventory&#39; and &#39;withVulnerabilities&#39;. (defaults to &#39;inventory&#39;) | 
  **download** | **bool** | Force the resulting BOM to be downloaded as a file (defaults to &#39;false&#39;) | 
+ **version** | **string** | The CycloneDX Spec variant exported (defaults to: &#39;1.5&#39;) | 
 
 ### Return type
 

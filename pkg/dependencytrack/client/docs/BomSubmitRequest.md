@@ -12,7 +12,7 @@ Name | Type | Description | Notes
 **ParentUUID** | Pointer to **string** |  | [optional] 
 **ParentName** | Pointer to **string** |  | [optional] 
 **ParentVersion** | Pointer to **string** |  | [optional] 
-**IsLatestProjectVersion** | Pointer to **bool** |  | [optional] 
+**IsLatest** | Pointer to **bool** |  | [optional] 
 **Bom** | **string** | Base64 encoded BOM | 
 
 ## Methods
@@ -219,30 +219,30 @@ SetParentVersion sets ParentVersion field to given value.
 
 HasParentVersion returns a boolean if a field has been set.
 
-### GetIsLatestProjectVersion
+### GetIsLatest
 
-`func (o *BomSubmitRequest) GetIsLatestProjectVersion() bool`
+`func (o *BomSubmitRequest) GetIsLatest() bool`
 
-GetIsLatestProjectVersion returns the IsLatestProjectVersion field if non-nil, zero value otherwise.
+GetIsLatest returns the IsLatest field if non-nil, zero value otherwise.
 
-### GetIsLatestProjectVersionOk
+### GetIsLatestOk
 
-`func (o *BomSubmitRequest) GetIsLatestProjectVersionOk() (*bool, bool)`
+`func (o *BomSubmitRequest) GetIsLatestOk() (*bool, bool)`
 
-GetIsLatestProjectVersionOk returns a tuple with the IsLatestProjectVersion field if it's non-nil, zero value otherwise
+GetIsLatestOk returns a tuple with the IsLatest field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
-### SetIsLatestProjectVersion
+### SetIsLatest
 
-`func (o *BomSubmitRequest) SetIsLatestProjectVersion(v bool)`
+`func (o *BomSubmitRequest) SetIsLatest(v bool)`
 
-SetIsLatestProjectVersion sets IsLatestProjectVersion field to given value.
+SetIsLatest sets IsLatest field to given value.
 
-### HasIsLatestProjectVersion
+### HasIsLatest
 
-`func (o *BomSubmitRequest) HasIsLatestProjectVersion() bool`
+`func (o *BomSubmitRequest) HasIsLatest() bool`
 
-HasIsLatestProjectVersion returns a boolean if a field has been set.
+HasIsLatest returns a boolean if a field has been set.
 
 ### GetBom
 

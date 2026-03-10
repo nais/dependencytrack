@@ -8,9 +8,9 @@ Name | Type | Description | Notes
 **Created** | Pointer to **int64** |  | [optional] 
 **LastUsed** | Pointer to **int64** |  | [optional] 
 **PublicId** | Pointer to **string** |  | [optional] 
-**Key** | Pointer to **string** |  | [optional] 
 **Legacy** | Pointer to **bool** |  | [optional] 
 **MaskedKey** | Pointer to **string** |  | [optional] 
+**Key** | Pointer to **string** |  | [optional] 
 
 ## Methods
 
@@ -131,31 +131,6 @@ SetPublicId sets PublicId field to given value.
 
 HasPublicId returns a boolean if a field has been set.
 
-### GetKey
-
-`func (o *ApiKey) GetKey() string`
-
-GetKey returns the Key field if non-nil, zero value otherwise.
-
-### GetKeyOk
-
-`func (o *ApiKey) GetKeyOk() (*string, bool)`
-
-GetKeyOk returns a tuple with the Key field if it's non-nil, zero value otherwise
-and a boolean to check if the value has been set.
-
-### SetKey
-
-`func (o *ApiKey) SetKey(v string)`
-
-SetKey sets Key field to given value.
-
-### HasKey
-
-`func (o *ApiKey) HasKey() bool`
-
-HasKey returns a boolean if a field has been set.
-
 ### GetLegacy
 
 `func (o *ApiKey) GetLegacy() bool`
@@ -205,6 +180,31 @@ SetMaskedKey sets MaskedKey field to given value.
 `func (o *ApiKey) HasMaskedKey() bool`
 
 HasMaskedKey returns a boolean if a field has been set.
+
+### GetKey
+
+`func (o *ApiKey) GetKey() string`
+
+GetKey returns the Key field if non-nil, zero value otherwise.
+
+### GetKeyOk
+
+`func (o *ApiKey) GetKeyOk() (*string, bool)`
+
+GetKeyOk returns a tuple with the Key field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetKey
+
+`func (o *ApiKey) SetKey(v string)`
+
+SetKey sets Key field to given value.
+
+### HasKey
+
+`func (o *ApiKey) HasKey() bool`
+
+HasKey returns a boolean if a field has been set.
 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
