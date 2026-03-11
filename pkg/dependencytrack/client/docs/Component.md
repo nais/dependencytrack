@@ -10,6 +10,7 @@ Name | Type | Description | Notes
 **Group** | Pointer to **string** |  | [optional] 
 **Name** | **string** |  | 
 **Version** | Pointer to **string** |  | [optional] 
+**Scope** | Pointer to **string** |  | [optional] 
 **Classifier** | **string** |  | 
 **Filename** | Pointer to **string** |  | [optional] 
 **Extension** | Pointer to **string** |  | [optional] 
@@ -45,11 +46,11 @@ Name | Type | Description | Notes
 **LastInheritedRiskScore** | Pointer to **float64** |  | [optional] 
 **Notes** | Pointer to **string** |  | [optional] 
 **Uuid** | **string** |  | 
-**Author** | Pointer to **string** |  | [optional] 
-**Metrics** | Pointer to [**DependencyMetrics**](DependencyMetrics.md) |  | [optional] 
-**RepositoryMeta** | Pointer to [**RepositoryMetaComponent**](RepositoryMetaComponent.md) |  | [optional] 
 **DependencyGraph** | Pointer to **[]string** |  | [optional] 
 **ExpandDependencyGraph** | Pointer to **bool** |  | [optional] 
+**Author** | Pointer to **string** |  | [optional] 
+**RepositoryMeta** | Pointer to [**RepositoryMetaComponent**](RepositoryMetaComponent.md) |  | [optional] 
+**Metrics** | Pointer to [**DependencyMetrics**](DependencyMetrics.md) |  | [optional] 
 **IsInternal** | Pointer to **bool** |  | [optional] 
 
 ## Methods
@@ -215,6 +216,31 @@ SetVersion sets Version field to given value.
 `func (o *Component) HasVersion() bool`
 
 HasVersion returns a boolean if a field has been set.
+
+### GetScope
+
+`func (o *Component) GetScope() string`
+
+GetScope returns the Scope field if non-nil, zero value otherwise.
+
+### GetScopeOk
+
+`func (o *Component) GetScopeOk() (*string, bool)`
+
+GetScopeOk returns a tuple with the Scope field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetScope
+
+`func (o *Component) SetScope(v string)`
+
+SetScope sets Scope field to given value.
+
+### HasScope
+
+`func (o *Component) HasScope() bool`
+
+HasScope returns a boolean if a field has been set.
 
 ### GetClassifier
 
@@ -1076,81 +1102,6 @@ and a boolean to check if the value has been set.
 SetUuid sets Uuid field to given value.
 
 
-### GetAuthor
-
-`func (o *Component) GetAuthor() string`
-
-GetAuthor returns the Author field if non-nil, zero value otherwise.
-
-### GetAuthorOk
-
-`func (o *Component) GetAuthorOk() (*string, bool)`
-
-GetAuthorOk returns a tuple with the Author field if it's non-nil, zero value otherwise
-and a boolean to check if the value has been set.
-
-### SetAuthor
-
-`func (o *Component) SetAuthor(v string)`
-
-SetAuthor sets Author field to given value.
-
-### HasAuthor
-
-`func (o *Component) HasAuthor() bool`
-
-HasAuthor returns a boolean if a field has been set.
-
-### GetMetrics
-
-`func (o *Component) GetMetrics() DependencyMetrics`
-
-GetMetrics returns the Metrics field if non-nil, zero value otherwise.
-
-### GetMetricsOk
-
-`func (o *Component) GetMetricsOk() (*DependencyMetrics, bool)`
-
-GetMetricsOk returns a tuple with the Metrics field if it's non-nil, zero value otherwise
-and a boolean to check if the value has been set.
-
-### SetMetrics
-
-`func (o *Component) SetMetrics(v DependencyMetrics)`
-
-SetMetrics sets Metrics field to given value.
-
-### HasMetrics
-
-`func (o *Component) HasMetrics() bool`
-
-HasMetrics returns a boolean if a field has been set.
-
-### GetRepositoryMeta
-
-`func (o *Component) GetRepositoryMeta() RepositoryMetaComponent`
-
-GetRepositoryMeta returns the RepositoryMeta field if non-nil, zero value otherwise.
-
-### GetRepositoryMetaOk
-
-`func (o *Component) GetRepositoryMetaOk() (*RepositoryMetaComponent, bool)`
-
-GetRepositoryMetaOk returns a tuple with the RepositoryMeta field if it's non-nil, zero value otherwise
-and a boolean to check if the value has been set.
-
-### SetRepositoryMeta
-
-`func (o *Component) SetRepositoryMeta(v RepositoryMetaComponent)`
-
-SetRepositoryMeta sets RepositoryMeta field to given value.
-
-### HasRepositoryMeta
-
-`func (o *Component) HasRepositoryMeta() bool`
-
-HasRepositoryMeta returns a boolean if a field has been set.
-
 ### GetDependencyGraph
 
 `func (o *Component) GetDependencyGraph() []string`
@@ -1200,6 +1151,81 @@ SetExpandDependencyGraph sets ExpandDependencyGraph field to given value.
 `func (o *Component) HasExpandDependencyGraph() bool`
 
 HasExpandDependencyGraph returns a boolean if a field has been set.
+
+### GetAuthor
+
+`func (o *Component) GetAuthor() string`
+
+GetAuthor returns the Author field if non-nil, zero value otherwise.
+
+### GetAuthorOk
+
+`func (o *Component) GetAuthorOk() (*string, bool)`
+
+GetAuthorOk returns a tuple with the Author field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetAuthor
+
+`func (o *Component) SetAuthor(v string)`
+
+SetAuthor sets Author field to given value.
+
+### HasAuthor
+
+`func (o *Component) HasAuthor() bool`
+
+HasAuthor returns a boolean if a field has been set.
+
+### GetRepositoryMeta
+
+`func (o *Component) GetRepositoryMeta() RepositoryMetaComponent`
+
+GetRepositoryMeta returns the RepositoryMeta field if non-nil, zero value otherwise.
+
+### GetRepositoryMetaOk
+
+`func (o *Component) GetRepositoryMetaOk() (*RepositoryMetaComponent, bool)`
+
+GetRepositoryMetaOk returns a tuple with the RepositoryMeta field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetRepositoryMeta
+
+`func (o *Component) SetRepositoryMeta(v RepositoryMetaComponent)`
+
+SetRepositoryMeta sets RepositoryMeta field to given value.
+
+### HasRepositoryMeta
+
+`func (o *Component) HasRepositoryMeta() bool`
+
+HasRepositoryMeta returns a boolean if a field has been set.
+
+### GetMetrics
+
+`func (o *Component) GetMetrics() DependencyMetrics`
+
+GetMetrics returns the Metrics field if non-nil, zero value otherwise.
+
+### GetMetricsOk
+
+`func (o *Component) GetMetricsOk() (*DependencyMetrics, bool)`
+
+GetMetricsOk returns a tuple with the Metrics field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetMetrics
+
+`func (o *Component) SetMetrics(v DependencyMetrics)`
+
+SetMetrics sets Metrics field to given value.
+
+### HasMetrics
+
+`func (o *Component) HasMetrics() bool`
+
+HasMetrics returns a boolean if a field has been set.
 
 ### GetIsInternal
 

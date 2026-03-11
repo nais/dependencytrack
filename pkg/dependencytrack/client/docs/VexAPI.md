@@ -12,7 +12,7 @@ Method | HTTP request | Description
 
 ## ExportProjectAsCycloneDx1
 
-> string ExportProjectAsCycloneDx1(ctx, uuid).Download(download).Execute()
+> string ExportProjectAsCycloneDx1(ctx, uuid).Download(download).Version(version).Execute()
 
 Returns a VEX for a project in CycloneDX format
 
@@ -33,10 +33,11 @@ import (
 func main() {
 	uuid := "38400000-8cf0-11bd-b23e-10b96e4ef00d" // string | The UUID of the project to export
 	download := true // bool | Force the resulting VEX to be downloaded as a file (defaults to 'false') (optional)
+	version := "version_example" // string | The CycloneDX Spec variant exported (defaults to: '1.5') (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.VexAPI.ExportProjectAsCycloneDx1(context.Background(), uuid).Download(download).Execute()
+	resp, r, err := apiClient.VexAPI.ExportProjectAsCycloneDx1(context.Background(), uuid).Download(download).Version(version).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `VexAPI.ExportProjectAsCycloneDx1``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -63,6 +64,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
  **download** | **bool** | Force the resulting VEX to be downloaded as a file (defaults to &#39;false&#39;) | 
+ **version** | **string** | The CycloneDX Spec variant exported (defaults to: &#39;1.5&#39;) | 
 
 ### Return type
 

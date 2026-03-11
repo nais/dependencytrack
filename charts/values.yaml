@@ -33,7 +33,7 @@ backend:
     repository: dependencytrack
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: 4.13.6-alpine
+    tag: 4.14.0-alpine
   replicaCount: 2
   resources:
     requests:
@@ -114,7 +114,7 @@ frontend:
     repository: dependencytrack
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: 4.13.6
+    tag: 4.14.0
   replicaCount: 1
   resources:
     requests:

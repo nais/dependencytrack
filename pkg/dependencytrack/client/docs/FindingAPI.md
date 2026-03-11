@@ -154,7 +154,7 @@ Name | Type | Description  | Notes
 
 ## GetAllFindings
 
-> []Finding GetAllFindings(ctx).ShowInactive(showInactive).Severity(severity).PublishDateFrom(publishDateFrom).PublishDateTo(publishDateTo).TextSearchField(textSearchField).TextSearchInput(textSearchInput).Cvssv2From(cvssv2From).Cvssv2To(cvssv2To).Cvssv3From(cvssv3From).Cvssv3To(cvssv3To).OccurrencesFrom(occurrencesFrom).OccurrencesTo(occurrencesTo).Execute()
+> []Finding GetAllFindings(ctx).ShowInactive(showInactive).Severity(severity).PublishDateFrom(publishDateFrom).PublishDateTo(publishDateTo).TextSearchField(textSearchField).TextSearchInput(textSearchInput).Cvssv2From(cvssv2From).Cvssv2To(cvssv2To).Cvssv3From(cvssv3From).Cvssv3To(cvssv3To).Cvssv4From(cvssv4From).Cvssv4To(cvssv4To).EpssFrom(epssFrom).EpssTo(epssTo).EpssPercentileFrom(epssPercentileFrom).EpssPercentileTo(epssPercentileTo).OccurrencesFrom(occurrencesFrom).OccurrencesTo(occurrencesTo).Execute()
 
 Returns a list of all findings grouped by vulnerability
 
@@ -183,12 +183,18 @@ func main() {
 	cvssv2To := "cvssv2To_example" // string | Filter CVSSv2 to this value (optional)
 	cvssv3From := "cvssv3From_example" // string | Filter CVSSv3 from this value (optional)
 	cvssv3To := "cvssv3To_example" // string | Filter CVSSv3 to this value (optional)
+	cvssv4From := "cvssv4From_example" // string | Filter CVSSv4 from this value (optional)
+	cvssv4To := "cvssv4To_example" // string | Filter CVSSv4 to this value (optional)
+	epssFrom := "epssFrom_example" // string | Filter EPSS from this value (optional)
+	epssTo := "epssTo_example" // string | Filter EPSS to this value (optional)
+	epssPercentileFrom := "epssPercentileFrom_example" // string | Filter EPSS Percentile from this value (optional)
+	epssPercentileTo := "epssPercentileTo_example" // string | Filter EPSS Percentile to this value (optional)
 	occurrencesFrom := "occurrencesFrom_example" // string | Filter occurrences in projects from this value (optional)
 	occurrencesTo := "occurrencesTo_example" // string | Filter occurrences in projects to this value (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.FindingAPI.GetAllFindings(context.Background()).ShowInactive(showInactive).Severity(severity).PublishDateFrom(publishDateFrom).PublishDateTo(publishDateTo).TextSearchField(textSearchField).TextSearchInput(textSearchInput).Cvssv2From(cvssv2From).Cvssv2To(cvssv2To).Cvssv3From(cvssv3From).Cvssv3To(cvssv3To).OccurrencesFrom(occurrencesFrom).OccurrencesTo(occurrencesTo).Execute()
+	resp, r, err := apiClient.FindingAPI.GetAllFindings(context.Background()).ShowInactive(showInactive).Severity(severity).PublishDateFrom(publishDateFrom).PublishDateTo(publishDateTo).TextSearchField(textSearchField).TextSearchInput(textSearchInput).Cvssv2From(cvssv2From).Cvssv2To(cvssv2To).Cvssv3From(cvssv3From).Cvssv3To(cvssv3To).Cvssv4From(cvssv4From).Cvssv4To(cvssv4To).EpssFrom(epssFrom).EpssTo(epssTo).EpssPercentileFrom(epssPercentileFrom).EpssPercentileTo(epssPercentileTo).OccurrencesFrom(occurrencesFrom).OccurrencesTo(occurrencesTo).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `FindingAPI.GetAllFindings``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -219,6 +225,12 @@ Name | Type | Description  | Notes
  **cvssv2To** | **string** | Filter CVSSv2 to this value | 
  **cvssv3From** | **string** | Filter CVSSv3 from this value | 
  **cvssv3To** | **string** | Filter CVSSv3 to this value | 
+ **cvssv4From** | **string** | Filter CVSSv4 from this value | 
+ **cvssv4To** | **string** | Filter CVSSv4 to this value | 
+ **epssFrom** | **string** | Filter EPSS from this value | 
+ **epssTo** | **string** | Filter EPSS to this value | 
+ **epssPercentileFrom** | **string** | Filter EPSS Percentile from this value | 
+ **epssPercentileTo** | **string** | Filter EPSS Percentile to this value | 
  **occurrencesFrom** | **string** | Filter occurrences in projects from this value | 
  **occurrencesTo** | **string** | Filter occurrences in projects to this value | 
 
@@ -242,7 +254,7 @@ Name | Type | Description  | Notes
 
 ## GetAllFindings1
 
-> []Finding GetAllFindings1(ctx).ShowInactive(showInactive).ShowSuppressed(showSuppressed).Severity(severity).AnalysisStatus(analysisStatus).VendorResponse(vendorResponse).PublishDateFrom(publishDateFrom).PublishDateTo(publishDateTo).AttributedOnDateFrom(attributedOnDateFrom).AttributedOnDateTo(attributedOnDateTo).TextSearchField(textSearchField).TextSearchInput(textSearchInput).Cvssv2From(cvssv2From).Cvssv2To(cvssv2To).Cvssv3From(cvssv3From).Cvssv3To(cvssv3To).Execute()
+> []Finding GetAllFindings1(ctx).ShowInactive(showInactive).ShowSuppressed(showSuppressed).Severity(severity).AnalysisStatus(analysisStatus).VendorResponse(vendorResponse).PublishDateFrom(publishDateFrom).PublishDateTo(publishDateTo).AttributedOnDateFrom(attributedOnDateFrom).AttributedOnDateTo(attributedOnDateTo).TextSearchField(textSearchField).TextSearchInput(textSearchInput).Cvssv2From(cvssv2From).Cvssv2To(cvssv2To).Cvssv3From(cvssv3From).Cvssv3To(cvssv3To).Cvssv4From(cvssv4From).Cvssv4To(cvssv4To).EpssFrom(epssFrom).EpssTo(epssTo).EpssPercentileFrom(epssPercentileFrom).EpssPercentileTo(epssPercentileTo).Execute()
 
 Returns a list of all findings
 
@@ -275,11 +287,17 @@ func main() {
 	cvssv2From := "cvssv2From_example" // string | Filter CVSSv2 from this value (optional)
 	cvssv2To := "cvssv2To_example" // string | Filter CVSSv2 from this Value (optional)
 	cvssv3From := "cvssv3From_example" // string | Filter CVSSv3 from this value (optional)
-	cvssv3To := "cvssv3To_example" // string | Filter CVSSv3 from this Value (optional)
+	cvssv3To := "cvssv3To_example" // string | Filter CVSSv3 to this value (optional)
+	cvssv4From := "cvssv4From_example" // string | Filter CVSSv4 from this value (optional)
+	cvssv4To := "cvssv4To_example" // string | Filter CVSSv4 to this value (optional)
+	epssFrom := "epssFrom_example" // string | Filter EPSS from this value (optional)
+	epssTo := "epssTo_example" // string | Filter EPSS to this value (optional)
+	epssPercentileFrom := "epssPercentileFrom_example" // string | Filter EPSS Percentile from this value (optional)
+	epssPercentileTo := "epssPercentileTo_example" // string | Filter EPSS Percentile to this value (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.FindingAPI.GetAllFindings1(context.Background()).ShowInactive(showInactive).ShowSuppressed(showSuppressed).Severity(severity).AnalysisStatus(analysisStatus).VendorResponse(vendorResponse).PublishDateFrom(publishDateFrom).PublishDateTo(publishDateTo).AttributedOnDateFrom(attributedOnDateFrom).AttributedOnDateTo(attributedOnDateTo).TextSearchField(textSearchField).TextSearchInput(textSearchInput).Cvssv2From(cvssv2From).Cvssv2To(cvssv2To).Cvssv3From(cvssv3From).Cvssv3To(cvssv3To).Execute()
+	resp, r, err := apiClient.FindingAPI.GetAllFindings1(context.Background()).ShowInactive(showInactive).ShowSuppressed(showSuppressed).Severity(severity).AnalysisStatus(analysisStatus).VendorResponse(vendorResponse).PublishDateFrom(publishDateFrom).PublishDateTo(publishDateTo).AttributedOnDateFrom(attributedOnDateFrom).AttributedOnDateTo(attributedOnDateTo).TextSearchField(textSearchField).TextSearchInput(textSearchInput).Cvssv2From(cvssv2From).Cvssv2To(cvssv2To).Cvssv3From(cvssv3From).Cvssv3To(cvssv3To).Cvssv4From(cvssv4From).Cvssv4To(cvssv4To).EpssFrom(epssFrom).EpssTo(epssTo).EpssPercentileFrom(epssPercentileFrom).EpssPercentileTo(epssPercentileTo).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `FindingAPI.GetAllFindings1``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -314,7 +332,13 @@ Name | Type | Description  | Notes
  **cvssv2From** | **string** | Filter CVSSv2 from this value | 
  **cvssv2To** | **string** | Filter CVSSv2 from this Value | 
  **cvssv3From** | **string** | Filter CVSSv3 from this value | 
- **cvssv3To** | **string** | Filter CVSSv3 from this Value | 
+ **cvssv3To** | **string** | Filter CVSSv3 to this value | 
+ **cvssv4From** | **string** | Filter CVSSv4 from this value | 
+ **cvssv4To** | **string** | Filter CVSSv4 to this value | 
+ **epssFrom** | **string** | Filter EPSS from this value | 
+ **epssTo** | **string** | Filter EPSS to this value | 
+ **epssPercentileFrom** | **string** | Filter EPSS Percentile from this value | 
+ **epssPercentileTo** | **string** | Filter EPSS Percentile to this value | 
 
 ### Return type
 
