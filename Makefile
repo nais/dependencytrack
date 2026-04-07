@@ -68,17 +68,19 @@ generate: generate-client generate-mocks
 
 generate-client:
 	@echo "Generating Go code from the OpenAPI specification..."
-	@openapi-generator generate \
-        -i schema/dtrack.json \
+	@docker run --rm \
+        -v "$(PWD):/local" \
+        --platform linux/amd64 \
+        openapitools/openapi-generator-cli generate \
+        -i /local/schema/dtrack.json \
         -g go \
-        -o pkg/dependencytrack/client \
+        -o /local/pkg/dependencytrack/client \
         --global-property apiTests=false,modelTests=false \
         --package-name client \
         --additional-properties=withGoMod=false \
         --additional-properties=generateInterfaces=true \
         --additional-properties=packageName=client || { \
-			echo "Error: openapi-generator is not installed or failed to execute."; \
-			echo "Please visit https://openapi-generator.tech/docs/installation/ for installation instructions."; \
+			echo "Error: docker is not running or openapi-generator-cli image failed to execute."; \
 			exit 1; \
 		}
 
