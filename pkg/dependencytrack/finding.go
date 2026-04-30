@@ -38,6 +38,8 @@ type Vulnerability struct {
 	SuppressedState string
 	Cve             *Cve
 	Cvss            *float64
+	EpssScore       *float64
+	EpssPercentile  *float64
 	LatestVersion   string
 	Metadata        *VulnMetadata
 }
@@ -179,6 +181,16 @@ func ParseFinding(finding client.Finding) (*Vulnerability, error) {
 		cvssV3BaseScore = &cvss
 	}
 
+	var epssScore *float64
+	if e, ok := vulnData["epssScore"].(float64); ok {
+		epssScore = &e
+	}
+
+	var epssPercentile *float64
+	if e, ok := vulnData["epssPercentile"].(float64); ok {
+		epssPercentile = &e
+	}
+
 	var link string
 	if source, ok := vulnData["source"].(string); ok {
 		switch source {
@@ -262,7 +274,9 @@ func ParseFinding(finding client.Finding) (*Vulnerability, error) {
 			Severity:    severity,
 			References:  references,
 		},
-		Cvss: cvssV3BaseScore,
+		Cvss:            cvssV3BaseScore,
+		EpssScore:       epssScore,
+		EpssPercentile:  epssPercentile,
 		Metadata: &VulnMetadata{
 			ProjectId:         projectId,
 			ComponentId:       componentId,
