@@ -136,7 +136,7 @@ trivy:
   image:
     registry: "ghcr.io"
     repository: "aquasecurity/trivy"
-    tag: "0.69.3"
+    tag: "0.70.0"
   serverToken: "todo"
   podSecurityContext:
     seccompProfile:
