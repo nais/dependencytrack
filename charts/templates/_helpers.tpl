@@ -80,6 +80,23 @@ app.kubernetes.io/instance: {{ include "dependencytrack-frontend.name" . }}
 {{- end }}
 
 {{/*
+Override trivy.imageRef to support digest pinning.
+NOTE: this is called from within the trivy subchart, so values are scoped
+to .Values.image.* (not .Values.trivy.image.*).
+If .Values.image.digest is set, renders registry/repository@digest, otherwise :tag.
+*/}}
+{{- define "trivy.imageRef" -}}
+{{- $registryName := .Values.image.registry -}}
+{{- $repositoryName := .Values.image.repository -}}
+{{- if .Values.image.digest -}}
+{{- printf "%s/%s@%s" $registryName $repositoryName .Values.image.digest -}}
+{{- else -}}
+{{- $tag := .Values.image.tag | default .Chart.AppVersion | toString -}}
+{{- printf "%s/%s:%s" $registryName $repositoryName $tag -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
 Create the name of the service account to use
 */}}
 {{- define "dependencytrack.serviceAccountName" -}}
