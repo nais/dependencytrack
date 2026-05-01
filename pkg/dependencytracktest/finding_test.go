@@ -33,4 +33,30 @@ func TestParseFinding(t *testing.T) {
 	assert.Equal(t, "a loooong description", v.Cve.Description)
 	assert.Equal(t, "44.0.1", v.LatestVersion)
 	assert.Equal(t, 1, len(v.Cve.References))
+	// cvssV3BaseScore present, no cvssV4Score — expect v3 score
+	assert.NotNil(t, v.Cvss)
+	assert.Equal(t, 2.5, *v.Cvss)
+}
+
+func TestParseFinding_CvssV4TakesPrecedence(t *testing.T) {
+	// Build a minimal finding where both cvssV4Score and cvssV3BaseScore are
+	// present. The returned Cvss field must use the v4 score (8.7), which is
+	// what DT uses to derive the severity label — keeping score and severity
+	// consistent.
+	finding := client.Finding{
+		Component: map[string]interface{}{"uuid": "c1", "project": "p1", "purl": "pkg:maven/test@1.0"},
+		Vulnerability: map[string]interface{}{
+			"vulnId":          "CVE-2025-10492",
+			"severity":        "HIGH",
+			"cvssV3BaseScore": float64(9.8),
+			"cvssV4Score":     float64(8.7),
+			"source":          "NVD",
+			"uuid":            "00000000-0000-0000-0000-000000000001",
+		},
+		Analysis: map[string]interface{}{"isSuppressed": false},
+	}
+	v, err := dependencytrack.ParseFinding(finding)
+	assert.NoError(t, err)
+	assert.NotNil(t, v.Cvss)
+	assert.Equal(t, 8.7, *v.Cvss)
 }
