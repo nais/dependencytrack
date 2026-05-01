@@ -33,30 +33,83 @@ func TestParseFinding(t *testing.T) {
 	assert.Equal(t, "a loooong description", v.Cve.Description)
 	assert.Equal(t, "44.0.1", v.LatestVersion)
 	assert.Equal(t, 1, len(v.Cve.References))
-	// cvssV3BaseScore present, no cvssV4Score — expect v3 score
 	assert.NotNil(t, v.Cvss)
 	assert.Equal(t, 2.5, *v.Cvss)
+	assert.NotNil(t, v.EpssScore)
+	assert.Equal(t, 0.00527, *v.EpssScore)
+	assert.NotNil(t, v.EpssPercentile)
+	assert.Equal(t, 0.66622, *v.EpssPercentile)
 }
 
-func TestParseFinding_CvssV4TakesPrecedence(t *testing.T) {
-	// Build a minimal finding where both cvssV4Score and cvssV3BaseScore are
-	// present. The returned Cvss field must use the v4 score (8.7), which is
-	// what DT uses to derive the severity label — keeping score and severity
-	// consistent.
-	finding := client.Finding{
-		Component: map[string]interface{}{"uuid": "c1", "project": "p1", "purl": "pkg:maven/test@1.0"},
-		Vulnerability: map[string]interface{}{
-			"vulnId":          "CVE-2025-10492",
-			"severity":        "HIGH",
-			"cvssV3BaseScore": float64(9.8),
-			"cvssV4Score":     float64(8.7),
-			"source":          "NVD",
-			"uuid":            "00000000-0000-0000-0000-000000000001",
+func TestParseFinding_CvssScore(t *testing.T) {
+	ptrF := func(f float64) *float64 { return &f }
+
+	tests := []struct {
+		name     string
+		vuln     map[string]interface{}
+		wantCvss *float64
+	}{
+		{
+			name: "v4 takes precedence over v3",
+			vuln: map[string]interface{}{
+				"vulnId":          "CVE-2025-10492",
+				"severity":        "HIGH",
+				"cvssV3BaseScore": float64(9.8),
+				"cvssV4Score":     float64(8.7),
+				"source":          "NVD",
+				"uuid":            "00000000-0000-0000-0000-000000000001",
+			},
+			wantCvss: ptrF(8.7),
 		},
-		Analysis: map[string]interface{}{"isSuppressed": false},
+		{
+			name: "v4 only",
+			vuln: map[string]interface{}{
+				"vulnId":      "GHSA-gg57-587f-h5v6",
+				"severity":    "MEDIUM",
+				"cvssV4Score": float64(5.1),
+				"source":      "GITHUB",
+				"uuid":        "00000000-0000-0000-0000-000000000002",
+			},
+			wantCvss: ptrF(5.1),
+		},
+		{
+			name: "v3 only",
+			vuln: map[string]interface{}{
+				"vulnId":          "GHSA-3vqj-43w4-2q58",
+				"severity":        "HIGH",
+				"cvssV3BaseScore": float64(7.5),
+				"source":          "GITHUB",
+				"uuid":            "00000000-0000-0000-0000-000000000003",
+			},
+			wantCvss: ptrF(7.5),
+		},
+		{
+			name: "neither present",
+			vuln: map[string]interface{}{
+				"vulnId":   "GHSA-0000-0000-0000",
+				"severity": "UNASSIGNED",
+				"source":   "GITHUB",
+				"uuid":     "00000000-0000-0000-0000-000000000004",
+			},
+			wantCvss: nil,
+		},
 	}
-	v, err := dependencytrack.ParseFinding(finding)
-	assert.NoError(t, err)
-	assert.NotNil(t, v.Cvss)
-	assert.Equal(t, 8.7, *v.Cvss)
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			finding := client.Finding{
+				Component:     map[string]interface{}{"uuid": "c1", "project": "p1", "purl": "pkg:maven/test@1.0"},
+				Vulnerability: tt.vuln,
+				Analysis:      map[string]interface{}{"isSuppressed": false},
+			}
+			v, err := dependencytrack.ParseFinding(finding)
+			assert.NoError(t, err)
+			if tt.wantCvss == nil {
+				assert.Nil(t, v.Cvss)
+			} else {
+				assert.NotNil(t, v.Cvss)
+				assert.Equal(t, *tt.wantCvss, *v.Cvss)
+			}
+		})
+	}
 }

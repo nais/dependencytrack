@@ -176,14 +176,11 @@ func ParseFinding(finding client.Finding) (*Vulnerability, error) {
 	if v, ok := vulnData["uuid"].(string); ok {
 		vulnerabilityUuid = v
 	}
-	// Prefer CVSS 4.0 score when present — it is what DT uses to derive the
-	// severity label. Fall back to CVSS 3.x so that cvss_score is always
-	// consistent with the severity string we store alongside it.
-	var cvssV3BaseScore *float64
+	var cvssScore *float64
 	if cvss, ok := vulnData["cvssV4Score"].(float64); ok {
-		cvssV3BaseScore = &cvss
+		cvssScore = &cvss
 	} else if cvss, ok := vulnData["cvssV3BaseScore"].(float64); ok {
-		cvssV3BaseScore = &cvss
+		cvssScore = &cvss
 	}
 
 	var epssScore *float64
@@ -279,7 +276,7 @@ func ParseFinding(finding client.Finding) (*Vulnerability, error) {
 			Severity:    severity,
 			References:  references,
 		},
-		Cvss:            cvssV3BaseScore,
+		Cvss:            cvssScore,
 		EpssScore:       epssScore,
 		EpssPercentile:  epssPercentile,
 		Metadata: &VulnMetadata{

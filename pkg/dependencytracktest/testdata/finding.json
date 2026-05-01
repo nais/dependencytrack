@@ -13,6 +13,8 @@
     "vulnId": "GHSA-79v4-65xg-pq4g",
     "title": "Vulnerable OpenSSL included in cryptography wheels",
     "cvssV3BaseScore": 2.5,
+    "epssScore": 0.00527,
+    "epssPercentile": 0.66622,
     "severity": "LOW",
     "severityRank": 3,
     "cweId": 392,
