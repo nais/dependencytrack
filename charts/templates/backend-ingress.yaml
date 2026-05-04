@@ -21,3 +21,25 @@ spec:
                   number: 8080
             path: /
             pathType: Prefix
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "dependencytrack-backend.name" . }}-haproxy
+  labels:
+    {{- include "dependencytrack-backend.labels" . | nindent 4 }}
+  annotations:
+    haproxy.org/timeout-server: "3600s"
+spec:
+  ingressClassName: internal-haproxy
+  rules:
+    - host: {{ .Values.backend.ingress | quote }}
+      http:
+        paths:
+          - backend:
+              service:
+                name: {{ include "dependencytrack-backend.name" . }}
+                port:
+                  number: 8080
+            path: /
+            pathType: Prefix
