@@ -193,29 +193,31 @@ func ParseFinding(finding client.Finding) (*Vulnerability, error) {
 		epssPercentile = &e
 	}
 
-	var link string
-	if source, ok := vulnData["source"].(string); ok {
-		switch source {
-		case "NVD":
-			link = fmt.Sprintf("https://nvd.nist.gov/vuln/detail/%s", vulnId)
-		case "GITHUB":
-			link = fmt.Sprintf("https://github.com/advisories/%s", vulnId)
-		case "UBUNTU":
-			link = fmt.Sprintf("https://ubuntu.com/security/CVE-%s", vulnId)
-		case "OSSINDEX":
-			link = fmt.Sprintf("https://ossindex.sonatype.org/vuln/%s", vulnId)
-		case "DEBIAN":
-			link = fmt.Sprintf("https://security-tracker.debian.org/tracker/%s", vulnId)
-		case "OSV":
-			link = fmt.Sprintf("https://osv.dev/vulnerability/%s", vulnId)
-		case "NPM":
-			link = fmt.Sprintf("https://www.npmjs.com/advisories/%s", vulnId)
-		case "RETIREJS":
-			link = fmt.Sprintf("https://retirejs.github.io/retire.js/%s.html", vulnId)
-		case "UNKNOWN":
-			link = fmt.Sprintf("https://security-tracker.debian.org/tracker/%s", vulnId)
+	var source string
+	if s, ok := vulnData["source"].(string); ok {
+		source = s
+	}
 
-		}
+	var link string
+	switch source {
+	case "NVD":
+		link = fmt.Sprintf("https://nvd.nist.gov/vuln/detail/%s", vulnId)
+	case "GITHUB":
+		link = fmt.Sprintf("https://github.com/advisories/%s", vulnId)
+	case "UBUNTU":
+		link = fmt.Sprintf("https://ubuntu.com/security/CVE-%s", vulnId)
+	case "OSSINDEX":
+		link = fmt.Sprintf("https://ossindex.sonatype.org/vuln/%s", vulnId)
+	case "DEBIAN":
+		link = fmt.Sprintf("https://security-tracker.debian.org/tracker/%s", vulnId)
+	case "OSV":
+		link = fmt.Sprintf("https://osv.dev/vulnerability/%s", vulnId)
+	case "NPM":
+		link = fmt.Sprintf("https://www.npmjs.com/advisories/%s", vulnId)
+	case "RETIREJS":
+		link = fmt.Sprintf("https://retirejs.github.io/retire.js/%s.html", vulnId)
+	case "UNKNOWN":
+		link = fmt.Sprintf("https://security-tracker.debian.org/tracker/%s", vulnId)
 	}
 
 	suppressed := false
@@ -254,11 +256,25 @@ func ParseFinding(finding client.Finding) (*Vulnerability, error) {
 	if aliases, ok := vulnData["aliases"].([]interface{}); ok {
 		for _, a := range aliases {
 			if alias, ok := a.(map[string]interface{}); ok {
-				if cveId, ok := alias["cveId"].(string); ok {
-					if ghsaId, ok := alias["ghsaId"].(string); ok {
-						references[cveId] = ghsaId
-					}
+				cveId, _ := alias["cveId"].(string)
+				if cveId == "" {
+					continue
 				}
+				ghsaId, _ := alias["ghsaId"].(string)
+				if ghsaId == "" {
+					// Only fall back to vulnId for GITHUB advisories — for other
+					// sources (NVD, OSV, etc.) vulnId is not a GHSA ID and using
+					// it would produce a meaningless CVE→CVE mapping.
+					if source != "GITHUB" || !strings.HasPrefix(vulnId, "GHSA-") {
+						continue
+					}
+					ghsaId = vulnId
+				}
+				// Skip self-referential mappings (cveId→ghsaId where both are the same).
+				if cveId == ghsaId {
+					continue
+				}
+				references[cveId] = ghsaId
 			}
 		}
 	}
