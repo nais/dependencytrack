@@ -257,7 +257,7 @@ func ParseFinding(finding client.Finding) (*Vulnerability, error) {
 		for _, a := range aliases {
 			if alias, ok := a.(map[string]interface{}); ok {
 				cveId, _ := alias["cveId"].(string)
-				if cveId == "" || cveId == vulnId {
+				if cveId == "" {
 					continue
 				}
 				ghsaId, _ := alias["ghsaId"].(string)
@@ -265,10 +265,14 @@ func ParseFinding(finding client.Finding) (*Vulnerability, error) {
 					// Only fall back to vulnId for GITHUB advisories — for other
 					// sources (NVD, OSV, etc.) vulnId is not a GHSA ID and using
 					// it would produce a meaningless CVE→CVE mapping.
-					if source != "GITHUB" || vulnId == "" {
+					if source != "GITHUB" || !strings.HasPrefix(vulnId, "GHSA-") {
 						continue
 					}
 					ghsaId = vulnId
+				}
+				// Skip self-referential mappings (cveId→ghsaId where both are the same).
+				if cveId == ghsaId {
+					continue
 				}
 				references[cveId] = ghsaId
 			}

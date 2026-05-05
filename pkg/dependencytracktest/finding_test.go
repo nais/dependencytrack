@@ -85,6 +85,15 @@ func TestParseFinding_Aliases(t *testing.T) {
 			wantRefs: map[string]string{},
 		},
 		{
+			name:   "cveId present but ghsaId absent, GITHUB source with CVE vulnId — skipped",
+			source: "GITHUB",
+			vulnId: "CVE-2024-12797",
+			aliases: []any{
+				map[string]any{"cveId": "CVE-2024-99999"},
+			},
+			wantRefs: map[string]string{},
+		},
+		{
 			name:   "ghsaId present but cveId absent — no entry emitted",
 			source: "GITHUB",
 			vulnId: "GHSA-79v4-65xg-pq4g",
@@ -94,11 +103,20 @@ func TestParseFinding_Aliases(t *testing.T) {
 			wantRefs: map[string]string{},
 		},
 		{
-			name:   "cveId equals vulnId — self-reference skipped",
-			source: "GITHUB",
+			name:   "cveId equals vulnId with ghsaId present — CVE→GHSA mapping retained",
+			source: "NVD",
 			vulnId: "CVE-2024-12797",
 			aliases: []any{
 				map[string]any{"cveId": "CVE-2024-12797", "ghsaId": "GHSA-79v4-65xg-pq4g"},
+			},
+			wantRefs: map[string]string{"CVE-2024-12797": "GHSA-79v4-65xg-pq4g"},
+		},
+		{
+			name:   "cveId equals vulnId without ghsaId — self-reference skipped",
+			source: "GITHUB",
+			vulnId: "GHSA-79v4-65xg-pq4g",
+			aliases: []any{
+				map[string]any{"cveId": "GHSA-79v4-65xg-pq4g"},
 			},
 			wantRefs: map[string]string{},
 		},
