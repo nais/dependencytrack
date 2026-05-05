@@ -296,7 +296,9 @@ func ParseFinding(finding client.Finding) (*Vulnerability, error) {
 		link = fmt.Sprintf("https://nvd.nist.gov/vuln/detail/%s", canonical)
 		// Keep only the promoted canonical to avoid FK violations for the
 		// remaining alias keys which would have no corresponding cve row.
-		references = map[string]string{canonical: vulnId}
+		// Use the original alias value from the map rather than vulnId, in
+		// case ghsaId in the alias entry differs from vulnId.
+		references = map[string]string{canonical: references[canonical]}
 	}
 
 	return &Vulnerability{

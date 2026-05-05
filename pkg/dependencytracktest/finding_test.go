@@ -101,6 +101,19 @@ func TestParseFinding_Aliases(t *testing.T) {
 			wantRefs: map[string]string{"CVE-2024-12797": "GHSA-79v4-65xg-pq4g"},
 		},
 		{
+			// ghsaId in the alias entry differs from vulnId — the trimmed
+			// references map must preserve the original ghsaId value, not vulnId.
+			name:   "GITHUB finding where ghsaId differs from vulnId — original ghsaId preserved in refs",
+			source: "GITHUB",
+			vulnId: "GHSA-79v4-65xg-pq4g",
+			aliases: []any{
+				map[string]any{"cveId": "CVE-2024-12797", "ghsaId": "GHSA-different-alias"},
+			},
+			wantId:   "CVE-2024-12797",
+			wantLink: "https://nvd.nist.gov/vuln/detail/CVE-2024-12797",
+			wantRefs: map[string]string{"CVE-2024-12797": "GHSA-different-alias"},
+		},
+		{
 			name:   "GITHUB finding with cveId only (no ghsaId) — falls back to vulnId as alias, promoted to CVE canonical",
 			source: "GITHUB",
 			vulnId: "GHSA-79v4-65xg-pq4g",
