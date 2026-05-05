@@ -102,6 +102,14 @@ func TestParseFinding_Aliases(t *testing.T) {
 			aliases:  []any{},
 			wantRefs: map[string]string{},
 		},
+		{
+			name:   "empty vulnId with no ghsaId — skipped",
+			vulnId: "",
+			aliases: []any{
+				map[string]any{"cveId": "CVE-2024-12797"},
+			},
+			wantRefs: map[string]string{},
+		},
 	}
 
 	for _, tt := range tests {
