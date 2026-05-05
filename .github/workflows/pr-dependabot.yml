@@ -1,11 +1,9 @@
-name: PR Dependabot Check
+name: Dependabot auto-merge
 
 on:
-  pull_request:
-    paths-ignore:
-      - 'charts/**'
-      - '*.md'
-      - 'LICENSE.md'
+  workflow_run:
+    workflows: ["Build and deploy Bootstrap"]
+    types: [completed]
 
 permissions:
   contents: write
@@ -14,21 +12,46 @@ permissions:
 jobs:
   dependabot:
     runs-on: ubuntu-latest
-    if: ${{ github.event.pull_request.user.login == 'dependabot[bot]' }}
+    if: >
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.actor.login == 'dependabot[bot]'
     steps:
+      - name: Fetch PR number from workflow run
+        id: pr
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RUN_HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
+        run: |
+          pr_number=$(gh pr list --repo "$GITHUB_REPOSITORY" \
+            --json number,headRefOid \
+            --jq ".[] | select(.headRefOid == \"$RUN_HEAD_SHA\") | .number" \
+            | head -1)
+          if [[ -z "$pr_number" ]]; then
+            echo "No PR found for SHA $RUN_HEAD_SHA — skipping."
+            exit 0
+          fi
+          echo "number=$pr_number" >> "$GITHUB_OUTPUT"
+          echo "url=https://github.com/$GITHUB_REPOSITORY/pull/$pr_number" >> "$GITHUB_OUTPUT"
+
       - name: Dependabot metadata
+        if: steps.pr.outputs.number != ''
         id: dependabot-metadata
         uses: dependabot/fetch-metadata@25dd0e34f4fe68f24cc83900b1fe3fe149efef98 # ratchet:dependabot/fetch-metadata@v3.1.0
         with:
           github-token: "${{ secrets.GITHUB_TOKEN }}"
-      - name: Approve a PR
+
+      - name: Approve PR
+        if: steps.pr.outputs.number != ''
         run: gh pr review --approve "$PR_URL"
         env:
-          PR_URL: ${{ github.event.pull_request.html_url }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Enable auto-merge for Dependabot PRs
-        if: ${{ steps.dependabot-metadata.outputs.update-type != 'version-update:semver-major' }}
+          PR_URL: ${{ steps.pr.outputs.url }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Enable auto-merge for non-major bumps
+        if: >
+          steps.pr.outputs.number != '' &&
+          steps.dependabot-metadata.outputs.update-type != 'version-update:semver-major'
         run: gh pr merge --auto --squash "$PR_URL"
         env:
-          PR_URL: ${{ github.event.pull_request.html_url }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_URL: ${{ steps.pr.outputs.url }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
