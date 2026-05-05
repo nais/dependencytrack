@@ -258,14 +258,14 @@ func ParseFinding(finding client.Finding) (*Vulnerability, error) {
 				if cveId == "" || cveId == vulnId {
 					continue
 				}
-			ghsaId := vulnId
-			if g, ok := alias["ghsaId"].(string); ok && g != "" {
-				ghsaId = g
-			}
-			if ghsaId == "" {
-				continue
-			}
-			references[cveId] = ghsaId
+				ghsaId := vulnId
+				if g, ok := alias["ghsaId"].(string); ok && g != "" {
+					ghsaId = g
+				}
+				if ghsaId == "" {
+					continue
+				}
+				references[cveId] = ghsaId
 			}
 		}
 	}
