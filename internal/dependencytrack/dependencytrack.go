@@ -92,8 +92,8 @@ func IsInImagesIgnoreList(image string, imagesIgnore string) bool {
 	if imagesIgnore == "" {
 		return false
 	}
-	images := strings.Split(imagesIgnore, ",")
-	for _, i := range images {
+	images := strings.SplitSeq(imagesIgnore, ",")
+	for i := range images {
 		if strings.Contains(image, i) {
 			return true
 		}

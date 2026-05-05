@@ -1,6 +1,5 @@
 .idea/
 .vscode/
-```
 /.env
 /cover.out
 /charts/values.json
@@ -9,3 +8,5 @@
 /pkg/dependencytrack/client/.travis.yml
 /pkg/dependencytrack/client/api/
 /pkg/dependencytrack/client/.openapi-generator/
+/go.work
+/go.work.sum

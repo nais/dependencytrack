@@ -6,37 +6,58 @@ on:
     paths-ignore:
       - "*.md"
       - "LICENSE.md"
+  pull_request:
+    types: [opened, reopened, synchronize]
+    paths-ignore:
+      - "*.md"
+      - "LICENSE.md"
 env:
   NAME: dependencytrack
   FEATURE_REPOSITORY: oci://europe-north1-docker.pkg.dev/nais-io/nais/feature
 
+concurrency:
+  group: ${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  tests:
-    if: github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
+  checks:
     permissions:
-      contents: read
+      contents: "read"
+    strategy:
+      fail-fast: false
+      matrix:
+        mise-task:
+          - check:deadcode
+          - check:gofix
+          - check:goimport
+          - check:govet
+          - check:gosec
+          - check:govulncheck
+          - check:staticcheck
+          - check:helmlint
+          - test
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # ratchet:actions/checkout@v6
-      - uses: actions/setup-go@4a3601121dd01d1626a1e23e37211e3254c1c06c # ratchet:actions/setup-go@v6
-        with:
-          go-version-file: 'go.mod'
-          cache-dependency-path: "**/*.sum"
+      - uses: jdx/mise-action@1648a7812b9aeae629881980618f079932869151 # ratchet:jdx/mise-action@v4
+      - run: mise run ${{ matrix.mise-task }}
 
-      - name: Run unit tests
-        run: make test
-
-      - name: Check for code
-        run: make check
-
-      - name: run integration tests
-        run: make integration_test
+  integration_test:
+    permissions:
+      contents: "read"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # ratchet:actions/checkout@v6
+      - uses: jdx/mise-action@1648a7812b9aeae629881980618f079932869151 # ratchet:jdx/mise-action@v4
+      - run: mise run test-integration
 
   bootstrap:
+    if: github.ref == 'refs/heads/main'
     outputs:
       version: ${{ steps.build-push-sign-bootstrap.outputs.version }}
     needs:
-      - tests
+      - checks
+      - integration_test
     permissions:
       contents: "read"
       id-token: "write"
@@ -52,6 +73,7 @@ jobs:
           push: true
 
   helm:
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     needs:
       - bootstrap
@@ -76,7 +98,6 @@ jobs:
           helm package charts
       - name: "Authenticate to Google Cloud"
         id: "auth"
-
         uses: "google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093" # ratchet:google-github-actions/auth@v3
         with:
           workload_identity_provider: "${{ secrets.NAIS_IO_WORKLOAD_IDENTITY_PROVIDER }}"
@@ -93,11 +114,11 @@ jobs:
           helm push ${{ env.NAME }}*.tgz ${{ env.FEATURE_REPOSITORY }}
       - name: Output chart version
         id: chart-version
-
         run: echo version=${{ needs.bootstrap.outputs.version }} >> $GITHUB_OUTPUT
-  rollout:
-    needs:
 
+  rollout:
+    if: github.ref == 'refs/heads/main'
+    needs:
       - helm
     runs-on: fasit-deploy
     permissions:

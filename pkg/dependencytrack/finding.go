@@ -276,9 +276,9 @@ func ParseFinding(finding client.Finding) (*Vulnerability, error) {
 			Severity:    severity,
 			References:  references,
 		},
-		Cvss:            cvssScore,
-		EpssScore:       epssScore,
-		EpssPercentile:  epssPercentile,
+		Cvss:           cvssScore,
+		EpssScore:      epssScore,
+		EpssPercentile: epssPercentile,
 		Metadata: &VulnMetadata{
 			ProjectId:         projectId,
 			ComponentId:       componentId,

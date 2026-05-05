@@ -17,7 +17,8 @@ import (
 func NewMockAclAPI(t interface {
 	mock.TestingT
 	Cleanup(func())
-}) *MockAclAPI {
+},
+) *MockAclAPI {
 	mock := &MockAclAPI{}
 	mock.Mock.Test(t)
 
@@ -409,7 +410,8 @@ func (_c *MockAclAPI_RetrieveProjectsExecute_Call) RunAndReturn(run func(r clien
 func NewMockAnalysisAPI(t interface {
 	mock.TestingT
 	Cleanup(func())
-}) *MockAnalysisAPI {
+},
+) *MockAnalysisAPI {
 	mock := &MockAnalysisAPI{}
 	mock.Mock.Test(t)
 
@@ -678,7 +680,8 @@ func (_c *MockAnalysisAPI_UpdateAnalysisExecute_Call) RunAndReturn(run func(r cl
 func NewMockBadgeAPI(t interface {
 	mock.TestingT
 	Cleanup(func())
-}) *MockBadgeAPI {
+},
+) *MockBadgeAPI {
 	mock := &MockBadgeAPI{}
 	mock.Mock.Test(t)
 
@@ -1217,7 +1220,8 @@ func (_c *MockBadgeAPI_GetProjectVulnerabilitiesBadgeExecute_Call) RunAndReturn(
 func NewMockBomAPI(t interface {
 	mock.TestingT
 	Cleanup(func())
-}) *MockBomAPI {
+},
+) *MockBomAPI {
 	mock := &MockBomAPI{}
 	mock.Mock.Test(t)
 
@@ -1863,7 +1867,8 @@ func (_c *MockBomAPI_UploadBomExecute_Call) RunAndReturn(run func(r client.ApiUp
 func NewMockCalculatorAPI(t interface {
 	mock.TestingT
 	Cleanup(func())
-}) *MockCalculatorAPI {
+},
+) *MockCalculatorAPI {
 	mock := &MockCalculatorAPI{}
 	mock.Mock.Test(t)
 
@@ -2132,7 +2137,8 @@ func (_c *MockCalculatorAPI_GetOwaspRRScoresExecute_Call) RunAndReturn(run func(
 func NewMockComponentAPI(t interface {
 	mock.TestingT
 	Cleanup(func())
-}) *MockComponentAPI {
+},
+) *MockComponentAPI {
 	mock := &MockComponentAPI{}
 	mock.Mock.Test(t)
 
@@ -3274,7 +3280,8 @@ func (_c *MockComponentAPI_UpdateComponentExecute_Call) RunAndReturn(run func(r 
 func NewMockComponentPropertyAPI(t interface {
 	mock.TestingT
 	Cleanup(func())
-}) *MockComponentPropertyAPI {
+},
+) *MockComponentPropertyAPI {
 	mock := &MockComponentPropertyAPI{}
 	mock.Mock.Test(t)
 
@@ -3680,7 +3687,8 @@ func (_c *MockComponentPropertyAPI_GetPropertiesExecute_Call) RunAndReturn(run f
 func NewMockConfigPropertyAPI(t interface {
 	mock.TestingT
 	Cleanup(func())
-}) *MockConfigPropertyAPI {
+},
+) *MockConfigPropertyAPI {
 	mock := &MockConfigPropertyAPI{}
 	mock.Mock.Test(t)
 
@@ -4203,7 +4211,8 @@ func (_c *MockConfigPropertyAPI_UpdateConfigPropertyExecute_Call) RunAndReturn(r
 func NewMockCweAPI(t interface {
 	mock.TestingT
 	Cleanup(func())
-}) *MockCweAPI {
+},
+) *MockCweAPI {
 	mock := &MockCweAPI{}
 	mock.Mock.Test(t)
 
@@ -4478,7 +4487,8 @@ func (_c *MockCweAPI_GetCwesExecute_Call) RunAndReturn(run func(r client.ApiGetC
 func NewMockDependencyGraphAPI(t interface {
 	mock.TestingT
 	Cleanup(func())
-}) *MockDependencyGraphAPI {
+},
+) *MockDependencyGraphAPI {
 	mock := &MockDependencyGraphAPI{}
 	mock.Mock.Test(t)
 
@@ -4759,7 +4769,8 @@ func (_c *MockDependencyGraphAPI_GetComponentsAndServicesByProjectUuidExecute_Ca
 func NewMockEventAPI(t interface {
 	mock.TestingT
 	Cleanup(func())
-}) *MockEventAPI {
+},
+) *MockEventAPI {
 	mock := &MockEventAPI{}
 	mock.Mock.Test(t)
 
@@ -4913,7 +4924,8 @@ func (_c *MockEventAPI_IsTokenBeingProcessed1Execute_Call) RunAndReturn(run func
 func NewMockFindingAPI(t interface {
 	mock.TestingT
 	Cleanup(func())
-}) *MockFindingAPI {
+},
+) *MockFindingAPI {
 	mock := &MockFindingAPI{}
 	mock.Mock.Test(t)
 
@@ -5561,7 +5573,8 @@ func (_c *MockFindingAPI_GetFindingsByProjectExecute_Call) RunAndReturn(run func
 func NewMockIntegrationAPI(t interface {
 	mock.TestingT
 	Cleanup(func())
-}) *MockIntegrationAPI {
+},
+) *MockIntegrationAPI {
 	mock := &MockIntegrationAPI{}
 	mock.Mock.Test(t)
 
@@ -5830,7 +5843,8 @@ func (_c *MockIntegrationAPI_GetInactiveEcosystemsExecute_Call) RunAndReturn(run
 func NewMockLdapAPI(t interface {
 	mock.TestingT
 	Cleanup(func())
-}) *MockLdapAPI {
+},
+) *MockLdapAPI {
 	mock := &MockLdapAPI{}
 	mock.Mock.Test(t)
 
@@ -6345,7 +6359,8 @@ func (_c *MockLdapAPI_RetrieveLdapGroupsExecute_Call) RunAndReturn(run func(r cl
 func NewMockLicenseAPI(t interface {
 	mock.TestingT
 	Cleanup(func())
-}) *MockLicenseAPI {
+},
+) *MockLicenseAPI {
 	mock := &MockLicenseAPI{}
 	mock.Mock.Test(t)
 
@@ -6981,7 +6996,8 @@ func (_c *MockLicenseAPI_GetLicensesExecute_Call) RunAndReturn(run func(r client
 func NewMockLicenseGroupAPI(t interface {
 	mock.TestingT
 	Cleanup(func())
-}) *MockLicenseGroupAPI {
+},
+) *MockLicenseGroupAPI {
 	mock := &MockLicenseGroupAPI{}
 	mock.Mock.Test(t)
 
@@ -7883,7 +7899,8 @@ func (_c *MockLicenseGroupAPI_UpdateLicenseGroupExecute_Call) RunAndReturn(run f
 func NewMockMetricsAPI(t interface {
 	mock.TestingT
 	Cleanup(func())
-}) *MockMetricsAPI {
+},
+) *MockMetricsAPI {
 	mock := &MockMetricsAPI{}
 	mock.Mock.Test(t)
 
@@ -9543,7 +9560,8 @@ func (_c *MockMetricsAPI_RefreshProjectMetricsExecute_Call) RunAndReturn(run fun
 func NewMockNotificationAPI(t interface {
 	mock.TestingT
 	Cleanup(func())
-}) *MockNotificationAPI {
+},
+) *MockNotificationAPI {
 	mock := &MockNotificationAPI{}
 	mock.Mock.Test(t)
 
@@ -11526,7 +11544,8 @@ func (_c *MockNotificationAPI_UpdateNotificationRuleExecute_Call) RunAndReturn(r
 func NewMockOidcAPI(t interface {
 	mock.TestingT
 	Cleanup(func())
-}) *MockOidcAPI {
+},
+) *MockOidcAPI {
 	mock := &MockOidcAPI{}
 	mock.Mock.Test(t)
 
@@ -12646,7 +12665,8 @@ func (_c *MockOidcAPI_UpdateGroupExecute_Call) RunAndReturn(run func(r client.Ap
 func NewMockPermissionAPI(t interface {
 	mock.TestingT
 	Cleanup(func())
-}) *MockPermissionAPI {
+},
+) *MockPermissionAPI {
 	mock := &MockPermissionAPI{}
 	mock.Mock.Test(t)
 
@@ -13324,7 +13344,8 @@ func (_c *MockPermissionAPI_RemovePermissionFromUserExecute_Call) RunAndReturn(r
 func NewMockPolicyAPI(t interface {
 	mock.TestingT
 	Cleanup(func())
-}) *MockPolicyAPI {
+},
+) *MockPolicyAPI {
 	mock := &MockPolicyAPI{}
 	mock.Mock.Test(t)
 
@@ -14492,7 +14513,8 @@ func (_c *MockPolicyAPI_UpdatePolicyExecute_Call) RunAndReturn(run func(r client
 func NewMockPolicyConditionAPI(t interface {
 	mock.TestingT
 	Cleanup(func())
-}) *MockPolicyConditionAPI {
+},
+) *MockPolicyConditionAPI {
 	mock := &MockPolicyConditionAPI{}
 	mock.Mock.Test(t)
 
@@ -14886,7 +14908,8 @@ func (_c *MockPolicyConditionAPI_UpdatePolicyConditionExecute_Call) RunAndReturn
 func NewMockProjectAPI(t interface {
 	mock.TestingT
 	Cleanup(func())
-}) *MockProjectAPI {
+},
+) *MockProjectAPI {
 	mock := &MockProjectAPI{}
 	mock.Mock.Test(t)
 
@@ -16905,7 +16928,8 @@ func (_c *MockProjectAPI_UpdateProjectExecute_Call) RunAndReturn(run func(r clie
 func NewMockProjectPropertyAPI(t interface {
 	mock.TestingT
 	Cleanup(func())
-}) *MockProjectPropertyAPI {
+},
+) *MockProjectPropertyAPI {
 	mock := &MockProjectPropertyAPI{}
 	mock.Mock.Test(t)
 
@@ -17432,7 +17456,8 @@ func (_c *MockProjectPropertyAPI_UpdatePropertyExecute_Call) RunAndReturn(run fu
 func NewMockRepositoryAPI(t interface {
 	mock.TestingT
 	Cleanup(func())
-}) *MockRepositoryAPI {
+},
+) *MockRepositoryAPI {
 	mock := &MockRepositoryAPI{}
 	mock.Mock.Test(t)
 
@@ -18189,7 +18214,8 @@ func (_c *MockRepositoryAPI_UpdateRepositoryExecute_Call) RunAndReturn(run func(
 func NewMockSearchAPI(t interface {
 	mock.TestingT
 	Cleanup(func())
-}) *MockSearchAPI {
+},
+) *MockSearchAPI {
 	mock := &MockSearchAPI{}
 	mock.Mock.Test(t)
 
@@ -19184,7 +19210,8 @@ func (_c *MockSearchAPI_VulnerableSoftwareSearchExecute_Call) RunAndReturn(run f
 func NewMockServiceAPI(t interface {
 	mock.TestingT
 	Cleanup(func())
-}) *MockServiceAPI {
+},
+) *MockServiceAPI {
 	mock := &MockServiceAPI{}
 	mock.Mock.Test(t)
 
@@ -19832,7 +19859,8 @@ func (_c *MockServiceAPI_UpdateServiceExecute_Call) RunAndReturn(run func(r clie
 func NewMockTagAPI(t interface {
 	mock.TestingT
 	Cleanup(func())
-}) *MockTagAPI {
+},
+) *MockTagAPI {
 	mock := &MockTagAPI{}
 	mock.Mock.Test(t)
 
@@ -21682,7 +21710,8 @@ func (_c *MockTagAPI_UntagProjectsExecute_Call) RunAndReturn(run func(r client.A
 func NewMockTeamAPI(t interface {
 	mock.TestingT
 	Cleanup(func())
-}) *MockTeamAPI {
+},
+) *MockTeamAPI {
 	mock := &MockTeamAPI{}
 	mock.Mock.Test(t)
 
@@ -23054,7 +23083,8 @@ func (_c *MockTeamAPI_UpdateTeamExecute_Call) RunAndReturn(run func(r client.Api
 func NewMockUserAPI(t interface {
 	mock.TestingT
 	Cleanup(func())
-}) *MockUserAPI {
+},
+) *MockUserAPI {
 	mock := &MockUserAPI{}
 	mock.Mock.Test(t)
 
@@ -25114,7 +25144,8 @@ func (_c *MockUserAPI_ValidateOidcAccessTokenExecute_Call) RunAndReturn(run func
 func NewMockVersionAPI(t interface {
 	mock.TestingT
 	Cleanup(func())
-}) *MockVersionAPI {
+},
+) *MockVersionAPI {
 	mock := &MockVersionAPI{}
 	mock.Mock.Test(t)
 
@@ -25262,7 +25293,8 @@ func (_c *MockVersionAPI_GetVersionExecute_Call) RunAndReturn(run func(r client.
 func NewMockVexAPI(t interface {
 	mock.TestingT
 	Cleanup(func())
-}) *MockVexAPI {
+},
+) *MockVexAPI {
 	mock := &MockVexAPI{}
 	mock.Mock.Test(t)
 
@@ -25656,7 +25688,8 @@ func (_c *MockVexAPI_UploadVexExecute_Call) RunAndReturn(run func(r client.ApiUp
 func NewMockViolationAPI(t interface {
 	mock.TestingT
 	Cleanup(func())
-}) *MockViolationAPI {
+},
+) *MockViolationAPI {
 	mock := &MockViolationAPI{}
 	mock.Mock.Test(t)
 
@@ -26058,7 +26091,8 @@ func (_c *MockViolationAPI_GetViolationsExecute_Call) RunAndReturn(run func(r cl
 func NewMockViolationanalysisAPI(t interface {
 	mock.TestingT
 	Cleanup(func())
-}) *MockViolationanalysisAPI {
+},
+) *MockViolationanalysisAPI {
 	mock := &MockViolationanalysisAPI{}
 	mock.Mock.Test(t)
 
@@ -26327,7 +26361,8 @@ func (_c *MockViolationanalysisAPI_UpdateAnalysis1Execute_Call) RunAndReturn(run
 func NewMockVulnerabilityAPI(t interface {
 	mock.TestingT
 	Cleanup(func())
-}) *MockVulnerabilityAPI {
+},
+) *MockVulnerabilityAPI {
 	mock := &MockVulnerabilityAPI{}
 	mock.Mock.Test(t)
 

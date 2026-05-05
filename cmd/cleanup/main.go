@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/joho/godotenv"
 	"github.com/nais/dependencytrack/pkg/client"
@@ -30,15 +31,15 @@ func main() {
 			panic(err)
 		}
 
-		var projectlog string
+		var projectlog strings.Builder
 		log.Infof("Projects to delete: %d", len(projects))
 		for _, project := range projects {
 			if err := c.DeleteProject(ctx, project.Uuid); err != nil {
 				log.Errorf("Error deleting project %s: %s", project.Name, err)
 			}
-			projectlog += fmt.Sprintf("Deleted project %s\n", project.Name)
+			projectlog.WriteString(fmt.Sprintf("Deleted project %s\n", project.Name))
 		}
-		log.Info(projectlog)
+		log.Info(projectlog.String())
 
 		err = c.PortfolioRefresh(ctx)
 		if err != nil {
@@ -51,17 +52,17 @@ func main() {
 		if err != nil {
 			panic(err)
 		}
-		var teamlog string
+		var teamlog strings.Builder
 		log.Infof("Teams to delete: %d", len(teams))
 		for _, team := range teams {
 			if team.Name != "Administrators" && team.Name != "Automation" && team.Name != "Portfolio Managers" {
 				if err := c.DeleteTeam(ctx, team.Uuid); err != nil {
 					log.Fatalf("Error deleting team %s: %s", team.Name, err)
 				}
-				teamlog += fmt.Sprintf("Deleted team %s\n", team.Name)
+				teamlog.WriteString(fmt.Sprintf("Deleted team %s\n", team.Name))
 			}
 		}
-		log.Info(teamlog)
+		log.Info(teamlog.String())
 	}
 
 	if deleteOidcUsers != "" {
@@ -69,14 +70,14 @@ func main() {
 		if err != nil {
 			panic(err)
 		}
-		var userlog string
+		var userlog strings.Builder
 		log.Infof("Users to delete: %d", len(users))
 		for _, user := range users {
 			if err := c.DeleteOidcUser(ctx, user.Username); err != nil {
 				log.Fatalf("Error deleting user %s: %s", user.Username, err)
 			}
-			userlog += fmt.Sprintf("Deleted user %s\n", user.Username)
+			userlog.WriteString(fmt.Sprintf("Deleted user %s\n", user.Username))
 		}
-		log.Info(userlog)
+		log.Info(userlog.String())
 	}
 }

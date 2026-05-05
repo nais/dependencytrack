@@ -285,10 +285,7 @@ func updateEcosystems(ctx context.Context, c dependencytrack.ManagementClient, e
 	for len(eco) > 0 {
 		log.Info("Processing chunk of ecosystems: ", len(eco))
 		// Get the next chunk of eco
-		end := chunkSize
-		if len(eco) < chunkSize {
-			end = len(eco)
-		}
+		end := min(len(eco), chunkSize)
 
 		chunk := eco[:end]
 		eco = eco[end:] // Remove the processed chunk from eco

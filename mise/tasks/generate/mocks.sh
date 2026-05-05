@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+#MISE description="Generate mocks"
+set -euo pipefail
+
+find pkg/dependencytracktest -type f -name "mock.go" -delete
+go tool github.com/vektra/mockery/v3 --config ./mockery.yaml
+find pkg/dependencytracktest -type f -name "mock.go" -exec go tool mvdan.cc/gofumpt -w {} \;
+go fix ./pkg/dependencytracktest/...

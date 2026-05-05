@@ -17,7 +17,8 @@ import (
 func NewMockClient(t interface {
 	mock.TestingT
 	Cleanup(func())
-}) *MockClient {
+},
+) *MockClient {
 	mock := &MockClient{}
 	mock.Mock.Test(t)
 
@@ -828,7 +829,8 @@ func (_c *MockClient_UpdateFinding_Call) RunAndReturn(run func(ctx context.Conte
 func NewMockManagementClient(t interface {
 	mock.TestingT
 	Cleanup(func())
-}) *MockManagementClient {
+},
+) *MockManagementClient {
 	mock := &MockManagementClient{}
 	mock.Mock.Test(t)
 
