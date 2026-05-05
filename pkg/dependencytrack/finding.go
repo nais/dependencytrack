@@ -280,25 +280,27 @@ func ParseFinding(finding client.Finding) (*Vulnerability, error) {
 		}
 	}
 
-	// For GITHUB findings with a GHSA vulnId: promote the CVE canonical to
-	// Cve.Id so downstream can upsert a cve row for it. Trim references to
-	// the promoted entry only — other CVE keys would also need cve rows.
-	// Sort for deterministic selection when multiple CVE aliases exist.
-	cveId := vulnId
+	// primaryId is the identifier used for Cve.Id. It starts as vulnId (which
+	// may be a GHSA ID) and is promoted to the CVE canonical when one exists.
+	primaryId := vulnId
 	if source == "GITHUB" && strings.HasPrefix(vulnId, "GHSA-") && len(references) > 0 {
 		canonicals := make([]string, 0, len(references))
 		for k := range references {
-			canonicals = append(canonicals, k)
+			if strings.HasPrefix(k, "CVE-") {
+				canonicals = append(canonicals, k)
+			}
 		}
-		sort.Strings(canonicals)
-		canonical := canonicals[0]
-		cveId = canonical
-		link = fmt.Sprintf("https://nvd.nist.gov/vuln/detail/%s", canonical)
-		// Keep only the promoted canonical to avoid FK violations for the
-		// remaining alias keys which would have no corresponding cve row.
-		// Use the original alias value from the map rather than vulnId, in
-		// case ghsaId in the alias entry differs from vulnId.
-		references = map[string]string{canonical: references[canonical]}
+		if len(canonicals) > 0 {
+			sort.Strings(canonicals)
+			canonical := canonicals[0]
+			primaryId = canonical
+			link = fmt.Sprintf("https://nvd.nist.gov/vuln/detail/%s", canonical)
+			// Keep only the promoted canonical to avoid FK violations for the
+			// remaining alias keys which would have no corresponding cve row.
+			// Use the original alias value from the map rather than vulnId, in
+			// case ghsaId in the alias entry differs from vulnId.
+			references = map[string]string{canonical: references[canonical]}
+		}
 	}
 
 	return &Vulnerability{
@@ -307,7 +309,7 @@ func ParseFinding(finding client.Finding) (*Vulnerability, error) {
 		SuppressedState: suppressedState,
 		LatestVersion:   componentLatestVersion,
 		Cve: &Cve{
-			Id:          cveId,
+			Id:          primaryId,
 			Description: desc,
 			Title:       title,
 			Link:        link,
