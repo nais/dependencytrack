@@ -280,13 +280,10 @@ func ParseFinding(finding client.Finding) (*Vulnerability, error) {
 		}
 	}
 
-	// For GITHUB-sourced findings whose vulnId is a GHSA: promote the
-	// lexicographically first CVE canonical from the references map to be the
-	// primary Cve.Id so that v13s can satisfy the cve_alias_canonical_fkey FK
-	// constraint (the canonical must have a cve row, which is only upserted
-	// for Cve.Id). Trim references to the promoted canonical only — all other
-	// CVE keys in the map would also require a cve row that won't be upserted.
-	// Sorting ensures deterministic behaviour when a GHSA maps to multiple CVEs.
+	// For GITHUB findings with a GHSA vulnId: promote the CVE canonical to
+	// Cve.Id so downstream can upsert a cve row for it. Trim references to
+	// the promoted entry only — other CVE keys would also need cve rows.
+	// Sort for deterministic selection when multiple CVE aliases exist.
 	cveId := vulnId
 	if source == "GITHUB" && strings.HasPrefix(vulnId, "GHSA-") && len(references) > 0 {
 		canonicals := make([]string, 0, len(references))
