@@ -42,22 +42,24 @@ func TestParseFinding(t *testing.T) {
 }
 
 func TestParseFinding_Aliases(t *testing.T) {
-	makeFinding := func(vulnId string, aliases []any) client.Finding {
+	makeFinding := func(source, vulnId string, aliases []any) client.Finding {
 		return client.Finding{
 			Component:     map[string]any{"uuid": "c1", "project": "p1", "purl": "pkg:pypi/test@1.0"},
-			Vulnerability: map[string]any{"vulnId": vulnId, "severity": "HIGH", "source": "GITHUB", "uuid": "u1", "aliases": aliases},
+			Vulnerability: map[string]any{"vulnId": vulnId, "severity": "HIGH", "source": source, "uuid": "u1", "aliases": aliases},
 			Analysis:      map[string]any{"isSuppressed": false},
 		}
 	}
 
 	tests := []struct {
 		name     string
+		source   string
 		vulnId   string
 		aliases  []any
 		wantRefs map[string]string
 	}{
 		{
 			name:   "both cveId and ghsaId present",
+			source: "GITHUB",
 			vulnId: "GHSA-79v4-65xg-pq4g",
 			aliases: []any{
 				map[string]any{"cveId": "CVE-2024-12797", "ghsaId": "GHSA-79v4-65xg-pq4g"},
@@ -65,7 +67,8 @@ func TestParseFinding_Aliases(t *testing.T) {
 			wantRefs: map[string]string{"CVE-2024-12797": "GHSA-79v4-65xg-pq4g"},
 		},
 		{
-			name:   "cveId present but ghsaId absent — falls back to vulnId",
+			name:   "cveId present but ghsaId absent, GITHUB source — falls back to vulnId",
+			source: "GITHUB",
 			vulnId: "GHSA-79v4-65xg-pq4g",
 			aliases: []any{
 				map[string]any{"cveId": "CVE-2024-12797"},
@@ -73,7 +76,17 @@ func TestParseFinding_Aliases(t *testing.T) {
 			wantRefs: map[string]string{"CVE-2024-12797": "GHSA-79v4-65xg-pq4g"},
 		},
 		{
+			name:   "cveId present but ghsaId absent, non-GITHUB source — skipped",
+			source: "NVD",
+			vulnId: "CVE-2024-12797",
+			aliases: []any{
+				map[string]any{"cveId": "CVE-2024-99999"},
+			},
+			wantRefs: map[string]string{},
+		},
+		{
 			name:   "ghsaId present but cveId absent — no entry emitted",
+			source: "GITHUB",
 			vulnId: "GHSA-79v4-65xg-pq4g",
 			aliases: []any{
 				map[string]any{"ghsaId": "GHSA-79v4-65xg-pq4g"},
@@ -82,6 +95,7 @@ func TestParseFinding_Aliases(t *testing.T) {
 		},
 		{
 			name:   "cveId equals vulnId — self-reference skipped",
+			source: "GITHUB",
 			vulnId: "CVE-2024-12797",
 			aliases: []any{
 				map[string]any{"cveId": "CVE-2024-12797", "ghsaId": "GHSA-79v4-65xg-pq4g"},
@@ -90,6 +104,7 @@ func TestParseFinding_Aliases(t *testing.T) {
 		},
 		{
 			name:   "empty cveId — skipped",
+			source: "GITHUB",
 			vulnId: "GHSA-79v4-65xg-pq4g",
 			aliases: []any{
 				map[string]any{"cveId": "", "ghsaId": "GHSA-79v4-65xg-pq4g"},
@@ -98,12 +113,14 @@ func TestParseFinding_Aliases(t *testing.T) {
 		},
 		{
 			name:     "no aliases — empty references",
+			source:   "GITHUB",
 			vulnId:   "GHSA-79v4-65xg-pq4g",
 			aliases:  []any{},
 			wantRefs: map[string]string{},
 		},
 		{
 			name:   "empty vulnId with no ghsaId — skipped",
+			source: "GITHUB",
 			vulnId: "",
 			aliases: []any{
 				map[string]any{"cveId": "CVE-2024-12797"},
@@ -114,7 +131,7 @@ func TestParseFinding_Aliases(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			v, err := dependencytrack.ParseFinding(makeFinding(tt.vulnId, tt.aliases))
+			v, err := dependencytrack.ParseFinding(makeFinding(tt.source, tt.vulnId, tt.aliases))
 			assert.NoError(t, err)
 			assert.Equal(t, tt.wantRefs, v.Cve.References)
 		})
