@@ -52,13 +52,13 @@ func TestParseFinding_Aliases(t *testing.T) {
 	}
 
 	tests := []struct {
-		name      string
-		source    string
-		vulnId    string
-		aliases   []any
-		wantId    string
-		wantLink  string
-		wantRefs  map[string]string
+		name     string
+		source   string
+		vulnId   string
+		aliases  []any
+		wantId   string
+		wantLink string
+		wantRefs map[string]string
 	}{
 		{
 			// References trimmed to promoted canonical only — remaining CVE keys
@@ -112,10 +112,10 @@ func TestParseFinding_Aliases(t *testing.T) {
 			wantRefs: map[string]string{"CVE-2024-12797": "GHSA-79v4-65xg-pq4g"},
 		},
 		{
-			name:   "GITHUB finding with no aliases — Cve.Id stays as GHSA",
-			source: "GITHUB",
-			vulnId: "GHSA-79v4-65xg-pq4g",
-			aliases: []any{},
+			name:     "GITHUB finding with no aliases — Cve.Id stays as GHSA",
+			source:   "GITHUB",
+			vulnId:   "GHSA-79v4-65xg-pq4g",
+			aliases:  []any{},
 			wantId:   "GHSA-79v4-65xg-pq4g",
 			wantLink: "https://github.com/advisories/GHSA-79v4-65xg-pq4g",
 			wantRefs: map[string]string{},
