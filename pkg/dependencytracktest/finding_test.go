@@ -41,6 +41,78 @@ func TestParseFinding(t *testing.T) {
 	assert.Equal(t, 0.66622, *v.EpssPercentile)
 }
 
+func TestParseFinding_Aliases(t *testing.T) {
+	makeFinding := func(vulnId string, aliases []any) client.Finding {
+		return client.Finding{
+			Component:     map[string]any{"uuid": "c1", "project": "p1", "purl": "pkg:pypi/test@1.0"},
+			Vulnerability: map[string]any{"vulnId": vulnId, "severity": "HIGH", "source": "GITHUB", "uuid": "u1", "aliases": aliases},
+			Analysis:      map[string]any{"isSuppressed": false},
+		}
+	}
+
+	tests := []struct {
+		name     string
+		vulnId   string
+		aliases  []any
+		wantRefs map[string]string
+	}{
+		{
+			name:   "both cveId and ghsaId present",
+			vulnId: "GHSA-79v4-65xg-pq4g",
+			aliases: []any{
+				map[string]any{"cveId": "CVE-2024-12797", "ghsaId": "GHSA-79v4-65xg-pq4g"},
+			},
+			wantRefs: map[string]string{"CVE-2024-12797": "GHSA-79v4-65xg-pq4g"},
+		},
+		{
+			name:   "cveId present but ghsaId absent — falls back to vulnId",
+			vulnId: "GHSA-79v4-65xg-pq4g",
+			aliases: []any{
+				map[string]any{"cveId": "CVE-2024-12797"},
+			},
+			wantRefs: map[string]string{"CVE-2024-12797": "GHSA-79v4-65xg-pq4g"},
+		},
+		{
+			name:   "ghsaId present but cveId absent — no entry emitted",
+			vulnId: "GHSA-79v4-65xg-pq4g",
+			aliases: []any{
+				map[string]any{"ghsaId": "GHSA-79v4-65xg-pq4g"},
+			},
+			wantRefs: map[string]string{},
+		},
+		{
+			name:   "cveId equals vulnId — self-reference skipped",
+			vulnId: "CVE-2024-12797",
+			aliases: []any{
+				map[string]any{"cveId": "CVE-2024-12797", "ghsaId": "GHSA-79v4-65xg-pq4g"},
+			},
+			wantRefs: map[string]string{},
+		},
+		{
+			name:   "empty cveId — skipped",
+			vulnId: "GHSA-79v4-65xg-pq4g",
+			aliases: []any{
+				map[string]any{"cveId": "", "ghsaId": "GHSA-79v4-65xg-pq4g"},
+			},
+			wantRefs: map[string]string{},
+		},
+		{
+			name:     "no aliases — empty references",
+			vulnId:   "GHSA-79v4-65xg-pq4g",
+			aliases:  []any{},
+			wantRefs: map[string]string{},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			v, err := dependencytrack.ParseFinding(makeFinding(tt.vulnId, tt.aliases))
+			assert.NoError(t, err)
+			assert.Equal(t, tt.wantRefs, v.Cve.References)
+		})
+	}
+}
+
 func TestParseFinding_CvssScore(t *testing.T) {
 	ptrF := func(f float64) *float64 { return &f }
 

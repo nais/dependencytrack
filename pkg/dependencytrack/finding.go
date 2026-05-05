@@ -254,11 +254,15 @@ func ParseFinding(finding client.Finding) (*Vulnerability, error) {
 	if aliases, ok := vulnData["aliases"].([]interface{}); ok {
 		for _, a := range aliases {
 			if alias, ok := a.(map[string]interface{}); ok {
-				if cveId, ok := alias["cveId"].(string); ok {
-					if ghsaId, ok := alias["ghsaId"].(string); ok {
-						references[cveId] = ghsaId
-					}
+				cveId, _ := alias["cveId"].(string)
+				if cveId == "" || cveId == vulnId {
+					continue
 				}
+				ghsaId := vulnId
+				if g, ok := alias["ghsaId"].(string); ok && g != "" {
+					ghsaId = g
+				}
+				references[cveId] = ghsaId
 			}
 		}
 	}
