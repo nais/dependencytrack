@@ -77,6 +77,34 @@ func TestParseFinding_Aliases(t *testing.T) {
 			},
 		},
 		{
+			// Non-CVE keys in references (malformed upstream data) must not be
+			// promoted — only keys with a "CVE-" prefix are considered. If no
+			// CVE-prefixed key exists, Cve.Id stays as the GHSA vulnId.
+			name:   "GITHUB finding with only non-CVE reference key — no promotion",
+			source: "GITHUB",
+			vulnId: "GHSA-79v4-65xg-pq4g",
+			aliases: []any{
+				map[string]any{"cveId": "GHSA-other-alias", "ghsaId": "GHSA-79v4-65xg-pq4g"},
+			},
+			wantId:   "GHSA-79v4-65xg-pq4g",
+			wantLink: "https://github.com/advisories/GHSA-79v4-65xg-pq4g",
+			wantRefs: map[string]string{"GHSA-other-alias": "GHSA-79v4-65xg-pq4g"},
+		},
+		{
+			// Mixed: one non-CVE key and one real CVE key — only the CVE is
+			// eligible for promotion; the non-CVE key is excluded from candidates.
+			name:   "GITHUB finding with mixed non-CVE and CVE reference keys — only CVE promoted",
+			source: "GITHUB",
+			vulnId: "GHSA-79v4-65xg-pq4g",
+			aliases: []any{
+				map[string]any{"cveId": "GHSA-other-alias", "ghsaId": "GHSA-79v4-65xg-pq4g"},
+				map[string]any{"cveId": "CVE-2024-12797", "ghsaId": "GHSA-79v4-65xg-pq4g"},
+			},
+			wantId:   "CVE-2024-12797",
+			wantLink: "https://nvd.nist.gov/vuln/detail/CVE-2024-12797",
+			wantRefs: map[string]string{"CVE-2024-12797": "GHSA-79v4-65xg-pq4g"},
+		},
+		{
 			// GITHUB finding where vulnId is already a CVE — promotion guard
 			// (strings.HasPrefix(vulnId, "GHSA-")) prevents overwriting Cve.Id.
 			name:   "GITHUB finding with CVE vulnId and ghsaId alias — no promotion, no ref trim",
@@ -195,15 +223,6 @@ func TestParseFinding_Aliases(t *testing.T) {
 			aliases: []any{
 				map[string]any{"cveId": "", "ghsaId": "GHSA-79v4-65xg-pq4g"},
 			},
-			wantId:   "GHSA-79v4-65xg-pq4g",
-			wantLink: "https://github.com/advisories/GHSA-79v4-65xg-pq4g",
-			wantRefs: map[string]string{},
-		},
-		{
-			name:     "no aliases — empty references, Cve.Id stays as GHSA",
-			source:   "GITHUB",
-			vulnId:   "GHSA-79v4-65xg-pq4g",
-			aliases:  []any{},
 			wantId:   "GHSA-79v4-65xg-pq4g",
 			wantLink: "https://github.com/advisories/GHSA-79v4-65xg-pq4g",
 			wantRefs: map[string]string{},
