@@ -46,12 +46,12 @@ func TestParseFinding_CvssScore(t *testing.T) {
 
 	tests := []struct {
 		name     string
-		vuln     map[string]interface{}
+		vuln     map[string]any
 		wantCvss *float64
 	}{
 		{
 			name: "v4 takes precedence over v3",
-			vuln: map[string]interface{}{
+			vuln: map[string]any{
 				"vulnId":          "CVE-2025-10492",
 				"severity":        "HIGH",
 				"cvssV3BaseScore": float64(9.8),
@@ -63,7 +63,7 @@ func TestParseFinding_CvssScore(t *testing.T) {
 		},
 		{
 			name: "v4 only",
-			vuln: map[string]interface{}{
+			vuln: map[string]any{
 				"vulnId":      "GHSA-gg57-587f-h5v6",
 				"severity":    "MEDIUM",
 				"cvssV4Score": float64(5.1),
@@ -74,7 +74,7 @@ func TestParseFinding_CvssScore(t *testing.T) {
 		},
 		{
 			name: "v3 only",
-			vuln: map[string]interface{}{
+			vuln: map[string]any{
 				"vulnId":          "GHSA-3vqj-43w4-2q58",
 				"severity":        "HIGH",
 				"cvssV3BaseScore": float64(7.5),
@@ -85,7 +85,7 @@ func TestParseFinding_CvssScore(t *testing.T) {
 		},
 		{
 			name: "neither present",
-			vuln: map[string]interface{}{
+			vuln: map[string]any{
 				"vulnId":   "GHSA-0000-0000-0000",
 				"severity": "UNASSIGNED",
 				"source":   "GITHUB",
@@ -98,9 +98,9 @@ func TestParseFinding_CvssScore(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			finding := client.Finding{
-				Component:     map[string]interface{}{"uuid": "c1", "project": "p1", "purl": "pkg:maven/test@1.0"},
+				Component:     map[string]any{"uuid": "c1", "project": "p1", "purl": "pkg:maven/test@1.0"},
 				Vulnerability: tt.vuln,
-				Analysis:      map[string]interface{}{"isSuppressed": false},
+				Analysis:      map[string]any{"isSuppressed": false},
 			}
 			v, err := dependencytrack.ParseFinding(finding)
 			assert.NoError(t, err)
