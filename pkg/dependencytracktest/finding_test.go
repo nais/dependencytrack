@@ -22,12 +22,13 @@ func TestParseFinding(t *testing.T) {
 	v, err := dependencytrack.ParseFinding(f)
 	assert.NoError(t, err)
 	assert.Equal(t, "pkg:pypi/cryptography@43.0.1", v.Package)
-	assert.Equal(t, "GHSA-79v4-65xg-pq4g", v.Cve.Id)
+	// GITHUB finding with a CVE alias: Cve.Id is promoted to the CVE canonical
+	assert.Equal(t, "CVE-2024-12797", v.Cve.Id)
 	assert.Equal(t, dependencytrack.SeverityLow, v.Cve.Severity)
 	assert.Equal(t, "17170e88-cfcb-4900-b3fb-5b0be0a071a5", v.Metadata.ProjectId)
 	assert.Equal(t, "5b009251-5efd-4703-8579-49af6cd3d0c6", v.Metadata.ComponentId)
 	assert.Equal(t, "6fa86367-6014-427e-8300-69269c16025b", v.Metadata.VulnerabilityUuid)
-	assert.Equal(t, fmt.Sprintf("https://github.com/advisories/%s", "GHSA-79v4-65xg-pq4g"), v.Cve.Link)
+	assert.Equal(t, fmt.Sprintf("https://nvd.nist.gov/vuln/detail/%s", "CVE-2024-12797"), v.Cve.Link)
 	assert.Equal(t, true, v.Suppressed)
 	assert.Equal(t, "Vulnerable OpenSSL included in cryptography wheels", v.Cve.Title)
 	assert.Equal(t, "a loooong description", v.Cve.Description)
@@ -51,28 +52,83 @@ func TestParseFinding_Aliases(t *testing.T) {
 	}
 
 	tests := []struct {
-		name     string
-		source   string
-		vulnId   string
-		aliases  []any
-		wantRefs map[string]string
+		name      string
+		source    string
+		vulnId    string
+		aliases   []any
+		wantId    string
+		wantLink  string
+		wantRefs  map[string]string
 	}{
 		{
-			name:   "both cveId and ghsaId present",
+			// References trimmed to promoted canonical only — remaining CVE keys
+			// would have no cve row and would violate cve_alias_canonical_fkey.
+			name:   "GITHUB finding with multiple CVE aliases — lexicographically first CVE wins, refs trimmed to promoted only",
+			source: "GITHUB",
+			vulnId: "GHSA-79v4-65xg-pq4g",
+			aliases: []any{
+				map[string]any{"cveId": "CVE-2024-99999", "ghsaId": "GHSA-79v4-65xg-pq4g"},
+				map[string]any{"cveId": "CVE-2024-00001", "ghsaId": "GHSA-79v4-65xg-pq4g"},
+			},
+			wantId:   "CVE-2024-00001",
+			wantLink: "https://nvd.nist.gov/vuln/detail/CVE-2024-00001",
+			wantRefs: map[string]string{
+				"CVE-2024-00001": "GHSA-79v4-65xg-pq4g",
+			},
+		},
+		{
+			// GITHUB finding where vulnId is already a CVE — promotion guard
+			// (strings.HasPrefix(vulnId, "GHSA-")) prevents overwriting Cve.Id.
+			name:   "GITHUB finding with CVE vulnId and ghsaId alias — no promotion, no ref trim",
+			source: "GITHUB",
+			vulnId: "CVE-2024-12797",
+			aliases: []any{
+				map[string]any{"cveId": "CVE-2024-12797", "ghsaId": "GHSA-79v4-65xg-pq4g"},
+			},
+			wantId:   "CVE-2024-12797",
+			wantLink: "https://github.com/advisories/CVE-2024-12797",
+			wantRefs: map[string]string{"CVE-2024-12797": "GHSA-79v4-65xg-pq4g"},
+		},
+		{
+			name:   "GITHUB finding with cveId and ghsaId — promoted to CVE canonical",
 			source: "GITHUB",
 			vulnId: "GHSA-79v4-65xg-pq4g",
 			aliases: []any{
 				map[string]any{"cveId": "CVE-2024-12797", "ghsaId": "GHSA-79v4-65xg-pq4g"},
 			},
+			wantId:   "CVE-2024-12797",
+			wantLink: "https://nvd.nist.gov/vuln/detail/CVE-2024-12797",
 			wantRefs: map[string]string{"CVE-2024-12797": "GHSA-79v4-65xg-pq4g"},
 		},
 		{
-			name:   "cveId present but ghsaId absent, GITHUB source — falls back to vulnId",
+			name:   "GITHUB finding with cveId only (no ghsaId) — falls back to vulnId as alias, promoted to CVE canonical",
 			source: "GITHUB",
 			vulnId: "GHSA-79v4-65xg-pq4g",
 			aliases: []any{
 				map[string]any{"cveId": "CVE-2024-12797"},
 			},
+			wantId:   "CVE-2024-12797",
+			wantLink: "https://nvd.nist.gov/vuln/detail/CVE-2024-12797",
+			wantRefs: map[string]string{"CVE-2024-12797": "GHSA-79v4-65xg-pq4g"},
+		},
+		{
+			name:   "GITHUB finding with no aliases — Cve.Id stays as GHSA",
+			source: "GITHUB",
+			vulnId: "GHSA-79v4-65xg-pq4g",
+			aliases: []any{},
+			wantId:   "GHSA-79v4-65xg-pq4g",
+			wantLink: "https://github.com/advisories/GHSA-79v4-65xg-pq4g",
+			wantRefs: map[string]string{},
+		},
+		{
+			name:   "NVD finding with GHSA alias — Cve.Id stays as CVE (no promotion needed)",
+			source: "NVD",
+			vulnId: "CVE-2024-12797",
+			aliases: []any{
+				map[string]any{"cveId": "CVE-2024-12797", "ghsaId": "GHSA-79v4-65xg-pq4g"},
+			},
+			wantId:   "CVE-2024-12797",
+			wantLink: "https://nvd.nist.gov/vuln/detail/CVE-2024-12797",
 			wantRefs: map[string]string{"CVE-2024-12797": "GHSA-79v4-65xg-pq4g"},
 		},
 		{
@@ -82,6 +138,8 @@ func TestParseFinding_Aliases(t *testing.T) {
 			aliases: []any{
 				map[string]any{"cveId": "CVE-2024-99999"},
 			},
+			wantId:   "CVE-2024-12797",
+			wantLink: "https://nvd.nist.gov/vuln/detail/CVE-2024-12797",
 			wantRefs: map[string]string{},
 		},
 		{
@@ -91,33 +149,30 @@ func TestParseFinding_Aliases(t *testing.T) {
 			aliases: []any{
 				map[string]any{"cveId": "CVE-2024-99999"},
 			},
+			wantId:   "CVE-2024-12797",
+			wantLink: "https://github.com/advisories/CVE-2024-12797",
 			wantRefs: map[string]string{},
 		},
 		{
-			name:   "ghsaId present but cveId absent — no entry emitted",
+			name:   "ghsaId present but cveId absent — no alias entry, Cve.Id stays as GHSA",
 			source: "GITHUB",
 			vulnId: "GHSA-79v4-65xg-pq4g",
 			aliases: []any{
 				map[string]any{"ghsaId": "GHSA-79v4-65xg-pq4g"},
 			},
+			wantId:   "GHSA-79v4-65xg-pq4g",
+			wantLink: "https://github.com/advisories/GHSA-79v4-65xg-pq4g",
 			wantRefs: map[string]string{},
 		},
 		{
-			name:   "cveId equals vulnId with ghsaId present — CVE→GHSA mapping retained",
-			source: "NVD",
-			vulnId: "CVE-2024-12797",
-			aliases: []any{
-				map[string]any{"cveId": "CVE-2024-12797", "ghsaId": "GHSA-79v4-65xg-pq4g"},
-			},
-			wantRefs: map[string]string{"CVE-2024-12797": "GHSA-79v4-65xg-pq4g"},
-		},
-		{
-			name:   "cveId equals vulnId without ghsaId — self-reference skipped",
+			name:   "cveId equals ghsaId — self-reference skipped, Cve.Id stays as GHSA",
 			source: "GITHUB",
 			vulnId: "GHSA-79v4-65xg-pq4g",
 			aliases: []any{
 				map[string]any{"cveId": "GHSA-79v4-65xg-pq4g"},
 			},
+			wantId:   "GHSA-79v4-65xg-pq4g",
+			wantLink: "https://github.com/advisories/GHSA-79v4-65xg-pq4g",
 			wantRefs: map[string]string{},
 		},
 		{
@@ -127,13 +182,17 @@ func TestParseFinding_Aliases(t *testing.T) {
 			aliases: []any{
 				map[string]any{"cveId": "", "ghsaId": "GHSA-79v4-65xg-pq4g"},
 			},
+			wantId:   "GHSA-79v4-65xg-pq4g",
+			wantLink: "https://github.com/advisories/GHSA-79v4-65xg-pq4g",
 			wantRefs: map[string]string{},
 		},
 		{
-			name:     "no aliases — empty references",
+			name:     "no aliases — empty references, Cve.Id stays as GHSA",
 			source:   "GITHUB",
 			vulnId:   "GHSA-79v4-65xg-pq4g",
 			aliases:  []any{},
+			wantId:   "GHSA-79v4-65xg-pq4g",
+			wantLink: "https://github.com/advisories/GHSA-79v4-65xg-pq4g",
 			wantRefs: map[string]string{},
 		},
 		{
@@ -143,6 +202,8 @@ func TestParseFinding_Aliases(t *testing.T) {
 			aliases: []any{
 				map[string]any{"cveId": "CVE-2024-12797"},
 			},
+			wantId:   "",
+			wantLink: "https://github.com/advisories/",
 			wantRefs: map[string]string{},
 		},
 	}
@@ -151,6 +212,8 @@ func TestParseFinding_Aliases(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			v, err := dependencytrack.ParseFinding(makeFinding(tt.source, tt.vulnId, tt.aliases))
 			assert.NoError(t, err)
+			assert.Equal(t, tt.wantId, v.Cve.Id)
+			assert.Equal(t, tt.wantLink, v.Cve.Link)
 			assert.Equal(t, tt.wantRefs, v.Cve.References)
 		})
 	}

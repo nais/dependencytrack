@@ -3,6 +3,7 @@ package dependencytrack
 import (
 	"context"
 	"fmt"
+	"sort"
 	"strings"
 
 	"github.com/nais/dependencytrack/pkg/dependencytrack/client"
@@ -279,13 +280,35 @@ func ParseFinding(finding client.Finding) (*Vulnerability, error) {
 		}
 	}
 
+	// For GITHUB-sourced findings whose vulnId is a GHSA: promote the
+	// lexicographically first CVE canonical from the references map to be the
+	// primary Cve.Id so that v13s can satisfy the cve_alias_canonical_fkey FK
+	// constraint (the canonical must have a cve row, which is only upserted
+	// for Cve.Id). Trim references to the promoted canonical only — all other
+	// CVE keys in the map would also require a cve row that won't be upserted.
+	// Sorting ensures deterministic behaviour when a GHSA maps to multiple CVEs.
+	cveId := vulnId
+	if source == "GITHUB" && strings.HasPrefix(vulnId, "GHSA-") && len(references) > 0 {
+		canonicals := make([]string, 0, len(references))
+		for k := range references {
+			canonicals = append(canonicals, k)
+		}
+		sort.Strings(canonicals)
+		canonical := canonicals[0]
+		cveId = canonical
+		link = fmt.Sprintf("https://nvd.nist.gov/vuln/detail/%s", canonical)
+		// Keep only the promoted canonical to avoid FK violations for the
+		// remaining alias keys which would have no corresponding cve row.
+		references = map[string]string{canonical: vulnId}
+	}
+
 	return &Vulnerability{
 		Package:         purl,
 		Suppressed:      suppressed,
 		SuppressedState: suppressedState,
 		LatestVersion:   componentLatestVersion,
 		Cve: &Cve{
-			Id:          vulnId,
+			Id:          cveId,
 			Description: desc,
 			Title:       title,
 			Link:        link,
