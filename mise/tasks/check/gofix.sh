@@ -5,8 +5,7 @@ set -euo pipefail
 echo "Running go fix..."
 go fix ./...
 
-if ! git diff --quiet -- .; then
-  echo "go fix modified tracked files. Please run 'go fix ./...' and commit the changes."
-  git diff -- .
+if ! git diff --exit-code; then
+  echo "go fix modified files — please run 'go fix ./...' locally and commit the changes" >&2
   exit 1
 fi
