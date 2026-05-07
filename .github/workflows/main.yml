@@ -116,7 +116,7 @@ jobs:
         id: chart-version
         run: echo version=${{ needs.bootstrap.outputs.version }} >> $GITHUB_OUTPUT
 
-  rollout:
+  deploy:
     if: github.ref == 'refs/heads/main'
     needs:
       - helm
