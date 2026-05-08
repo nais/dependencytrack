@@ -1,6 +1,6 @@
 module github.com/nais/dependencytrack
 
-go 1.26.2
+go 1.26.3
 
 tool (
 	github.com/nais/dependencytrack/pkg/dependencytrack
@@ -175,4 +175,3 @@ require (
 	honnef.co/go/tools v0.7.0 // indirect
 	mvdan.cc/gofumpt v0.9.2 // indirect
 )
-
