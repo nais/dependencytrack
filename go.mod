@@ -18,7 +18,7 @@ replace github.com/nais/dependencytrack/pkg/dependencytrack => ./pkg/dependencyt
 require (
 	github.com/gin-gonic/gin v1.12.0
 	github.com/google/uuid v1.6.0
-	github.com/in-toto/in-toto-golang v0.10.0
+	github.com/in-toto/in-toto-golang v0.11.0
 	github.com/joho/godotenv v1.5.1
 	github.com/lestrrat-go/jwx/v2 v2.1.6
 	github.com/nais/dependencytrack/pkg/dependencytrack v0.0.0-20260504114231-d7602b021173
