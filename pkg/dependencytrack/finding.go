@@ -3,6 +3,7 @@ package dependencytrack
 import (
 	"context"
 	"fmt"
+	"sort"
 	"strings"
 
 	"github.com/nais/dependencytrack/pkg/dependencytrack/client"
@@ -279,13 +280,36 @@ func ParseFinding(finding client.Finding) (*Vulnerability, error) {
 		}
 	}
 
+	// primaryId is the identifier used for Cve.Id. It starts as vulnId (which
+	// may be a GHSA ID) and is promoted to the CVE canonical when one exists.
+	primaryId := vulnId
+	if source == "GITHUB" && strings.HasPrefix(vulnId, "GHSA-") && len(references) > 0 {
+		canonicals := make([]string, 0, len(references))
+		for k := range references {
+			if strings.HasPrefix(k, "CVE-") {
+				canonicals = append(canonicals, k)
+			}
+		}
+		if len(canonicals) > 0 {
+			sort.Strings(canonicals)
+			canonical := canonicals[0]
+			primaryId = canonical
+			link = fmt.Sprintf("https://nvd.nist.gov/vuln/detail/%s", canonical)
+			// Keep only the promoted canonical to avoid FK violations for the
+			// remaining alias keys which would have no corresponding cve row.
+			// Use the original alias value from the map rather than vulnId, in
+			// case ghsaId in the alias entry differs from vulnId.
+			references = map[string]string{canonical: references[canonical]}
+		}
+	}
+
 	return &Vulnerability{
 		Package:         purl,
 		Suppressed:      suppressed,
 		SuppressedState: suppressedState,
 		LatestVersion:   componentLatestVersion,
 		Cve: &Cve{
-			Id:          vulnId,
+			Id:          primaryId,
 			Description: desc,
 			Title:       title,
 			Link:        link,
