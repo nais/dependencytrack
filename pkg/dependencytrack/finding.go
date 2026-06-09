@@ -204,7 +204,11 @@ func ParseFinding(finding client.Finding) (*Vulnerability, error) {
 	case "NVD":
 		link = fmt.Sprintf("https://nvd.nist.gov/vuln/detail/%s", vulnId)
 	case "GITHUB":
-		link = fmt.Sprintf("https://github.com/advisories/%s", vulnId)
+		if strings.HasPrefix(vulnId, "CVE-") {
+			link = fmt.Sprintf("https://nvd.nist.gov/vuln/detail/%s", vulnId)
+		} else {
+			link = fmt.Sprintf("https://github.com/advisories/%s", vulnId)
+		}
 	case "UBUNTU":
 		link = fmt.Sprintf("https://ubuntu.com/security/CVE-%s", vulnId)
 	case "OSSINDEX":
@@ -294,7 +298,6 @@ func ParseFinding(finding client.Finding) (*Vulnerability, error) {
 			sort.Strings(canonicals)
 			canonical := canonicals[0]
 			primaryId = canonical
-			link = fmt.Sprintf("https://nvd.nist.gov/vuln/detail/%s", canonical)
 			// Keep only the promoted canonical to avoid FK violations for the
 			// remaining alias keys which would have no corresponding cve row.
 			// Use the original alias value from the map rather than vulnId, in
