@@ -28,7 +28,7 @@ func TestParseFinding(t *testing.T) {
 	assert.Equal(t, "17170e88-cfcb-4900-b3fb-5b0be0a071a5", v.Metadata.ProjectId)
 	assert.Equal(t, "5b009251-5efd-4703-8579-49af6cd3d0c6", v.Metadata.ComponentId)
 	assert.Equal(t, "6fa86367-6014-427e-8300-69269c16025b", v.Metadata.VulnerabilityUuid)
-	assert.Equal(t, fmt.Sprintf("https://nvd.nist.gov/vuln/detail/%s", "CVE-2024-12797"), v.Cve.Link)
+	assert.Equal(t, fmt.Sprintf("https://github.com/advisories/%s", "GHSA-79v4-65xg-pq4g"), v.Cve.Link)
 	assert.Equal(t, true, v.Suppressed)
 	assert.Equal(t, "Vulnerable OpenSSL included in cryptography wheels", v.Cve.Title)
 	assert.Equal(t, "a loooong description", v.Cve.Description)
@@ -71,7 +71,7 @@ func TestParseFinding_Aliases(t *testing.T) {
 				map[string]any{"cveId": "CVE-2024-00001", "ghsaId": "GHSA-79v4-65xg-pq4g"},
 			},
 			wantId:   "CVE-2024-00001",
-			wantLink: "https://nvd.nist.gov/vuln/detail/CVE-2024-00001",
+			wantLink: "https://github.com/advisories/GHSA-79v4-65xg-pq4g",
 			wantRefs: map[string]string{
 				"CVE-2024-00001": "GHSA-79v4-65xg-pq4g",
 			},
@@ -101,7 +101,7 @@ func TestParseFinding_Aliases(t *testing.T) {
 				map[string]any{"cveId": "CVE-2024-12797", "ghsaId": "GHSA-79v4-65xg-pq4g"},
 			},
 			wantId:   "CVE-2024-12797",
-			wantLink: "https://nvd.nist.gov/vuln/detail/CVE-2024-12797",
+			wantLink: "https://github.com/advisories/GHSA-79v4-65xg-pq4g",
 			wantRefs: map[string]string{"CVE-2024-12797": "GHSA-79v4-65xg-pq4g"},
 		},
 		{
@@ -114,7 +114,7 @@ func TestParseFinding_Aliases(t *testing.T) {
 				map[string]any{"cveId": "CVE-2024-12797", "ghsaId": "GHSA-79v4-65xg-pq4g"},
 			},
 			wantId:   "CVE-2024-12797",
-			wantLink: "https://github.com/advisories/CVE-2024-12797",
+			wantLink: "https://nvd.nist.gov/vuln/detail/CVE-2024-12797",
 			wantRefs: map[string]string{"CVE-2024-12797": "GHSA-79v4-65xg-pq4g"},
 		},
 		{
@@ -125,7 +125,7 @@ func TestParseFinding_Aliases(t *testing.T) {
 				map[string]any{"cveId": "CVE-2024-12797", "ghsaId": "GHSA-79v4-65xg-pq4g"},
 			},
 			wantId:   "CVE-2024-12797",
-			wantLink: "https://nvd.nist.gov/vuln/detail/CVE-2024-12797",
+			wantLink: "https://github.com/advisories/GHSA-79v4-65xg-pq4g",
 			wantRefs: map[string]string{"CVE-2024-12797": "GHSA-79v4-65xg-pq4g"},
 		},
 		{
@@ -138,7 +138,7 @@ func TestParseFinding_Aliases(t *testing.T) {
 				map[string]any{"cveId": "CVE-2024-12797", "ghsaId": "GHSA-different-alias"},
 			},
 			wantId:   "CVE-2024-12797",
-			wantLink: "https://nvd.nist.gov/vuln/detail/CVE-2024-12797",
+			wantLink: "https://github.com/advisories/GHSA-79v4-65xg-pq4g",
 			wantRefs: map[string]string{"CVE-2024-12797": "GHSA-different-alias"},
 		},
 		{
@@ -149,7 +149,7 @@ func TestParseFinding_Aliases(t *testing.T) {
 				map[string]any{"cveId": "CVE-2024-12797"},
 			},
 			wantId:   "CVE-2024-12797",
-			wantLink: "https://nvd.nist.gov/vuln/detail/CVE-2024-12797",
+			wantLink: "https://github.com/advisories/GHSA-79v4-65xg-pq4g",
 			wantRefs: map[string]string{"CVE-2024-12797": "GHSA-79v4-65xg-pq4g"},
 		},
 		{
@@ -191,7 +191,7 @@ func TestParseFinding_Aliases(t *testing.T) {
 				map[string]any{"cveId": "CVE-2024-99999"},
 			},
 			wantId:   "CVE-2024-12797",
-			wantLink: "https://github.com/advisories/CVE-2024-12797",
+			wantLink: "https://nvd.nist.gov/vuln/detail/CVE-2024-12797",
 			wantRefs: map[string]string{},
 		},
 		{
