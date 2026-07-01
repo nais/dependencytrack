@@ -52,6 +52,10 @@ spec:
               value: "{{ .Values.bootstrap.logLevel }}"
             - name: BASE_URL
               value: "{{ .Values.bootstrap.baseUrl }}"
+          {{- if ne .Values.bootstrap.bomValidation.disabled nil }}
+            - name: BOM_VALIDATION_DISABLED
+              value: "{{ .Values.bootstrap.bomValidation.disabled }}"
+          {{- end }}
             - name: GOOGLE_OSV_ENABLED
               value: "{{ .Values.bootstrap.google.osv_enabled }}"
             - name: FRONTEND_BASE_URL
