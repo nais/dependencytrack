@@ -39,7 +39,7 @@ func init() {
 	flag.StringVar(&cfg.LogLevel, "log-level", cfg.LogLevel, "which log level to use, default 'info'")
 	flag.StringVar(&cfg.FrontendBaseUrl, "frontend-base-url", "http://localhost:9000", "frontend base url")
 	flag.StringVar(&cfg.BaseUrl, "base-url", "http://localhost:9001", "base url of dependencytrack")
-	flag.StringVar(&cfg.BomValidationDisabled, "bom-validation-disabled", cfg.BomValidationDisabled, "disable Dependency-Track BOM schema validation when explicitly set to true or false")
+	flag.StringVar(&cfg.BomValidationDisabled, "bom-validation-disabled", cfg.BomValidationDisabled, "set Dependency-Track BOM schema validation mode when explicitly set to true (disable) or false (enable); omit to leave unchanged")
 	flag.StringVar(&cfg.DefaultAdminPassword, "default-admin-password", "admin", "default admin password")
 	flag.StringVar(&cfg.AdminPassword, "admin-password", cfg.AdminPassword, "new admin password")
 	flag.StringVar(&cfg.GithubAdvisoryToken, "github-advisory-token", cfg.GithubAdvisoryToken, "github advisory mirroring token")
@@ -234,7 +234,7 @@ func main() {
 		case "bom.validation.mode":
 			bomValidationMode, ok := resolveBomValidationMode(cfg.BomValidationDisabled)
 			if !ok && cfg.BomValidationDisabled != "" {
-				log.Warnf("invalid BOM_VALIDATION_DISABLED value %q, expected true or false; leaving bom validation mode unchanged", cfg.BomValidationDisabled)
+				log.Warnf("invalid BOM_VALIDATION_DISABLED / --bom-validation-disabled value %q, expected true or false; leaving bom validation mode unchanged", cfg.BomValidationDisabled)
 			}
 			if ok {
 				if isAlreadySet(prop.PropertyValue, bomValidationMode) {
@@ -335,6 +335,8 @@ func isAlreadySet(config *string, inputValue string) bool {
 }
 
 func resolveBomValidationMode(disabled string) (string, bool) {
+	disabled = strings.TrimSpace(disabled)
+
 	if disabled == "" {
 		return "", false
 	}
