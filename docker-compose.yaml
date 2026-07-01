@@ -61,6 +61,9 @@ services:
       - BASE_URL=http://dtrack-apiserver:8080/
       - DEFAULT_ADMIN_PASSWORD=admin
       - ADMIN_PASSWORD=yolo
+      # Optional: set to true to disable BOM schema validation, or false to force enable it.
+      # Omit entirely to leave the Dependency-Track setting unchanged.
+      # - BOM_VALIDATION_DISABLED=true
       - TRIVY_API_TOKEN=my-token
       - USERS_FILE=users.yaml
       - TRIVY_BASE_URL=http://trivy:4005

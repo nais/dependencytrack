@@ -8,6 +8,8 @@ bootstrap:
     tag: yolo
   logLevel: INFO
   baseUrl: http://dependencytrack-backend:8080/api
+  bomValidation:
+    disabled:
   frontendBaseUrl:
   defaultAdminPassword: admin
   adminPassword: todo

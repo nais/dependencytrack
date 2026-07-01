@@ -86,6 +86,10 @@ values:
     displayName: Bootstrap frontend base url
     computed:
       template: '"https://salsa.{{.Tenant.Name}}.cloud.nais.io"'
+  bootstrap.bomValidation.disabled:
+    displayName: Bootstrap disable BOM schema validation
+    config:
+      type: bool
   bootstrap.github.advisory_mirroring_token:
     displayName: Bootstrap GitHub advisory mirroring token
     config:

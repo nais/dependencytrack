@@ -58,6 +58,52 @@ asdf install
    - **API:** http://localhost:9001
    - **Swagger UI:** http://localhost:9002
 
+### Test BOM schema validation locally
+
+The BOM schema validation workaround can be configured in Kubernetes and locally.
+
+#### Helm / Feature configuration
+
+Use the Helm value:
+
+```yaml
+bootstrap:
+  bomValidation:
+    disabled: true
+```
+
+This value is also exposed in `charts/Feature.yaml` as:
+
+```yaml
+bootstrap.bomValidation.disabled
+```
+
+Semantics:
+
+- Unset: leave the Dependency-Track setting unchanged
+- `true`: set `bom.validation.mode=DISABLED`
+- `false`: set `bom.validation.mode=ENABLED`
+
+#### Docker Compose
+
+To test the CycloneDX 1.7 workaround locally with Docker Compose, set the bootstrap environment variable:
+
+```yaml
+# - BOM_VALIDATION_DISABLED=true
+```
+
+by uncommenting it in the `bootstrap` service in `docker-compose.yaml`, or by adding it manually, then start the stack again:
+
+```bash
+make compose
+```
+
+Notes:
+
+- Omit `BOM_VALIDATION_DISABLED` to leave the Dependency-Track setting unchanged
+- Set `BOM_VALIDATION_DISABLED=true` to set `bom.validation.mode=DISABLED`
+- Set `BOM_VALIDATION_DISABLED=false` to set `bom.validation.mode=ENABLED`
+
 ### Test Users
 
 The `users.yaml` file contains pre-configured users for automated testing. You can modify this file to add or update test users as needed.
