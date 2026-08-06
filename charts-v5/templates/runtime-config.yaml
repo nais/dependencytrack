@@ -17,7 +17,6 @@ data:
   DT_CORS_ALLOW_CREDENTIALS: {{ .Values.apiServerEnv.cors.allowCredentials | quote }}
   DT_CORS_MAX_AGE: {{ .Values.apiServerEnv.cors.maxAge | quote }}
   DT_DATASOURCE_POOL_MAX_LIFETIME_MS: {{ .Values.apiServerEnv.datasource.pool.maxLifetimeMs | quote }}
-  DT_METRICS_ENABLED: {{ .Values.apiServerEnv.metrics.enabled | quote }}
 {{- if .Values.apiServerEnv.oidc.teamSynchronization }}
   DT_OIDC_TEAM_SYNCHRONIZATION: "true"
   DT_OIDC_TEAMS_CLAIM: {{ .Values.apiServerEnv.oidc.teamsClaim | quote }}

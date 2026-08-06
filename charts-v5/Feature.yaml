@@ -63,10 +63,45 @@ values:
     displayName: File storage size
     config:
       type: string
+  app.fileStorage.provider:
+    displayName: File storage provider
+    config:
+      type: string
   app.fileStorage.local.storageClassName:
     displayName: File storage class
     config:
       type: string
+  app.fileStorage.local.accessModes:
+    displayName: File storage access modes
+    computed:
+      template: |
+        - ReadWriteOnce
+  app.fileStorage.local.existingClaim:
+    displayName: Existing file storage claim
+    config:
+      type: string
+  app.fileStorage.s3.endpoint:
+    displayName: S3 endpoint
+    config:
+      type: string
+  app.fileStorage.s3.region:
+    displayName: S3 region
+    config:
+      type: string
+  app.fileStorage.s3.bucket:
+    displayName: S3 bucket
+    config:
+      type: string
+  app.fileStorage.s3.credentials.accessKeyId:
+    displayName: S3 access key ID
+    config:
+      type: string
+      secret: true
+  app.fileStorage.s3.credentials.secretAccessKey:
+    displayName: S3 secret access key
+    config:
+      type: string
+      secret: true
   app.apiServer.serviceMonitor.enabled:
     displayName: ServiceMonitor enabled
     computed:
@@ -156,12 +191,6 @@ values:
     displayName: Database pool maximum lifetime
     computed:
       template: '"400000"'
-  apiServerEnv.metrics.enabled:
-    displayName: Metrics enabled
-    computed:
-      template: "true"
-    config:
-      type: bool
   frontendEnv.oidcClientId:
     displayName: Frontend OIDC client ID
     computed:
@@ -197,6 +226,16 @@ values:
     config:
       type: string
       secret: true
+  bootstrap.users:
+    displayName: Bootstrap users
+    computed:
+      template: |
+        - username: "console"
+          password: {{.Management.console_dependencytrack_password | quote}}
+        - username: "teams"
+          password: {{.Management.teams_dependencytrack_password | quote}}
+        - username: "v13s"
+          password: {{.Management.v13s_dependencytrack_password | quote}}
   bootstrap.bomValidation.disabled:
     displayName: Bootstrap disable BOM validation
     config:
