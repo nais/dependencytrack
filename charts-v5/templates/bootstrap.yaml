@@ -1,0 +1,83 @@
+{{- if .Values.bootstrap.enabled }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ .Release.Name }}-dependencytrack-v5-bootstrap
+  annotations:
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-delete-policy: hook-succeeded
+spec:
+  backoffLimit: 6
+  ttlSecondsAfterFinished: 60
+  template:
+    spec:
+      restartPolicy: Never
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: bootstrap
+          image: {{ printf "%s/%s:%s" .Values.bootstrap.image.repository .Values.bootstrap.image.name .Values.bootstrap.image.tag | quote }}
+          securityContext:
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+          env:
+            - name: LOG_LEVEL
+              value: {{ .Values.bootstrap.logLevel | quote }}
+            - name: BASE_URL
+              value: {{ required "bootstrap.baseUrl is required" .Values.bootstrap.baseUrl | quote }}
+            - name: FRONTEND_BASE_URL
+              value: {{ required "bootstrap.frontendBaseUrl is required" .Values.bootstrap.frontendBaseUrl | quote }}
+            - name: GOOGLE_OSV_ENABLED
+              value: {{ .Values.bootstrap.google.osv_enabled | quote }}
+            - name: TRIVY_IGNORE_UNFIXED
+              value: {{ .Values.bootstrap.trivy.ignore_unfixed | quote }}
+            {{- if ne .Values.bootstrap.bomValidation.disabled nil }}
+            - name: BOM_VALIDATION_DISABLED
+              value: {{ .Values.bootstrap.bomValidation.disabled | quote }}
+            {{- end }}
+            {{- if .Values.bootstrap.trivy.base_url }}
+            - name: TRIVY_BASE_URL
+              value: {{ .Values.bootstrap.trivy.base_url | quote }}
+            {{- end }}
+          envFrom:
+            - secretRef:
+                name: {{ .Release.Name }}-dependencytrack-v5-bootstrap
+          volumeMounts:
+            - name: users
+              mountPath: /bootstrap
+      volumes:
+        - name: users
+          secret:
+            secretName: {{ .Release.Name }}-dependencytrack-v5-bootstrap-users
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ .Release.Name }}-dependencytrack-v5-bootstrap
+type: Opaque
+stringData:
+  DEFAULT_ADMIN_PASSWORD: {{ .Values.bootstrap.defaultAdminPassword | quote }}
+  ADMIN_PASSWORD: {{ .Values.bootstrap.adminPassword | quote }}
+  GITHUB_ADVISORY_TOKEN: {{ .Values.bootstrap.github.advisory_mirroring_token | quote }}
+  TRIVY_API_TOKEN: {{ .Values.bootstrap.trivy.api_token | quote }}
+  OSS_INDEX_API_USERNAME: {{ .Values.bootstrap.oss_index.username | quote }}
+  OSS_INDEX_API_TOKEN: {{ .Values.bootstrap.oss_index.token | quote }}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ .Release.Name }}-dependencytrack-v5-bootstrap-users
+type: Opaque
+stringData:
+  users.yaml: |
+    users:
+{{ .Values.bootstrap.users | toYaml | indent 6 }}
+{{- end }}
