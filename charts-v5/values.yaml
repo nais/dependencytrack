@@ -92,7 +92,7 @@ app:
 
   ingress:
     enabled: true
-    ingressClassName: internal-haproxy
+    ingressClassName: nais-ingress
     hostname: ""
 
 cloudSqlProxy:
@@ -118,8 +118,6 @@ apiServerEnv:
   datasource:
     pool:
       maxLifetimeMs: "400000"
-  metrics:
-    enabled: true
 
 frontendEnv:
   oidcIssuer: https://auth.nais.io

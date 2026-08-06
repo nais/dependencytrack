@@ -18,6 +18,8 @@ the v4 release, then install this chart.
   against the exact Dependency-Track v5 release before production cutover.
 - Local file storage uses `ReadWriteOnce`; keep `app.apiServer.web.replicaCount`
   at `1` unless you switch to S3 or an RWX-capable StorageClass.
+- Metrics are always enabled by the official v5 chart and are exposed on its
+  management port; they are therefore not a Feature-configurable setting.
 
 ## Validation
 
