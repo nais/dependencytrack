@@ -111,7 +111,7 @@ values:
   app.apiServer.serviceMonitor.namespace:
     displayName: ServiceMonitor namespace
     computed:
-      template: '"{{.Release.Namespace}}"'
+      template: '"monitoring"'
   cloudSqlProxy.connectionName:
     displayName: Cloud SQL connection name
     computed:
