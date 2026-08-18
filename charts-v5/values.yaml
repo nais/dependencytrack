@@ -69,9 +69,16 @@ app:
           capabilities:
             drop:
               - ALL
+          seccompProfile:
+            type: RuntimeDefault
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            memory: 256Mi
     serviceMonitor:
-      enabled: true
-      namespace: monitoring
+      enabled: false
       scrapeInterval: 60s
       scrapeTimeout: 30s
 

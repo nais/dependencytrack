@@ -102,16 +102,6 @@ values:
     config:
       type: string
       secret: true
-  app.apiServer.serviceMonitor.enabled:
-    displayName: ServiceMonitor enabled
-    computed:
-      template: "true"
-    config:
-      type: bool
-  app.apiServer.serviceMonitor.namespace:
-    displayName: ServiceMonitor namespace
-    computed:
-      template: '"monitoring"'
   cloudSqlProxy.connectionName:
     displayName: Cloud SQL connection name
     computed:
