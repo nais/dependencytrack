@@ -1,5 +1,5 @@
 [tools]
-go = "1.26.5"
+go = "1.26.6"
 helm = "4.2.3"
 
 [settings]
