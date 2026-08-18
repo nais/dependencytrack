@@ -31,6 +31,5 @@ kind: ConfigMap
 metadata:
   name: dependencytrack-v5-frontend-runtime
 data:
-  API_BASE_URL: {{ required "app.frontend.apiBaseUrl is required" .Values.app.frontend.apiBaseUrl | quote }}
   OIDC_ISSUER: {{ required "frontendEnv.oidcIssuer is required" .Values.frontendEnv.oidcIssuer | quote }}
   OIDC_CLIENT_ID: {{ required "frontendEnv.oidcClientId is required" .Values.frontendEnv.oidcClientId | quote }}

@@ -10,3 +10,5 @@
 /pkg/dependencytrack/client/.openapi-generator/
 /go.work
 /go.work.sum
+/.claude/
+/.agents/
