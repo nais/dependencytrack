@@ -1,6 +1,6 @@
 module github.com/nais/dependencytrack/pkg/dependencytrack
 
-go 1.26.5
+go 1.26.6
 
 require (
 	github.com/lestrrat-go/jwx/v2 v2.1.7
