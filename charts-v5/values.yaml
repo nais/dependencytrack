@@ -1,0 +1,157 @@
+# Wrapper values for the official Dependency-Track v5 chart. Values under app
+# are passed to the dependency-track subchart; the remaining sections are
+# rendered by this chart for NAIS-specific runtime configuration and bootstrap.
+app:
+  fullnameOverride: dependencytrack-v5
+  serviceAccount:
+    create: true
+    annotations:
+      iam.gke.io/gcp-service-account: ""
+
+  database:
+    jdbcUrl: "jdbc:postgresql://127.0.0.1:5432/dependencytrack?reWriteBatchedInserts=true"
+    username: ""
+    password: ""
+
+  secretManagement:
+    provider: database
+    database:
+      kek:
+        mode: config
+        value: ""
+
+  fileStorage:
+    provider: local
+    local:
+      size: 10Gi
+      storageClassName: standard
+      accessModes:
+        - ReadWriteOnce
+
+  apiServer:
+    topology: monolith
+    image:
+      repository: dependencytrack/apiserver
+      tag: ""
+    web:
+      # Local default storage is ReadWriteOnce, so only one API server can
+      # mount it. Use S3 or an RWX StorageClass before scaling this above one.
+      replicaCount: 1
+      resources:
+        requests:
+          cpu: "1"
+          memory: 4Gi
+        limits:
+          memory: 4Gi
+    extraEnvFrom:
+      - configMapRef:
+          name: dependencytrack-v5-runtime
+    extraContainers:
+      - name: cloud-sql-proxy
+        image: eu.gcr.io/cloud-sql-connectors/cloud-sql-proxy:2.21.1
+        args:
+          - $(CLOUD_SQL_CONNECTION_NAME)
+          - --private-ip
+          - --auto-iam-authn
+          - --port=5432
+        env:
+          - name: CLOUD_SQL_CONNECTION_NAME
+            valueFrom:
+              configMapKeyRef:
+                name: dependencytrack-v5-runtime
+                key: CLOUD_SQL_CONNECTION_NAME
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 1000
+          runAsGroup: 1000
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop:
+              - ALL
+          seccompProfile:
+            type: RuntimeDefault
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            memory: 256Mi
+    serviceMonitor:
+      enabled: false
+      scrapeInterval: 60s
+      scrapeTimeout: 30s
+
+  frontend:
+    enabled: true
+    image:
+      repository: dependencytrack/frontend
+      tag: ""
+    replicaCount: 1
+    resources:
+      requests:
+        cpu: "1"
+        memory: 256Mi
+    apiBaseUrl: ""
+    extraEnvFrom:
+      - configMapRef:
+          name: dependencytrack-v5-frontend-runtime
+
+  ingress:
+    enabled: true
+    ingressClassName: nais-ingress
+    hostname: ""
+
+cloudSqlProxy:
+  connectionName: ""
+
+apiServerEnv:
+  oidc:
+    enabled: true
+    issuer: https://auth.nais.io
+    clientId: ""
+    usernameClaim: email
+    userProvisioning: true
+    teamSynchronization: false
+    teamsClaim: groups
+  cors:
+    enabled: true
+    allowedOrigins: ""
+    allowedMethods: "GET, POST, PUT, PATCH, DELETE, OPTIONS"
+    allowedHeaders: "Origin, Content-Type, Authorization, X-Requested-With, Content-Length, Accept, Origin, X-Api-Key, X-Total-Count, *"
+    exposedHeaders: "Origin, Content-Type, Authorization, X-Requested-With, Content-Length, Accept, Origin, X-Api-Key, X-Total-Count"
+    allowCredentials: true
+    maxAge: "3600"
+  datasource:
+    pool:
+      maxLifetimeMs: "400000"
+
+frontendEnv:
+  oidcIssuer: https://auth.nais.io
+  oidcClientId: ""
+
+bootstrap:
+  enabled: true
+  image:
+    repository: europe-north1-docker.pkg.dev/nais-io/nais/images
+    name: dependencytrack-bootstrap
+    tag: ""
+  logLevel: INFO
+  baseUrl: ""
+  frontendBaseUrl: ""
+  defaultAdminPassword: admin
+  adminPassword: ""
+  bomValidation:
+    disabled:
+  github:
+    advisory_mirroring_token: ""
+  google:
+    osv_enabled: true
+  users: []
+  trivy:
+    ignore_unfixed: true
+    api_token: ""
+    base_url: ""
+  oss_index:
+    username: ""
+    token: ""

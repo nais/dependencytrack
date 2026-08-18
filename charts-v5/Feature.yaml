@@ -1,0 +1,265 @@
+environmentKinds:
+  - management
+timeout: 20m0s
+values:
+  app.apiServer.image.tag:
+    displayName: API server image tag
+    config:
+      type: string
+  app.apiServer.web.replicaCount:
+    displayName: API server replica count
+    config:
+      type: int
+  app.apiServer.web.resources.requests.memory:
+    displayName: API server memory request
+    config:
+      type: string
+  app.apiServer.web.resources.requests.cpu:
+    displayName: API server CPU request
+    config:
+      type: string
+  app.frontend.image.tag:
+    displayName: Frontend image tag
+    config:
+      type: string
+  app.frontend.replicaCount:
+    displayName: Frontend replica count
+    config:
+      type: int
+  app.frontend.resources.requests.memory:
+    displayName: Frontend memory request
+    config:
+      type: string
+  app.frontend.resources.requests.cpu:
+    displayName: Frontend CPU request
+    config:
+      type: string
+  app.ingress.hostname:
+    displayName: Ingress hostname
+    computed:
+      template: '"salsa.{{.Tenant.Name}}.cloud.nais.io"'
+  app.serviceAccount.annotations.iam\\.gke\\.io/gcp-service-account:
+    displayName: Google service account email
+    computed:
+      template: '{{.Management.dependencytrack_google_service_account_email | quote}}'
+  app.database.jdbcUrl:
+    displayName: Database JDBC URL
+    computed:
+      template: '"jdbc:postgresql://127.0.0.1:5432/{{.Management.dependencytrack_database_name}}?reWriteBatchedInserts=true"'
+  app.database.username:
+    displayName: Database username
+    computed:
+      template: '{{.Management.dependencytrack_database_user | quote}}'
+    config:
+      type: string
+  app.database.password:
+    displayName: Database password
+    computed:
+      template: '{{.Management.dependencytrack_database_password | quote}}'
+    config:
+      type: string
+      secret: true
+  app.fileStorage.local.size:
+    displayName: File storage size
+    config:
+      type: string
+  app.fileStorage.provider:
+    displayName: File storage provider
+    config:
+      type: string
+  app.fileStorage.local.storageClassName:
+    displayName: File storage class
+    config:
+      type: string
+  app.fileStorage.local.accessModes:
+    displayName: File storage access modes
+    computed:
+      template: |
+        - ReadWriteOnce
+  app.fileStorage.local.existingClaim:
+    displayName: Existing file storage claim
+    config:
+      type: string
+  app.fileStorage.s3.endpoint:
+    displayName: S3 endpoint
+    config:
+      type: string
+  app.fileStorage.s3.region:
+    displayName: S3 region
+    config:
+      type: string
+  app.fileStorage.s3.bucket:
+    displayName: S3 bucket
+    config:
+      type: string
+  app.fileStorage.s3.credentials.accessKeyId:
+    displayName: S3 access key ID
+    config:
+      type: string
+      secret: true
+  app.fileStorage.s3.credentials.secretAccessKey:
+    displayName: S3 secret access key
+    config:
+      type: string
+      secret: true
+  cloudSqlProxy.connectionName:
+    displayName: Cloud SQL connection name
+    computed:
+      template: '{{.Management.dependencytrack_database_instance | quote}}'
+  app.secretManagement.database.kek.value:
+    displayName: Dependency-Track KEK
+    config:
+      type: string
+      secret: true
+  apiServerEnv.oidc.clientId:
+    displayName: OIDC client ID
+    computed:
+      template: '{{.Management.dependencytrack_zitadel_client_id | quote}}'
+  apiServerEnv.oidc.enabled:
+    displayName: OIDC enabled
+    computed:
+      template: "true"
+    config:
+      type: bool
+  apiServerEnv.oidc.issuer:
+    displayName: OIDC issuer
+    computed:
+      template: '"https://auth.nais.io"'
+  apiServerEnv.oidc.usernameClaim:
+    displayName: OIDC username claim
+    computed:
+      template: '"email"'
+  apiServerEnv.oidc.userProvisioning:
+    displayName: OIDC user provisioning
+    computed:
+      template: "true"
+    config:
+      type: bool
+  apiServerEnv.oidc.teamSynchronization:
+    displayName: OIDC team synchronization
+    computed:
+      template: "false"
+    config:
+      type: bool
+  apiServerEnv.oidc.teamsClaim:
+    displayName: OIDC teams claim
+    computed:
+      template: '"groups"'
+  apiServerEnv.cors.allowedOrigins:
+    displayName: CORS allowed origins
+    computed:
+      template: '"https://salsa.{{.Tenant.Name}}.cloud.nais.io"'
+  apiServerEnv.cors.enabled:
+    displayName: CORS enabled
+    computed:
+      template: "true"
+    config:
+      type: bool
+  apiServerEnv.cors.allowedMethods:
+    displayName: CORS allowed methods
+    computed:
+      template: '"GET, POST, PUT, PATCH, DELETE, OPTIONS"'
+  apiServerEnv.cors.allowedHeaders:
+    displayName: CORS allowed headers
+    computed:
+      template: '"Origin, Content-Type, Authorization, X-Requested-With, Content-Length, Accept, Origin, X-Api-Key, X-Total-Count, *"'
+  apiServerEnv.cors.exposedHeaders:
+    displayName: CORS exposed headers
+    computed:
+      template: '"Origin, Content-Type, Authorization, X-Requested-With, Content-Length, Accept, Origin, X-Api-Key, X-Total-Count"'
+  apiServerEnv.cors.allowCredentials:
+    displayName: CORS allow credentials
+    computed:
+      template: "true"
+    config:
+      type: bool
+  apiServerEnv.cors.maxAge:
+    displayName: CORS max age
+    computed:
+      template: '"3600"'
+  apiServerEnv.datasource.pool.maxLifetimeMs:
+    displayName: Database pool maximum lifetime
+    computed:
+      template: '"400000"'
+  frontendEnv.oidcClientId:
+    displayName: Frontend OIDC client ID
+    computed:
+      template: '{{.Management.dependencytrack_zitadel_client_id | quote}}'
+  frontendEnv.oidcIssuer:
+    displayName: Frontend OIDC issuer
+    computed:
+      template: '"https://auth.nais.io"'
+  app.frontend.apiBaseUrl:
+    displayName: Frontend API base URL
+    computed:
+      template: '"https://salsa.{{.Tenant.Name}}.cloud.nais.io/api"'
+  bootstrap.image.tag:
+    displayName: Bootstrap image tag
+    config:
+      type: string
+  bootstrap.logLevel:
+    displayName: Bootstrap log level
+    config:
+      type: string
+  bootstrap.baseUrl:
+    displayName: Bootstrap API base URL
+    computed:
+      template: '"http://dependencytrack-v5-api-server:8080/api"'
+  bootstrap.frontendBaseUrl:
+    displayName: Bootstrap frontend base URL
+    computed:
+      template: '"https://salsa.{{.Tenant.Name}}.cloud.nais.io"'
+  bootstrap.adminPassword:
+    displayName: Bootstrap admin password
+    computed:
+      template: '{{.Management.admin_dependencytrack_password | quote}}'
+    config:
+      type: string
+      secret: true
+  bootstrap.users:
+    displayName: Bootstrap users
+    computed:
+      template: |
+        - username: "console"
+          password: {{.Management.console_dependencytrack_password | quote}}
+        - username: "teams"
+          password: {{.Management.teams_dependencytrack_password | quote}}
+        - username: "v13s"
+          password: {{.Management.v13s_dependencytrack_password | quote}}
+  bootstrap.bomValidation.disabled:
+    displayName: Bootstrap disable BOM validation
+    config:
+      type: bool
+  bootstrap.github.advisory_mirroring_token:
+    displayName: Bootstrap GitHub advisory token
+    config:
+      type: string
+      secret: true
+  bootstrap.google.osv_enabled:
+    displayName: Bootstrap Google OSV enabled
+    config:
+      type: bool
+  bootstrap.trivy.api_token:
+    displayName: Bootstrap Trivy token
+    computed:
+      template: '{{.Management.trivy_server_token | quote}}'
+    config:
+      type: string
+      secret: true
+  bootstrap.trivy.base_url:
+    displayName: Bootstrap Trivy base URL
+    config:
+      type: string
+  bootstrap.trivy.ignore_unfixed:
+    displayName: Bootstrap Trivy ignore unfixed
+    config:
+      type: bool
+  bootstrap.oss_index.username:
+    displayName: Bootstrap OSS Index username
+    config:
+      type: string
+  bootstrap.oss_index.token:
+    displayName: Bootstrap OSS Index token
+    config:
+      type: string
+      secret: true
