@@ -27,6 +27,17 @@ bootstrap:
   oss_index:
     username:
     token:
+  # Dependency-Track task-scheduler cadences, in hours. Empty leaves the
+  # Dependency-Track default untouched. Applied by the bootstrap Job; the backend
+  # pod must restart to pick up a changed cadence (TaskScheduler reads these once
+  # at startup).
+  taskScheduler:
+    # DT default 1h. Full portfolio + per-component metrics rescan.
+    portfolioMetricsUpdateCadence: "3"
+    # DT default 1h. Full VULNERABILITY table aggregate for one dashboard chart.
+    vulnerabilityMetricsUpdateCadence: "24"
+    # DT default 6h. Full COMPONENT table scan for internal-component matching.
+    internalComponentsIdentificationCadence: "24"
 
 backend:
   logLevel: INFO

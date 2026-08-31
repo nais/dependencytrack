@@ -5,6 +5,7 @@ import (
 	"flag"
 	"os"
 	"os/signal"
+	"strconv"
 	"strings"
 	"syscall"
 
@@ -33,6 +34,18 @@ type Config struct {
 	TrivyIgnoreUnfixed    bool   `json:"trivy-ignore-unfixed"`
 	OssIndexApiUsername   string `json:"oss-index-api-username"`
 	OssIndexApiToken      string `json:"oss-index-api-token"`
+
+	PortfolioMetricsCadence     string `json:"portfolio-metrics-cadence"`
+	VulnerabilityMetricsCadence string `json:"vulnerability-metrics-cadence"`
+	InternalComponentIdCadence  string `json:"internal-component-identification-cadence"`
+}
+
+func (c *Config) taskSchedulerCadences() map[string]string {
+	return map[string]string{
+		"portfolio.metrics.update.cadence":           c.PortfolioMetricsCadence,
+		"vulnerability.metrics.update.cadence":       c.VulnerabilityMetricsCadence,
+		"internal.components.identification.cadence": c.InternalComponentIdCadence,
+	}
 }
 
 func init() {
@@ -50,6 +63,9 @@ func init() {
 	flag.BoolVar(&cfg.TrivyIgnoreUnfixed, "trivy-ignore-unfixed", cfg.TrivyIgnoreUnfixed, "ignore unfixed vulnerabilities")
 	flag.StringVar(&cfg.OssIndexApiUsername, "oss-index-api-username", cfg.OssIndexApiUsername, "oss index username")
 	flag.StringVar(&cfg.OssIndexApiToken, "oss-index-api-token", cfg.OssIndexApiToken, "oss index token")
+	flag.StringVar(&cfg.PortfolioMetricsCadence, "portfolio-metrics-cadence", cfg.PortfolioMetricsCadence, "task-scheduler portfolio.metrics.update.cadence in hours; omit to leave unchanged")
+	flag.StringVar(&cfg.VulnerabilityMetricsCadence, "vulnerability-metrics-cadence", cfg.VulnerabilityMetricsCadence, "task-scheduler vulnerability.metrics.update.cadence in hours; omit to leave unchanged")
+	flag.StringVar(&cfg.InternalComponentIdCadence, "internal-component-identification-cadence", cfg.InternalComponentIdCadence, "task-scheduler internal.components.identification.cadence in hours; omit to leave unchanged")
 }
 
 func main() {
@@ -247,6 +263,21 @@ func main() {
 			}
 		}
 
+		if prop.GroupName != nil && *prop.GroupName == "task-scheduler" {
+			if desired, ok := cfg.taskSchedulerCadences()[*prop.PropertyName]; ok && desired != "" {
+				hours, valid := resolveCadence(desired)
+				if !valid {
+					log.Warnf("invalid cadence %q for %s, expected a positive integer number of hours; leaving unchanged", desired, *prop.PropertyName)
+				} else if isAlreadySet(prop.PropertyValue, hours) {
+					log.Infof("%s already set to %s hours", *prop.PropertyName, hours)
+				} else {
+					prop.PropertyValue = &hours
+					cp = append(cp, prop)
+					log.Infof("updated: %s to %s hours", *prop.PropertyName, hours)
+				}
+			}
+		}
+
 		if cfg.OssIndexApiUsername == "" || cfg.OssIndexApiToken == "" {
 			switch *prop.PropertyName {
 			case "ossindex.enabled":
@@ -332,6 +363,23 @@ func isAlreadySet(config *string, inputValue string) bool {
 		return false
 	}
 	return strings.EqualFold(*config, inputValue)
+}
+
+// resolveCadence validates a user-supplied task-scheduler cadence. It accepts a
+// positive integer number of hours and returns it normalised; anything else does
+// not resolve and the caller leaves the existing value untouched.
+func resolveCadence(value string) (string, bool) {
+	value = strings.TrimSpace(value)
+	if value == "" {
+		return "", false
+	}
+
+	hours, err := strconv.Atoi(value)
+	if err != nil || hours <= 0 {
+		return "", false
+	}
+
+	return strconv.Itoa(hours), true
 }
 
 func resolveBomValidationMode(disabled string) (string, bool) {

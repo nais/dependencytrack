@@ -66,6 +66,18 @@ spec:
             - name: TRIVY_BASE_URL
               value: "{{ .Values.bootstrap.trivy.base_url }}"
             {{- end }}
+          {{- if and .Values.bootstrap.taskScheduler .Values.bootstrap.taskScheduler.portfolioMetricsUpdateCadence }}
+            - name: PORTFOLIO_METRICS_CADENCE
+              value: "{{ .Values.bootstrap.taskScheduler.portfolioMetricsUpdateCadence }}"
+          {{- end }}
+          {{- if and .Values.bootstrap.taskScheduler .Values.bootstrap.taskScheduler.vulnerabilityMetricsUpdateCadence }}
+            - name: VULNERABILITY_METRICS_CADENCE
+              value: "{{ .Values.bootstrap.taskScheduler.vulnerabilityMetricsUpdateCadence }}"
+          {{- end }}
+          {{- if and .Values.bootstrap.taskScheduler .Values.bootstrap.taskScheduler.internalComponentsIdentificationCadence }}
+            - name: INTERNAL_COMPONENT_IDENTIFICATION_CADENCE
+              value: "{{ .Values.bootstrap.taskScheduler.internalComponentsIdentificationCadence }}"
+          {{- end }}
           envFrom:
             - secretRef:
                 name: "{{ .Release.Name }}-bootstrap-pwd"

@@ -10,3 +10,7 @@
 /pkg/dependencytrack/client/.openapi-generator/
 /go.work
 /go.work.sum
+/.agents/
+/.claude/
+/.mcp.json
+/skills-lock.json

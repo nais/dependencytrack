@@ -150,6 +150,21 @@ values:
     config:
       type: string
       secret: true
+  bootstrap.taskScheduler.portfolioMetricsUpdateCadence:
+    description: Cadence in hours for the portfolio metrics update task (DT default 1)
+    displayName: Bootstrap portfolio metrics update cadence (hours)
+    config:
+      type: string
+  bootstrap.taskScheduler.vulnerabilityMetricsUpdateCadence:
+    description: Cadence in hours for the vulnerability metrics update task (DT default 1)
+    displayName: Bootstrap vulnerability metrics update cadence (hours)
+    config:
+      type: string
+  bootstrap.taskScheduler.internalComponentsIdentificationCadence:
+    description: Cadence in hours for the internal component identification task (DT default 6)
+    displayName: Bootstrap internal components identification cadence (hours)
+    config:
+      type: string
 
   # Frontend Config
   frontend.swagger.enabled:
