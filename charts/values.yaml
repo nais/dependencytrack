@@ -17,6 +17,10 @@ bootstrap:
     advisory_mirroring_token:
   google:
     osv_enabled: true
+    # OSV ecosystems to mirror, semicolon-separated. Empty mirrors every
+    # ecosystem OSV publishes. Names must match OSV exactly:
+    # https://osv-vulnerabilities.storage.googleapis.com/ecosystems.txt
+    osv_ecosystems: ""
   users:
     - username: console
       password: todo

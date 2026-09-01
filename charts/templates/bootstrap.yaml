@@ -58,6 +58,10 @@ spec:
           {{- end }}
             - name: GOOGLE_OSV_ENABLED
               value: "{{ .Values.bootstrap.google.osv_enabled }}"
+          {{- if .Values.bootstrap.google.osv_ecosystems }}
+            - name: OSV_ECOSYSTEMS
+              value: {{ .Values.bootstrap.google.osv_ecosystems | quote }}
+          {{- end }}
             - name: FRONTEND_BASE_URL
               value: "{{ .Values.bootstrap.frontendBaseUrl }}"
             - name: TRIVY_IGNORE_UNFIXED

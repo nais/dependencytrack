@@ -141,6 +141,11 @@ values:
     displayName: Bootstrap Google OSV enabled
     config:
       type: bool
+  bootstrap.google.osv_ecosystems:
+    description: Semicolon-separated OSV ecosystems to mirror; empty mirrors all
+    displayName: Bootstrap Google OSV ecosystems
+    config:
+      type: string
   bootstrap.oss_index.username:
     displayName: Bootstrap OSS Index username
     config:

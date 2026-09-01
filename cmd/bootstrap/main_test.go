@@ -1,6 +1,9 @@
 package main
 
-import "testing"
+import (
+	"strings"
+	"testing"
+)
 
 func TestResolveBomValidationMode(t *testing.T) {
 	tests := []struct {
@@ -78,6 +81,55 @@ func TestResolveCadence(t *testing.T) {
 			}
 			if gotResolve != tt.wantResolve {
 				t.Fatalf("resolveCadence(%q) resolved = %v, want %v", tt.value, gotResolve, tt.wantResolve)
+			}
+		})
+	}
+}
+
+func TestParseEcosystemList(t *testing.T) {
+	tests := []struct {
+		name string
+		raw  string
+		want string
+	}{
+		{name: "empty", raw: "", want: ""},
+		{name: "trims and sorts", raw: "npm; Go ;Maven", want: "Go;Maven;npm"},
+		{name: "de-duplicates", raw: "Go;Go;PyPI;PyPI", want: "Go;PyPI"},
+		{name: "drops blank entries", raw: "Go;;;Maven;", want: "Go;Maven"},
+		{name: "keeps names with dots", raw: "crates.io;Go", want: "Go;crates.io"},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := strings.Join(parseEcosystemList(tt.raw), ";")
+			if got != tt.want {
+				t.Fatalf("parseEcosystemList(%q) = %q, want %q", tt.raw, got, tt.want)
+			}
+		})
+	}
+}
+
+func TestSameEcosystemSet(t *testing.T) {
+	ptr := func(s string) *string { return &s }
+
+	tests := []struct {
+		name    string
+		stored  *string
+		desired string
+		want    bool
+	}{
+		{name: "nil stored", stored: nil, desired: "Go", want: false},
+		{name: "same set different order", stored: ptr("Maven;Go"), desired: "Go;Maven", want: true},
+		{name: "same set different spacing", stored: ptr(" Go ; Maven "), desired: "Go;Maven", want: true},
+		{name: "subset is not equal", stored: ptr("Go"), desired: "Go;Maven", want: false},
+		{name: "superset is not equal", stored: ptr("Go;Maven;npm"), desired: "Go;Maven", want: false},
+		{name: "disjoint", stored: ptr("PyPI"), desired: "Go", want: false},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := sameEcosystemSet(tt.stored, tt.desired); got != tt.want {
+				t.Fatalf("sameEcosystemSet(%v, %q) = %v, want %v", tt.stored, tt.desired, got, tt.want)
 			}
 		})
 	}

@@ -5,13 +5,13 @@ import (
 	"flag"
 	"os"
 	"os/signal"
+	"sort"
 	"strconv"
 	"strings"
 	"syscall"
 
 	"github.com/nais/dependencytrack/cmd/common"
 	"github.com/nais/dependencytrack/pkg/dependencytrack"
-	"github.com/sirupsen/logrus"
 	"gopkg.in/yaml.v3"
 )
 
@@ -29,6 +29,7 @@ type Config struct {
 	UsersFile             string `json:"users-file"`
 	GithubAdvisoryToken   string `json:"github-advisory-token"`
 	GoogleOSVEnabled      bool   `json:"google-osv-enabled"`
+	OsvEcosystems         string `json:"osv-ecosystems"`
 	TrivyApiToken         string `json:"trivy-token"`
 	TrivyBaseURL          string `json:"trivy-base-url"`
 	TrivyIgnoreUnfixed    bool   `json:"trivy-ignore-unfixed"`
@@ -58,6 +59,7 @@ func init() {
 	flag.StringVar(&cfg.GithubAdvisoryToken, "github-advisory-token", cfg.GithubAdvisoryToken, "github advisory mirroring token")
 	flag.StringVar(&cfg.UsersFile, "users-file", "/bootstrap/users.yaml", "file with users to create")
 	flag.BoolVar(&cfg.GoogleOSVEnabled, "google-osv-enabled", cfg.GoogleOSVEnabled, "enable google osv integration")
+	flag.StringVar(&cfg.OsvEcosystems, "osv-ecosystems", cfg.OsvEcosystems, "semicolon-separated OSV ecosystems to mirror; empty mirrors all")
 	flag.StringVar(&cfg.TrivyApiToken, "trivy-api-token", cfg.TrivyApiToken, "trivy api token to use for scanning")
 	flag.StringVar(&cfg.TrivyBaseURL, "trivy-base-url", cfg.TrivyBaseURL, "trivy base url")
 	flag.BoolVar(&cfg.TrivyIgnoreUnfixed, "trivy-ignore-unfixed", cfg.TrivyIgnoreUnfixed, "ignore unfixed vulnerabilities")
@@ -181,19 +183,26 @@ func main() {
 		if cfg.GoogleOSVEnabled {
 			switch *prop.PropertyName {
 			case "google.osv.enabled":
-				eco, err := c.GetEcosystems(ctx)
-				if err != nil {
-					log.Fatalf("get ecosystems: %v", err)
+				ecosystems := parseEcosystemList(cfg.OsvEcosystems)
+				if len(ecosystems) == 0 {
+					all, err := c.GetEcosystems(ctx)
+					if err != nil {
+						log.Fatalf("get ecosystems: %v", err)
+					}
+					ecosystems = parseEcosystemList(strings.Join(all, ";"))
 				}
-				// if the list is empty we activated all ecosystems
-				if len(eco) == 0 {
-					log.Info("google osv integration already enabled")
+				desired := strings.Join(ecosystems, ";")
+				if desired == "" {
+					log.Info("no OSV ecosystems available; leaving google.osv.enabled unchanged")
 					continue
 				}
-
-				if err = updateEcosystems(ctx, c, eco, prop, log); err != nil {
-					log.Fatalf("update ecosystems: %v", err)
+				if sameEcosystemSet(prop.PropertyValue, desired) {
+					log.Info("osv ecosystems already up to date")
+					continue
 				}
+				prop.PropertyValue = &desired
+				cp = append(cp, prop)
+				log.Infof("updated: osv ecosystems (%d)", len(ecosystems))
 			}
 		}
 
@@ -329,33 +338,39 @@ func main() {
 	}
 }
 
-func updateEcosystems(ctx context.Context, c dependencytrack.ManagementClient, eco []string, prop dependencytrack.ConfigProperty, log *logrus.Logger) error {
-	chunkSize := 10
-
-	for len(eco) > 0 {
-		log.Info("Processing chunk of ecosystems: ", len(eco))
-		// Get the next chunk of eco
-		end := min(len(eco), chunkSize)
-
-		chunk := eco[:end]
-		eco = eco[end:] // Remove the processed chunk from eco
-
-		propVal := strings.Join(chunk, ";")
-		p := dependencytrack.ConfigProperty{
-			GroupName:     prop.GroupName,
-			PropertyName:  prop.PropertyName,
-			PropertyType:  prop.PropertyType,
-			PropertyValue: &propVal,
-			Description:   prop.Description,
+func parseEcosystemList(raw string) []string {
+	seen := make(map[string]struct{})
+	var out []string
+	for _, e := range strings.Split(raw, ";") {
+		e = strings.TrimSpace(e)
+		if e == "" {
+			continue
 		}
-
-		if err := c.ConfigPropertyAggregate(ctx, p); err != nil {
-			return err
+		if _, dup := seen[e]; dup {
+			continue
 		}
-
-		log.Info("Chunk processed and sent. Remaining items:", len(eco))
+		seen[e] = struct{}{}
+		out = append(out, e)
 	}
-	return nil
+	sort.Strings(out)
+	return out
+}
+
+func sameEcosystemSet(stored *string, desired string) bool {
+	if stored == nil {
+		return false
+	}
+	a := parseEcosystemList(*stored)
+	b := parseEcosystemList(desired)
+	if len(a) != len(b) {
+		return false
+	}
+	for i := range a {
+		if a[i] != b[i] {
+			return false
+		}
+	}
+	return true
 }
 
 func isAlreadySet(config *string, inputValue string) bool {
@@ -365,9 +380,6 @@ func isAlreadySet(config *string, inputValue string) bool {
 	return strings.EqualFold(*config, inputValue)
 }
 
-// resolveCadence validates a user-supplied task-scheduler cadence. It accepts a
-// positive integer number of hours and returns it normalised; anything else does
-// not resolve and the caller leaves the existing value untouched.
 func resolveCadence(value string) (string, bool) {
 	value = strings.TrimSpace(value)
 	if value == "" {
