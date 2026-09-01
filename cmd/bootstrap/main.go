@@ -341,7 +341,7 @@ func main() {
 func parseEcosystemList(raw string) []string {
 	seen := make(map[string]struct{})
 	var out []string
-	for _, e := range strings.Split(raw, ";") {
+	for e := range strings.SplitSeq(raw, ";") {
 		e = strings.TrimSpace(e)
 		if e == "" {
 			continue
