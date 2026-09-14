@@ -19,6 +19,8 @@ Name | Type | Description | Notes
 **Sha256** | Pointer to **string** |  | [optional] 
 **Sha384** | Pointer to **string** |  | [optional] 
 **Sha512** | Pointer to **string** |  | [optional] 
+**Streebog256** | Pointer to **string** |  | [optional] 
+**Streebog512** | Pointer to **string** |  | [optional] 
 **Sha3256** | Pointer to **string** |  | [optional] 
 **Sha3384** | Pointer to **string** |  | [optional] 
 **Sha3512** | Pointer to **string** |  | [optional] 
@@ -436,6 +438,56 @@ SetSha512 sets Sha512 field to given value.
 `func (o *Component) HasSha512() bool`
 
 HasSha512 returns a boolean if a field has been set.
+
+### GetStreebog256
+
+`func (o *Component) GetStreebog256() string`
+
+GetStreebog256 returns the Streebog256 field if non-nil, zero value otherwise.
+
+### GetStreebog256Ok
+
+`func (o *Component) GetStreebog256Ok() (*string, bool)`
+
+GetStreebog256Ok returns a tuple with the Streebog256 field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetStreebog256
+
+`func (o *Component) SetStreebog256(v string)`
+
+SetStreebog256 sets Streebog256 field to given value.
+
+### HasStreebog256
+
+`func (o *Component) HasStreebog256() bool`
+
+HasStreebog256 returns a boolean if a field has been set.
+
+### GetStreebog512
+
+`func (o *Component) GetStreebog512() string`
+
+GetStreebog512 returns the Streebog512 field if non-nil, zero value otherwise.
+
+### GetStreebog512Ok
+
+`func (o *Component) GetStreebog512Ok() (*string, bool)`
+
+GetStreebog512Ok returns a tuple with the Streebog512 field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetStreebog512
+
+`func (o *Component) SetStreebog512(v string)`
+
+SetStreebog512 sets Streebog512 field to given value.
+
+### HasStreebog512
+
+`func (o *Component) HasStreebog512() bool`
+
+HasStreebog512 returns a boolean if a field has been set.
 
 ### GetSha3256
 

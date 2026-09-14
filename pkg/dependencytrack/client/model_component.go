@@ -36,6 +36,8 @@ type Component struct {
 	Sha256 *string `json:"sha256,omitempty" validate:"regexp=^[0-9a-fA-F]{64}$"`
 	Sha384 *string `json:"sha384,omitempty" validate:"regexp=^[0-9a-fA-F]{96}$"`
 	Sha512 *string `json:"sha512,omitempty" validate:"regexp=^[0-9a-fA-F]{128}$"`
+	Streebog256 *string `json:"streebog_256,omitempty" validate:"regexp=^[0-9a-fA-F]{64}$"`
+	Streebog512 *string `json:"streebog_512,omitempty" validate:"regexp=^[0-9a-fA-F]{128}$"`
 	Sha3256 *string `json:"sha3_256,omitempty" validate:"regexp=^[0-9a-fA-F]{64}$"`
 	Sha3384 *string `json:"sha3_384,omitempty" validate:"regexp=^[0-9a-fA-F]{96}$"`
 	Sha3512 *string `json:"sha3_512,omitempty" validate:"regexp=^[0-9a-fA-F]{128}$"`
@@ -556,6 +558,70 @@ func (o *Component) HasSha512() bool {
 // SetSha512 gets a reference to the given string and assigns it to the Sha512 field.
 func (o *Component) SetSha512(v string) {
 	o.Sha512 = &v
+}
+
+// GetStreebog256 returns the Streebog256 field value if set, zero value otherwise.
+func (o *Component) GetStreebog256() string {
+	if o == nil || IsNil(o.Streebog256) {
+		var ret string
+		return ret
+	}
+	return *o.Streebog256
+}
+
+// GetStreebog256Ok returns a tuple with the Streebog256 field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *Component) GetStreebog256Ok() (*string, bool) {
+	if o == nil || IsNil(o.Streebog256) {
+		return nil, false
+	}
+	return o.Streebog256, true
+}
+
+// HasStreebog256 returns a boolean if a field has been set.
+func (o *Component) HasStreebog256() bool {
+	if o != nil && !IsNil(o.Streebog256) {
+		return true
+	}
+
+	return false
+}
+
+// SetStreebog256 gets a reference to the given string and assigns it to the Streebog256 field.
+func (o *Component) SetStreebog256(v string) {
+	o.Streebog256 = &v
+}
+
+// GetStreebog512 returns the Streebog512 field value if set, zero value otherwise.
+func (o *Component) GetStreebog512() string {
+	if o == nil || IsNil(o.Streebog512) {
+		var ret string
+		return ret
+	}
+	return *o.Streebog512
+}
+
+// GetStreebog512Ok returns a tuple with the Streebog512 field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *Component) GetStreebog512Ok() (*string, bool) {
+	if o == nil || IsNil(o.Streebog512) {
+		return nil, false
+	}
+	return o.Streebog512, true
+}
+
+// HasStreebog512 returns a boolean if a field has been set.
+func (o *Component) HasStreebog512() bool {
+	if o != nil && !IsNil(o.Streebog512) {
+		return true
+	}
+
+	return false
+}
+
+// SetStreebog512 gets a reference to the given string and assigns it to the Streebog512 field.
+func (o *Component) SetStreebog512(v string) {
+	o.Streebog512 = &v
 }
 
 // GetSha3256 returns the Sha3256 field value if set, zero value otherwise.
@@ -1648,6 +1714,12 @@ func (o Component) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.Sha512) {
 		toSerialize["sha512"] = o.Sha512
+	}
+	if !IsNil(o.Streebog256) {
+		toSerialize["streebog_256"] = o.Streebog256
+	}
+	if !IsNil(o.Streebog512) {
+		toSerialize["streebog_512"] = o.Streebog512
 	}
 	if !IsNil(o.Sha3256) {
 		toSerialize["sha3_256"] = o.Sha3256
