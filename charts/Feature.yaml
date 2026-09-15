@@ -86,8 +86,8 @@ values:
     config:
       type: int
   backend.persistence.storageClass:
-  computed:
-    template: {{ if .Configs.config.storageClass }}{{ .Configs.config.storageClass }}{{ else }}{{ end }}
+    computed:
+      template: {{ if .Configs.config.storageClass }}{{ .Configs.config.storageClass }}{{ else }}{{ end }}
 
 
   # Bootstrap Config
