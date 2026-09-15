@@ -5,7 +5,7 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **FirstSeen** | **int64** | UNIX epoch timestamp in milliseconds | 
-**LastSeen** | **int64** | UNIX epoch timestamp in milliseconds | 
+**LastSeen** | **int64** | Deprecated; always equal to firstSeen | 
 **Source** | Pointer to **string** |  | [optional] 
 **Uuid** | Pointer to **string** |  | [optional] 
 

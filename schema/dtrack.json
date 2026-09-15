@@ -11,7 +11,7 @@
       "name": "Apache-2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "version": "4.14.2"
+    "version": "4.14.4"
   },
   "servers": [
     {
@@ -7522,7 +7522,7 @@
           "project"
         ],
         "summary": "Creates a new project",
-        "description": "\u003Cp\u003EIf a parent project exists, \u003Ccode\u003Eparent.uuid\u003C/code\u003E is required\u003C/p\u003E\n\u003Cp\u003E\n  When portfolio access control is enabled, one or more teams to grant access\n  to can be provided via \u003Ccode\u003EaccessTeams\u003C/code\u003E. Either \u003Ccode\u003Euuid\u003C/code\u003E or\n  \u003Ccode\u003Ename\u003C/code\u003E of a team must be specified. Only teams which the authenticated\n  principal is a member of can be assigned. Principals with \u003Cstrong\u003EACCESS_MANAGEMENT\u003C/strong\u003E\n  permission can assign \u003Cem\u003Eany\u003C/em\u003E team.\n\u003C/p\u003E\n\u003Cp\u003ERequires permission \u003Cstrong\u003EPORTFOLIO_MANAGEMENT\u003C/strong\u003E\u003C/p\u003E\n",
+        "description": "<p>\n  To create the project under a parent, set <code>parent</code> to an object\n  containing the parent's <code>uuid</code>. To create a top-level project,\n  omit <code>parent</code> or set it to <code>null</code>. Providing\n  <code>parent</code> without a non-null <code>uuid</code> is rejected with 400.\n</p>\n<p>\n  When portfolio access control is enabled, one or more teams to grant access\n  to can be provided via <code>accessTeams</code>. Either <code>uuid</code> or\n  <code>name</code> of a team must be specified. Only teams which the authenticated\n  principal is a member of can be assigned. Principals with <strong>ACCESS_MANAGEMENT</strong>\n  permission can assign <em>any</em> team.\n</p>\n<p>Requires permission <strong>PORTFOLIO_MANAGEMENT</strong></p>\n",
         "operationId": "createProject",
         "requestBody": {
           "content": {
@@ -7571,7 +7571,7 @@
           "project"
         ],
         "summary": "Updates a project",
-        "description": "\u003Cp\u003ERequires permission \u003Cstrong\u003EPORTFOLIO_MANAGEMENT\u003C/strong\u003E\u003C/p\u003E",
+        "description": "<p>\n  To re-parent the project, set <code>parent</code> to an object containing\n  the new parent's <code>uuid</code>. Omit <code>parent</code> (or set it to\n  <code>null</code>) to leave the parent unchanged. Providing <code>parent</code>\n  without a non-null <code>uuid</code> is rejected with 400.\n</p>\n<p>Requires permission <strong>PORTFOLIO_MANAGEMENT</strong></p>\n",
         "operationId": "updateProject",
         "requestBody": {
           "content": {
@@ -7592,6 +7592,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Bad Request"
           },
           "401": {
             "description": "Unauthorized"
@@ -13528,6 +13531,11 @@
               "rfc-9116",
               "electronic-signature",
               "digital-signature",
+              "patent",
+              "patent-family",
+              "patent-assertion",
+              "citation",
+              "poam",
               "other"
             ]
           },
@@ -14697,7 +14705,8 @@
           },
           "lastSeen": {
             "type": "integer",
-            "description": "UNIX epoch timestamp in milliseconds",
+            "deprecated": true,
+            "description": "Deprecated; always equal to firstSeen",
             "format": "int64"
           },
           "source": {
@@ -14821,6 +14830,14 @@
             "type": "string"
           },
           "sha512": {
+            "pattern": "^[0-9a-fA-F]{128}$",
+            "type": "string"
+          },
+          "streebog_256": {
+            "pattern": "^[0-9a-fA-F]{64}$",
+            "type": "string"
+          },
+          "streebog_512": {
             "pattern": "^[0-9a-fA-F]{128}$",
             "type": "string"
           },
