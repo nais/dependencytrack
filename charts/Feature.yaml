@@ -87,7 +87,7 @@ values:
       type: int
   backend.persistence.storageClass:
     computed:
-      template: {{ if .Configs.config.storageClass }}{{ .Configs.config.storageClass }}{{ else }}{{ end }}
+      template: "{{ if .Configs.config.storageClass }}{{ .Configs.config.storageClass }}{{ else }}{{ end }}"
 
 
   # Bootstrap Config
@@ -241,4 +241,4 @@ values:
       type: int
   trivy.persistence.storageClass:
     computed:
-      template: {{ if .Configs.config.storageClass }}{{ .Configs.config.storageClass }}{{ else }}{{ end }}
+      template: "{{ if .Configs.config.storageClass }}{{ .Configs.config.storageClass }}{{ else }}{{ end }}"
