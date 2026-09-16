@@ -2,6 +2,11 @@ environmentKinds:
   - management
 timeout: 20m0s
 values:
+  # Shared Config
+  config.storageClass:
+    displayName: Storage class
+    config:
+      type: string
 
   # Backend Config
   backend.logLevel:
@@ -80,6 +85,10 @@ values:
     displayName: Backend replica count
     config:
       type: int
+  backend.persistence.storageClass:
+    computed:
+      template: "{{ if .Configs.config.storageClass }}{{ .Configs.config.storageClass }}{{ else }}{{ end }}"
+
 
   # Bootstrap Config
   bootstrap.frontendBaseUrl:
@@ -230,3 +239,6 @@ values:
     displayName: Trivy replica count
     config:
       type: int
+  trivy.persistence.storageClass:
+    computed:
+      template: "{{ if .Configs.config.storageClass }}{{ .Configs.config.storageClass }}{{ else }}{{ end }}"
