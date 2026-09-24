@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: dependencytrack-v5-runtime
+data:
+  CLOUD_SQL_CONNECTION_NAME: {{ required "cloudSqlProxy.connectionName is required" .Values.cloudSqlProxy.connectionName | quote }}
+  DT_OIDC_ENABLED: {{ .Values.apiServerEnv.oidc.enabled | quote }}
+{{- if .Values.apiServerEnv.oidc.enabled }}
+  DT_OIDC_ISSUER: {{ required "apiServerEnv.oidc.issuer is required when OIDC is enabled" .Values.apiServerEnv.oidc.issuer | quote }}
+  DT_OIDC_CLIENT_ID: {{ required "apiServerEnv.oidc.clientId is required when OIDC is enabled" .Values.apiServerEnv.oidc.clientId | quote }}
+  DT_OIDC_USERNAME_CLAIM: {{ .Values.apiServerEnv.oidc.usernameClaim | quote }}
+  DT_OIDC_USER_PROVISIONING: {{ .Values.apiServerEnv.oidc.userProvisioning | quote }}
+{{- if .Values.apiServerEnv.oidc.teamSynchronization }}
+  DT_OIDC_TEAM_SYNCHRONIZATION: "true"
+  DT_OIDC_TEAMS_CLAIM: {{ .Values.apiServerEnv.oidc.teamsClaim | quote }}
+{{- end }}
+{{- end }}
+  DT_CORS_ENABLED: {{ .Values.apiServerEnv.cors.enabled | quote }}
+{{- if .Values.apiServerEnv.cors.enabled }}
+  DT_CORS_ALLOWED_ORIGINS: {{ required "apiServerEnv.cors.allowedOrigins is required when CORS is enabled" .Values.apiServerEnv.cors.allowedOrigins | quote }}
+  DT_CORS_ALLOWED_METHODS: {{ .Values.apiServerEnv.cors.allowedMethods | quote }}
+  DT_CORS_ALLOWED_HEADERS: {{ .Values.apiServerEnv.cors.allowedHeaders | quote }}
+  DT_CORS_EXPOSED_HEADERS: {{ .Values.apiServerEnv.cors.exposedHeaders | quote }}
+  DT_CORS_ALLOW_CREDENTIALS: {{ .Values.apiServerEnv.cors.allowCredentials | quote }}
+  DT_CORS_MAX_AGE: {{ .Values.apiServerEnv.cors.maxAge | quote }}
+{{- end }}
+  DT_DATASOURCE_POOL_MAX_LIFETIME_MS: {{ .Values.apiServerEnv.datasource.pool.maxLifetimeMs | quote }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: dependencytrack-v5-frontend-runtime
+data:
+  OIDC_ISSUER: {{ required "frontendEnv.oidcIssuer is required" .Values.frontendEnv.oidcIssuer | quote }}
+  OIDC_CLIENT_ID: {{ required "frontendEnv.oidcClientId is required" .Values.frontendEnv.oidcClientId | quote }}

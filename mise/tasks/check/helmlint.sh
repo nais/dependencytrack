@@ -4,6 +4,7 @@ set -euo pipefail
 
 echo "Running helm lint..."
 helm lint --strict ./charts
+helm lint --strict ./charts-v5 --values ./charts-v5/test-values.yaml
 
 echo "Validating rendered secret key..."
 encoded_key="$(
@@ -31,3 +32,6 @@ if [[ "$(printf '%s' "$encoded_key" | base64 --decode | wc -c | tr -d ' ')" != "
   echo "Rendered secret.key must decode to exactly 32 bytes" >&2
   exit 1
 fi
+
+echo "Rendering Dependency-Track v5 wrapper chart..."
+helm template dependencytrack-v5 ./charts-v5 --values ./charts-v5/test-values.yaml >/dev/null

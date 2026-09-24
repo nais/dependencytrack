@@ -1,0 +1,35 @@
+# Non-secret values used only for local Helm rendering of wrapper templates.
+cloudSqlProxy:
+  connectionName: project:region:instance
+
+app:
+  database:
+    username: dependencytrack
+    password: test-password
+  secretManagement:
+    database:
+      kek:
+        value: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=
+  fileStorage:
+    s3:
+      bucket: dependencytrack-v5-test
+      credentials:
+        accessKeyId: GOOG1ETESTACCESSKEY
+        secretAccessKey: test-secret
+  frontend:
+    apiBaseUrl: https://salsa.dev-nais.cloud.nais.io/api
+
+apiServerEnv:
+  oidc:
+    clientId: dependencytrack
+  cors:
+    allowedOrigins: https://salsa.dev-nais.cloud.nais.io
+
+frontendEnv:
+  oidcClientId: dependencytrack
+
+bootstrap:
+  image:
+    tag: test
+  baseUrl: http://dependencytrack-v5-api-server:8080/api
+  frontendBaseUrl: https://salsa.dev-nais.cloud.nais.io
