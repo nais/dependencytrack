@@ -20,8 +20,20 @@ app:
         mode: config
         value: ""
 
+  # S3 on Google Cloud Storage through its XML API with HMAC keys. The upstream
+  # S3 provider supports only static or AWS credentials, not GKE workload
+  # identity. Shared object storage allows more than one API-server replica.
   fileStorage:
-    provider: local
+    provider: s3
+    s3:
+      endpoint: https://storage.googleapis.com
+      region: auto
+      bucket: ""
+      credentials:
+        accessKeyId: ""
+        secretAccessKey: ""
+    # Fallback for environments without a bucket. ReadWriteOnce limits the API
+    # server to one replica; the upstream chart fails rendering otherwise.
     local:
       size: 10Gi
       storageClassName: standard
@@ -34,8 +46,7 @@ app:
       repository: dependencytrack/apiserver
       tag: ""
     web:
-      # Local default storage is ReadWriteOnce, so only one API server can
-      # mount it. Use S3 or an RWX StorageClass before scaling this above one.
+      # More than one replica requires fileStorage.provider=s3 (the default).
       replicaCount: 1
       resources:
         requests:

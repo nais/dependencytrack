@@ -30,6 +30,35 @@ before scheduling a production cutover.
    first v5 start; changing it makes database-stored secrets unreadable.
 7. Configure private connectivity so the migration environment can reach both
    the v4 source database and the new v5 target database.
+8. Create the file-storage bucket and its HMAC key. See
+   [File storage on Cloud Storage](#file-storage-on-cloud-storage).
+
+### File storage on Cloud Storage
+
+v5 stores uploaded BOMs and analysis payloads in object storage. The upstream
+S3 provider supports static or AWS credentials only, so it reaches Cloud
+Storage through the S3-compatible XML API with an HMAC key. v4 has no file
+storage, so there is nothing to migrate into the bucket.
+
+1. Create a bucket in the same project and region as the deployment, with
+   uniform bucket-level access and public access prevention enforced.
+2. On that bucket, grant the Dependency-Track Google service account
+   `roles/storage.objectUser` (object create, read and delete) and
+   `roles/storage.legacyBucketReader`. The API server checks that the bucket
+   exists on startup and fails if it cannot.
+3. Create an HMAC key for the same service account:
+
+   ```bash
+   gcloud storage hmac create <service-account-email> --project <project>
+   ```
+
+4. Store the access ID and secret as the Feature values
+   `app.fileStorage.s3.credentials.accessKeyId` and
+   `app.fileStorage.s3.credentials.secretAccessKey`, and the bucket name as
+   `app.fileStorage.s3.bucket`. The secret is shown only once.
+
+The chart defaults `app.fileStorage.s3.endpoint` to
+`https://storage.googleapis.com` and `app.fileStorage.s3.region` to `auto`.
 
 For Cloud SQL, run the migrator from an approved environment with Cloud SQL
 Auth Proxy connectivity to both instances. Do not expose either database
@@ -56,8 +85,9 @@ Review the rendered manifest:
 - API server runtime ConfigMap contains the intended OIDC and CORS values.
 - The ServiceMonitor has no `metadata.namespace`; Helm installs it in the
   release namespace.
-- Local file storage has one API-server replica. Use S3 or RWX storage before
-  increasing `app.apiServer.web.replicaCount`.
+- File storage uses the intended bucket, with endpoint
+  `https://storage.googleapis.com`. With `fileStorage.provider: local`, the
+  API server must stay at one replica.
 
 Also compare `charts-v5/values.yaml` with the exact upstream chart version
 declared in `charts-v5/Chart.yaml` before upgrading that dependency.
@@ -136,6 +166,8 @@ Required values include:
 - `cloudSqlProxy.connectionName`
 - `app.database.jdbcUrl`, `app.database.username`, and `app.database.password`
 - `app.secretManagement.database.kek.value`
+- `app.fileStorage.s3.bucket` and the HMAC key in
+  `app.fileStorage.s3.credentials.accessKeyId` and `secretAccessKey`
 - `app.frontend.apiBaseUrl`
 - OIDC client IDs and issuer values
 - bootstrap image tag, API URL, frontend URL, and required bootstrap secrets
@@ -156,7 +188,9 @@ update `bootstrap.baseUrl` to the generated API service name before deploying.
 1. Check API-server, frontend, Cloud SQL proxy, and bootstrap Job logs.
 2. Open the public frontend and complete an OIDC login.
 3. Confirm the frontend calls the expected `app.frontend.apiBaseUrl`.
-4. Upload a known SBOM and confirm it is processed.
+4. Upload a known SBOM and confirm it is processed. The API-server log must
+   show no file-storage errors, and the upload must appear as an object in the
+   bucket while it is processed.
 5. Spot-check known projects, components, findings, teams, and users from v4.
 6. Confirm Prometheus discovers the release-namespace ServiceMonitor and
    scrapes the API-server management endpoint.

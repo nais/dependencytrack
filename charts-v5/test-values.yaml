@@ -10,6 +10,12 @@ app:
     database:
       kek:
         value: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=
+  fileStorage:
+    s3:
+      bucket: dependencytrack-v5-test
+      credentials:
+        accessKeyId: GOOG1ETESTACCESSKEY
+        secretAccessKey: test-secret
   frontend:
     apiBaseUrl: https://salsa.dev-nais.cloud.nais.io/api
 

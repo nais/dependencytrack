@@ -17,8 +17,9 @@ the v4 release, then install this chart.
   directly, so it remains the single source of truth for the frontend API URL.
 - `bootstrap.*` retains the repository bootstrap Job. Validate its API calls
   against the exact Dependency-Track v5 release before production cutover.
-- Local file storage uses `ReadWriteOnce`; keep `app.apiServer.web.replicaCount`
-  at `1` unless you switch to S3 or an RWX-capable StorageClass.
+- File storage defaults to S3 on Google Cloud Storage (`storage.googleapis.com`)
+  with HMAC keys, so the API server can run more than one replica. Local
+  `ReadWriteOnce` storage remains available as a fallback with one replica.
 - Metrics are always enabled by the official v5 chart and are exposed on its
   management port. This wrapper installs its ServiceMonitor in the release
   namespace, so it is not a Feature-configurable setting.
