@@ -158,6 +158,9 @@ bootstrap:
     advisory_mirroring_token: ""
   google:
     osv_enabled: true
+    # Semicolon-separated OSV ecosystems. v5 rejects an empty list, so empty
+    # keeps the ecosystems already stored in Dependency-Track.
+    osv_ecosystems: ""
   users: []
   trivy:
     ignore_unfixed: true

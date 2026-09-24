@@ -194,8 +194,11 @@ update `bootstrap.baseUrl` to the generated API service name before deploying.
 5. Spot-check known projects, components, findings, teams, and users from v4.
 6. Confirm Prometheus discovers the release-namespace ServiceMonitor and
    scrapes the API-server management endpoint.
-7. Re-enter repository, analyzer, and vulnerability-source credentials in v5.
-   The migrator intentionally does not carry these encrypted values over.
+7. Confirm the bootstrap Job logged `done: extensions configured`, and that
+   Administration shows the NVD, GitHub and OSV data sources and the Trivy
+   analyzer (with OS scanning) enabled. The migrator does not carry encrypted
+   credentials over; the Job re-creates the Trivy, GitHub and OSS Index tokens
+   as managed secrets. Re-enter any other repository credentials by hand.
 8. Review and re-enable migrated notification rules. They are intentionally
    disabled by the migrator.
 9. Resolve users renamed with `-CONFLICT-LDAP` or `-CONFLICT-OIDC`.

@@ -239,6 +239,11 @@ values:
     displayName: Bootstrap Google OSV enabled
     config:
       type: bool
+  bootstrap.google.osv_ecosystems:
+    description: Semicolon-separated OSV ecosystems to mirror; empty keeps the stored list
+    displayName: Bootstrap Google OSV ecosystems
+    config:
+      type: string
   bootstrap.trivy.api_token:
     displayName: Bootstrap Trivy token
     computed:

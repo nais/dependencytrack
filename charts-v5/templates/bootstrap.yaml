@@ -31,12 +31,18 @@ spec:
           env:
             - name: LOG_LEVEL
               value: {{ .Values.bootstrap.logLevel | quote }}
+            - name: DEPENDENCYTRACK_V5
+              value: "true"
             - name: BASE_URL
               value: {{ required "bootstrap.baseUrl is required" .Values.bootstrap.baseUrl | quote }}
             - name: FRONTEND_BASE_URL
               value: {{ required "bootstrap.frontendBaseUrl is required" .Values.bootstrap.frontendBaseUrl | quote }}
             - name: GOOGLE_OSV_ENABLED
               value: {{ .Values.bootstrap.google.osv_enabled | quote }}
+            {{- if .Values.bootstrap.google.osv_ecosystems }}
+            - name: OSV_ECOSYSTEMS
+              value: {{ .Values.bootstrap.google.osv_ecosystems | quote }}
+            {{- end }}
             - name: TRIVY_IGNORE_UNFIXED
               value: {{ .Values.bootstrap.trivy.ignore_unfixed | quote }}
             {{- if ne .Values.bootstrap.bomValidation.disabled nil }}

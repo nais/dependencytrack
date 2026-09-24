@@ -43,9 +43,11 @@ type ManagementClient interface {
 	DeleteOidcUser(ctx context.Context, username string) error
 	DeleteTeam(ctx context.Context, uuid string) error
 	DeleteUserMembership(ctx context.Context, teamUuid, username string) error
+	EnsureSecret(ctx context.Context, name, value string) error
 	GenerateApiKey(ctx context.Context, uuid string) (string, error)
 	GetConfigProperties(ctx context.Context) ([]ConfigProperty, error)
 	GetEcosystems(ctx context.Context) ([]string, error)
+	GetExtensionConfig(ctx context.Context, extensionPoint, extension string) (ExtensionConfig, error)
 	GetOidcUser(ctx context.Context, username string) (*User, error)
 	GetOidcUsers(ctx context.Context) ([]*User, error)
 	GetTeam(ctx context.Context, team string) (*Team, error)
@@ -53,6 +55,7 @@ type ManagementClient interface {
 	ProjectMetricsRefresh(ctx context.Context, uuid string) error
 	RemoveAdminUser(ctx context.Context, username string) error
 	RemoveAdminUsers(ctx context.Context, users []*AdminUser) error
+	UpdateExtensionConfig(ctx context.Context, extensionPoint, extension string, config ExtensionConfig) (bool, error)
 	Version(ctx context.Context) (string, error)
 }
 

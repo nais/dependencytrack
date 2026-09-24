@@ -1583,6 +1583,69 @@ func (_c *MockManagementClient_DeleteUserMembership_Call) RunAndReturn(run func(
 	return _c
 }
 
+// EnsureSecret provides a mock function for the type MockManagementClient
+func (_mock *MockManagementClient) EnsureSecret(ctx context.Context, name string, value string) error {
+	ret := _mock.Called(ctx, name, value)
+
+	if len(ret) == 0 {
+		panic("no return value specified for EnsureSecret")
+	}
+
+	var r0 error
+	if returnFunc, ok := ret.Get(0).(func(context.Context, string, string) error); ok {
+		r0 = returnFunc(ctx, name, value)
+	} else {
+		r0 = ret.Error(0)
+	}
+	return r0
+}
+
+// MockManagementClient_EnsureSecret_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'EnsureSecret'
+type MockManagementClient_EnsureSecret_Call struct {
+	*mock.Call
+}
+
+// EnsureSecret is a helper method to define mock.On call
+//   - ctx context.Context
+//   - name string
+//   - value string
+func (_e *MockManagementClient_Expecter) EnsureSecret(ctx interface{}, name interface{}, value interface{}) *MockManagementClient_EnsureSecret_Call {
+	return &MockManagementClient_EnsureSecret_Call{Call: _e.mock.On("EnsureSecret", ctx, name, value)}
+}
+
+func (_c *MockManagementClient_EnsureSecret_Call) Run(run func(ctx context.Context, name string, value string)) *MockManagementClient_EnsureSecret_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		var arg0 context.Context
+		if args[0] != nil {
+			arg0 = args[0].(context.Context)
+		}
+		var arg1 string
+		if args[1] != nil {
+			arg1 = args[1].(string)
+		}
+		var arg2 string
+		if args[2] != nil {
+			arg2 = args[2].(string)
+		}
+		run(
+			arg0,
+			arg1,
+			arg2,
+		)
+	})
+	return _c
+}
+
+func (_c *MockManagementClient_EnsureSecret_Call) Return(err error) *MockManagementClient_EnsureSecret_Call {
+	_c.Call.Return(err)
+	return _c
+}
+
+func (_c *MockManagementClient_EnsureSecret_Call) RunAndReturn(run func(ctx context.Context, name string, value string) error) *MockManagementClient_EnsureSecret_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // GenerateApiKey provides a mock function for the type MockManagementClient
 func (_mock *MockManagementClient) GenerateApiKey(ctx context.Context, uuid string) (string, error) {
 	ret := _mock.Called(ctx, uuid)
@@ -1769,6 +1832,80 @@ func (_c *MockManagementClient_GetEcosystems_Call) Return(strings []string, err 
 }
 
 func (_c *MockManagementClient_GetEcosystems_Call) RunAndReturn(run func(ctx context.Context) ([]string, error)) *MockManagementClient_GetEcosystems_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// GetExtensionConfig provides a mock function for the type MockManagementClient
+func (_mock *MockManagementClient) GetExtensionConfig(ctx context.Context, extensionPoint string, extension string) (dependencytrack.ExtensionConfig, error) {
+	ret := _mock.Called(ctx, extensionPoint, extension)
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetExtensionConfig")
+	}
+
+	var r0 dependencytrack.ExtensionConfig
+	var r1 error
+	if returnFunc, ok := ret.Get(0).(func(context.Context, string, string) (dependencytrack.ExtensionConfig, error)); ok {
+		return returnFunc(ctx, extensionPoint, extension)
+	}
+	if returnFunc, ok := ret.Get(0).(func(context.Context, string, string) dependencytrack.ExtensionConfig); ok {
+		r0 = returnFunc(ctx, extensionPoint, extension)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(dependencytrack.ExtensionConfig)
+		}
+	}
+	if returnFunc, ok := ret.Get(1).(func(context.Context, string, string) error); ok {
+		r1 = returnFunc(ctx, extensionPoint, extension)
+	} else {
+		r1 = ret.Error(1)
+	}
+	return r0, r1
+}
+
+// MockManagementClient_GetExtensionConfig_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetExtensionConfig'
+type MockManagementClient_GetExtensionConfig_Call struct {
+	*mock.Call
+}
+
+// GetExtensionConfig is a helper method to define mock.On call
+//   - ctx context.Context
+//   - extensionPoint string
+//   - extension string
+func (_e *MockManagementClient_Expecter) GetExtensionConfig(ctx interface{}, extensionPoint interface{}, extension interface{}) *MockManagementClient_GetExtensionConfig_Call {
+	return &MockManagementClient_GetExtensionConfig_Call{Call: _e.mock.On("GetExtensionConfig", ctx, extensionPoint, extension)}
+}
+
+func (_c *MockManagementClient_GetExtensionConfig_Call) Run(run func(ctx context.Context, extensionPoint string, extension string)) *MockManagementClient_GetExtensionConfig_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		var arg0 context.Context
+		if args[0] != nil {
+			arg0 = args[0].(context.Context)
+		}
+		var arg1 string
+		if args[1] != nil {
+			arg1 = args[1].(string)
+		}
+		var arg2 string
+		if args[2] != nil {
+			arg2 = args[2].(string)
+		}
+		run(
+			arg0,
+			arg1,
+			arg2,
+		)
+	})
+	return _c
+}
+
+func (_c *MockManagementClient_GetExtensionConfig_Call) Return(v dependencytrack.ExtensionConfig, err error) *MockManagementClient_GetExtensionConfig_Call {
+	_c.Call.Return(v, err)
+	return _c
+}
+
+func (_c *MockManagementClient_GetExtensionConfig_Call) RunAndReturn(run func(ctx context.Context, extensionPoint string, extension string) (dependencytrack.ExtensionConfig, error)) *MockManagementClient_GetExtensionConfig_Call {
 	_c.Call.Return(run)
 	return _c
 }
@@ -2200,6 +2337,84 @@ func (_c *MockManagementClient_RemoveAdminUsers_Call) Return(err error) *MockMan
 }
 
 func (_c *MockManagementClient_RemoveAdminUsers_Call) RunAndReturn(run func(ctx context.Context, users []*dependencytrack.AdminUser) error) *MockManagementClient_RemoveAdminUsers_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// UpdateExtensionConfig provides a mock function for the type MockManagementClient
+func (_mock *MockManagementClient) UpdateExtensionConfig(ctx context.Context, extensionPoint string, extension string, config dependencytrack.ExtensionConfig) (bool, error) {
+	ret := _mock.Called(ctx, extensionPoint, extension, config)
+
+	if len(ret) == 0 {
+		panic("no return value specified for UpdateExtensionConfig")
+	}
+
+	var r0 bool
+	var r1 error
+	if returnFunc, ok := ret.Get(0).(func(context.Context, string, string, dependencytrack.ExtensionConfig) (bool, error)); ok {
+		return returnFunc(ctx, extensionPoint, extension, config)
+	}
+	if returnFunc, ok := ret.Get(0).(func(context.Context, string, string, dependencytrack.ExtensionConfig) bool); ok {
+		r0 = returnFunc(ctx, extensionPoint, extension, config)
+	} else {
+		r0 = ret.Get(0).(bool)
+	}
+	if returnFunc, ok := ret.Get(1).(func(context.Context, string, string, dependencytrack.ExtensionConfig) error); ok {
+		r1 = returnFunc(ctx, extensionPoint, extension, config)
+	} else {
+		r1 = ret.Error(1)
+	}
+	return r0, r1
+}
+
+// MockManagementClient_UpdateExtensionConfig_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'UpdateExtensionConfig'
+type MockManagementClient_UpdateExtensionConfig_Call struct {
+	*mock.Call
+}
+
+// UpdateExtensionConfig is a helper method to define mock.On call
+//   - ctx context.Context
+//   - extensionPoint string
+//   - extension string
+//   - config dependencytrack.ExtensionConfig
+func (_e *MockManagementClient_Expecter) UpdateExtensionConfig(ctx interface{}, extensionPoint interface{}, extension interface{}, config interface{}) *MockManagementClient_UpdateExtensionConfig_Call {
+	return &MockManagementClient_UpdateExtensionConfig_Call{Call: _e.mock.On("UpdateExtensionConfig", ctx, extensionPoint, extension, config)}
+}
+
+func (_c *MockManagementClient_UpdateExtensionConfig_Call) Run(run func(ctx context.Context, extensionPoint string, extension string, config dependencytrack.ExtensionConfig)) *MockManagementClient_UpdateExtensionConfig_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		var arg0 context.Context
+		if args[0] != nil {
+			arg0 = args[0].(context.Context)
+		}
+		var arg1 string
+		if args[1] != nil {
+			arg1 = args[1].(string)
+		}
+		var arg2 string
+		if args[2] != nil {
+			arg2 = args[2].(string)
+		}
+		var arg3 dependencytrack.ExtensionConfig
+		if args[3] != nil {
+			arg3 = args[3].(dependencytrack.ExtensionConfig)
+		}
+		run(
+			arg0,
+			arg1,
+			arg2,
+			arg3,
+		)
+	})
+	return _c
+}
+
+func (_c *MockManagementClient_UpdateExtensionConfig_Call) Return(b bool, err error) *MockManagementClient_UpdateExtensionConfig_Call {
+	_c.Call.Return(b, err)
+	return _c
+}
+
+func (_c *MockManagementClient_UpdateExtensionConfig_Call) RunAndReturn(run func(ctx context.Context, extensionPoint string, extension string, config dependencytrack.ExtensionConfig) (bool, error)) *MockManagementClient_UpdateExtensionConfig_Call {
 	_c.Call.Return(run)
 	return _c
 }

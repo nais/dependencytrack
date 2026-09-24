@@ -15,8 +15,14 @@ the v4 release, then install this chart.
 - `apiServerEnv.*` and `frontendEnv.*` are rendered into ConfigMaps and loaded
   through `extraEnvFrom`; the upstream chart injects `app.frontend.apiBaseUrl`
   directly, so it remains the single source of truth for the frontend API URL.
-- `bootstrap.*` retains the repository bootstrap Job. Validate its API calls
-  against the exact Dependency-Track v5 release before production cutover.
+- `bootstrap.*` retains the repository bootstrap Job and runs it with
+  `DEPENDENCYTRACK_V5=true`. v5 replaced the v4 config properties for
+  vulnerability sources and analyzers with extension configs that are only
+  writable through the v2 API. The Job stores tokens as managed secrets and
+  configures the NVD, GitHub and OSV data sources and the Trivy and OSS Index
+  analyzers. It enables Trivy OS package scanning, which v4 enabled by default
+  and v5 does not. Validate the Job against the exact v5 release before the
+  production cutover.
 - File storage defaults to S3 on Google Cloud Storage (`storage.googleapis.com`)
   with HMAC keys, so the API server can run more than one replica. Local
   `ReadWriteOnce` storage remains available as a fallback with one replica.
