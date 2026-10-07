@@ -81,6 +81,10 @@ values:
     displayName: Backend cpu request
     config:
       type: string
+  backend.resources.limits.memory:
+    displayName: Backend memory limit
+    config:
+      type: string
   backend.replicaCount:
     displayName: Backend replica count
     config:
