@@ -50,7 +50,7 @@ backend:
     repository: dependencytrack
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: 4.14.4-alpine
+    tag: 4.14.5-alpine
   replicaCount: 1
   resources:
     requests:
@@ -78,7 +78,7 @@ backend:
 
   cloudProxy:
     repository: eu.gcr.io/cloud-sql-connectors/cloud-sql-proxy
-    tag: 2.25.4
+    tag: 2.26.0
 
   postgresql:
     enabled: true
@@ -131,7 +131,7 @@ frontend:
     repository: dependencytrack
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: 4.14.4
+    tag: 4.14.5
   replicaCount: 1
   resources:
     requests:
