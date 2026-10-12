@@ -19,10 +19,19 @@ func NewMockClient(t interface {
 	Cleanup(func())
 },
 ) *MockClient {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &MockClient{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }
@@ -78,7 +87,7 @@ type MockClient_CreateProject_Call struct {
 //   - imageName string
 //   - imageTag string
 //   - tags []string
-func (_e *MockClient_Expecter) CreateProject(ctx interface{}, imageName interface{}, imageTag interface{}, tags interface{}) *MockClient_CreateProject_Call {
+func (_e *MockClient_Expecter) CreateProject(ctx any, imageName any, imageTag any, tags any) *MockClient_CreateProject_Call {
 	return &MockClient_CreateProject_Call{Call: _e.mock.On("CreateProject", ctx, imageName, imageTag, tags)}
 }
 
@@ -158,7 +167,7 @@ type MockClient_CreateProjectWithSbom_Call struct {
 //   - imageName string
 //   - imageTag string
 //   - sbom []byte
-func (_e *MockClient_Expecter) CreateProjectWithSbom(ctx interface{}, imageName interface{}, imageTag interface{}, sbom interface{}) *MockClient_CreateProjectWithSbom_Call {
+func (_e *MockClient_Expecter) CreateProjectWithSbom(ctx any, imageName any, imageTag any, sbom any) *MockClient_CreateProjectWithSbom_Call {
 	return &MockClient_CreateProjectWithSbom_Call{Call: _e.mock.On("CreateProjectWithSbom", ctx, imageName, imageTag, sbom)}
 }
 
@@ -225,7 +234,7 @@ type MockClient_DeleteProject_Call struct {
 // DeleteProject is a helper method to define mock.On call
 //   - ctx context.Context
 //   - uuid string
-func (_e *MockClient_Expecter) DeleteProject(ctx interface{}, uuid interface{}) *MockClient_DeleteProject_Call {
+func (_e *MockClient_Expecter) DeleteProject(ctx any, uuid any) *MockClient_DeleteProject_Call {
 	return &MockClient_DeleteProject_Call{Call: _e.mock.On("DeleteProject", ctx, uuid)}
 }
 
@@ -295,7 +304,7 @@ type MockClient_GetAnalysisTrailForImage_Call struct {
 //   - projectId string
 //   - componentId string
 //   - vulnerabilityId string
-func (_e *MockClient_Expecter) GetAnalysisTrailForImage(ctx interface{}, projectId interface{}, componentId interface{}, vulnerabilityId interface{}) *MockClient_GetAnalysisTrailForImage_Call {
+func (_e *MockClient_Expecter) GetAnalysisTrailForImage(ctx any, projectId any, componentId any, vulnerabilityId any) *MockClient_GetAnalysisTrailForImage_Call {
 	return &MockClient_GetAnalysisTrailForImage_Call{Call: _e.mock.On("GetAnalysisTrailForImage", ctx, projectId, componentId, vulnerabilityId)}
 }
 
@@ -340,11 +349,11 @@ func (_c *MockClient_GetAnalysisTrailForImage_Call) RunAndReturn(run func(ctx co
 // GetFindings provides a mock function for the type MockClient
 func (_mock *MockClient) GetFindings(ctx context.Context, uuid string, suppressed bool, filterSource ...string) ([]*dependencytrack.Vulnerability, error) {
 	// string
-	_va := make([]interface{}, len(filterSource))
+	_va := make([]any, len(filterSource))
 	for _i := range filterSource {
 		_va[_i] = filterSource[_i]
 	}
-	var _ca []interface{}
+	var _ca []any
 	_ca = append(_ca, ctx, uuid, suppressed)
 	_ca = append(_ca, _va...)
 	ret := _mock.Called(_ca...)
@@ -383,9 +392,9 @@ type MockClient_GetFindings_Call struct {
 //   - uuid string
 //   - suppressed bool
 //   - filterSource ...string
-func (_e *MockClient_Expecter) GetFindings(ctx interface{}, uuid interface{}, suppressed interface{}, filterSource ...interface{}) *MockClient_GetFindings_Call {
+func (_e *MockClient_Expecter) GetFindings(ctx any, uuid any, suppressed any, filterSource ...any) *MockClient_GetFindings_Call {
 	return &MockClient_GetFindings_Call{Call: _e.mock.On("GetFindings",
-		append([]interface{}{ctx, uuid, suppressed}, filterSource...)...)}
+		append([]any{ctx, uuid, suppressed}, filterSource...)...)}
 }
 
 func (_c *MockClient_GetFindings_Call) Run(run func(ctx context.Context, uuid string, suppressed bool, filterSource ...string)) *MockClient_GetFindings_Call {
@@ -467,7 +476,7 @@ type MockClient_GetProject_Call struct {
 //   - ctx context.Context
 //   - name string
 //   - version string
-func (_e *MockClient_Expecter) GetProject(ctx interface{}, name interface{}, version interface{}) *MockClient_GetProject_Call {
+func (_e *MockClient_Expecter) GetProject(ctx any, name any, version any) *MockClient_GetProject_Call {
 	return &MockClient_GetProject_Call{Call: _e.mock.On("GetProject", ctx, name, version)}
 }
 
@@ -541,7 +550,7 @@ type MockClient_GetProjects_Call struct {
 //   - ctx context.Context
 //   - limit int32
 //   - offset int32
-func (_e *MockClient_Expecter) GetProjects(ctx interface{}, limit interface{}, offset interface{}) *MockClient_GetProjects_Call {
+func (_e *MockClient_Expecter) GetProjects(ctx any, limit any, offset any) *MockClient_GetProjects_Call {
 	return &MockClient_GetProjects_Call{Call: _e.mock.On("GetProjects", ctx, limit, offset)}
 }
 
@@ -612,7 +621,7 @@ type MockClient_IsTaskInProgress_Call struct {
 // IsTaskInProgress is a helper method to define mock.On call
 //   - ctx context.Context
 //   - uuid string
-func (_e *MockClient_Expecter) IsTaskInProgress(ctx interface{}, uuid interface{}) *MockClient_IsTaskInProgress_Call {
+func (_e *MockClient_Expecter) IsTaskInProgress(ctx any, uuid any) *MockClient_IsTaskInProgress_Call {
 	return &MockClient_IsTaskInProgress_Call{Call: _e.mock.On("IsTaskInProgress", ctx, uuid)}
 }
 
@@ -669,7 +678,7 @@ type MockClient_TriggerAnalysis_Call struct {
 // TriggerAnalysis is a helper method to define mock.On call
 //   - ctx context.Context
 //   - uuid string
-func (_e *MockClient_Expecter) TriggerAnalysis(ctx interface{}, uuid interface{}) *MockClient_TriggerAnalysis_Call {
+func (_e *MockClient_Expecter) TriggerAnalysis(ctx any, uuid any) *MockClient_TriggerAnalysis_Call {
 	return &MockClient_TriggerAnalysis_Call{Call: _e.mock.On("TriggerAnalysis", ctx, uuid)}
 }
 
@@ -735,7 +744,7 @@ type MockClient_TriggerAnalysisToken_Call struct {
 // TriggerAnalysisToken is a helper method to define mock.On call
 //   - ctx context.Context
 //   - uuid string
-func (_e *MockClient_Expecter) TriggerAnalysisToken(ctx interface{}, uuid interface{}) *MockClient_TriggerAnalysisToken_Call {
+func (_e *MockClient_Expecter) TriggerAnalysisToken(ctx any, uuid any) *MockClient_TriggerAnalysisToken_Call {
 	return &MockClient_TriggerAnalysisToken_Call{Call: _e.mock.On("TriggerAnalysisToken", ctx, uuid)}
 }
 
@@ -792,7 +801,7 @@ type MockClient_UpdateFinding_Call struct {
 // UpdateFinding is a helper method to define mock.On call
 //   - ctx context.Context
 //   - request dependencytrack.AnalysisRequest
-func (_e *MockClient_Expecter) UpdateFinding(ctx interface{}, request interface{}) *MockClient_UpdateFinding_Call {
+func (_e *MockClient_Expecter) UpdateFinding(ctx any, request any) *MockClient_UpdateFinding_Call {
 	return &MockClient_UpdateFinding_Call{Call: _e.mock.On("UpdateFinding", ctx, request)}
 }
 
@@ -831,10 +840,19 @@ func NewMockManagementClient(t interface {
 	Cleanup(func())
 },
 ) *MockManagementClient {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &MockManagementClient{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }
@@ -878,7 +896,7 @@ type MockManagementClient_AddToTeam_Call struct {
 //   - ctx context.Context
 //   - username string
 //   - uuid string
-func (_e *MockManagementClient_Expecter) AddToTeam(ctx interface{}, username interface{}, uuid interface{}) *MockManagementClient_AddToTeam_Call {
+func (_e *MockManagementClient_Expecter) AddToTeam(ctx any, username any, uuid any) *MockManagementClient_AddToTeam_Call {
 	return &MockManagementClient_AddToTeam_Call{Call: _e.mock.On("AddToTeam", ctx, username, uuid)}
 }
 
@@ -939,7 +957,7 @@ type MockManagementClient_AllMetricsRefresh_Call struct {
 
 // AllMetricsRefresh is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockManagementClient_Expecter) AllMetricsRefresh(ctx interface{}) *MockManagementClient_AllMetricsRefresh_Call {
+func (_e *MockManagementClient_Expecter) AllMetricsRefresh(ctx any) *MockManagementClient_AllMetricsRefresh_Call {
 	return &MockManagementClient_AllMetricsRefresh_Call{Call: _e.mock.On("AllMetricsRefresh", ctx)}
 }
 
@@ -992,7 +1010,7 @@ type MockManagementClient_ChangeAdminPassword_Call struct {
 //   - ctx context.Context
 //   - oldPassword auth.Password
 //   - newPassword auth.Password
-func (_e *MockManagementClient_Expecter) ChangeAdminPassword(ctx interface{}, oldPassword interface{}, newPassword interface{}) *MockManagementClient_ChangeAdminPassword_Call {
+func (_e *MockManagementClient_Expecter) ChangeAdminPassword(ctx any, oldPassword any, newPassword any) *MockManagementClient_ChangeAdminPassword_Call {
 	return &MockManagementClient_ChangeAdminPassword_Call{Call: _e.mock.On("ChangeAdminPassword", ctx, oldPassword, newPassword)}
 }
 
@@ -1054,7 +1072,7 @@ type MockManagementClient_ConfigPropertyAggregate_Call struct {
 // ConfigPropertyAggregate is a helper method to define mock.On call
 //   - ctx context.Context
 //   - property dependencytrack.ConfigProperty
-func (_e *MockManagementClient_Expecter) ConfigPropertyAggregate(ctx interface{}, property interface{}) *MockManagementClient_ConfigPropertyAggregate_Call {
+func (_e *MockManagementClient_Expecter) ConfigPropertyAggregate(ctx any, property any) *MockManagementClient_ConfigPropertyAggregate_Call {
 	return &MockManagementClient_ConfigPropertyAggregate_Call{Call: _e.mock.On("ConfigPropertyAggregate", ctx, property)}
 }
 
@@ -1113,7 +1131,7 @@ type MockManagementClient_CreateAdminUser_Call struct {
 //   - username string
 //   - password auth.Password
 //   - teamUuid string
-func (_e *MockManagementClient_Expecter) CreateAdminUser(ctx interface{}, username interface{}, password interface{}, teamUuid interface{}) *MockManagementClient_CreateAdminUser_Call {
+func (_e *MockManagementClient_Expecter) CreateAdminUser(ctx any, username any, password any, teamUuid any) *MockManagementClient_CreateAdminUser_Call {
 	return &MockManagementClient_CreateAdminUser_Call{Call: _e.mock.On("CreateAdminUser", ctx, username, password, teamUuid)}
 }
 
@@ -1181,7 +1199,7 @@ type MockManagementClient_CreateAdminUsers_Call struct {
 //   - ctx context.Context
 //   - users []*dependencytrack.AdminUser
 //   - teamUuid string
-func (_e *MockManagementClient_Expecter) CreateAdminUsers(ctx interface{}, users interface{}, teamUuid interface{}) *MockManagementClient_CreateAdminUsers_Call {
+func (_e *MockManagementClient_Expecter) CreateAdminUsers(ctx any, users any, teamUuid any) *MockManagementClient_CreateAdminUsers_Call {
 	return &MockManagementClient_CreateAdminUsers_Call{Call: _e.mock.On("CreateAdminUsers", ctx, users, teamUuid)}
 }
 
@@ -1243,7 +1261,7 @@ type MockManagementClient_CreateOidcUser_Call struct {
 // CreateOidcUser is a helper method to define mock.On call
 //   - ctx context.Context
 //   - email string
-func (_e *MockManagementClient_Expecter) CreateOidcUser(ctx interface{}, email interface{}) *MockManagementClient_CreateOidcUser_Call {
+func (_e *MockManagementClient_Expecter) CreateOidcUser(ctx any, email any) *MockManagementClient_CreateOidcUser_Call {
 	return &MockManagementClient_CreateOidcUser_Call{Call: _e.mock.On("CreateOidcUser", ctx, email)}
 }
 
@@ -1312,7 +1330,7 @@ type MockManagementClient_CreateTeam_Call struct {
 //   - ctx context.Context
 //   - teamName string
 //   - permissions []dependencytrack.Permission
-func (_e *MockManagementClient_Expecter) CreateTeam(ctx interface{}, teamName interface{}, permissions interface{}) *MockManagementClient_CreateTeam_Call {
+func (_e *MockManagementClient_Expecter) CreateTeam(ctx any, teamName any, permissions any) *MockManagementClient_CreateTeam_Call {
 	return &MockManagementClient_CreateTeam_Call{Call: _e.mock.On("CreateTeam", ctx, teamName, permissions)}
 }
 
@@ -1374,7 +1392,7 @@ type MockManagementClient_DeleteManagedUser_Call struct {
 // DeleteManagedUser is a helper method to define mock.On call
 //   - ctx context.Context
 //   - username string
-func (_e *MockManagementClient_Expecter) DeleteManagedUser(ctx interface{}, username interface{}) *MockManagementClient_DeleteManagedUser_Call {
+func (_e *MockManagementClient_Expecter) DeleteManagedUser(ctx any, username any) *MockManagementClient_DeleteManagedUser_Call {
 	return &MockManagementClient_DeleteManagedUser_Call{Call: _e.mock.On("DeleteManagedUser", ctx, username)}
 }
 
@@ -1431,7 +1449,7 @@ type MockManagementClient_DeleteOidcUser_Call struct {
 // DeleteOidcUser is a helper method to define mock.On call
 //   - ctx context.Context
 //   - username string
-func (_e *MockManagementClient_Expecter) DeleteOidcUser(ctx interface{}, username interface{}) *MockManagementClient_DeleteOidcUser_Call {
+func (_e *MockManagementClient_Expecter) DeleteOidcUser(ctx any, username any) *MockManagementClient_DeleteOidcUser_Call {
 	return &MockManagementClient_DeleteOidcUser_Call{Call: _e.mock.On("DeleteOidcUser", ctx, username)}
 }
 
@@ -1488,7 +1506,7 @@ type MockManagementClient_DeleteTeam_Call struct {
 // DeleteTeam is a helper method to define mock.On call
 //   - ctx context.Context
 //   - uuid string
-func (_e *MockManagementClient_Expecter) DeleteTeam(ctx interface{}, uuid interface{}) *MockManagementClient_DeleteTeam_Call {
+func (_e *MockManagementClient_Expecter) DeleteTeam(ctx any, uuid any) *MockManagementClient_DeleteTeam_Call {
 	return &MockManagementClient_DeleteTeam_Call{Call: _e.mock.On("DeleteTeam", ctx, uuid)}
 }
 
@@ -1546,7 +1564,7 @@ type MockManagementClient_DeleteUserMembership_Call struct {
 //   - ctx context.Context
 //   - teamUuid string
 //   - username string
-func (_e *MockManagementClient_Expecter) DeleteUserMembership(ctx interface{}, teamUuid interface{}, username interface{}) *MockManagementClient_DeleteUserMembership_Call {
+func (_e *MockManagementClient_Expecter) DeleteUserMembership(ctx any, teamUuid any, username any) *MockManagementClient_DeleteUserMembership_Call {
 	return &MockManagementClient_DeleteUserMembership_Call{Call: _e.mock.On("DeleteUserMembership", ctx, teamUuid, username)}
 }
 
@@ -1617,7 +1635,7 @@ type MockManagementClient_GenerateApiKey_Call struct {
 // GenerateApiKey is a helper method to define mock.On call
 //   - ctx context.Context
 //   - uuid string
-func (_e *MockManagementClient_Expecter) GenerateApiKey(ctx interface{}, uuid interface{}) *MockManagementClient_GenerateApiKey_Call {
+func (_e *MockManagementClient_Expecter) GenerateApiKey(ctx any, uuid any) *MockManagementClient_GenerateApiKey_Call {
 	return &MockManagementClient_GenerateApiKey_Call{Call: _e.mock.On("GenerateApiKey", ctx, uuid)}
 }
 
@@ -1684,7 +1702,7 @@ type MockManagementClient_GetConfigProperties_Call struct {
 
 // GetConfigProperties is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockManagementClient_Expecter) GetConfigProperties(ctx interface{}) *MockManagementClient_GetConfigProperties_Call {
+func (_e *MockManagementClient_Expecter) GetConfigProperties(ctx any) *MockManagementClient_GetConfigProperties_Call {
 	return &MockManagementClient_GetConfigProperties_Call{Call: _e.mock.On("GetConfigProperties", ctx)}
 }
 
@@ -1746,7 +1764,7 @@ type MockManagementClient_GetEcosystems_Call struct {
 
 // GetEcosystems is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockManagementClient_Expecter) GetEcosystems(ctx interface{}) *MockManagementClient_GetEcosystems_Call {
+func (_e *MockManagementClient_Expecter) GetEcosystems(ctx any) *MockManagementClient_GetEcosystems_Call {
 	return &MockManagementClient_GetEcosystems_Call{Call: _e.mock.On("GetEcosystems", ctx)}
 }
 
@@ -1809,7 +1827,7 @@ type MockManagementClient_GetOidcUser_Call struct {
 // GetOidcUser is a helper method to define mock.On call
 //   - ctx context.Context
 //   - username string
-func (_e *MockManagementClient_Expecter) GetOidcUser(ctx interface{}, username interface{}) *MockManagementClient_GetOidcUser_Call {
+func (_e *MockManagementClient_Expecter) GetOidcUser(ctx any, username any) *MockManagementClient_GetOidcUser_Call {
 	return &MockManagementClient_GetOidcUser_Call{Call: _e.mock.On("GetOidcUser", ctx, username)}
 }
 
@@ -1876,7 +1894,7 @@ type MockManagementClient_GetOidcUsers_Call struct {
 
 // GetOidcUsers is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockManagementClient_Expecter) GetOidcUsers(ctx interface{}) *MockManagementClient_GetOidcUsers_Call {
+func (_e *MockManagementClient_Expecter) GetOidcUsers(ctx any) *MockManagementClient_GetOidcUsers_Call {
 	return &MockManagementClient_GetOidcUsers_Call{Call: _e.mock.On("GetOidcUsers", ctx)}
 }
 
@@ -1939,7 +1957,7 @@ type MockManagementClient_GetTeam_Call struct {
 // GetTeam is a helper method to define mock.On call
 //   - ctx context.Context
 //   - team string
-func (_e *MockManagementClient_Expecter) GetTeam(ctx interface{}, team interface{}) *MockManagementClient_GetTeam_Call {
+func (_e *MockManagementClient_Expecter) GetTeam(ctx any, team any) *MockManagementClient_GetTeam_Call {
 	return &MockManagementClient_GetTeam_Call{Call: _e.mock.On("GetTeam", ctx, team)}
 }
 
@@ -2006,7 +2024,7 @@ type MockManagementClient_GetTeams_Call struct {
 
 // GetTeams is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockManagementClient_Expecter) GetTeams(ctx interface{}) *MockManagementClient_GetTeams_Call {
+func (_e *MockManagementClient_Expecter) GetTeams(ctx any) *MockManagementClient_GetTeams_Call {
 	return &MockManagementClient_GetTeams_Call{Call: _e.mock.On("GetTeams", ctx)}
 }
 
@@ -2058,7 +2076,7 @@ type MockManagementClient_ProjectMetricsRefresh_Call struct {
 // ProjectMetricsRefresh is a helper method to define mock.On call
 //   - ctx context.Context
 //   - uuid string
-func (_e *MockManagementClient_Expecter) ProjectMetricsRefresh(ctx interface{}, uuid interface{}) *MockManagementClient_ProjectMetricsRefresh_Call {
+func (_e *MockManagementClient_Expecter) ProjectMetricsRefresh(ctx any, uuid any) *MockManagementClient_ProjectMetricsRefresh_Call {
 	return &MockManagementClient_ProjectMetricsRefresh_Call{Call: _e.mock.On("ProjectMetricsRefresh", ctx, uuid)}
 }
 
@@ -2115,7 +2133,7 @@ type MockManagementClient_RemoveAdminUser_Call struct {
 // RemoveAdminUser is a helper method to define mock.On call
 //   - ctx context.Context
 //   - username string
-func (_e *MockManagementClient_Expecter) RemoveAdminUser(ctx interface{}, username interface{}) *MockManagementClient_RemoveAdminUser_Call {
+func (_e *MockManagementClient_Expecter) RemoveAdminUser(ctx any, username any) *MockManagementClient_RemoveAdminUser_Call {
 	return &MockManagementClient_RemoveAdminUser_Call{Call: _e.mock.On("RemoveAdminUser", ctx, username)}
 }
 
@@ -2172,7 +2190,7 @@ type MockManagementClient_RemoveAdminUsers_Call struct {
 // RemoveAdminUsers is a helper method to define mock.On call
 //   - ctx context.Context
 //   - users []*dependencytrack.AdminUser
-func (_e *MockManagementClient_Expecter) RemoveAdminUsers(ctx interface{}, users interface{}) *MockManagementClient_RemoveAdminUsers_Call {
+func (_e *MockManagementClient_Expecter) RemoveAdminUsers(ctx any, users any) *MockManagementClient_RemoveAdminUsers_Call {
 	return &MockManagementClient_RemoveAdminUsers_Call{Call: _e.mock.On("RemoveAdminUsers", ctx, users)}
 }
 
@@ -2237,7 +2255,7 @@ type MockManagementClient_Version_Call struct {
 
 // Version is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockManagementClient_Expecter) Version(ctx interface{}) *MockManagementClient_Version_Call {
+func (_e *MockManagementClient_Expecter) Version(ctx any) *MockManagementClient_Version_Call {
 	return &MockManagementClient_Version_Call{Call: _e.mock.On("Version", ctx)}
 }
 

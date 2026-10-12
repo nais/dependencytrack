@@ -19,10 +19,19 @@ func NewMockAclAPI(t interface {
 	Cleanup(func())
 },
 ) *MockAclAPI {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &MockAclAPI{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }
@@ -64,7 +73,7 @@ type MockAclAPI_AddMapping_Call struct {
 
 // AddMapping is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockAclAPI_Expecter) AddMapping(ctx interface{}) *MockAclAPI_AddMapping_Call {
+func (_e *MockAclAPI_Expecter) AddMapping(ctx any) *MockAclAPI_AddMapping_Call {
 	return &MockAclAPI_AddMapping_Call{Call: _e.mock.On("AddMapping", ctx)}
 }
 
@@ -126,7 +135,7 @@ type MockAclAPI_AddMappingExecute_Call struct {
 
 // AddMappingExecute is a helper method to define mock.On call
 //   - r client.ApiAddMappingRequest
-func (_e *MockAclAPI_Expecter) AddMappingExecute(r interface{}) *MockAclAPI_AddMappingExecute_Call {
+func (_e *MockAclAPI_Expecter) AddMappingExecute(r any) *MockAclAPI_AddMappingExecute_Call {
 	return &MockAclAPI_AddMappingExecute_Call{Call: _e.mock.On("AddMappingExecute", r)}
 }
 
@@ -179,7 +188,7 @@ type MockAclAPI_DeleteMapping_Call struct {
 //   - ctx context.Context
 //   - teamUuid string
 //   - projectUuid string
-func (_e *MockAclAPI_Expecter) DeleteMapping(ctx interface{}, teamUuid interface{}, projectUuid interface{}) *MockAclAPI_DeleteMapping_Call {
+func (_e *MockAclAPI_Expecter) DeleteMapping(ctx any, teamUuid any, projectUuid any) *MockAclAPI_DeleteMapping_Call {
 	return &MockAclAPI_DeleteMapping_Call{Call: _e.mock.On("DeleteMapping", ctx, teamUuid, projectUuid)}
 }
 
@@ -251,7 +260,7 @@ type MockAclAPI_DeleteMappingExecute_Call struct {
 
 // DeleteMappingExecute is a helper method to define mock.On call
 //   - r client.ApiDeleteMappingRequest
-func (_e *MockAclAPI_Expecter) DeleteMappingExecute(r interface{}) *MockAclAPI_DeleteMappingExecute_Call {
+func (_e *MockAclAPI_Expecter) DeleteMappingExecute(r any) *MockAclAPI_DeleteMappingExecute_Call {
 	return &MockAclAPI_DeleteMappingExecute_Call{Call: _e.mock.On("DeleteMappingExecute", r)}
 }
 
@@ -303,7 +312,7 @@ type MockAclAPI_RetrieveProjects_Call struct {
 // RetrieveProjects is a helper method to define mock.On call
 //   - ctx context.Context
 //   - uuid string
-func (_e *MockAclAPI_Expecter) RetrieveProjects(ctx interface{}, uuid interface{}) *MockAclAPI_RetrieveProjects_Call {
+func (_e *MockAclAPI_Expecter) RetrieveProjects(ctx any, uuid any) *MockAclAPI_RetrieveProjects_Call {
 	return &MockAclAPI_RetrieveProjects_Call{Call: _e.mock.On("RetrieveProjects", ctx, uuid)}
 }
 
@@ -378,7 +387,7 @@ type MockAclAPI_RetrieveProjectsExecute_Call struct {
 
 // RetrieveProjectsExecute is a helper method to define mock.On call
 //   - r client.ApiRetrieveProjectsRequest
-func (_e *MockAclAPI_Expecter) RetrieveProjectsExecute(r interface{}) *MockAclAPI_RetrieveProjectsExecute_Call {
+func (_e *MockAclAPI_Expecter) RetrieveProjectsExecute(r any) *MockAclAPI_RetrieveProjectsExecute_Call {
 	return &MockAclAPI_RetrieveProjectsExecute_Call{Call: _e.mock.On("RetrieveProjectsExecute", r)}
 }
 
@@ -412,10 +421,19 @@ func NewMockAnalysisAPI(t interface {
 	Cleanup(func())
 },
 ) *MockAnalysisAPI {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &MockAnalysisAPI{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }
@@ -457,7 +475,7 @@ type MockAnalysisAPI_RetrieveAnalysis_Call struct {
 
 // RetrieveAnalysis is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockAnalysisAPI_Expecter) RetrieveAnalysis(ctx interface{}) *MockAnalysisAPI_RetrieveAnalysis_Call {
+func (_e *MockAnalysisAPI_Expecter) RetrieveAnalysis(ctx any) *MockAnalysisAPI_RetrieveAnalysis_Call {
 	return &MockAnalysisAPI_RetrieveAnalysis_Call{Call: _e.mock.On("RetrieveAnalysis", ctx)}
 }
 
@@ -527,7 +545,7 @@ type MockAnalysisAPI_RetrieveAnalysisExecute_Call struct {
 
 // RetrieveAnalysisExecute is a helper method to define mock.On call
 //   - r client.ApiRetrieveAnalysisRequest
-func (_e *MockAnalysisAPI_Expecter) RetrieveAnalysisExecute(r interface{}) *MockAnalysisAPI_RetrieveAnalysisExecute_Call {
+func (_e *MockAnalysisAPI_Expecter) RetrieveAnalysisExecute(r any) *MockAnalysisAPI_RetrieveAnalysisExecute_Call {
 	return &MockAnalysisAPI_RetrieveAnalysisExecute_Call{Call: _e.mock.On("RetrieveAnalysisExecute", r)}
 }
 
@@ -578,7 +596,7 @@ type MockAnalysisAPI_UpdateAnalysis_Call struct {
 
 // UpdateAnalysis is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockAnalysisAPI_Expecter) UpdateAnalysis(ctx interface{}) *MockAnalysisAPI_UpdateAnalysis_Call {
+func (_e *MockAnalysisAPI_Expecter) UpdateAnalysis(ctx any) *MockAnalysisAPI_UpdateAnalysis_Call {
 	return &MockAnalysisAPI_UpdateAnalysis_Call{Call: _e.mock.On("UpdateAnalysis", ctx)}
 }
 
@@ -648,7 +666,7 @@ type MockAnalysisAPI_UpdateAnalysisExecute_Call struct {
 
 // UpdateAnalysisExecute is a helper method to define mock.On call
 //   - r client.ApiUpdateAnalysisRequest
-func (_e *MockAnalysisAPI_Expecter) UpdateAnalysisExecute(r interface{}) *MockAnalysisAPI_UpdateAnalysisExecute_Call {
+func (_e *MockAnalysisAPI_Expecter) UpdateAnalysisExecute(r any) *MockAnalysisAPI_UpdateAnalysisExecute_Call {
 	return &MockAnalysisAPI_UpdateAnalysisExecute_Call{Call: _e.mock.On("UpdateAnalysisExecute", r)}
 }
 
@@ -682,10 +700,19 @@ func NewMockBadgeAPI(t interface {
 	Cleanup(func())
 },
 ) *MockBadgeAPI {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &MockBadgeAPI{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }
@@ -728,7 +755,7 @@ type MockBadgeAPI_GetProjectPolicyViolationsBadge_Call struct {
 // GetProjectPolicyViolationsBadge is a helper method to define mock.On call
 //   - ctx context.Context
 //   - uuid string
-func (_e *MockBadgeAPI_Expecter) GetProjectPolicyViolationsBadge(ctx interface{}, uuid interface{}) *MockBadgeAPI_GetProjectPolicyViolationsBadge_Call {
+func (_e *MockBadgeAPI_Expecter) GetProjectPolicyViolationsBadge(ctx any, uuid any) *MockBadgeAPI_GetProjectPolicyViolationsBadge_Call {
 	return &MockBadgeAPI_GetProjectPolicyViolationsBadge_Call{Call: _e.mock.On("GetProjectPolicyViolationsBadge", ctx, uuid)}
 }
 
@@ -786,7 +813,7 @@ type MockBadgeAPI_GetProjectPolicyViolationsBadge1_Call struct {
 //   - ctx context.Context
 //   - name string
 //   - version string
-func (_e *MockBadgeAPI_Expecter) GetProjectPolicyViolationsBadge1(ctx interface{}, name interface{}, version interface{}) *MockBadgeAPI_GetProjectPolicyViolationsBadge1_Call {
+func (_e *MockBadgeAPI_Expecter) GetProjectPolicyViolationsBadge1(ctx any, name any, version any) *MockBadgeAPI_GetProjectPolicyViolationsBadge1_Call {
 	return &MockBadgeAPI_GetProjectPolicyViolationsBadge1_Call{Call: _e.mock.On("GetProjectPolicyViolationsBadge1", ctx, name, version)}
 }
 
@@ -864,7 +891,7 @@ type MockBadgeAPI_GetProjectPolicyViolationsBadge1Execute_Call struct {
 
 // GetProjectPolicyViolationsBadge1Execute is a helper method to define mock.On call
 //   - r client.ApiGetProjectPolicyViolationsBadge1Request
-func (_e *MockBadgeAPI_Expecter) GetProjectPolicyViolationsBadge1Execute(r interface{}) *MockBadgeAPI_GetProjectPolicyViolationsBadge1Execute_Call {
+func (_e *MockBadgeAPI_Expecter) GetProjectPolicyViolationsBadge1Execute(r any) *MockBadgeAPI_GetProjectPolicyViolationsBadge1Execute_Call {
 	return &MockBadgeAPI_GetProjectPolicyViolationsBadge1Execute_Call{Call: _e.mock.On("GetProjectPolicyViolationsBadge1Execute", r)}
 }
 
@@ -932,7 +959,7 @@ type MockBadgeAPI_GetProjectPolicyViolationsBadgeExecute_Call struct {
 
 // GetProjectPolicyViolationsBadgeExecute is a helper method to define mock.On call
 //   - r client.ApiGetProjectPolicyViolationsBadgeRequest
-func (_e *MockBadgeAPI_Expecter) GetProjectPolicyViolationsBadgeExecute(r interface{}) *MockBadgeAPI_GetProjectPolicyViolationsBadgeExecute_Call {
+func (_e *MockBadgeAPI_Expecter) GetProjectPolicyViolationsBadgeExecute(r any) *MockBadgeAPI_GetProjectPolicyViolationsBadgeExecute_Call {
 	return &MockBadgeAPI_GetProjectPolicyViolationsBadgeExecute_Call{Call: _e.mock.On("GetProjectPolicyViolationsBadgeExecute", r)}
 }
 
@@ -984,7 +1011,7 @@ type MockBadgeAPI_GetProjectVulnerabilitiesBadge_Call struct {
 // GetProjectVulnerabilitiesBadge is a helper method to define mock.On call
 //   - ctx context.Context
 //   - uuid string
-func (_e *MockBadgeAPI_Expecter) GetProjectVulnerabilitiesBadge(ctx interface{}, uuid interface{}) *MockBadgeAPI_GetProjectVulnerabilitiesBadge_Call {
+func (_e *MockBadgeAPI_Expecter) GetProjectVulnerabilitiesBadge(ctx any, uuid any) *MockBadgeAPI_GetProjectVulnerabilitiesBadge_Call {
 	return &MockBadgeAPI_GetProjectVulnerabilitiesBadge_Call{Call: _e.mock.On("GetProjectVulnerabilitiesBadge", ctx, uuid)}
 }
 
@@ -1042,7 +1069,7 @@ type MockBadgeAPI_GetProjectVulnerabilitiesBadge1_Call struct {
 //   - ctx context.Context
 //   - name string
 //   - version string
-func (_e *MockBadgeAPI_Expecter) GetProjectVulnerabilitiesBadge1(ctx interface{}, name interface{}, version interface{}) *MockBadgeAPI_GetProjectVulnerabilitiesBadge1_Call {
+func (_e *MockBadgeAPI_Expecter) GetProjectVulnerabilitiesBadge1(ctx any, name any, version any) *MockBadgeAPI_GetProjectVulnerabilitiesBadge1_Call {
 	return &MockBadgeAPI_GetProjectVulnerabilitiesBadge1_Call{Call: _e.mock.On("GetProjectVulnerabilitiesBadge1", ctx, name, version)}
 }
 
@@ -1120,7 +1147,7 @@ type MockBadgeAPI_GetProjectVulnerabilitiesBadge1Execute_Call struct {
 
 // GetProjectVulnerabilitiesBadge1Execute is a helper method to define mock.On call
 //   - r client.ApiGetProjectVulnerabilitiesBadge1Request
-func (_e *MockBadgeAPI_Expecter) GetProjectVulnerabilitiesBadge1Execute(r interface{}) *MockBadgeAPI_GetProjectVulnerabilitiesBadge1Execute_Call {
+func (_e *MockBadgeAPI_Expecter) GetProjectVulnerabilitiesBadge1Execute(r any) *MockBadgeAPI_GetProjectVulnerabilitiesBadge1Execute_Call {
 	return &MockBadgeAPI_GetProjectVulnerabilitiesBadge1Execute_Call{Call: _e.mock.On("GetProjectVulnerabilitiesBadge1Execute", r)}
 }
 
@@ -1188,7 +1215,7 @@ type MockBadgeAPI_GetProjectVulnerabilitiesBadgeExecute_Call struct {
 
 // GetProjectVulnerabilitiesBadgeExecute is a helper method to define mock.On call
 //   - r client.ApiGetProjectVulnerabilitiesBadgeRequest
-func (_e *MockBadgeAPI_Expecter) GetProjectVulnerabilitiesBadgeExecute(r interface{}) *MockBadgeAPI_GetProjectVulnerabilitiesBadgeExecute_Call {
+func (_e *MockBadgeAPI_Expecter) GetProjectVulnerabilitiesBadgeExecute(r any) *MockBadgeAPI_GetProjectVulnerabilitiesBadgeExecute_Call {
 	return &MockBadgeAPI_GetProjectVulnerabilitiesBadgeExecute_Call{Call: _e.mock.On("GetProjectVulnerabilitiesBadgeExecute", r)}
 }
 
@@ -1222,10 +1249,19 @@ func NewMockBomAPI(t interface {
 	Cleanup(func())
 },
 ) *MockBomAPI {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &MockBomAPI{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }
@@ -1268,7 +1304,7 @@ type MockBomAPI_ExportComponentAsCycloneDx_Call struct {
 // ExportComponentAsCycloneDx is a helper method to define mock.On call
 //   - ctx context.Context
 //   - uuid string
-func (_e *MockBomAPI_Expecter) ExportComponentAsCycloneDx(ctx interface{}, uuid interface{}) *MockBomAPI_ExportComponentAsCycloneDx_Call {
+func (_e *MockBomAPI_Expecter) ExportComponentAsCycloneDx(ctx any, uuid any) *MockBomAPI_ExportComponentAsCycloneDx_Call {
 	return &MockBomAPI_ExportComponentAsCycloneDx_Call{Call: _e.mock.On("ExportComponentAsCycloneDx", ctx, uuid)}
 }
 
@@ -1341,7 +1377,7 @@ type MockBomAPI_ExportComponentAsCycloneDxExecute_Call struct {
 
 // ExportComponentAsCycloneDxExecute is a helper method to define mock.On call
 //   - r client.ApiExportComponentAsCycloneDxRequest
-func (_e *MockBomAPI_Expecter) ExportComponentAsCycloneDxExecute(r interface{}) *MockBomAPI_ExportComponentAsCycloneDxExecute_Call {
+func (_e *MockBomAPI_Expecter) ExportComponentAsCycloneDxExecute(r any) *MockBomAPI_ExportComponentAsCycloneDxExecute_Call {
 	return &MockBomAPI_ExportComponentAsCycloneDxExecute_Call{Call: _e.mock.On("ExportComponentAsCycloneDxExecute", r)}
 }
 
@@ -1393,7 +1429,7 @@ type MockBomAPI_ExportProjectAsCycloneDx_Call struct {
 // ExportProjectAsCycloneDx is a helper method to define mock.On call
 //   - ctx context.Context
 //   - uuid string
-func (_e *MockBomAPI_Expecter) ExportProjectAsCycloneDx(ctx interface{}, uuid interface{}) *MockBomAPI_ExportProjectAsCycloneDx_Call {
+func (_e *MockBomAPI_Expecter) ExportProjectAsCycloneDx(ctx any, uuid any) *MockBomAPI_ExportProjectAsCycloneDx_Call {
 	return &MockBomAPI_ExportProjectAsCycloneDx_Call{Call: _e.mock.On("ExportProjectAsCycloneDx", ctx, uuid)}
 }
 
@@ -1466,7 +1502,7 @@ type MockBomAPI_ExportProjectAsCycloneDxExecute_Call struct {
 
 // ExportProjectAsCycloneDxExecute is a helper method to define mock.On call
 //   - r client.ApiExportProjectAsCycloneDxRequest
-func (_e *MockBomAPI_Expecter) ExportProjectAsCycloneDxExecute(r interface{}) *MockBomAPI_ExportProjectAsCycloneDxExecute_Call {
+func (_e *MockBomAPI_Expecter) ExportProjectAsCycloneDxExecute(r any) *MockBomAPI_ExportProjectAsCycloneDxExecute_Call {
 	return &MockBomAPI_ExportProjectAsCycloneDxExecute_Call{Call: _e.mock.On("ExportProjectAsCycloneDxExecute", r)}
 }
 
@@ -1518,7 +1554,7 @@ type MockBomAPI_IsTokenBeingProcessed_Call struct {
 // IsTokenBeingProcessed is a helper method to define mock.On call
 //   - ctx context.Context
 //   - uuid string
-func (_e *MockBomAPI_Expecter) IsTokenBeingProcessed(ctx interface{}, uuid interface{}) *MockBomAPI_IsTokenBeingProcessed_Call {
+func (_e *MockBomAPI_Expecter) IsTokenBeingProcessed(ctx any, uuid any) *MockBomAPI_IsTokenBeingProcessed_Call {
 	return &MockBomAPI_IsTokenBeingProcessed_Call{Call: _e.mock.On("IsTokenBeingProcessed", ctx, uuid)}
 }
 
@@ -1593,7 +1629,7 @@ type MockBomAPI_IsTokenBeingProcessedExecute_Call struct {
 
 // IsTokenBeingProcessedExecute is a helper method to define mock.On call
 //   - r client.ApiIsTokenBeingProcessedRequest
-func (_e *MockBomAPI_Expecter) IsTokenBeingProcessedExecute(r interface{}) *MockBomAPI_IsTokenBeingProcessedExecute_Call {
+func (_e *MockBomAPI_Expecter) IsTokenBeingProcessedExecute(r any) *MockBomAPI_IsTokenBeingProcessedExecute_Call {
 	return &MockBomAPI_IsTokenBeingProcessedExecute_Call{Call: _e.mock.On("IsTokenBeingProcessedExecute", r)}
 }
 
@@ -1644,7 +1680,7 @@ type MockBomAPI_UploadBom_Call struct {
 
 // UploadBom is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockBomAPI_Expecter) UploadBom(ctx interface{}) *MockBomAPI_UploadBom_Call {
+func (_e *MockBomAPI_Expecter) UploadBom(ctx any) *MockBomAPI_UploadBom_Call {
 	return &MockBomAPI_UploadBom_Call{Call: _e.mock.On("UploadBom", ctx)}
 }
 
@@ -1695,7 +1731,7 @@ type MockBomAPI_UploadBomBase64Encoded_Call struct {
 
 // UploadBomBase64Encoded is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockBomAPI_Expecter) UploadBomBase64Encoded(ctx interface{}) *MockBomAPI_UploadBomBase64Encoded_Call {
+func (_e *MockBomAPI_Expecter) UploadBomBase64Encoded(ctx any) *MockBomAPI_UploadBomBase64Encoded_Call {
 	return &MockBomAPI_UploadBomBase64Encoded_Call{Call: _e.mock.On("UploadBomBase64Encoded", ctx)}
 }
 
@@ -1765,7 +1801,7 @@ type MockBomAPI_UploadBomBase64EncodedExecute_Call struct {
 
 // UploadBomBase64EncodedExecute is a helper method to define mock.On call
 //   - r client.ApiUploadBomBase64EncodedRequest
-func (_e *MockBomAPI_Expecter) UploadBomBase64EncodedExecute(r interface{}) *MockBomAPI_UploadBomBase64EncodedExecute_Call {
+func (_e *MockBomAPI_Expecter) UploadBomBase64EncodedExecute(r any) *MockBomAPI_UploadBomBase64EncodedExecute_Call {
 	return &MockBomAPI_UploadBomBase64EncodedExecute_Call{Call: _e.mock.On("UploadBomBase64EncodedExecute", r)}
 }
 
@@ -1835,7 +1871,7 @@ type MockBomAPI_UploadBomExecute_Call struct {
 
 // UploadBomExecute is a helper method to define mock.On call
 //   - r client.ApiUploadBomRequest
-func (_e *MockBomAPI_Expecter) UploadBomExecute(r interface{}) *MockBomAPI_UploadBomExecute_Call {
+func (_e *MockBomAPI_Expecter) UploadBomExecute(r any) *MockBomAPI_UploadBomExecute_Call {
 	return &MockBomAPI_UploadBomExecute_Call{Call: _e.mock.On("UploadBomExecute", r)}
 }
 
@@ -1869,10 +1905,19 @@ func NewMockCalculatorAPI(t interface {
 	Cleanup(func())
 },
 ) *MockCalculatorAPI {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &MockCalculatorAPI{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }
@@ -1914,7 +1959,7 @@ type MockCalculatorAPI_GetCvssScores_Call struct {
 
 // GetCvssScores is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockCalculatorAPI_Expecter) GetCvssScores(ctx interface{}) *MockCalculatorAPI_GetCvssScores_Call {
+func (_e *MockCalculatorAPI_Expecter) GetCvssScores(ctx any) *MockCalculatorAPI_GetCvssScores_Call {
 	return &MockCalculatorAPI_GetCvssScores_Call{Call: _e.mock.On("GetCvssScores", ctx)}
 }
 
@@ -1984,7 +2029,7 @@ type MockCalculatorAPI_GetCvssScoresExecute_Call struct {
 
 // GetCvssScoresExecute is a helper method to define mock.On call
 //   - r client.ApiGetCvssScoresRequest
-func (_e *MockCalculatorAPI_Expecter) GetCvssScoresExecute(r interface{}) *MockCalculatorAPI_GetCvssScoresExecute_Call {
+func (_e *MockCalculatorAPI_Expecter) GetCvssScoresExecute(r any) *MockCalculatorAPI_GetCvssScoresExecute_Call {
 	return &MockCalculatorAPI_GetCvssScoresExecute_Call{Call: _e.mock.On("GetCvssScoresExecute", r)}
 }
 
@@ -2035,7 +2080,7 @@ type MockCalculatorAPI_GetOwaspRRScores_Call struct {
 
 // GetOwaspRRScores is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockCalculatorAPI_Expecter) GetOwaspRRScores(ctx interface{}) *MockCalculatorAPI_GetOwaspRRScores_Call {
+func (_e *MockCalculatorAPI_Expecter) GetOwaspRRScores(ctx any) *MockCalculatorAPI_GetOwaspRRScores_Call {
 	return &MockCalculatorAPI_GetOwaspRRScores_Call{Call: _e.mock.On("GetOwaspRRScores", ctx)}
 }
 
@@ -2105,7 +2150,7 @@ type MockCalculatorAPI_GetOwaspRRScoresExecute_Call struct {
 
 // GetOwaspRRScoresExecute is a helper method to define mock.On call
 //   - r client.ApiGetOwaspRRScoresRequest
-func (_e *MockCalculatorAPI_Expecter) GetOwaspRRScoresExecute(r interface{}) *MockCalculatorAPI_GetOwaspRRScoresExecute_Call {
+func (_e *MockCalculatorAPI_Expecter) GetOwaspRRScoresExecute(r any) *MockCalculatorAPI_GetOwaspRRScoresExecute_Call {
 	return &MockCalculatorAPI_GetOwaspRRScoresExecute_Call{Call: _e.mock.On("GetOwaspRRScoresExecute", r)}
 }
 
@@ -2139,10 +2184,19 @@ func NewMockComponentAPI(t interface {
 	Cleanup(func())
 },
 ) *MockComponentAPI {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &MockComponentAPI{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }
@@ -2185,7 +2239,7 @@ type MockComponentAPI_CreateComponent_Call struct {
 // CreateComponent is a helper method to define mock.On call
 //   - ctx context.Context
 //   - uuid string
-func (_e *MockComponentAPI_Expecter) CreateComponent(ctx interface{}, uuid interface{}) *MockComponentAPI_CreateComponent_Call {
+func (_e *MockComponentAPI_Expecter) CreateComponent(ctx any, uuid any) *MockComponentAPI_CreateComponent_Call {
 	return &MockComponentAPI_CreateComponent_Call{Call: _e.mock.On("CreateComponent", ctx, uuid)}
 }
 
@@ -2260,7 +2314,7 @@ type MockComponentAPI_CreateComponentExecute_Call struct {
 
 // CreateComponentExecute is a helper method to define mock.On call
 //   - r client.ApiCreateComponentRequest
-func (_e *MockComponentAPI_Expecter) CreateComponentExecute(r interface{}) *MockComponentAPI_CreateComponentExecute_Call {
+func (_e *MockComponentAPI_Expecter) CreateComponentExecute(r any) *MockComponentAPI_CreateComponentExecute_Call {
 	return &MockComponentAPI_CreateComponentExecute_Call{Call: _e.mock.On("CreateComponentExecute", r)}
 }
 
@@ -2312,7 +2366,7 @@ type MockComponentAPI_DeleteComponent_Call struct {
 // DeleteComponent is a helper method to define mock.On call
 //   - ctx context.Context
 //   - uuid string
-func (_e *MockComponentAPI_Expecter) DeleteComponent(ctx interface{}, uuid interface{}) *MockComponentAPI_DeleteComponent_Call {
+func (_e *MockComponentAPI_Expecter) DeleteComponent(ctx any, uuid any) *MockComponentAPI_DeleteComponent_Call {
 	return &MockComponentAPI_DeleteComponent_Call{Call: _e.mock.On("DeleteComponent", ctx, uuid)}
 }
 
@@ -2379,7 +2433,7 @@ type MockComponentAPI_DeleteComponentExecute_Call struct {
 
 // DeleteComponentExecute is a helper method to define mock.On call
 //   - r client.ApiDeleteComponentRequest
-func (_e *MockComponentAPI_Expecter) DeleteComponentExecute(r interface{}) *MockComponentAPI_DeleteComponentExecute_Call {
+func (_e *MockComponentAPI_Expecter) DeleteComponentExecute(r any) *MockComponentAPI_DeleteComponentExecute_Call {
 	return &MockComponentAPI_DeleteComponentExecute_Call{Call: _e.mock.On("DeleteComponentExecute", r)}
 }
 
@@ -2431,7 +2485,7 @@ type MockComponentAPI_GetAllComponents_Call struct {
 // GetAllComponents is a helper method to define mock.On call
 //   - ctx context.Context
 //   - uuid string
-func (_e *MockComponentAPI_Expecter) GetAllComponents(ctx interface{}, uuid interface{}) *MockComponentAPI_GetAllComponents_Call {
+func (_e *MockComponentAPI_Expecter) GetAllComponents(ctx any, uuid any) *MockComponentAPI_GetAllComponents_Call {
 	return &MockComponentAPI_GetAllComponents_Call{Call: _e.mock.On("GetAllComponents", ctx, uuid)}
 }
 
@@ -2506,7 +2560,7 @@ type MockComponentAPI_GetAllComponentsExecute_Call struct {
 
 // GetAllComponentsExecute is a helper method to define mock.On call
 //   - r client.ApiGetAllComponentsRequest
-func (_e *MockComponentAPI_Expecter) GetAllComponentsExecute(r interface{}) *MockComponentAPI_GetAllComponentsExecute_Call {
+func (_e *MockComponentAPI_Expecter) GetAllComponentsExecute(r any) *MockComponentAPI_GetAllComponentsExecute_Call {
 	return &MockComponentAPI_GetAllComponentsExecute_Call{Call: _e.mock.On("GetAllComponentsExecute", r)}
 }
 
@@ -2558,7 +2612,7 @@ type MockComponentAPI_GetComponentByHash_Call struct {
 // GetComponentByHash is a helper method to define mock.On call
 //   - ctx context.Context
 //   - hash string
-func (_e *MockComponentAPI_Expecter) GetComponentByHash(ctx interface{}, hash interface{}) *MockComponentAPI_GetComponentByHash_Call {
+func (_e *MockComponentAPI_Expecter) GetComponentByHash(ctx any, hash any) *MockComponentAPI_GetComponentByHash_Call {
 	return &MockComponentAPI_GetComponentByHash_Call{Call: _e.mock.On("GetComponentByHash", ctx, hash)}
 }
 
@@ -2633,7 +2687,7 @@ type MockComponentAPI_GetComponentByHashExecute_Call struct {
 
 // GetComponentByHashExecute is a helper method to define mock.On call
 //   - r client.ApiGetComponentByHashRequest
-func (_e *MockComponentAPI_Expecter) GetComponentByHashExecute(r interface{}) *MockComponentAPI_GetComponentByHashExecute_Call {
+func (_e *MockComponentAPI_Expecter) GetComponentByHashExecute(r any) *MockComponentAPI_GetComponentByHashExecute_Call {
 	return &MockComponentAPI_GetComponentByHashExecute_Call{Call: _e.mock.On("GetComponentByHashExecute", r)}
 }
 
@@ -2684,7 +2738,7 @@ type MockComponentAPI_GetComponentByIdentity_Call struct {
 
 // GetComponentByIdentity is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockComponentAPI_Expecter) GetComponentByIdentity(ctx interface{}) *MockComponentAPI_GetComponentByIdentity_Call {
+func (_e *MockComponentAPI_Expecter) GetComponentByIdentity(ctx any) *MockComponentAPI_GetComponentByIdentity_Call {
 	return &MockComponentAPI_GetComponentByIdentity_Call{Call: _e.mock.On("GetComponentByIdentity", ctx)}
 }
 
@@ -2754,7 +2808,7 @@ type MockComponentAPI_GetComponentByIdentityExecute_Call struct {
 
 // GetComponentByIdentityExecute is a helper method to define mock.On call
 //   - r client.ApiGetComponentByIdentityRequest
-func (_e *MockComponentAPI_Expecter) GetComponentByIdentityExecute(r interface{}) *MockComponentAPI_GetComponentByIdentityExecute_Call {
+func (_e *MockComponentAPI_Expecter) GetComponentByIdentityExecute(r any) *MockComponentAPI_GetComponentByIdentityExecute_Call {
 	return &MockComponentAPI_GetComponentByIdentityExecute_Call{Call: _e.mock.On("GetComponentByIdentityExecute", r)}
 }
 
@@ -2806,7 +2860,7 @@ type MockComponentAPI_GetComponentByUuid_Call struct {
 // GetComponentByUuid is a helper method to define mock.On call
 //   - ctx context.Context
 //   - uuid string
-func (_e *MockComponentAPI_Expecter) GetComponentByUuid(ctx interface{}, uuid interface{}) *MockComponentAPI_GetComponentByUuid_Call {
+func (_e *MockComponentAPI_Expecter) GetComponentByUuid(ctx any, uuid any) *MockComponentAPI_GetComponentByUuid_Call {
 	return &MockComponentAPI_GetComponentByUuid_Call{Call: _e.mock.On("GetComponentByUuid", ctx, uuid)}
 }
 
@@ -2881,7 +2935,7 @@ type MockComponentAPI_GetComponentByUuidExecute_Call struct {
 
 // GetComponentByUuidExecute is a helper method to define mock.On call
 //   - r client.ApiGetComponentByUuidRequest
-func (_e *MockComponentAPI_Expecter) GetComponentByUuidExecute(r interface{}) *MockComponentAPI_GetComponentByUuidExecute_Call {
+func (_e *MockComponentAPI_Expecter) GetComponentByUuidExecute(r any) *MockComponentAPI_GetComponentByUuidExecute_Call {
 	return &MockComponentAPI_GetComponentByUuidExecute_Call{Call: _e.mock.On("GetComponentByUuidExecute", r)}
 }
 
@@ -2934,7 +2988,7 @@ type MockComponentAPI_GetDependencyGraphForComponent_Call struct {
 //   - ctx context.Context
 //   - projectUuid string
 //   - componentUuids string
-func (_e *MockComponentAPI_Expecter) GetDependencyGraphForComponent(ctx interface{}, projectUuid interface{}, componentUuids interface{}) *MockComponentAPI_GetDependencyGraphForComponent_Call {
+func (_e *MockComponentAPI_Expecter) GetDependencyGraphForComponent(ctx any, projectUuid any, componentUuids any) *MockComponentAPI_GetDependencyGraphForComponent_Call {
 	return &MockComponentAPI_GetDependencyGraphForComponent_Call{Call: _e.mock.On("GetDependencyGraphForComponent", ctx, projectUuid, componentUuids)}
 }
 
@@ -3014,7 +3068,7 @@ type MockComponentAPI_GetDependencyGraphForComponentExecute_Call struct {
 
 // GetDependencyGraphForComponentExecute is a helper method to define mock.On call
 //   - r client.ApiGetDependencyGraphForComponentRequest
-func (_e *MockComponentAPI_Expecter) GetDependencyGraphForComponentExecute(r interface{}) *MockComponentAPI_GetDependencyGraphForComponentExecute_Call {
+func (_e *MockComponentAPI_Expecter) GetDependencyGraphForComponentExecute(r any) *MockComponentAPI_GetDependencyGraphForComponentExecute_Call {
 	return &MockComponentAPI_GetDependencyGraphForComponentExecute_Call{Call: _e.mock.On("GetDependencyGraphForComponentExecute", r)}
 }
 
@@ -3065,7 +3119,7 @@ type MockComponentAPI_IdentifyInternalComponents_Call struct {
 
 // IdentifyInternalComponents is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockComponentAPI_Expecter) IdentifyInternalComponents(ctx interface{}) *MockComponentAPI_IdentifyInternalComponents_Call {
+func (_e *MockComponentAPI_Expecter) IdentifyInternalComponents(ctx any) *MockComponentAPI_IdentifyInternalComponents_Call {
 	return &MockComponentAPI_IdentifyInternalComponents_Call{Call: _e.mock.On("IdentifyInternalComponents", ctx)}
 }
 
@@ -3127,7 +3181,7 @@ type MockComponentAPI_IdentifyInternalComponentsExecute_Call struct {
 
 // IdentifyInternalComponentsExecute is a helper method to define mock.On call
 //   - r client.ApiIdentifyInternalComponentsRequest
-func (_e *MockComponentAPI_Expecter) IdentifyInternalComponentsExecute(r interface{}) *MockComponentAPI_IdentifyInternalComponentsExecute_Call {
+func (_e *MockComponentAPI_Expecter) IdentifyInternalComponentsExecute(r any) *MockComponentAPI_IdentifyInternalComponentsExecute_Call {
 	return &MockComponentAPI_IdentifyInternalComponentsExecute_Call{Call: _e.mock.On("IdentifyInternalComponentsExecute", r)}
 }
 
@@ -3178,7 +3232,7 @@ type MockComponentAPI_UpdateComponent_Call struct {
 
 // UpdateComponent is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockComponentAPI_Expecter) UpdateComponent(ctx interface{}) *MockComponentAPI_UpdateComponent_Call {
+func (_e *MockComponentAPI_Expecter) UpdateComponent(ctx any) *MockComponentAPI_UpdateComponent_Call {
 	return &MockComponentAPI_UpdateComponent_Call{Call: _e.mock.On("UpdateComponent", ctx)}
 }
 
@@ -3248,7 +3302,7 @@ type MockComponentAPI_UpdateComponentExecute_Call struct {
 
 // UpdateComponentExecute is a helper method to define mock.On call
 //   - r client.ApiUpdateComponentRequest
-func (_e *MockComponentAPI_Expecter) UpdateComponentExecute(r interface{}) *MockComponentAPI_UpdateComponentExecute_Call {
+func (_e *MockComponentAPI_Expecter) UpdateComponentExecute(r any) *MockComponentAPI_UpdateComponentExecute_Call {
 	return &MockComponentAPI_UpdateComponentExecute_Call{Call: _e.mock.On("UpdateComponentExecute", r)}
 }
 
@@ -3282,10 +3336,19 @@ func NewMockComponentPropertyAPI(t interface {
 	Cleanup(func())
 },
 ) *MockComponentPropertyAPI {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &MockComponentPropertyAPI{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }
@@ -3328,7 +3391,7 @@ type MockComponentPropertyAPI_CreateProperty_Call struct {
 // CreateProperty is a helper method to define mock.On call
 //   - ctx context.Context
 //   - uuid string
-func (_e *MockComponentPropertyAPI_Expecter) CreateProperty(ctx interface{}, uuid interface{}) *MockComponentPropertyAPI_CreateProperty_Call {
+func (_e *MockComponentPropertyAPI_Expecter) CreateProperty(ctx any, uuid any) *MockComponentPropertyAPI_CreateProperty_Call {
 	return &MockComponentPropertyAPI_CreateProperty_Call{Call: _e.mock.On("CreateProperty", ctx, uuid)}
 }
 
@@ -3403,7 +3466,7 @@ type MockComponentPropertyAPI_CreatePropertyExecute_Call struct {
 
 // CreatePropertyExecute is a helper method to define mock.On call
 //   - r client.ApiCreatePropertyRequest
-func (_e *MockComponentPropertyAPI_Expecter) CreatePropertyExecute(r interface{}) *MockComponentPropertyAPI_CreatePropertyExecute_Call {
+func (_e *MockComponentPropertyAPI_Expecter) CreatePropertyExecute(r any) *MockComponentPropertyAPI_CreatePropertyExecute_Call {
 	return &MockComponentPropertyAPI_CreatePropertyExecute_Call{Call: _e.mock.On("CreatePropertyExecute", r)}
 }
 
@@ -3456,7 +3519,7 @@ type MockComponentPropertyAPI_DeleteProperty_Call struct {
 //   - ctx context.Context
 //   - uuid string
 //   - propertyUuid string
-func (_e *MockComponentPropertyAPI_Expecter) DeleteProperty(ctx interface{}, uuid interface{}, propertyUuid interface{}) *MockComponentPropertyAPI_DeleteProperty_Call {
+func (_e *MockComponentPropertyAPI_Expecter) DeleteProperty(ctx any, uuid any, propertyUuid any) *MockComponentPropertyAPI_DeleteProperty_Call {
 	return &MockComponentPropertyAPI_DeleteProperty_Call{Call: _e.mock.On("DeleteProperty", ctx, uuid, propertyUuid)}
 }
 
@@ -3528,7 +3591,7 @@ type MockComponentPropertyAPI_DeletePropertyExecute_Call struct {
 
 // DeletePropertyExecute is a helper method to define mock.On call
 //   - r client.ApiDeletePropertyRequest
-func (_e *MockComponentPropertyAPI_Expecter) DeletePropertyExecute(r interface{}) *MockComponentPropertyAPI_DeletePropertyExecute_Call {
+func (_e *MockComponentPropertyAPI_Expecter) DeletePropertyExecute(r any) *MockComponentPropertyAPI_DeletePropertyExecute_Call {
 	return &MockComponentPropertyAPI_DeletePropertyExecute_Call{Call: _e.mock.On("DeletePropertyExecute", r)}
 }
 
@@ -3580,7 +3643,7 @@ type MockComponentPropertyAPI_GetProperties_Call struct {
 // GetProperties is a helper method to define mock.On call
 //   - ctx context.Context
 //   - uuid string
-func (_e *MockComponentPropertyAPI_Expecter) GetProperties(ctx interface{}, uuid interface{}) *MockComponentPropertyAPI_GetProperties_Call {
+func (_e *MockComponentPropertyAPI_Expecter) GetProperties(ctx any, uuid any) *MockComponentPropertyAPI_GetProperties_Call {
 	return &MockComponentPropertyAPI_GetProperties_Call{Call: _e.mock.On("GetProperties", ctx, uuid)}
 }
 
@@ -3655,7 +3718,7 @@ type MockComponentPropertyAPI_GetPropertiesExecute_Call struct {
 
 // GetPropertiesExecute is a helper method to define mock.On call
 //   - r client.ApiGetPropertiesRequest
-func (_e *MockComponentPropertyAPI_Expecter) GetPropertiesExecute(r interface{}) *MockComponentPropertyAPI_GetPropertiesExecute_Call {
+func (_e *MockComponentPropertyAPI_Expecter) GetPropertiesExecute(r any) *MockComponentPropertyAPI_GetPropertiesExecute_Call {
 	return &MockComponentPropertyAPI_GetPropertiesExecute_Call{Call: _e.mock.On("GetPropertiesExecute", r)}
 }
 
@@ -3689,10 +3752,19 @@ func NewMockConfigPropertyAPI(t interface {
 	Cleanup(func())
 },
 ) *MockConfigPropertyAPI {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &MockConfigPropertyAPI{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }
@@ -3734,7 +3806,7 @@ type MockConfigPropertyAPI_GetConfigProperties_Call struct {
 
 // GetConfigProperties is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockConfigPropertyAPI_Expecter) GetConfigProperties(ctx interface{}) *MockConfigPropertyAPI_GetConfigProperties_Call {
+func (_e *MockConfigPropertyAPI_Expecter) GetConfigProperties(ctx any) *MockConfigPropertyAPI_GetConfigProperties_Call {
 	return &MockConfigPropertyAPI_GetConfigProperties_Call{Call: _e.mock.On("GetConfigProperties", ctx)}
 }
 
@@ -3804,7 +3876,7 @@ type MockConfigPropertyAPI_GetConfigPropertiesExecute_Call struct {
 
 // GetConfigPropertiesExecute is a helper method to define mock.On call
 //   - r client.ApiGetConfigPropertiesRequest
-func (_e *MockConfigPropertyAPI_Expecter) GetConfigPropertiesExecute(r interface{}) *MockConfigPropertyAPI_GetConfigPropertiesExecute_Call {
+func (_e *MockConfigPropertyAPI_Expecter) GetConfigPropertiesExecute(r any) *MockConfigPropertyAPI_GetConfigPropertiesExecute_Call {
 	return &MockConfigPropertyAPI_GetConfigPropertiesExecute_Call{Call: _e.mock.On("GetConfigPropertiesExecute", r)}
 }
 
@@ -3857,7 +3929,7 @@ type MockConfigPropertyAPI_GetPublicConfigProperty_Call struct {
 //   - ctx context.Context
 //   - groupName string
 //   - propertyName string
-func (_e *MockConfigPropertyAPI_Expecter) GetPublicConfigProperty(ctx interface{}, groupName interface{}, propertyName interface{}) *MockConfigPropertyAPI_GetPublicConfigProperty_Call {
+func (_e *MockConfigPropertyAPI_Expecter) GetPublicConfigProperty(ctx any, groupName any, propertyName any) *MockConfigPropertyAPI_GetPublicConfigProperty_Call {
 	return &MockConfigPropertyAPI_GetPublicConfigProperty_Call{Call: _e.mock.On("GetPublicConfigProperty", ctx, groupName, propertyName)}
 }
 
@@ -3937,7 +4009,7 @@ type MockConfigPropertyAPI_GetPublicConfigPropertyExecute_Call struct {
 
 // GetPublicConfigPropertyExecute is a helper method to define mock.On call
 //   - r client.ApiGetPublicConfigPropertyRequest
-func (_e *MockConfigPropertyAPI_Expecter) GetPublicConfigPropertyExecute(r interface{}) *MockConfigPropertyAPI_GetPublicConfigPropertyExecute_Call {
+func (_e *MockConfigPropertyAPI_Expecter) GetPublicConfigPropertyExecute(r any) *MockConfigPropertyAPI_GetPublicConfigPropertyExecute_Call {
 	return &MockConfigPropertyAPI_GetPublicConfigPropertyExecute_Call{Call: _e.mock.On("GetPublicConfigPropertyExecute", r)}
 }
 
@@ -3988,7 +4060,7 @@ type MockConfigPropertyAPI_UpdateConfigProperty_Call struct {
 
 // UpdateConfigProperty is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockConfigPropertyAPI_Expecter) UpdateConfigProperty(ctx interface{}) *MockConfigPropertyAPI_UpdateConfigProperty_Call {
+func (_e *MockConfigPropertyAPI_Expecter) UpdateConfigProperty(ctx any) *MockConfigPropertyAPI_UpdateConfigProperty_Call {
 	return &MockConfigPropertyAPI_UpdateConfigProperty_Call{Call: _e.mock.On("UpdateConfigProperty", ctx)}
 }
 
@@ -4039,7 +4111,7 @@ type MockConfigPropertyAPI_UpdateConfigProperty1_Call struct {
 
 // UpdateConfigProperty1 is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockConfigPropertyAPI_Expecter) UpdateConfigProperty1(ctx interface{}) *MockConfigPropertyAPI_UpdateConfigProperty1_Call {
+func (_e *MockConfigPropertyAPI_Expecter) UpdateConfigProperty1(ctx any) *MockConfigPropertyAPI_UpdateConfigProperty1_Call {
 	return &MockConfigPropertyAPI_UpdateConfigProperty1_Call{Call: _e.mock.On("UpdateConfigProperty1", ctx)}
 }
 
@@ -4109,7 +4181,7 @@ type MockConfigPropertyAPI_UpdateConfigProperty1Execute_Call struct {
 
 // UpdateConfigProperty1Execute is a helper method to define mock.On call
 //   - r client.ApiUpdateConfigProperty1Request
-func (_e *MockConfigPropertyAPI_Expecter) UpdateConfigProperty1Execute(r interface{}) *MockConfigPropertyAPI_UpdateConfigProperty1Execute_Call {
+func (_e *MockConfigPropertyAPI_Expecter) UpdateConfigProperty1Execute(r any) *MockConfigPropertyAPI_UpdateConfigProperty1Execute_Call {
 	return &MockConfigPropertyAPI_UpdateConfigProperty1Execute_Call{Call: _e.mock.On("UpdateConfigProperty1Execute", r)}
 }
 
@@ -4179,7 +4251,7 @@ type MockConfigPropertyAPI_UpdateConfigPropertyExecute_Call struct {
 
 // UpdateConfigPropertyExecute is a helper method to define mock.On call
 //   - r client.ApiUpdateConfigPropertyRequest
-func (_e *MockConfigPropertyAPI_Expecter) UpdateConfigPropertyExecute(r interface{}) *MockConfigPropertyAPI_UpdateConfigPropertyExecute_Call {
+func (_e *MockConfigPropertyAPI_Expecter) UpdateConfigPropertyExecute(r any) *MockConfigPropertyAPI_UpdateConfigPropertyExecute_Call {
 	return &MockConfigPropertyAPI_UpdateConfigPropertyExecute_Call{Call: _e.mock.On("UpdateConfigPropertyExecute", r)}
 }
 
@@ -4213,10 +4285,19 @@ func NewMockCweAPI(t interface {
 	Cleanup(func())
 },
 ) *MockCweAPI {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &MockCweAPI{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }
@@ -4259,7 +4340,7 @@ type MockCweAPI_GetCwe_Call struct {
 // GetCwe is a helper method to define mock.On call
 //   - ctx context.Context
 //   - cweId int32
-func (_e *MockCweAPI_Expecter) GetCwe(ctx interface{}, cweId interface{}) *MockCweAPI_GetCwe_Call {
+func (_e *MockCweAPI_Expecter) GetCwe(ctx any, cweId any) *MockCweAPI_GetCwe_Call {
 	return &MockCweAPI_GetCwe_Call{Call: _e.mock.On("GetCwe", ctx, cweId)}
 }
 
@@ -4334,7 +4415,7 @@ type MockCweAPI_GetCweExecute_Call struct {
 
 // GetCweExecute is a helper method to define mock.On call
 //   - r client.ApiGetCweRequest
-func (_e *MockCweAPI_Expecter) GetCweExecute(r interface{}) *MockCweAPI_GetCweExecute_Call {
+func (_e *MockCweAPI_Expecter) GetCweExecute(r any) *MockCweAPI_GetCweExecute_Call {
 	return &MockCweAPI_GetCweExecute_Call{Call: _e.mock.On("GetCweExecute", r)}
 }
 
@@ -4385,7 +4466,7 @@ type MockCweAPI_GetCwes_Call struct {
 
 // GetCwes is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockCweAPI_Expecter) GetCwes(ctx interface{}) *MockCweAPI_GetCwes_Call {
+func (_e *MockCweAPI_Expecter) GetCwes(ctx any) *MockCweAPI_GetCwes_Call {
 	return &MockCweAPI_GetCwes_Call{Call: _e.mock.On("GetCwes", ctx)}
 }
 
@@ -4455,7 +4536,7 @@ type MockCweAPI_GetCwesExecute_Call struct {
 
 // GetCwesExecute is a helper method to define mock.On call
 //   - r client.ApiGetCwesRequest
-func (_e *MockCweAPI_Expecter) GetCwesExecute(r interface{}) *MockCweAPI_GetCwesExecute_Call {
+func (_e *MockCweAPI_Expecter) GetCwesExecute(r any) *MockCweAPI_GetCwesExecute_Call {
 	return &MockCweAPI_GetCwesExecute_Call{Call: _e.mock.On("GetCwesExecute", r)}
 }
 
@@ -4489,10 +4570,19 @@ func NewMockDependencyGraphAPI(t interface {
 	Cleanup(func())
 },
 ) *MockDependencyGraphAPI {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &MockDependencyGraphAPI{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }
@@ -4535,7 +4625,7 @@ type MockDependencyGraphAPI_GetComponentsAndServicesByComponentUuid_Call struct 
 // GetComponentsAndServicesByComponentUuid is a helper method to define mock.On call
 //   - ctx context.Context
 //   - uuid string
-func (_e *MockDependencyGraphAPI_Expecter) GetComponentsAndServicesByComponentUuid(ctx interface{}, uuid interface{}) *MockDependencyGraphAPI_GetComponentsAndServicesByComponentUuid_Call {
+func (_e *MockDependencyGraphAPI_Expecter) GetComponentsAndServicesByComponentUuid(ctx any, uuid any) *MockDependencyGraphAPI_GetComponentsAndServicesByComponentUuid_Call {
 	return &MockDependencyGraphAPI_GetComponentsAndServicesByComponentUuid_Call{Call: _e.mock.On("GetComponentsAndServicesByComponentUuid", ctx, uuid)}
 }
 
@@ -4610,7 +4700,7 @@ type MockDependencyGraphAPI_GetComponentsAndServicesByComponentUuidExecute_Call 
 
 // GetComponentsAndServicesByComponentUuidExecute is a helper method to define mock.On call
 //   - r client.ApiGetComponentsAndServicesByComponentUuidRequest
-func (_e *MockDependencyGraphAPI_Expecter) GetComponentsAndServicesByComponentUuidExecute(r interface{}) *MockDependencyGraphAPI_GetComponentsAndServicesByComponentUuidExecute_Call {
+func (_e *MockDependencyGraphAPI_Expecter) GetComponentsAndServicesByComponentUuidExecute(r any) *MockDependencyGraphAPI_GetComponentsAndServicesByComponentUuidExecute_Call {
 	return &MockDependencyGraphAPI_GetComponentsAndServicesByComponentUuidExecute_Call{Call: _e.mock.On("GetComponentsAndServicesByComponentUuidExecute", r)}
 }
 
@@ -4662,7 +4752,7 @@ type MockDependencyGraphAPI_GetComponentsAndServicesByProjectUuid_Call struct {
 // GetComponentsAndServicesByProjectUuid is a helper method to define mock.On call
 //   - ctx context.Context
 //   - uuid string
-func (_e *MockDependencyGraphAPI_Expecter) GetComponentsAndServicesByProjectUuid(ctx interface{}, uuid interface{}) *MockDependencyGraphAPI_GetComponentsAndServicesByProjectUuid_Call {
+func (_e *MockDependencyGraphAPI_Expecter) GetComponentsAndServicesByProjectUuid(ctx any, uuid any) *MockDependencyGraphAPI_GetComponentsAndServicesByProjectUuid_Call {
 	return &MockDependencyGraphAPI_GetComponentsAndServicesByProjectUuid_Call{Call: _e.mock.On("GetComponentsAndServicesByProjectUuid", ctx, uuid)}
 }
 
@@ -4737,7 +4827,7 @@ type MockDependencyGraphAPI_GetComponentsAndServicesByProjectUuidExecute_Call st
 
 // GetComponentsAndServicesByProjectUuidExecute is a helper method to define mock.On call
 //   - r client.ApiGetComponentsAndServicesByProjectUuidRequest
-func (_e *MockDependencyGraphAPI_Expecter) GetComponentsAndServicesByProjectUuidExecute(r interface{}) *MockDependencyGraphAPI_GetComponentsAndServicesByProjectUuidExecute_Call {
+func (_e *MockDependencyGraphAPI_Expecter) GetComponentsAndServicesByProjectUuidExecute(r any) *MockDependencyGraphAPI_GetComponentsAndServicesByProjectUuidExecute_Call {
 	return &MockDependencyGraphAPI_GetComponentsAndServicesByProjectUuidExecute_Call{Call: _e.mock.On("GetComponentsAndServicesByProjectUuidExecute", r)}
 }
 
@@ -4771,10 +4861,19 @@ func NewMockEventAPI(t interface {
 	Cleanup(func())
 },
 ) *MockEventAPI {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &MockEventAPI{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }
@@ -4817,7 +4916,7 @@ type MockEventAPI_IsTokenBeingProcessed1_Call struct {
 // IsTokenBeingProcessed1 is a helper method to define mock.On call
 //   - ctx context.Context
 //   - uuid string
-func (_e *MockEventAPI_Expecter) IsTokenBeingProcessed1(ctx interface{}, uuid interface{}) *MockEventAPI_IsTokenBeingProcessed1_Call {
+func (_e *MockEventAPI_Expecter) IsTokenBeingProcessed1(ctx any, uuid any) *MockEventAPI_IsTokenBeingProcessed1_Call {
 	return &MockEventAPI_IsTokenBeingProcessed1_Call{Call: _e.mock.On("IsTokenBeingProcessed1", ctx, uuid)}
 }
 
@@ -4892,7 +4991,7 @@ type MockEventAPI_IsTokenBeingProcessed1Execute_Call struct {
 
 // IsTokenBeingProcessed1Execute is a helper method to define mock.On call
 //   - r client.ApiIsTokenBeingProcessed1Request
-func (_e *MockEventAPI_Expecter) IsTokenBeingProcessed1Execute(r interface{}) *MockEventAPI_IsTokenBeingProcessed1Execute_Call {
+func (_e *MockEventAPI_Expecter) IsTokenBeingProcessed1Execute(r any) *MockEventAPI_IsTokenBeingProcessed1Execute_Call {
 	return &MockEventAPI_IsTokenBeingProcessed1Execute_Call{Call: _e.mock.On("IsTokenBeingProcessed1Execute", r)}
 }
 
@@ -4926,10 +5025,19 @@ func NewMockFindingAPI(t interface {
 	Cleanup(func())
 },
 ) *MockFindingAPI {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &MockFindingAPI{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }
@@ -4972,7 +5080,7 @@ type MockFindingAPI_AnalyzeProject_Call struct {
 // AnalyzeProject is a helper method to define mock.On call
 //   - ctx context.Context
 //   - uuid string
-func (_e *MockFindingAPI_Expecter) AnalyzeProject(ctx interface{}, uuid interface{}) *MockFindingAPI_AnalyzeProject_Call {
+func (_e *MockFindingAPI_Expecter) AnalyzeProject(ctx any, uuid any) *MockFindingAPI_AnalyzeProject_Call {
 	return &MockFindingAPI_AnalyzeProject_Call{Call: _e.mock.On("AnalyzeProject", ctx, uuid)}
 }
 
@@ -5047,7 +5155,7 @@ type MockFindingAPI_AnalyzeProjectExecute_Call struct {
 
 // AnalyzeProjectExecute is a helper method to define mock.On call
 //   - r client.ApiAnalyzeProjectRequest
-func (_e *MockFindingAPI_Expecter) AnalyzeProjectExecute(r interface{}) *MockFindingAPI_AnalyzeProjectExecute_Call {
+func (_e *MockFindingAPI_Expecter) AnalyzeProjectExecute(r any) *MockFindingAPI_AnalyzeProjectExecute_Call {
 	return &MockFindingAPI_AnalyzeProjectExecute_Call{Call: _e.mock.On("AnalyzeProjectExecute", r)}
 }
 
@@ -5099,7 +5207,7 @@ type MockFindingAPI_ExportFindingsByProject_Call struct {
 // ExportFindingsByProject is a helper method to define mock.On call
 //   - ctx context.Context
 //   - uuid string
-func (_e *MockFindingAPI_Expecter) ExportFindingsByProject(ctx interface{}, uuid interface{}) *MockFindingAPI_ExportFindingsByProject_Call {
+func (_e *MockFindingAPI_Expecter) ExportFindingsByProject(ctx any, uuid any) *MockFindingAPI_ExportFindingsByProject_Call {
 	return &MockFindingAPI_ExportFindingsByProject_Call{Call: _e.mock.On("ExportFindingsByProject", ctx, uuid)}
 }
 
@@ -5172,7 +5280,7 @@ type MockFindingAPI_ExportFindingsByProjectExecute_Call struct {
 
 // ExportFindingsByProjectExecute is a helper method to define mock.On call
 //   - r client.ApiExportFindingsByProjectRequest
-func (_e *MockFindingAPI_Expecter) ExportFindingsByProjectExecute(r interface{}) *MockFindingAPI_ExportFindingsByProjectExecute_Call {
+func (_e *MockFindingAPI_Expecter) ExportFindingsByProjectExecute(r any) *MockFindingAPI_ExportFindingsByProjectExecute_Call {
 	return &MockFindingAPI_ExportFindingsByProjectExecute_Call{Call: _e.mock.On("ExportFindingsByProjectExecute", r)}
 }
 
@@ -5223,7 +5331,7 @@ type MockFindingAPI_GetAllFindings_Call struct {
 
 // GetAllFindings is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockFindingAPI_Expecter) GetAllFindings(ctx interface{}) *MockFindingAPI_GetAllFindings_Call {
+func (_e *MockFindingAPI_Expecter) GetAllFindings(ctx any) *MockFindingAPI_GetAllFindings_Call {
 	return &MockFindingAPI_GetAllFindings_Call{Call: _e.mock.On("GetAllFindings", ctx)}
 }
 
@@ -5274,7 +5382,7 @@ type MockFindingAPI_GetAllFindings1_Call struct {
 
 // GetAllFindings1 is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockFindingAPI_Expecter) GetAllFindings1(ctx interface{}) *MockFindingAPI_GetAllFindings1_Call {
+func (_e *MockFindingAPI_Expecter) GetAllFindings1(ctx any) *MockFindingAPI_GetAllFindings1_Call {
 	return &MockFindingAPI_GetAllFindings1_Call{Call: _e.mock.On("GetAllFindings1", ctx)}
 }
 
@@ -5344,7 +5452,7 @@ type MockFindingAPI_GetAllFindings1Execute_Call struct {
 
 // GetAllFindings1Execute is a helper method to define mock.On call
 //   - r client.ApiGetAllFindings1Request
-func (_e *MockFindingAPI_Expecter) GetAllFindings1Execute(r interface{}) *MockFindingAPI_GetAllFindings1Execute_Call {
+func (_e *MockFindingAPI_Expecter) GetAllFindings1Execute(r any) *MockFindingAPI_GetAllFindings1Execute_Call {
 	return &MockFindingAPI_GetAllFindings1Execute_Call{Call: _e.mock.On("GetAllFindings1Execute", r)}
 }
 
@@ -5414,7 +5522,7 @@ type MockFindingAPI_GetAllFindingsExecute_Call struct {
 
 // GetAllFindingsExecute is a helper method to define mock.On call
 //   - r client.ApiGetAllFindingsRequest
-func (_e *MockFindingAPI_Expecter) GetAllFindingsExecute(r interface{}) *MockFindingAPI_GetAllFindingsExecute_Call {
+func (_e *MockFindingAPI_Expecter) GetAllFindingsExecute(r any) *MockFindingAPI_GetAllFindingsExecute_Call {
 	return &MockFindingAPI_GetAllFindingsExecute_Call{Call: _e.mock.On("GetAllFindingsExecute", r)}
 }
 
@@ -5466,7 +5574,7 @@ type MockFindingAPI_GetFindingsByProject_Call struct {
 // GetFindingsByProject is a helper method to define mock.On call
 //   - ctx context.Context
 //   - uuid string
-func (_e *MockFindingAPI_Expecter) GetFindingsByProject(ctx interface{}, uuid interface{}) *MockFindingAPI_GetFindingsByProject_Call {
+func (_e *MockFindingAPI_Expecter) GetFindingsByProject(ctx any, uuid any) *MockFindingAPI_GetFindingsByProject_Call {
 	return &MockFindingAPI_GetFindingsByProject_Call{Call: _e.mock.On("GetFindingsByProject", ctx, uuid)}
 }
 
@@ -5541,7 +5649,7 @@ type MockFindingAPI_GetFindingsByProjectExecute_Call struct {
 
 // GetFindingsByProjectExecute is a helper method to define mock.On call
 //   - r client.ApiGetFindingsByProjectRequest
-func (_e *MockFindingAPI_Expecter) GetFindingsByProjectExecute(r interface{}) *MockFindingAPI_GetFindingsByProjectExecute_Call {
+func (_e *MockFindingAPI_Expecter) GetFindingsByProjectExecute(r any) *MockFindingAPI_GetFindingsByProjectExecute_Call {
 	return &MockFindingAPI_GetFindingsByProjectExecute_Call{Call: _e.mock.On("GetFindingsByProjectExecute", r)}
 }
 
@@ -5575,10 +5683,19 @@ func NewMockIntegrationAPI(t interface {
 	Cleanup(func())
 },
 ) *MockIntegrationAPI {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &MockIntegrationAPI{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }
@@ -5620,7 +5737,7 @@ type MockIntegrationAPI_GetAllEcosystems_Call struct {
 
 // GetAllEcosystems is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockIntegrationAPI_Expecter) GetAllEcosystems(ctx interface{}) *MockIntegrationAPI_GetAllEcosystems_Call {
+func (_e *MockIntegrationAPI_Expecter) GetAllEcosystems(ctx any) *MockIntegrationAPI_GetAllEcosystems_Call {
 	return &MockIntegrationAPI_GetAllEcosystems_Call{Call: _e.mock.On("GetAllEcosystems", ctx)}
 }
 
@@ -5690,7 +5807,7 @@ type MockIntegrationAPI_GetAllEcosystemsExecute_Call struct {
 
 // GetAllEcosystemsExecute is a helper method to define mock.On call
 //   - r client.ApiGetAllEcosystemsRequest
-func (_e *MockIntegrationAPI_Expecter) GetAllEcosystemsExecute(r interface{}) *MockIntegrationAPI_GetAllEcosystemsExecute_Call {
+func (_e *MockIntegrationAPI_Expecter) GetAllEcosystemsExecute(r any) *MockIntegrationAPI_GetAllEcosystemsExecute_Call {
 	return &MockIntegrationAPI_GetAllEcosystemsExecute_Call{Call: _e.mock.On("GetAllEcosystemsExecute", r)}
 }
 
@@ -5741,7 +5858,7 @@ type MockIntegrationAPI_GetInactiveEcosystems_Call struct {
 
 // GetInactiveEcosystems is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockIntegrationAPI_Expecter) GetInactiveEcosystems(ctx interface{}) *MockIntegrationAPI_GetInactiveEcosystems_Call {
+func (_e *MockIntegrationAPI_Expecter) GetInactiveEcosystems(ctx any) *MockIntegrationAPI_GetInactiveEcosystems_Call {
 	return &MockIntegrationAPI_GetInactiveEcosystems_Call{Call: _e.mock.On("GetInactiveEcosystems", ctx)}
 }
 
@@ -5811,7 +5928,7 @@ type MockIntegrationAPI_GetInactiveEcosystemsExecute_Call struct {
 
 // GetInactiveEcosystemsExecute is a helper method to define mock.On call
 //   - r client.ApiGetInactiveEcosystemsRequest
-func (_e *MockIntegrationAPI_Expecter) GetInactiveEcosystemsExecute(r interface{}) *MockIntegrationAPI_GetInactiveEcosystemsExecute_Call {
+func (_e *MockIntegrationAPI_Expecter) GetInactiveEcosystemsExecute(r any) *MockIntegrationAPI_GetInactiveEcosystemsExecute_Call {
 	return &MockIntegrationAPI_GetInactiveEcosystemsExecute_Call{Call: _e.mock.On("GetInactiveEcosystemsExecute", r)}
 }
 
@@ -5845,10 +5962,19 @@ func NewMockLdapAPI(t interface {
 	Cleanup(func())
 },
 ) *MockLdapAPI {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &MockLdapAPI{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }
@@ -5890,7 +6016,7 @@ type MockLdapAPI_AddMapping1_Call struct {
 
 // AddMapping1 is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockLdapAPI_Expecter) AddMapping1(ctx interface{}) *MockLdapAPI_AddMapping1_Call {
+func (_e *MockLdapAPI_Expecter) AddMapping1(ctx any) *MockLdapAPI_AddMapping1_Call {
 	return &MockLdapAPI_AddMapping1_Call{Call: _e.mock.On("AddMapping1", ctx)}
 }
 
@@ -5960,7 +6086,7 @@ type MockLdapAPI_AddMapping1Execute_Call struct {
 
 // AddMapping1Execute is a helper method to define mock.On call
 //   - r client.ApiAddMapping1Request
-func (_e *MockLdapAPI_Expecter) AddMapping1Execute(r interface{}) *MockLdapAPI_AddMapping1Execute_Call {
+func (_e *MockLdapAPI_Expecter) AddMapping1Execute(r any) *MockLdapAPI_AddMapping1Execute_Call {
 	return &MockLdapAPI_AddMapping1Execute_Call{Call: _e.mock.On("AddMapping1Execute", r)}
 }
 
@@ -6012,7 +6138,7 @@ type MockLdapAPI_DeleteMapping1_Call struct {
 // DeleteMapping1 is a helper method to define mock.On call
 //   - ctx context.Context
 //   - uuid string
-func (_e *MockLdapAPI_Expecter) DeleteMapping1(ctx interface{}, uuid interface{}) *MockLdapAPI_DeleteMapping1_Call {
+func (_e *MockLdapAPI_Expecter) DeleteMapping1(ctx any, uuid any) *MockLdapAPI_DeleteMapping1_Call {
 	return &MockLdapAPI_DeleteMapping1_Call{Call: _e.mock.On("DeleteMapping1", ctx, uuid)}
 }
 
@@ -6079,7 +6205,7 @@ type MockLdapAPI_DeleteMapping1Execute_Call struct {
 
 // DeleteMapping1Execute is a helper method to define mock.On call
 //   - r client.ApiDeleteMapping1Request
-func (_e *MockLdapAPI_Expecter) DeleteMapping1Execute(r interface{}) *MockLdapAPI_DeleteMapping1Execute_Call {
+func (_e *MockLdapAPI_Expecter) DeleteMapping1Execute(r any) *MockLdapAPI_DeleteMapping1Execute_Call {
 	return &MockLdapAPI_DeleteMapping1Execute_Call{Call: _e.mock.On("DeleteMapping1Execute", r)}
 }
 
@@ -6130,7 +6256,7 @@ type MockLdapAPI_RetrieveLdapGroups_Call struct {
 
 // RetrieveLdapGroups is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockLdapAPI_Expecter) RetrieveLdapGroups(ctx interface{}) *MockLdapAPI_RetrieveLdapGroups_Call {
+func (_e *MockLdapAPI_Expecter) RetrieveLdapGroups(ctx any) *MockLdapAPI_RetrieveLdapGroups_Call {
 	return &MockLdapAPI_RetrieveLdapGroups_Call{Call: _e.mock.On("RetrieveLdapGroups", ctx)}
 }
 
@@ -6182,7 +6308,7 @@ type MockLdapAPI_RetrieveLdapGroups1_Call struct {
 // RetrieveLdapGroups1 is a helper method to define mock.On call
 //   - ctx context.Context
 //   - uuid string
-func (_e *MockLdapAPI_Expecter) RetrieveLdapGroups1(ctx interface{}, uuid interface{}) *MockLdapAPI_RetrieveLdapGroups1_Call {
+func (_e *MockLdapAPI_Expecter) RetrieveLdapGroups1(ctx any, uuid any) *MockLdapAPI_RetrieveLdapGroups1_Call {
 	return &MockLdapAPI_RetrieveLdapGroups1_Call{Call: _e.mock.On("RetrieveLdapGroups1", ctx, uuid)}
 }
 
@@ -6257,7 +6383,7 @@ type MockLdapAPI_RetrieveLdapGroups1Execute_Call struct {
 
 // RetrieveLdapGroups1Execute is a helper method to define mock.On call
 //   - r client.ApiRetrieveLdapGroups1Request
-func (_e *MockLdapAPI_Expecter) RetrieveLdapGroups1Execute(r interface{}) *MockLdapAPI_RetrieveLdapGroups1Execute_Call {
+func (_e *MockLdapAPI_Expecter) RetrieveLdapGroups1Execute(r any) *MockLdapAPI_RetrieveLdapGroups1Execute_Call {
 	return &MockLdapAPI_RetrieveLdapGroups1Execute_Call{Call: _e.mock.On("RetrieveLdapGroups1Execute", r)}
 }
 
@@ -6327,7 +6453,7 @@ type MockLdapAPI_RetrieveLdapGroupsExecute_Call struct {
 
 // RetrieveLdapGroupsExecute is a helper method to define mock.On call
 //   - r client.ApiRetrieveLdapGroupsRequest
-func (_e *MockLdapAPI_Expecter) RetrieveLdapGroupsExecute(r interface{}) *MockLdapAPI_RetrieveLdapGroupsExecute_Call {
+func (_e *MockLdapAPI_Expecter) RetrieveLdapGroupsExecute(r any) *MockLdapAPI_RetrieveLdapGroupsExecute_Call {
 	return &MockLdapAPI_RetrieveLdapGroupsExecute_Call{Call: _e.mock.On("RetrieveLdapGroupsExecute", r)}
 }
 
@@ -6361,10 +6487,19 @@ func NewMockLicenseAPI(t interface {
 	Cleanup(func())
 },
 ) *MockLicenseAPI {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &MockLicenseAPI{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }
@@ -6406,7 +6541,7 @@ type MockLicenseAPI_CreateLicense_Call struct {
 
 // CreateLicense is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockLicenseAPI_Expecter) CreateLicense(ctx interface{}) *MockLicenseAPI_CreateLicense_Call {
+func (_e *MockLicenseAPI_Expecter) CreateLicense(ctx any) *MockLicenseAPI_CreateLicense_Call {
 	return &MockLicenseAPI_CreateLicense_Call{Call: _e.mock.On("CreateLicense", ctx)}
 }
 
@@ -6476,7 +6611,7 @@ type MockLicenseAPI_CreateLicenseExecute_Call struct {
 
 // CreateLicenseExecute is a helper method to define mock.On call
 //   - r client.ApiCreateLicenseRequest
-func (_e *MockLicenseAPI_Expecter) CreateLicenseExecute(r interface{}) *MockLicenseAPI_CreateLicenseExecute_Call {
+func (_e *MockLicenseAPI_Expecter) CreateLicenseExecute(r any) *MockLicenseAPI_CreateLicenseExecute_Call {
 	return &MockLicenseAPI_CreateLicenseExecute_Call{Call: _e.mock.On("CreateLicenseExecute", r)}
 }
 
@@ -6528,7 +6663,7 @@ type MockLicenseAPI_DeleteLicense_Call struct {
 // DeleteLicense is a helper method to define mock.On call
 //   - ctx context.Context
 //   - licenseId string
-func (_e *MockLicenseAPI_Expecter) DeleteLicense(ctx interface{}, licenseId interface{}) *MockLicenseAPI_DeleteLicense_Call {
+func (_e *MockLicenseAPI_Expecter) DeleteLicense(ctx any, licenseId any) *MockLicenseAPI_DeleteLicense_Call {
 	return &MockLicenseAPI_DeleteLicense_Call{Call: _e.mock.On("DeleteLicense", ctx, licenseId)}
 }
 
@@ -6595,7 +6730,7 @@ type MockLicenseAPI_DeleteLicenseExecute_Call struct {
 
 // DeleteLicenseExecute is a helper method to define mock.On call
 //   - r client.ApiDeleteLicenseRequest
-func (_e *MockLicenseAPI_Expecter) DeleteLicenseExecute(r interface{}) *MockLicenseAPI_DeleteLicenseExecute_Call {
+func (_e *MockLicenseAPI_Expecter) DeleteLicenseExecute(r any) *MockLicenseAPI_DeleteLicenseExecute_Call {
 	return &MockLicenseAPI_DeleteLicenseExecute_Call{Call: _e.mock.On("DeleteLicenseExecute", r)}
 }
 
@@ -6647,7 +6782,7 @@ type MockLicenseAPI_GetLicense_Call struct {
 // GetLicense is a helper method to define mock.On call
 //   - ctx context.Context
 //   - licenseId string
-func (_e *MockLicenseAPI_Expecter) GetLicense(ctx interface{}, licenseId interface{}) *MockLicenseAPI_GetLicense_Call {
+func (_e *MockLicenseAPI_Expecter) GetLicense(ctx any, licenseId any) *MockLicenseAPI_GetLicense_Call {
 	return &MockLicenseAPI_GetLicense_Call{Call: _e.mock.On("GetLicense", ctx, licenseId)}
 }
 
@@ -6722,7 +6857,7 @@ type MockLicenseAPI_GetLicenseExecute_Call struct {
 
 // GetLicenseExecute is a helper method to define mock.On call
 //   - r client.ApiGetLicenseRequest
-func (_e *MockLicenseAPI_Expecter) GetLicenseExecute(r interface{}) *MockLicenseAPI_GetLicenseExecute_Call {
+func (_e *MockLicenseAPI_Expecter) GetLicenseExecute(r any) *MockLicenseAPI_GetLicenseExecute_Call {
 	return &MockLicenseAPI_GetLicenseExecute_Call{Call: _e.mock.On("GetLicenseExecute", r)}
 }
 
@@ -6773,7 +6908,7 @@ type MockLicenseAPI_GetLicenseListing_Call struct {
 
 // GetLicenseListing is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockLicenseAPI_Expecter) GetLicenseListing(ctx interface{}) *MockLicenseAPI_GetLicenseListing_Call {
+func (_e *MockLicenseAPI_Expecter) GetLicenseListing(ctx any) *MockLicenseAPI_GetLicenseListing_Call {
 	return &MockLicenseAPI_GetLicenseListing_Call{Call: _e.mock.On("GetLicenseListing", ctx)}
 }
 
@@ -6843,7 +6978,7 @@ type MockLicenseAPI_GetLicenseListingExecute_Call struct {
 
 // GetLicenseListingExecute is a helper method to define mock.On call
 //   - r client.ApiGetLicenseListingRequest
-func (_e *MockLicenseAPI_Expecter) GetLicenseListingExecute(r interface{}) *MockLicenseAPI_GetLicenseListingExecute_Call {
+func (_e *MockLicenseAPI_Expecter) GetLicenseListingExecute(r any) *MockLicenseAPI_GetLicenseListingExecute_Call {
 	return &MockLicenseAPI_GetLicenseListingExecute_Call{Call: _e.mock.On("GetLicenseListingExecute", r)}
 }
 
@@ -6894,7 +7029,7 @@ type MockLicenseAPI_GetLicenses_Call struct {
 
 // GetLicenses is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockLicenseAPI_Expecter) GetLicenses(ctx interface{}) *MockLicenseAPI_GetLicenses_Call {
+func (_e *MockLicenseAPI_Expecter) GetLicenses(ctx any) *MockLicenseAPI_GetLicenses_Call {
 	return &MockLicenseAPI_GetLicenses_Call{Call: _e.mock.On("GetLicenses", ctx)}
 }
 
@@ -6964,7 +7099,7 @@ type MockLicenseAPI_GetLicensesExecute_Call struct {
 
 // GetLicensesExecute is a helper method to define mock.On call
 //   - r client.ApiGetLicensesRequest
-func (_e *MockLicenseAPI_Expecter) GetLicensesExecute(r interface{}) *MockLicenseAPI_GetLicensesExecute_Call {
+func (_e *MockLicenseAPI_Expecter) GetLicensesExecute(r any) *MockLicenseAPI_GetLicensesExecute_Call {
 	return &MockLicenseAPI_GetLicensesExecute_Call{Call: _e.mock.On("GetLicensesExecute", r)}
 }
 
@@ -6998,10 +7133,19 @@ func NewMockLicenseGroupAPI(t interface {
 	Cleanup(func())
 },
 ) *MockLicenseGroupAPI {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &MockLicenseGroupAPI{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }
@@ -7045,7 +7189,7 @@ type MockLicenseGroupAPI_AddLicenseToLicenseGroup_Call struct {
 //   - ctx context.Context
 //   - uuid string
 //   - licenseUuid string
-func (_e *MockLicenseGroupAPI_Expecter) AddLicenseToLicenseGroup(ctx interface{}, uuid interface{}, licenseUuid interface{}) *MockLicenseGroupAPI_AddLicenseToLicenseGroup_Call {
+func (_e *MockLicenseGroupAPI_Expecter) AddLicenseToLicenseGroup(ctx any, uuid any, licenseUuid any) *MockLicenseGroupAPI_AddLicenseToLicenseGroup_Call {
 	return &MockLicenseGroupAPI_AddLicenseToLicenseGroup_Call{Call: _e.mock.On("AddLicenseToLicenseGroup", ctx, uuid, licenseUuid)}
 }
 
@@ -7125,7 +7269,7 @@ type MockLicenseGroupAPI_AddLicenseToLicenseGroupExecute_Call struct {
 
 // AddLicenseToLicenseGroupExecute is a helper method to define mock.On call
 //   - r client.ApiAddLicenseToLicenseGroupRequest
-func (_e *MockLicenseGroupAPI_Expecter) AddLicenseToLicenseGroupExecute(r interface{}) *MockLicenseGroupAPI_AddLicenseToLicenseGroupExecute_Call {
+func (_e *MockLicenseGroupAPI_Expecter) AddLicenseToLicenseGroupExecute(r any) *MockLicenseGroupAPI_AddLicenseToLicenseGroupExecute_Call {
 	return &MockLicenseGroupAPI_AddLicenseToLicenseGroupExecute_Call{Call: _e.mock.On("AddLicenseToLicenseGroupExecute", r)}
 }
 
@@ -7176,7 +7320,7 @@ type MockLicenseGroupAPI_CreateLicenseGroup_Call struct {
 
 // CreateLicenseGroup is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockLicenseGroupAPI_Expecter) CreateLicenseGroup(ctx interface{}) *MockLicenseGroupAPI_CreateLicenseGroup_Call {
+func (_e *MockLicenseGroupAPI_Expecter) CreateLicenseGroup(ctx any) *MockLicenseGroupAPI_CreateLicenseGroup_Call {
 	return &MockLicenseGroupAPI_CreateLicenseGroup_Call{Call: _e.mock.On("CreateLicenseGroup", ctx)}
 }
 
@@ -7246,7 +7390,7 @@ type MockLicenseGroupAPI_CreateLicenseGroupExecute_Call struct {
 
 // CreateLicenseGroupExecute is a helper method to define mock.On call
 //   - r client.ApiCreateLicenseGroupRequest
-func (_e *MockLicenseGroupAPI_Expecter) CreateLicenseGroupExecute(r interface{}) *MockLicenseGroupAPI_CreateLicenseGroupExecute_Call {
+func (_e *MockLicenseGroupAPI_Expecter) CreateLicenseGroupExecute(r any) *MockLicenseGroupAPI_CreateLicenseGroupExecute_Call {
 	return &MockLicenseGroupAPI_CreateLicenseGroupExecute_Call{Call: _e.mock.On("CreateLicenseGroupExecute", r)}
 }
 
@@ -7298,7 +7442,7 @@ type MockLicenseGroupAPI_DeleteLicenseGroup_Call struct {
 // DeleteLicenseGroup is a helper method to define mock.On call
 //   - ctx context.Context
 //   - uuid string
-func (_e *MockLicenseGroupAPI_Expecter) DeleteLicenseGroup(ctx interface{}, uuid interface{}) *MockLicenseGroupAPI_DeleteLicenseGroup_Call {
+func (_e *MockLicenseGroupAPI_Expecter) DeleteLicenseGroup(ctx any, uuid any) *MockLicenseGroupAPI_DeleteLicenseGroup_Call {
 	return &MockLicenseGroupAPI_DeleteLicenseGroup_Call{Call: _e.mock.On("DeleteLicenseGroup", ctx, uuid)}
 }
 
@@ -7365,7 +7509,7 @@ type MockLicenseGroupAPI_DeleteLicenseGroupExecute_Call struct {
 
 // DeleteLicenseGroupExecute is a helper method to define mock.On call
 //   - r client.ApiDeleteLicenseGroupRequest
-func (_e *MockLicenseGroupAPI_Expecter) DeleteLicenseGroupExecute(r interface{}) *MockLicenseGroupAPI_DeleteLicenseGroupExecute_Call {
+func (_e *MockLicenseGroupAPI_Expecter) DeleteLicenseGroupExecute(r any) *MockLicenseGroupAPI_DeleteLicenseGroupExecute_Call {
 	return &MockLicenseGroupAPI_DeleteLicenseGroupExecute_Call{Call: _e.mock.On("DeleteLicenseGroupExecute", r)}
 }
 
@@ -7417,7 +7561,7 @@ type MockLicenseGroupAPI_GetLicenseGroup_Call struct {
 // GetLicenseGroup is a helper method to define mock.On call
 //   - ctx context.Context
 //   - uuid string
-func (_e *MockLicenseGroupAPI_Expecter) GetLicenseGroup(ctx interface{}, uuid interface{}) *MockLicenseGroupAPI_GetLicenseGroup_Call {
+func (_e *MockLicenseGroupAPI_Expecter) GetLicenseGroup(ctx any, uuid any) *MockLicenseGroupAPI_GetLicenseGroup_Call {
 	return &MockLicenseGroupAPI_GetLicenseGroup_Call{Call: _e.mock.On("GetLicenseGroup", ctx, uuid)}
 }
 
@@ -7492,7 +7636,7 @@ type MockLicenseGroupAPI_GetLicenseGroupExecute_Call struct {
 
 // GetLicenseGroupExecute is a helper method to define mock.On call
 //   - r client.ApiGetLicenseGroupRequest
-func (_e *MockLicenseGroupAPI_Expecter) GetLicenseGroupExecute(r interface{}) *MockLicenseGroupAPI_GetLicenseGroupExecute_Call {
+func (_e *MockLicenseGroupAPI_Expecter) GetLicenseGroupExecute(r any) *MockLicenseGroupAPI_GetLicenseGroupExecute_Call {
 	return &MockLicenseGroupAPI_GetLicenseGroupExecute_Call{Call: _e.mock.On("GetLicenseGroupExecute", r)}
 }
 
@@ -7543,7 +7687,7 @@ type MockLicenseGroupAPI_GetLicenseGroups_Call struct {
 
 // GetLicenseGroups is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockLicenseGroupAPI_Expecter) GetLicenseGroups(ctx interface{}) *MockLicenseGroupAPI_GetLicenseGroups_Call {
+func (_e *MockLicenseGroupAPI_Expecter) GetLicenseGroups(ctx any) *MockLicenseGroupAPI_GetLicenseGroups_Call {
 	return &MockLicenseGroupAPI_GetLicenseGroups_Call{Call: _e.mock.On("GetLicenseGroups", ctx)}
 }
 
@@ -7613,7 +7757,7 @@ type MockLicenseGroupAPI_GetLicenseGroupsExecute_Call struct {
 
 // GetLicenseGroupsExecute is a helper method to define mock.On call
 //   - r client.ApiGetLicenseGroupsRequest
-func (_e *MockLicenseGroupAPI_Expecter) GetLicenseGroupsExecute(r interface{}) *MockLicenseGroupAPI_GetLicenseGroupsExecute_Call {
+func (_e *MockLicenseGroupAPI_Expecter) GetLicenseGroupsExecute(r any) *MockLicenseGroupAPI_GetLicenseGroupsExecute_Call {
 	return &MockLicenseGroupAPI_GetLicenseGroupsExecute_Call{Call: _e.mock.On("GetLicenseGroupsExecute", r)}
 }
 
@@ -7666,7 +7810,7 @@ type MockLicenseGroupAPI_RemoveLicenseFromLicenseGroup_Call struct {
 //   - ctx context.Context
 //   - uuid string
 //   - licenseUuid string
-func (_e *MockLicenseGroupAPI_Expecter) RemoveLicenseFromLicenseGroup(ctx interface{}, uuid interface{}, licenseUuid interface{}) *MockLicenseGroupAPI_RemoveLicenseFromLicenseGroup_Call {
+func (_e *MockLicenseGroupAPI_Expecter) RemoveLicenseFromLicenseGroup(ctx any, uuid any, licenseUuid any) *MockLicenseGroupAPI_RemoveLicenseFromLicenseGroup_Call {
 	return &MockLicenseGroupAPI_RemoveLicenseFromLicenseGroup_Call{Call: _e.mock.On("RemoveLicenseFromLicenseGroup", ctx, uuid, licenseUuid)}
 }
 
@@ -7746,7 +7890,7 @@ type MockLicenseGroupAPI_RemoveLicenseFromLicenseGroupExecute_Call struct {
 
 // RemoveLicenseFromLicenseGroupExecute is a helper method to define mock.On call
 //   - r client.ApiRemoveLicenseFromLicenseGroupRequest
-func (_e *MockLicenseGroupAPI_Expecter) RemoveLicenseFromLicenseGroupExecute(r interface{}) *MockLicenseGroupAPI_RemoveLicenseFromLicenseGroupExecute_Call {
+func (_e *MockLicenseGroupAPI_Expecter) RemoveLicenseFromLicenseGroupExecute(r any) *MockLicenseGroupAPI_RemoveLicenseFromLicenseGroupExecute_Call {
 	return &MockLicenseGroupAPI_RemoveLicenseFromLicenseGroupExecute_Call{Call: _e.mock.On("RemoveLicenseFromLicenseGroupExecute", r)}
 }
 
@@ -7797,7 +7941,7 @@ type MockLicenseGroupAPI_UpdateLicenseGroup_Call struct {
 
 // UpdateLicenseGroup is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockLicenseGroupAPI_Expecter) UpdateLicenseGroup(ctx interface{}) *MockLicenseGroupAPI_UpdateLicenseGroup_Call {
+func (_e *MockLicenseGroupAPI_Expecter) UpdateLicenseGroup(ctx any) *MockLicenseGroupAPI_UpdateLicenseGroup_Call {
 	return &MockLicenseGroupAPI_UpdateLicenseGroup_Call{Call: _e.mock.On("UpdateLicenseGroup", ctx)}
 }
 
@@ -7867,7 +8011,7 @@ type MockLicenseGroupAPI_UpdateLicenseGroupExecute_Call struct {
 
 // UpdateLicenseGroupExecute is a helper method to define mock.On call
 //   - r client.ApiUpdateLicenseGroupRequest
-func (_e *MockLicenseGroupAPI_Expecter) UpdateLicenseGroupExecute(r interface{}) *MockLicenseGroupAPI_UpdateLicenseGroupExecute_Call {
+func (_e *MockLicenseGroupAPI_Expecter) UpdateLicenseGroupExecute(r any) *MockLicenseGroupAPI_UpdateLicenseGroupExecute_Call {
 	return &MockLicenseGroupAPI_UpdateLicenseGroupExecute_Call{Call: _e.mock.On("UpdateLicenseGroupExecute", r)}
 }
 
@@ -7901,10 +8045,19 @@ func NewMockMetricsAPI(t interface {
 	Cleanup(func())
 },
 ) *MockMetricsAPI {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &MockMetricsAPI{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }
@@ -7947,7 +8100,7 @@ type MockMetricsAPI_GetComponentCurrentMetrics_Call struct {
 // GetComponentCurrentMetrics is a helper method to define mock.On call
 //   - ctx context.Context
 //   - uuid string
-func (_e *MockMetricsAPI_Expecter) GetComponentCurrentMetrics(ctx interface{}, uuid interface{}) *MockMetricsAPI_GetComponentCurrentMetrics_Call {
+func (_e *MockMetricsAPI_Expecter) GetComponentCurrentMetrics(ctx any, uuid any) *MockMetricsAPI_GetComponentCurrentMetrics_Call {
 	return &MockMetricsAPI_GetComponentCurrentMetrics_Call{Call: _e.mock.On("GetComponentCurrentMetrics", ctx, uuid)}
 }
 
@@ -8022,7 +8175,7 @@ type MockMetricsAPI_GetComponentCurrentMetricsExecute_Call struct {
 
 // GetComponentCurrentMetricsExecute is a helper method to define mock.On call
 //   - r client.ApiGetComponentCurrentMetricsRequest
-func (_e *MockMetricsAPI_Expecter) GetComponentCurrentMetricsExecute(r interface{}) *MockMetricsAPI_GetComponentCurrentMetricsExecute_Call {
+func (_e *MockMetricsAPI_Expecter) GetComponentCurrentMetricsExecute(r any) *MockMetricsAPI_GetComponentCurrentMetricsExecute_Call {
 	return &MockMetricsAPI_GetComponentCurrentMetricsExecute_Call{Call: _e.mock.On("GetComponentCurrentMetricsExecute", r)}
 }
 
@@ -8075,7 +8228,7 @@ type MockMetricsAPI_GetComponentMetricsSince_Call struct {
 //   - ctx context.Context
 //   - uuid string
 //   - date string
-func (_e *MockMetricsAPI_Expecter) GetComponentMetricsSince(ctx interface{}, uuid interface{}, date interface{}) *MockMetricsAPI_GetComponentMetricsSince_Call {
+func (_e *MockMetricsAPI_Expecter) GetComponentMetricsSince(ctx any, uuid any, date any) *MockMetricsAPI_GetComponentMetricsSince_Call {
 	return &MockMetricsAPI_GetComponentMetricsSince_Call{Call: _e.mock.On("GetComponentMetricsSince", ctx, uuid, date)}
 }
 
@@ -8155,7 +8308,7 @@ type MockMetricsAPI_GetComponentMetricsSinceExecute_Call struct {
 
 // GetComponentMetricsSinceExecute is a helper method to define mock.On call
 //   - r client.ApiGetComponentMetricsSinceRequest
-func (_e *MockMetricsAPI_Expecter) GetComponentMetricsSinceExecute(r interface{}) *MockMetricsAPI_GetComponentMetricsSinceExecute_Call {
+func (_e *MockMetricsAPI_Expecter) GetComponentMetricsSinceExecute(r any) *MockMetricsAPI_GetComponentMetricsSinceExecute_Call {
 	return &MockMetricsAPI_GetComponentMetricsSinceExecute_Call{Call: _e.mock.On("GetComponentMetricsSinceExecute", r)}
 }
 
@@ -8208,7 +8361,7 @@ type MockMetricsAPI_GetComponentMetricsXDays_Call struct {
 //   - ctx context.Context
 //   - uuid string
 //   - days int32
-func (_e *MockMetricsAPI_Expecter) GetComponentMetricsXDays(ctx interface{}, uuid interface{}, days interface{}) *MockMetricsAPI_GetComponentMetricsXDays_Call {
+func (_e *MockMetricsAPI_Expecter) GetComponentMetricsXDays(ctx any, uuid any, days any) *MockMetricsAPI_GetComponentMetricsXDays_Call {
 	return &MockMetricsAPI_GetComponentMetricsXDays_Call{Call: _e.mock.On("GetComponentMetricsXDays", ctx, uuid, days)}
 }
 
@@ -8288,7 +8441,7 @@ type MockMetricsAPI_GetComponentMetricsXDaysExecute_Call struct {
 
 // GetComponentMetricsXDaysExecute is a helper method to define mock.On call
 //   - r client.ApiGetComponentMetricsXDaysRequest
-func (_e *MockMetricsAPI_Expecter) GetComponentMetricsXDaysExecute(r interface{}) *MockMetricsAPI_GetComponentMetricsXDaysExecute_Call {
+func (_e *MockMetricsAPI_Expecter) GetComponentMetricsXDaysExecute(r any) *MockMetricsAPI_GetComponentMetricsXDaysExecute_Call {
 	return &MockMetricsAPI_GetComponentMetricsXDaysExecute_Call{Call: _e.mock.On("GetComponentMetricsXDaysExecute", r)}
 }
 
@@ -8339,7 +8492,7 @@ type MockMetricsAPI_GetPortfolioCurrentMetrics_Call struct {
 
 // GetPortfolioCurrentMetrics is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockMetricsAPI_Expecter) GetPortfolioCurrentMetrics(ctx interface{}) *MockMetricsAPI_GetPortfolioCurrentMetrics_Call {
+func (_e *MockMetricsAPI_Expecter) GetPortfolioCurrentMetrics(ctx any) *MockMetricsAPI_GetPortfolioCurrentMetrics_Call {
 	return &MockMetricsAPI_GetPortfolioCurrentMetrics_Call{Call: _e.mock.On("GetPortfolioCurrentMetrics", ctx)}
 }
 
@@ -8409,7 +8562,7 @@ type MockMetricsAPI_GetPortfolioCurrentMetricsExecute_Call struct {
 
 // GetPortfolioCurrentMetricsExecute is a helper method to define mock.On call
 //   - r client.ApiGetPortfolioCurrentMetricsRequest
-func (_e *MockMetricsAPI_Expecter) GetPortfolioCurrentMetricsExecute(r interface{}) *MockMetricsAPI_GetPortfolioCurrentMetricsExecute_Call {
+func (_e *MockMetricsAPI_Expecter) GetPortfolioCurrentMetricsExecute(r any) *MockMetricsAPI_GetPortfolioCurrentMetricsExecute_Call {
 	return &MockMetricsAPI_GetPortfolioCurrentMetricsExecute_Call{Call: _e.mock.On("GetPortfolioCurrentMetricsExecute", r)}
 }
 
@@ -8461,7 +8614,7 @@ type MockMetricsAPI_GetPortfolioMetricsSince_Call struct {
 // GetPortfolioMetricsSince is a helper method to define mock.On call
 //   - ctx context.Context
 //   - date string
-func (_e *MockMetricsAPI_Expecter) GetPortfolioMetricsSince(ctx interface{}, date interface{}) *MockMetricsAPI_GetPortfolioMetricsSince_Call {
+func (_e *MockMetricsAPI_Expecter) GetPortfolioMetricsSince(ctx any, date any) *MockMetricsAPI_GetPortfolioMetricsSince_Call {
 	return &MockMetricsAPI_GetPortfolioMetricsSince_Call{Call: _e.mock.On("GetPortfolioMetricsSince", ctx, date)}
 }
 
@@ -8536,7 +8689,7 @@ type MockMetricsAPI_GetPortfolioMetricsSinceExecute_Call struct {
 
 // GetPortfolioMetricsSinceExecute is a helper method to define mock.On call
 //   - r client.ApiGetPortfolioMetricsSinceRequest
-func (_e *MockMetricsAPI_Expecter) GetPortfolioMetricsSinceExecute(r interface{}) *MockMetricsAPI_GetPortfolioMetricsSinceExecute_Call {
+func (_e *MockMetricsAPI_Expecter) GetPortfolioMetricsSinceExecute(r any) *MockMetricsAPI_GetPortfolioMetricsSinceExecute_Call {
 	return &MockMetricsAPI_GetPortfolioMetricsSinceExecute_Call{Call: _e.mock.On("GetPortfolioMetricsSinceExecute", r)}
 }
 
@@ -8588,7 +8741,7 @@ type MockMetricsAPI_GetPortfolioMetricsXDays_Call struct {
 // GetPortfolioMetricsXDays is a helper method to define mock.On call
 //   - ctx context.Context
 //   - days int32
-func (_e *MockMetricsAPI_Expecter) GetPortfolioMetricsXDays(ctx interface{}, days interface{}) *MockMetricsAPI_GetPortfolioMetricsXDays_Call {
+func (_e *MockMetricsAPI_Expecter) GetPortfolioMetricsXDays(ctx any, days any) *MockMetricsAPI_GetPortfolioMetricsXDays_Call {
 	return &MockMetricsAPI_GetPortfolioMetricsXDays_Call{Call: _e.mock.On("GetPortfolioMetricsXDays", ctx, days)}
 }
 
@@ -8663,7 +8816,7 @@ type MockMetricsAPI_GetPortfolioMetricsXDaysExecute_Call struct {
 
 // GetPortfolioMetricsXDaysExecute is a helper method to define mock.On call
 //   - r client.ApiGetPortfolioMetricsXDaysRequest
-func (_e *MockMetricsAPI_Expecter) GetPortfolioMetricsXDaysExecute(r interface{}) *MockMetricsAPI_GetPortfolioMetricsXDaysExecute_Call {
+func (_e *MockMetricsAPI_Expecter) GetPortfolioMetricsXDaysExecute(r any) *MockMetricsAPI_GetPortfolioMetricsXDaysExecute_Call {
 	return &MockMetricsAPI_GetPortfolioMetricsXDaysExecute_Call{Call: _e.mock.On("GetPortfolioMetricsXDaysExecute", r)}
 }
 
@@ -8715,7 +8868,7 @@ type MockMetricsAPI_GetProjectCurrentMetrics_Call struct {
 // GetProjectCurrentMetrics is a helper method to define mock.On call
 //   - ctx context.Context
 //   - uuid string
-func (_e *MockMetricsAPI_Expecter) GetProjectCurrentMetrics(ctx interface{}, uuid interface{}) *MockMetricsAPI_GetProjectCurrentMetrics_Call {
+func (_e *MockMetricsAPI_Expecter) GetProjectCurrentMetrics(ctx any, uuid any) *MockMetricsAPI_GetProjectCurrentMetrics_Call {
 	return &MockMetricsAPI_GetProjectCurrentMetrics_Call{Call: _e.mock.On("GetProjectCurrentMetrics", ctx, uuid)}
 }
 
@@ -8790,7 +8943,7 @@ type MockMetricsAPI_GetProjectCurrentMetricsExecute_Call struct {
 
 // GetProjectCurrentMetricsExecute is a helper method to define mock.On call
 //   - r client.ApiGetProjectCurrentMetricsRequest
-func (_e *MockMetricsAPI_Expecter) GetProjectCurrentMetricsExecute(r interface{}) *MockMetricsAPI_GetProjectCurrentMetricsExecute_Call {
+func (_e *MockMetricsAPI_Expecter) GetProjectCurrentMetricsExecute(r any) *MockMetricsAPI_GetProjectCurrentMetricsExecute_Call {
 	return &MockMetricsAPI_GetProjectCurrentMetricsExecute_Call{Call: _e.mock.On("GetProjectCurrentMetricsExecute", r)}
 }
 
@@ -8843,7 +8996,7 @@ type MockMetricsAPI_GetProjectMetricsSince_Call struct {
 //   - ctx context.Context
 //   - uuid string
 //   - date string
-func (_e *MockMetricsAPI_Expecter) GetProjectMetricsSince(ctx interface{}, uuid interface{}, date interface{}) *MockMetricsAPI_GetProjectMetricsSince_Call {
+func (_e *MockMetricsAPI_Expecter) GetProjectMetricsSince(ctx any, uuid any, date any) *MockMetricsAPI_GetProjectMetricsSince_Call {
 	return &MockMetricsAPI_GetProjectMetricsSince_Call{Call: _e.mock.On("GetProjectMetricsSince", ctx, uuid, date)}
 }
 
@@ -8923,7 +9076,7 @@ type MockMetricsAPI_GetProjectMetricsSinceExecute_Call struct {
 
 // GetProjectMetricsSinceExecute is a helper method to define mock.On call
 //   - r client.ApiGetProjectMetricsSinceRequest
-func (_e *MockMetricsAPI_Expecter) GetProjectMetricsSinceExecute(r interface{}) *MockMetricsAPI_GetProjectMetricsSinceExecute_Call {
+func (_e *MockMetricsAPI_Expecter) GetProjectMetricsSinceExecute(r any) *MockMetricsAPI_GetProjectMetricsSinceExecute_Call {
 	return &MockMetricsAPI_GetProjectMetricsSinceExecute_Call{Call: _e.mock.On("GetProjectMetricsSinceExecute", r)}
 }
 
@@ -8976,7 +9129,7 @@ type MockMetricsAPI_GetProjectMetricsXDays_Call struct {
 //   - ctx context.Context
 //   - uuid string
 //   - days int32
-func (_e *MockMetricsAPI_Expecter) GetProjectMetricsXDays(ctx interface{}, uuid interface{}, days interface{}) *MockMetricsAPI_GetProjectMetricsXDays_Call {
+func (_e *MockMetricsAPI_Expecter) GetProjectMetricsXDays(ctx any, uuid any, days any) *MockMetricsAPI_GetProjectMetricsXDays_Call {
 	return &MockMetricsAPI_GetProjectMetricsXDays_Call{Call: _e.mock.On("GetProjectMetricsXDays", ctx, uuid, days)}
 }
 
@@ -9056,7 +9209,7 @@ type MockMetricsAPI_GetProjectMetricsXDaysExecute_Call struct {
 
 // GetProjectMetricsXDaysExecute is a helper method to define mock.On call
 //   - r client.ApiGetProjectMetricsXDaysRequest
-func (_e *MockMetricsAPI_Expecter) GetProjectMetricsXDaysExecute(r interface{}) *MockMetricsAPI_GetProjectMetricsXDaysExecute_Call {
+func (_e *MockMetricsAPI_Expecter) GetProjectMetricsXDaysExecute(r any) *MockMetricsAPI_GetProjectMetricsXDaysExecute_Call {
 	return &MockMetricsAPI_GetProjectMetricsXDaysExecute_Call{Call: _e.mock.On("GetProjectMetricsXDaysExecute", r)}
 }
 
@@ -9107,7 +9260,7 @@ type MockMetricsAPI_GetVulnerabilityMetrics_Call struct {
 
 // GetVulnerabilityMetrics is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockMetricsAPI_Expecter) GetVulnerabilityMetrics(ctx interface{}) *MockMetricsAPI_GetVulnerabilityMetrics_Call {
+func (_e *MockMetricsAPI_Expecter) GetVulnerabilityMetrics(ctx any) *MockMetricsAPI_GetVulnerabilityMetrics_Call {
 	return &MockMetricsAPI_GetVulnerabilityMetrics_Call{Call: _e.mock.On("GetVulnerabilityMetrics", ctx)}
 }
 
@@ -9177,7 +9330,7 @@ type MockMetricsAPI_GetVulnerabilityMetricsExecute_Call struct {
 
 // GetVulnerabilityMetricsExecute is a helper method to define mock.On call
 //   - r client.ApiGetVulnerabilityMetricsRequest
-func (_e *MockMetricsAPI_Expecter) GetVulnerabilityMetricsExecute(r interface{}) *MockMetricsAPI_GetVulnerabilityMetricsExecute_Call {
+func (_e *MockMetricsAPI_Expecter) GetVulnerabilityMetricsExecute(r any) *MockMetricsAPI_GetVulnerabilityMetricsExecute_Call {
 	return &MockMetricsAPI_GetVulnerabilityMetricsExecute_Call{Call: _e.mock.On("GetVulnerabilityMetricsExecute", r)}
 }
 
@@ -9229,7 +9382,7 @@ type MockMetricsAPI_RefreshComponentMetrics_Call struct {
 // RefreshComponentMetrics is a helper method to define mock.On call
 //   - ctx context.Context
 //   - uuid string
-func (_e *MockMetricsAPI_Expecter) RefreshComponentMetrics(ctx interface{}, uuid interface{}) *MockMetricsAPI_RefreshComponentMetrics_Call {
+func (_e *MockMetricsAPI_Expecter) RefreshComponentMetrics(ctx any, uuid any) *MockMetricsAPI_RefreshComponentMetrics_Call {
 	return &MockMetricsAPI_RefreshComponentMetrics_Call{Call: _e.mock.On("RefreshComponentMetrics", ctx, uuid)}
 }
 
@@ -9296,7 +9449,7 @@ type MockMetricsAPI_RefreshComponentMetricsExecute_Call struct {
 
 // RefreshComponentMetricsExecute is a helper method to define mock.On call
 //   - r client.ApiRefreshComponentMetricsRequest
-func (_e *MockMetricsAPI_Expecter) RefreshComponentMetricsExecute(r interface{}) *MockMetricsAPI_RefreshComponentMetricsExecute_Call {
+func (_e *MockMetricsAPI_Expecter) RefreshComponentMetricsExecute(r any) *MockMetricsAPI_RefreshComponentMetricsExecute_Call {
 	return &MockMetricsAPI_RefreshComponentMetricsExecute_Call{Call: _e.mock.On("RefreshComponentMetricsExecute", r)}
 }
 
@@ -9347,7 +9500,7 @@ type MockMetricsAPI_RefreshPortfolioMetrics_Call struct {
 
 // RefreshPortfolioMetrics is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockMetricsAPI_Expecter) RefreshPortfolioMetrics(ctx interface{}) *MockMetricsAPI_RefreshPortfolioMetrics_Call {
+func (_e *MockMetricsAPI_Expecter) RefreshPortfolioMetrics(ctx any) *MockMetricsAPI_RefreshPortfolioMetrics_Call {
 	return &MockMetricsAPI_RefreshPortfolioMetrics_Call{Call: _e.mock.On("RefreshPortfolioMetrics", ctx)}
 }
 
@@ -9409,7 +9562,7 @@ type MockMetricsAPI_RefreshPortfolioMetricsExecute_Call struct {
 
 // RefreshPortfolioMetricsExecute is a helper method to define mock.On call
 //   - r client.ApiRefreshPortfolioMetricsRequest
-func (_e *MockMetricsAPI_Expecter) RefreshPortfolioMetricsExecute(r interface{}) *MockMetricsAPI_RefreshPortfolioMetricsExecute_Call {
+func (_e *MockMetricsAPI_Expecter) RefreshPortfolioMetricsExecute(r any) *MockMetricsAPI_RefreshPortfolioMetricsExecute_Call {
 	return &MockMetricsAPI_RefreshPortfolioMetricsExecute_Call{Call: _e.mock.On("RefreshPortfolioMetricsExecute", r)}
 }
 
@@ -9461,7 +9614,7 @@ type MockMetricsAPI_RefreshProjectMetrics_Call struct {
 // RefreshProjectMetrics is a helper method to define mock.On call
 //   - ctx context.Context
 //   - uuid string
-func (_e *MockMetricsAPI_Expecter) RefreshProjectMetrics(ctx interface{}, uuid interface{}) *MockMetricsAPI_RefreshProjectMetrics_Call {
+func (_e *MockMetricsAPI_Expecter) RefreshProjectMetrics(ctx any, uuid any) *MockMetricsAPI_RefreshProjectMetrics_Call {
 	return &MockMetricsAPI_RefreshProjectMetrics_Call{Call: _e.mock.On("RefreshProjectMetrics", ctx, uuid)}
 }
 
@@ -9528,7 +9681,7 @@ type MockMetricsAPI_RefreshProjectMetricsExecute_Call struct {
 
 // RefreshProjectMetricsExecute is a helper method to define mock.On call
 //   - r client.ApiRefreshProjectMetricsRequest
-func (_e *MockMetricsAPI_Expecter) RefreshProjectMetricsExecute(r interface{}) *MockMetricsAPI_RefreshProjectMetricsExecute_Call {
+func (_e *MockMetricsAPI_Expecter) RefreshProjectMetricsExecute(r any) *MockMetricsAPI_RefreshProjectMetricsExecute_Call {
 	return &MockMetricsAPI_RefreshProjectMetricsExecute_Call{Call: _e.mock.On("RefreshProjectMetricsExecute", r)}
 }
 
@@ -9562,10 +9715,19 @@ func NewMockNotificationAPI(t interface {
 	Cleanup(func())
 },
 ) *MockNotificationAPI {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &MockNotificationAPI{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }
@@ -9609,7 +9771,7 @@ type MockNotificationAPI_AddProjectToRule_Call struct {
 //   - ctx context.Context
 //   - ruleUuid string
 //   - projectUuid string
-func (_e *MockNotificationAPI_Expecter) AddProjectToRule(ctx interface{}, ruleUuid interface{}, projectUuid interface{}) *MockNotificationAPI_AddProjectToRule_Call {
+func (_e *MockNotificationAPI_Expecter) AddProjectToRule(ctx any, ruleUuid any, projectUuid any) *MockNotificationAPI_AddProjectToRule_Call {
 	return &MockNotificationAPI_AddProjectToRule_Call{Call: _e.mock.On("AddProjectToRule", ctx, ruleUuid, projectUuid)}
 }
 
@@ -9689,7 +9851,7 @@ type MockNotificationAPI_AddProjectToRuleExecute_Call struct {
 
 // AddProjectToRuleExecute is a helper method to define mock.On call
 //   - r client.ApiAddProjectToRuleRequest
-func (_e *MockNotificationAPI_Expecter) AddProjectToRuleExecute(r interface{}) *MockNotificationAPI_AddProjectToRuleExecute_Call {
+func (_e *MockNotificationAPI_Expecter) AddProjectToRuleExecute(r any) *MockNotificationAPI_AddProjectToRuleExecute_Call {
 	return &MockNotificationAPI_AddProjectToRuleExecute_Call{Call: _e.mock.On("AddProjectToRuleExecute", r)}
 }
 
@@ -9742,7 +9904,7 @@ type MockNotificationAPI_AddTeamToRule_Call struct {
 //   - ctx context.Context
 //   - ruleUuid string
 //   - teamUuid string
-func (_e *MockNotificationAPI_Expecter) AddTeamToRule(ctx interface{}, ruleUuid interface{}, teamUuid interface{}) *MockNotificationAPI_AddTeamToRule_Call {
+func (_e *MockNotificationAPI_Expecter) AddTeamToRule(ctx any, ruleUuid any, teamUuid any) *MockNotificationAPI_AddTeamToRule_Call {
 	return &MockNotificationAPI_AddTeamToRule_Call{Call: _e.mock.On("AddTeamToRule", ctx, ruleUuid, teamUuid)}
 }
 
@@ -9822,7 +9984,7 @@ type MockNotificationAPI_AddTeamToRuleExecute_Call struct {
 
 // AddTeamToRuleExecute is a helper method to define mock.On call
 //   - r client.ApiAddTeamToRuleRequest
-func (_e *MockNotificationAPI_Expecter) AddTeamToRuleExecute(r interface{}) *MockNotificationAPI_AddTeamToRuleExecute_Call {
+func (_e *MockNotificationAPI_Expecter) AddTeamToRuleExecute(r any) *MockNotificationAPI_AddTeamToRuleExecute_Call {
 	return &MockNotificationAPI_AddTeamToRuleExecute_Call{Call: _e.mock.On("AddTeamToRuleExecute", r)}
 }
 
@@ -9873,7 +10035,7 @@ type MockNotificationAPI_CreateNotificationPublisher_Call struct {
 
 // CreateNotificationPublisher is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockNotificationAPI_Expecter) CreateNotificationPublisher(ctx interface{}) *MockNotificationAPI_CreateNotificationPublisher_Call {
+func (_e *MockNotificationAPI_Expecter) CreateNotificationPublisher(ctx any) *MockNotificationAPI_CreateNotificationPublisher_Call {
 	return &MockNotificationAPI_CreateNotificationPublisher_Call{Call: _e.mock.On("CreateNotificationPublisher", ctx)}
 }
 
@@ -9943,7 +10105,7 @@ type MockNotificationAPI_CreateNotificationPublisherExecute_Call struct {
 
 // CreateNotificationPublisherExecute is a helper method to define mock.On call
 //   - r client.ApiCreateNotificationPublisherRequest
-func (_e *MockNotificationAPI_Expecter) CreateNotificationPublisherExecute(r interface{}) *MockNotificationAPI_CreateNotificationPublisherExecute_Call {
+func (_e *MockNotificationAPI_Expecter) CreateNotificationPublisherExecute(r any) *MockNotificationAPI_CreateNotificationPublisherExecute_Call {
 	return &MockNotificationAPI_CreateNotificationPublisherExecute_Call{Call: _e.mock.On("CreateNotificationPublisherExecute", r)}
 }
 
@@ -9994,7 +10156,7 @@ type MockNotificationAPI_CreateNotificationRule_Call struct {
 
 // CreateNotificationRule is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockNotificationAPI_Expecter) CreateNotificationRule(ctx interface{}) *MockNotificationAPI_CreateNotificationRule_Call {
+func (_e *MockNotificationAPI_Expecter) CreateNotificationRule(ctx any) *MockNotificationAPI_CreateNotificationRule_Call {
 	return &MockNotificationAPI_CreateNotificationRule_Call{Call: _e.mock.On("CreateNotificationRule", ctx)}
 }
 
@@ -10064,7 +10226,7 @@ type MockNotificationAPI_CreateNotificationRuleExecute_Call struct {
 
 // CreateNotificationRuleExecute is a helper method to define mock.On call
 //   - r client.ApiCreateNotificationRuleRequest
-func (_e *MockNotificationAPI_Expecter) CreateNotificationRuleExecute(r interface{}) *MockNotificationAPI_CreateNotificationRuleExecute_Call {
+func (_e *MockNotificationAPI_Expecter) CreateNotificationRuleExecute(r any) *MockNotificationAPI_CreateNotificationRuleExecute_Call {
 	return &MockNotificationAPI_CreateNotificationRuleExecute_Call{Call: _e.mock.On("CreateNotificationRuleExecute", r)}
 }
 
@@ -10115,7 +10277,7 @@ type MockNotificationAPI_CreateScheduledNotificationRule_Call struct {
 
 // CreateScheduledNotificationRule is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockNotificationAPI_Expecter) CreateScheduledNotificationRule(ctx interface{}) *MockNotificationAPI_CreateScheduledNotificationRule_Call {
+func (_e *MockNotificationAPI_Expecter) CreateScheduledNotificationRule(ctx any) *MockNotificationAPI_CreateScheduledNotificationRule_Call {
 	return &MockNotificationAPI_CreateScheduledNotificationRule_Call{Call: _e.mock.On("CreateScheduledNotificationRule", ctx)}
 }
 
@@ -10185,7 +10347,7 @@ type MockNotificationAPI_CreateScheduledNotificationRuleExecute_Call struct {
 
 // CreateScheduledNotificationRuleExecute is a helper method to define mock.On call
 //   - r client.ApiCreateScheduledNotificationRuleRequest
-func (_e *MockNotificationAPI_Expecter) CreateScheduledNotificationRuleExecute(r interface{}) *MockNotificationAPI_CreateScheduledNotificationRuleExecute_Call {
+func (_e *MockNotificationAPI_Expecter) CreateScheduledNotificationRuleExecute(r any) *MockNotificationAPI_CreateScheduledNotificationRuleExecute_Call {
 	return &MockNotificationAPI_CreateScheduledNotificationRuleExecute_Call{Call: _e.mock.On("CreateScheduledNotificationRuleExecute", r)}
 }
 
@@ -10237,7 +10399,7 @@ type MockNotificationAPI_DeleteNotificationPublisher_Call struct {
 // DeleteNotificationPublisher is a helper method to define mock.On call
 //   - ctx context.Context
 //   - notificationPublisherUuid string
-func (_e *MockNotificationAPI_Expecter) DeleteNotificationPublisher(ctx interface{}, notificationPublisherUuid interface{}) *MockNotificationAPI_DeleteNotificationPublisher_Call {
+func (_e *MockNotificationAPI_Expecter) DeleteNotificationPublisher(ctx any, notificationPublisherUuid any) *MockNotificationAPI_DeleteNotificationPublisher_Call {
 	return &MockNotificationAPI_DeleteNotificationPublisher_Call{Call: _e.mock.On("DeleteNotificationPublisher", ctx, notificationPublisherUuid)}
 }
 
@@ -10304,7 +10466,7 @@ type MockNotificationAPI_DeleteNotificationPublisherExecute_Call struct {
 
 // DeleteNotificationPublisherExecute is a helper method to define mock.On call
 //   - r client.ApiDeleteNotificationPublisherRequest
-func (_e *MockNotificationAPI_Expecter) DeleteNotificationPublisherExecute(r interface{}) *MockNotificationAPI_DeleteNotificationPublisherExecute_Call {
+func (_e *MockNotificationAPI_Expecter) DeleteNotificationPublisherExecute(r any) *MockNotificationAPI_DeleteNotificationPublisherExecute_Call {
 	return &MockNotificationAPI_DeleteNotificationPublisherExecute_Call{Call: _e.mock.On("DeleteNotificationPublisherExecute", r)}
 }
 
@@ -10355,7 +10517,7 @@ type MockNotificationAPI_DeleteNotificationRule_Call struct {
 
 // DeleteNotificationRule is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockNotificationAPI_Expecter) DeleteNotificationRule(ctx interface{}) *MockNotificationAPI_DeleteNotificationRule_Call {
+func (_e *MockNotificationAPI_Expecter) DeleteNotificationRule(ctx any) *MockNotificationAPI_DeleteNotificationRule_Call {
 	return &MockNotificationAPI_DeleteNotificationRule_Call{Call: _e.mock.On("DeleteNotificationRule", ctx)}
 }
 
@@ -10417,7 +10579,7 @@ type MockNotificationAPI_DeleteNotificationRuleExecute_Call struct {
 
 // DeleteNotificationRuleExecute is a helper method to define mock.On call
 //   - r client.ApiDeleteNotificationRuleRequest
-func (_e *MockNotificationAPI_Expecter) DeleteNotificationRuleExecute(r interface{}) *MockNotificationAPI_DeleteNotificationRuleExecute_Call {
+func (_e *MockNotificationAPI_Expecter) DeleteNotificationRuleExecute(r any) *MockNotificationAPI_DeleteNotificationRuleExecute_Call {
 	return &MockNotificationAPI_DeleteNotificationRuleExecute_Call{Call: _e.mock.On("DeleteNotificationRuleExecute", r)}
 }
 
@@ -10468,7 +10630,7 @@ type MockNotificationAPI_GetAllNotificationPublishers_Call struct {
 
 // GetAllNotificationPublishers is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockNotificationAPI_Expecter) GetAllNotificationPublishers(ctx interface{}) *MockNotificationAPI_GetAllNotificationPublishers_Call {
+func (_e *MockNotificationAPI_Expecter) GetAllNotificationPublishers(ctx any) *MockNotificationAPI_GetAllNotificationPublishers_Call {
 	return &MockNotificationAPI_GetAllNotificationPublishers_Call{Call: _e.mock.On("GetAllNotificationPublishers", ctx)}
 }
 
@@ -10538,7 +10700,7 @@ type MockNotificationAPI_GetAllNotificationPublishersExecute_Call struct {
 
 // GetAllNotificationPublishersExecute is a helper method to define mock.On call
 //   - r client.ApiGetAllNotificationPublishersRequest
-func (_e *MockNotificationAPI_Expecter) GetAllNotificationPublishersExecute(r interface{}) *MockNotificationAPI_GetAllNotificationPublishersExecute_Call {
+func (_e *MockNotificationAPI_Expecter) GetAllNotificationPublishersExecute(r any) *MockNotificationAPI_GetAllNotificationPublishersExecute_Call {
 	return &MockNotificationAPI_GetAllNotificationPublishersExecute_Call{Call: _e.mock.On("GetAllNotificationPublishersExecute", r)}
 }
 
@@ -10589,7 +10751,7 @@ type MockNotificationAPI_GetAllNotificationRules_Call struct {
 
 // GetAllNotificationRules is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockNotificationAPI_Expecter) GetAllNotificationRules(ctx interface{}) *MockNotificationAPI_GetAllNotificationRules_Call {
+func (_e *MockNotificationAPI_Expecter) GetAllNotificationRules(ctx any) *MockNotificationAPI_GetAllNotificationRules_Call {
 	return &MockNotificationAPI_GetAllNotificationRules_Call{Call: _e.mock.On("GetAllNotificationRules", ctx)}
 }
 
@@ -10659,7 +10821,7 @@ type MockNotificationAPI_GetAllNotificationRulesExecute_Call struct {
 
 // GetAllNotificationRulesExecute is a helper method to define mock.On call
 //   - r client.ApiGetAllNotificationRulesRequest
-func (_e *MockNotificationAPI_Expecter) GetAllNotificationRulesExecute(r interface{}) *MockNotificationAPI_GetAllNotificationRulesExecute_Call {
+func (_e *MockNotificationAPI_Expecter) GetAllNotificationRulesExecute(r any) *MockNotificationAPI_GetAllNotificationRulesExecute_Call {
 	return &MockNotificationAPI_GetAllNotificationRulesExecute_Call{Call: _e.mock.On("GetAllNotificationRulesExecute", r)}
 }
 
@@ -10712,7 +10874,7 @@ type MockNotificationAPI_RemoveProjectFromRule_Call struct {
 //   - ctx context.Context
 //   - ruleUuid string
 //   - projectUuid string
-func (_e *MockNotificationAPI_Expecter) RemoveProjectFromRule(ctx interface{}, ruleUuid interface{}, projectUuid interface{}) *MockNotificationAPI_RemoveProjectFromRule_Call {
+func (_e *MockNotificationAPI_Expecter) RemoveProjectFromRule(ctx any, ruleUuid any, projectUuid any) *MockNotificationAPI_RemoveProjectFromRule_Call {
 	return &MockNotificationAPI_RemoveProjectFromRule_Call{Call: _e.mock.On("RemoveProjectFromRule", ctx, ruleUuid, projectUuid)}
 }
 
@@ -10792,7 +10954,7 @@ type MockNotificationAPI_RemoveProjectFromRuleExecute_Call struct {
 
 // RemoveProjectFromRuleExecute is a helper method to define mock.On call
 //   - r client.ApiRemoveProjectFromRuleRequest
-func (_e *MockNotificationAPI_Expecter) RemoveProjectFromRuleExecute(r interface{}) *MockNotificationAPI_RemoveProjectFromRuleExecute_Call {
+func (_e *MockNotificationAPI_Expecter) RemoveProjectFromRuleExecute(r any) *MockNotificationAPI_RemoveProjectFromRuleExecute_Call {
 	return &MockNotificationAPI_RemoveProjectFromRuleExecute_Call{Call: _e.mock.On("RemoveProjectFromRuleExecute", r)}
 }
 
@@ -10845,7 +11007,7 @@ type MockNotificationAPI_RemoveTeamFromRule_Call struct {
 //   - ctx context.Context
 //   - ruleUuid string
 //   - teamUuid string
-func (_e *MockNotificationAPI_Expecter) RemoveTeamFromRule(ctx interface{}, ruleUuid interface{}, teamUuid interface{}) *MockNotificationAPI_RemoveTeamFromRule_Call {
+func (_e *MockNotificationAPI_Expecter) RemoveTeamFromRule(ctx any, ruleUuid any, teamUuid any) *MockNotificationAPI_RemoveTeamFromRule_Call {
 	return &MockNotificationAPI_RemoveTeamFromRule_Call{Call: _e.mock.On("RemoveTeamFromRule", ctx, ruleUuid, teamUuid)}
 }
 
@@ -10925,7 +11087,7 @@ type MockNotificationAPI_RemoveTeamFromRuleExecute_Call struct {
 
 // RemoveTeamFromRuleExecute is a helper method to define mock.On call
 //   - r client.ApiRemoveTeamFromRuleRequest
-func (_e *MockNotificationAPI_Expecter) RemoveTeamFromRuleExecute(r interface{}) *MockNotificationAPI_RemoveTeamFromRuleExecute_Call {
+func (_e *MockNotificationAPI_Expecter) RemoveTeamFromRuleExecute(r any) *MockNotificationAPI_RemoveTeamFromRuleExecute_Call {
 	return &MockNotificationAPI_RemoveTeamFromRuleExecute_Call{Call: _e.mock.On("RemoveTeamFromRuleExecute", r)}
 }
 
@@ -10976,7 +11138,7 @@ type MockNotificationAPI_RestoreDefaultTemplates_Call struct {
 
 // RestoreDefaultTemplates is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockNotificationAPI_Expecter) RestoreDefaultTemplates(ctx interface{}) *MockNotificationAPI_RestoreDefaultTemplates_Call {
+func (_e *MockNotificationAPI_Expecter) RestoreDefaultTemplates(ctx any) *MockNotificationAPI_RestoreDefaultTemplates_Call {
 	return &MockNotificationAPI_RestoreDefaultTemplates_Call{Call: _e.mock.On("RestoreDefaultTemplates", ctx)}
 }
 
@@ -11038,7 +11200,7 @@ type MockNotificationAPI_RestoreDefaultTemplatesExecute_Call struct {
 
 // RestoreDefaultTemplatesExecute is a helper method to define mock.On call
 //   - r client.ApiRestoreDefaultTemplatesRequest
-func (_e *MockNotificationAPI_Expecter) RestoreDefaultTemplatesExecute(r interface{}) *MockNotificationAPI_RestoreDefaultTemplatesExecute_Call {
+func (_e *MockNotificationAPI_Expecter) RestoreDefaultTemplatesExecute(r any) *MockNotificationAPI_RestoreDefaultTemplatesExecute_Call {
 	return &MockNotificationAPI_RestoreDefaultTemplatesExecute_Call{Call: _e.mock.On("RestoreDefaultTemplatesExecute", r)}
 }
 
@@ -11090,7 +11252,7 @@ type MockNotificationAPI_TestNotificationRule_Call struct {
 // TestNotificationRule is a helper method to define mock.On call
 //   - ctx context.Context
 //   - uuid string
-func (_e *MockNotificationAPI_Expecter) TestNotificationRule(ctx interface{}, uuid interface{}) *MockNotificationAPI_TestNotificationRule_Call {
+func (_e *MockNotificationAPI_Expecter) TestNotificationRule(ctx any, uuid any) *MockNotificationAPI_TestNotificationRule_Call {
 	return &MockNotificationAPI_TestNotificationRule_Call{Call: _e.mock.On("TestNotificationRule", ctx, uuid)}
 }
 
@@ -11157,7 +11319,7 @@ type MockNotificationAPI_TestNotificationRuleExecute_Call struct {
 
 // TestNotificationRuleExecute is a helper method to define mock.On call
 //   - r client.ApiTestNotificationRuleRequest
-func (_e *MockNotificationAPI_Expecter) TestNotificationRuleExecute(r interface{}) *MockNotificationAPI_TestNotificationRuleExecute_Call {
+func (_e *MockNotificationAPI_Expecter) TestNotificationRuleExecute(r any) *MockNotificationAPI_TestNotificationRuleExecute_Call {
 	return &MockNotificationAPI_TestNotificationRuleExecute_Call{Call: _e.mock.On("TestNotificationRuleExecute", r)}
 }
 
@@ -11208,7 +11370,7 @@ type MockNotificationAPI_TestSmtpPublisherConfig_Call struct {
 
 // TestSmtpPublisherConfig is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockNotificationAPI_Expecter) TestSmtpPublisherConfig(ctx interface{}) *MockNotificationAPI_TestSmtpPublisherConfig_Call {
+func (_e *MockNotificationAPI_Expecter) TestSmtpPublisherConfig(ctx any) *MockNotificationAPI_TestSmtpPublisherConfig_Call {
 	return &MockNotificationAPI_TestSmtpPublisherConfig_Call{Call: _e.mock.On("TestSmtpPublisherConfig", ctx)}
 }
 
@@ -11270,7 +11432,7 @@ type MockNotificationAPI_TestSmtpPublisherConfigExecute_Call struct {
 
 // TestSmtpPublisherConfigExecute is a helper method to define mock.On call
 //   - r client.ApiTestSmtpPublisherConfigRequest
-func (_e *MockNotificationAPI_Expecter) TestSmtpPublisherConfigExecute(r interface{}) *MockNotificationAPI_TestSmtpPublisherConfigExecute_Call {
+func (_e *MockNotificationAPI_Expecter) TestSmtpPublisherConfigExecute(r any) *MockNotificationAPI_TestSmtpPublisherConfigExecute_Call {
 	return &MockNotificationAPI_TestSmtpPublisherConfigExecute_Call{Call: _e.mock.On("TestSmtpPublisherConfigExecute", r)}
 }
 
@@ -11321,7 +11483,7 @@ type MockNotificationAPI_UpdateNotificationPublisher_Call struct {
 
 // UpdateNotificationPublisher is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockNotificationAPI_Expecter) UpdateNotificationPublisher(ctx interface{}) *MockNotificationAPI_UpdateNotificationPublisher_Call {
+func (_e *MockNotificationAPI_Expecter) UpdateNotificationPublisher(ctx any) *MockNotificationAPI_UpdateNotificationPublisher_Call {
 	return &MockNotificationAPI_UpdateNotificationPublisher_Call{Call: _e.mock.On("UpdateNotificationPublisher", ctx)}
 }
 
@@ -11391,7 +11553,7 @@ type MockNotificationAPI_UpdateNotificationPublisherExecute_Call struct {
 
 // UpdateNotificationPublisherExecute is a helper method to define mock.On call
 //   - r client.ApiUpdateNotificationPublisherRequest
-func (_e *MockNotificationAPI_Expecter) UpdateNotificationPublisherExecute(r interface{}) *MockNotificationAPI_UpdateNotificationPublisherExecute_Call {
+func (_e *MockNotificationAPI_Expecter) UpdateNotificationPublisherExecute(r any) *MockNotificationAPI_UpdateNotificationPublisherExecute_Call {
 	return &MockNotificationAPI_UpdateNotificationPublisherExecute_Call{Call: _e.mock.On("UpdateNotificationPublisherExecute", r)}
 }
 
@@ -11442,7 +11604,7 @@ type MockNotificationAPI_UpdateNotificationRule_Call struct {
 
 // UpdateNotificationRule is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockNotificationAPI_Expecter) UpdateNotificationRule(ctx interface{}) *MockNotificationAPI_UpdateNotificationRule_Call {
+func (_e *MockNotificationAPI_Expecter) UpdateNotificationRule(ctx any) *MockNotificationAPI_UpdateNotificationRule_Call {
 	return &MockNotificationAPI_UpdateNotificationRule_Call{Call: _e.mock.On("UpdateNotificationRule", ctx)}
 }
 
@@ -11512,7 +11674,7 @@ type MockNotificationAPI_UpdateNotificationRuleExecute_Call struct {
 
 // UpdateNotificationRuleExecute is a helper method to define mock.On call
 //   - r client.ApiUpdateNotificationRuleRequest
-func (_e *MockNotificationAPI_Expecter) UpdateNotificationRuleExecute(r interface{}) *MockNotificationAPI_UpdateNotificationRuleExecute_Call {
+func (_e *MockNotificationAPI_Expecter) UpdateNotificationRuleExecute(r any) *MockNotificationAPI_UpdateNotificationRuleExecute_Call {
 	return &MockNotificationAPI_UpdateNotificationRuleExecute_Call{Call: _e.mock.On("UpdateNotificationRuleExecute", r)}
 }
 
@@ -11546,10 +11708,19 @@ func NewMockOidcAPI(t interface {
 	Cleanup(func())
 },
 ) *MockOidcAPI {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &MockOidcAPI{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }
@@ -11591,7 +11762,7 @@ type MockOidcAPI_AddMapping2_Call struct {
 
 // AddMapping2 is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockOidcAPI_Expecter) AddMapping2(ctx interface{}) *MockOidcAPI_AddMapping2_Call {
+func (_e *MockOidcAPI_Expecter) AddMapping2(ctx any) *MockOidcAPI_AddMapping2_Call {
 	return &MockOidcAPI_AddMapping2_Call{Call: _e.mock.On("AddMapping2", ctx)}
 }
 
@@ -11661,7 +11832,7 @@ type MockOidcAPI_AddMapping2Execute_Call struct {
 
 // AddMapping2Execute is a helper method to define mock.On call
 //   - r client.ApiAddMapping2Request
-func (_e *MockOidcAPI_Expecter) AddMapping2Execute(r interface{}) *MockOidcAPI_AddMapping2Execute_Call {
+func (_e *MockOidcAPI_Expecter) AddMapping2Execute(r any) *MockOidcAPI_AddMapping2Execute_Call {
 	return &MockOidcAPI_AddMapping2Execute_Call{Call: _e.mock.On("AddMapping2Execute", r)}
 }
 
@@ -11712,7 +11883,7 @@ type MockOidcAPI_CreateGroup_Call struct {
 
 // CreateGroup is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockOidcAPI_Expecter) CreateGroup(ctx interface{}) *MockOidcAPI_CreateGroup_Call {
+func (_e *MockOidcAPI_Expecter) CreateGroup(ctx any) *MockOidcAPI_CreateGroup_Call {
 	return &MockOidcAPI_CreateGroup_Call{Call: _e.mock.On("CreateGroup", ctx)}
 }
 
@@ -11782,7 +11953,7 @@ type MockOidcAPI_CreateGroupExecute_Call struct {
 
 // CreateGroupExecute is a helper method to define mock.On call
 //   - r client.ApiCreateGroupRequest
-func (_e *MockOidcAPI_Expecter) CreateGroupExecute(r interface{}) *MockOidcAPI_CreateGroupExecute_Call {
+func (_e *MockOidcAPI_Expecter) CreateGroupExecute(r any) *MockOidcAPI_CreateGroupExecute_Call {
 	return &MockOidcAPI_CreateGroupExecute_Call{Call: _e.mock.On("CreateGroupExecute", r)}
 }
 
@@ -11834,7 +12005,7 @@ type MockOidcAPI_DeleteGroup_Call struct {
 // DeleteGroup is a helper method to define mock.On call
 //   - ctx context.Context
 //   - uuid string
-func (_e *MockOidcAPI_Expecter) DeleteGroup(ctx interface{}, uuid interface{}) *MockOidcAPI_DeleteGroup_Call {
+func (_e *MockOidcAPI_Expecter) DeleteGroup(ctx any, uuid any) *MockOidcAPI_DeleteGroup_Call {
 	return &MockOidcAPI_DeleteGroup_Call{Call: _e.mock.On("DeleteGroup", ctx, uuid)}
 }
 
@@ -11901,7 +12072,7 @@ type MockOidcAPI_DeleteGroupExecute_Call struct {
 
 // DeleteGroupExecute is a helper method to define mock.On call
 //   - r client.ApiDeleteGroupRequest
-func (_e *MockOidcAPI_Expecter) DeleteGroupExecute(r interface{}) *MockOidcAPI_DeleteGroupExecute_Call {
+func (_e *MockOidcAPI_Expecter) DeleteGroupExecute(r any) *MockOidcAPI_DeleteGroupExecute_Call {
 	return &MockOidcAPI_DeleteGroupExecute_Call{Call: _e.mock.On("DeleteGroupExecute", r)}
 }
 
@@ -11954,7 +12125,7 @@ type MockOidcAPI_DeleteMapping2_Call struct {
 //   - ctx context.Context
 //   - groupUuid string
 //   - teamUuid string
-func (_e *MockOidcAPI_Expecter) DeleteMapping2(ctx interface{}, groupUuid interface{}, teamUuid interface{}) *MockOidcAPI_DeleteMapping2_Call {
+func (_e *MockOidcAPI_Expecter) DeleteMapping2(ctx any, groupUuid any, teamUuid any) *MockOidcAPI_DeleteMapping2_Call {
 	return &MockOidcAPI_DeleteMapping2_Call{Call: _e.mock.On("DeleteMapping2", ctx, groupUuid, teamUuid)}
 }
 
@@ -12026,7 +12197,7 @@ type MockOidcAPI_DeleteMapping2Execute_Call struct {
 
 // DeleteMapping2Execute is a helper method to define mock.On call
 //   - r client.ApiDeleteMapping2Request
-func (_e *MockOidcAPI_Expecter) DeleteMapping2Execute(r interface{}) *MockOidcAPI_DeleteMapping2Execute_Call {
+func (_e *MockOidcAPI_Expecter) DeleteMapping2Execute(r any) *MockOidcAPI_DeleteMapping2Execute_Call {
 	return &MockOidcAPI_DeleteMapping2Execute_Call{Call: _e.mock.On("DeleteMapping2Execute", r)}
 }
 
@@ -12078,7 +12249,7 @@ type MockOidcAPI_DeleteMappingByUuid_Call struct {
 // DeleteMappingByUuid is a helper method to define mock.On call
 //   - ctx context.Context
 //   - uuid string
-func (_e *MockOidcAPI_Expecter) DeleteMappingByUuid(ctx interface{}, uuid interface{}) *MockOidcAPI_DeleteMappingByUuid_Call {
+func (_e *MockOidcAPI_Expecter) DeleteMappingByUuid(ctx any, uuid any) *MockOidcAPI_DeleteMappingByUuid_Call {
 	return &MockOidcAPI_DeleteMappingByUuid_Call{Call: _e.mock.On("DeleteMappingByUuid", ctx, uuid)}
 }
 
@@ -12145,7 +12316,7 @@ type MockOidcAPI_DeleteMappingByUuidExecute_Call struct {
 
 // DeleteMappingByUuidExecute is a helper method to define mock.On call
 //   - r client.ApiDeleteMappingByUuidRequest
-func (_e *MockOidcAPI_Expecter) DeleteMappingByUuidExecute(r interface{}) *MockOidcAPI_DeleteMappingByUuidExecute_Call {
+func (_e *MockOidcAPI_Expecter) DeleteMappingByUuidExecute(r any) *MockOidcAPI_DeleteMappingByUuidExecute_Call {
 	return &MockOidcAPI_DeleteMappingByUuidExecute_Call{Call: _e.mock.On("DeleteMappingByUuidExecute", r)}
 }
 
@@ -12196,7 +12367,7 @@ type MockOidcAPI_IsAvailable_Call struct {
 
 // IsAvailable is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockOidcAPI_Expecter) IsAvailable(ctx interface{}) *MockOidcAPI_IsAvailable_Call {
+func (_e *MockOidcAPI_Expecter) IsAvailable(ctx any) *MockOidcAPI_IsAvailable_Call {
 	return &MockOidcAPI_IsAvailable_Call{Call: _e.mock.On("IsAvailable", ctx)}
 }
 
@@ -12264,7 +12435,7 @@ type MockOidcAPI_IsAvailableExecute_Call struct {
 
 // IsAvailableExecute is a helper method to define mock.On call
 //   - r client.ApiIsAvailableRequest
-func (_e *MockOidcAPI_Expecter) IsAvailableExecute(r interface{}) *MockOidcAPI_IsAvailableExecute_Call {
+func (_e *MockOidcAPI_Expecter) IsAvailableExecute(r any) *MockOidcAPI_IsAvailableExecute_Call {
 	return &MockOidcAPI_IsAvailableExecute_Call{Call: _e.mock.On("IsAvailableExecute", r)}
 }
 
@@ -12315,7 +12486,7 @@ type MockOidcAPI_RetrieveGroups_Call struct {
 
 // RetrieveGroups is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockOidcAPI_Expecter) RetrieveGroups(ctx interface{}) *MockOidcAPI_RetrieveGroups_Call {
+func (_e *MockOidcAPI_Expecter) RetrieveGroups(ctx any) *MockOidcAPI_RetrieveGroups_Call {
 	return &MockOidcAPI_RetrieveGroups_Call{Call: _e.mock.On("RetrieveGroups", ctx)}
 }
 
@@ -12385,7 +12556,7 @@ type MockOidcAPI_RetrieveGroupsExecute_Call struct {
 
 // RetrieveGroupsExecute is a helper method to define mock.On call
 //   - r client.ApiRetrieveGroupsRequest
-func (_e *MockOidcAPI_Expecter) RetrieveGroupsExecute(r interface{}) *MockOidcAPI_RetrieveGroupsExecute_Call {
+func (_e *MockOidcAPI_Expecter) RetrieveGroupsExecute(r any) *MockOidcAPI_RetrieveGroupsExecute_Call {
 	return &MockOidcAPI_RetrieveGroupsExecute_Call{Call: _e.mock.On("RetrieveGroupsExecute", r)}
 }
 
@@ -12437,7 +12608,7 @@ type MockOidcAPI_RetrieveTeamsMappedToGroup_Call struct {
 // RetrieveTeamsMappedToGroup is a helper method to define mock.On call
 //   - ctx context.Context
 //   - uuid string
-func (_e *MockOidcAPI_Expecter) RetrieveTeamsMappedToGroup(ctx interface{}, uuid interface{}) *MockOidcAPI_RetrieveTeamsMappedToGroup_Call {
+func (_e *MockOidcAPI_Expecter) RetrieveTeamsMappedToGroup(ctx any, uuid any) *MockOidcAPI_RetrieveTeamsMappedToGroup_Call {
 	return &MockOidcAPI_RetrieveTeamsMappedToGroup_Call{Call: _e.mock.On("RetrieveTeamsMappedToGroup", ctx, uuid)}
 }
 
@@ -12512,7 +12683,7 @@ type MockOidcAPI_RetrieveTeamsMappedToGroupExecute_Call struct {
 
 // RetrieveTeamsMappedToGroupExecute is a helper method to define mock.On call
 //   - r client.ApiRetrieveTeamsMappedToGroupRequest
-func (_e *MockOidcAPI_Expecter) RetrieveTeamsMappedToGroupExecute(r interface{}) *MockOidcAPI_RetrieveTeamsMappedToGroupExecute_Call {
+func (_e *MockOidcAPI_Expecter) RetrieveTeamsMappedToGroupExecute(r any) *MockOidcAPI_RetrieveTeamsMappedToGroupExecute_Call {
 	return &MockOidcAPI_RetrieveTeamsMappedToGroupExecute_Call{Call: _e.mock.On("RetrieveTeamsMappedToGroupExecute", r)}
 }
 
@@ -12563,7 +12734,7 @@ type MockOidcAPI_UpdateGroup_Call struct {
 
 // UpdateGroup is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockOidcAPI_Expecter) UpdateGroup(ctx interface{}) *MockOidcAPI_UpdateGroup_Call {
+func (_e *MockOidcAPI_Expecter) UpdateGroup(ctx any) *MockOidcAPI_UpdateGroup_Call {
 	return &MockOidcAPI_UpdateGroup_Call{Call: _e.mock.On("UpdateGroup", ctx)}
 }
 
@@ -12633,7 +12804,7 @@ type MockOidcAPI_UpdateGroupExecute_Call struct {
 
 // UpdateGroupExecute is a helper method to define mock.On call
 //   - r client.ApiUpdateGroupRequest
-func (_e *MockOidcAPI_Expecter) UpdateGroupExecute(r interface{}) *MockOidcAPI_UpdateGroupExecute_Call {
+func (_e *MockOidcAPI_Expecter) UpdateGroupExecute(r any) *MockOidcAPI_UpdateGroupExecute_Call {
 	return &MockOidcAPI_UpdateGroupExecute_Call{Call: _e.mock.On("UpdateGroupExecute", r)}
 }
 
@@ -12667,10 +12838,19 @@ func NewMockPermissionAPI(t interface {
 	Cleanup(func())
 },
 ) *MockPermissionAPI {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &MockPermissionAPI{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }
@@ -12714,7 +12894,7 @@ type MockPermissionAPI_AddPermissionToTeam_Call struct {
 //   - ctx context.Context
 //   - uuid string
 //   - permission string
-func (_e *MockPermissionAPI_Expecter) AddPermissionToTeam(ctx interface{}, uuid interface{}, permission interface{}) *MockPermissionAPI_AddPermissionToTeam_Call {
+func (_e *MockPermissionAPI_Expecter) AddPermissionToTeam(ctx any, uuid any, permission any) *MockPermissionAPI_AddPermissionToTeam_Call {
 	return &MockPermissionAPI_AddPermissionToTeam_Call{Call: _e.mock.On("AddPermissionToTeam", ctx, uuid, permission)}
 }
 
@@ -12794,7 +12974,7 @@ type MockPermissionAPI_AddPermissionToTeamExecute_Call struct {
 
 // AddPermissionToTeamExecute is a helper method to define mock.On call
 //   - r client.ApiAddPermissionToTeamRequest
-func (_e *MockPermissionAPI_Expecter) AddPermissionToTeamExecute(r interface{}) *MockPermissionAPI_AddPermissionToTeamExecute_Call {
+func (_e *MockPermissionAPI_Expecter) AddPermissionToTeamExecute(r any) *MockPermissionAPI_AddPermissionToTeamExecute_Call {
 	return &MockPermissionAPI_AddPermissionToTeamExecute_Call{Call: _e.mock.On("AddPermissionToTeamExecute", r)}
 }
 
@@ -12847,7 +13027,7 @@ type MockPermissionAPI_AddPermissionToUser_Call struct {
 //   - ctx context.Context
 //   - username string
 //   - permission string
-func (_e *MockPermissionAPI_Expecter) AddPermissionToUser(ctx interface{}, username interface{}, permission interface{}) *MockPermissionAPI_AddPermissionToUser_Call {
+func (_e *MockPermissionAPI_Expecter) AddPermissionToUser(ctx any, username any, permission any) *MockPermissionAPI_AddPermissionToUser_Call {
 	return &MockPermissionAPI_AddPermissionToUser_Call{Call: _e.mock.On("AddPermissionToUser", ctx, username, permission)}
 }
 
@@ -12927,7 +13107,7 @@ type MockPermissionAPI_AddPermissionToUserExecute_Call struct {
 
 // AddPermissionToUserExecute is a helper method to define mock.On call
 //   - r client.ApiAddPermissionToUserRequest
-func (_e *MockPermissionAPI_Expecter) AddPermissionToUserExecute(r interface{}) *MockPermissionAPI_AddPermissionToUserExecute_Call {
+func (_e *MockPermissionAPI_Expecter) AddPermissionToUserExecute(r any) *MockPermissionAPI_AddPermissionToUserExecute_Call {
 	return &MockPermissionAPI_AddPermissionToUserExecute_Call{Call: _e.mock.On("AddPermissionToUserExecute", r)}
 }
 
@@ -12978,7 +13158,7 @@ type MockPermissionAPI_GetAllPermissions_Call struct {
 
 // GetAllPermissions is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockPermissionAPI_Expecter) GetAllPermissions(ctx interface{}) *MockPermissionAPI_GetAllPermissions_Call {
+func (_e *MockPermissionAPI_Expecter) GetAllPermissions(ctx any) *MockPermissionAPI_GetAllPermissions_Call {
 	return &MockPermissionAPI_GetAllPermissions_Call{Call: _e.mock.On("GetAllPermissions", ctx)}
 }
 
@@ -13046,7 +13226,7 @@ type MockPermissionAPI_GetAllPermissionsExecute_Call struct {
 
 // GetAllPermissionsExecute is a helper method to define mock.On call
 //   - r client.ApiGetAllPermissionsRequest
-func (_e *MockPermissionAPI_Expecter) GetAllPermissionsExecute(r interface{}) *MockPermissionAPI_GetAllPermissionsExecute_Call {
+func (_e *MockPermissionAPI_Expecter) GetAllPermissionsExecute(r any) *MockPermissionAPI_GetAllPermissionsExecute_Call {
 	return &MockPermissionAPI_GetAllPermissionsExecute_Call{Call: _e.mock.On("GetAllPermissionsExecute", r)}
 }
 
@@ -13099,7 +13279,7 @@ type MockPermissionAPI_RemovePermissionFromTeam_Call struct {
 //   - ctx context.Context
 //   - uuid string
 //   - permission string
-func (_e *MockPermissionAPI_Expecter) RemovePermissionFromTeam(ctx interface{}, uuid interface{}, permission interface{}) *MockPermissionAPI_RemovePermissionFromTeam_Call {
+func (_e *MockPermissionAPI_Expecter) RemovePermissionFromTeam(ctx any, uuid any, permission any) *MockPermissionAPI_RemovePermissionFromTeam_Call {
 	return &MockPermissionAPI_RemovePermissionFromTeam_Call{Call: _e.mock.On("RemovePermissionFromTeam", ctx, uuid, permission)}
 }
 
@@ -13179,7 +13359,7 @@ type MockPermissionAPI_RemovePermissionFromTeamExecute_Call struct {
 
 // RemovePermissionFromTeamExecute is a helper method to define mock.On call
 //   - r client.ApiRemovePermissionFromTeamRequest
-func (_e *MockPermissionAPI_Expecter) RemovePermissionFromTeamExecute(r interface{}) *MockPermissionAPI_RemovePermissionFromTeamExecute_Call {
+func (_e *MockPermissionAPI_Expecter) RemovePermissionFromTeamExecute(r any) *MockPermissionAPI_RemovePermissionFromTeamExecute_Call {
 	return &MockPermissionAPI_RemovePermissionFromTeamExecute_Call{Call: _e.mock.On("RemovePermissionFromTeamExecute", r)}
 }
 
@@ -13232,7 +13412,7 @@ type MockPermissionAPI_RemovePermissionFromUser_Call struct {
 //   - ctx context.Context
 //   - username string
 //   - permission string
-func (_e *MockPermissionAPI_Expecter) RemovePermissionFromUser(ctx interface{}, username interface{}, permission interface{}) *MockPermissionAPI_RemovePermissionFromUser_Call {
+func (_e *MockPermissionAPI_Expecter) RemovePermissionFromUser(ctx any, username any, permission any) *MockPermissionAPI_RemovePermissionFromUser_Call {
 	return &MockPermissionAPI_RemovePermissionFromUser_Call{Call: _e.mock.On("RemovePermissionFromUser", ctx, username, permission)}
 }
 
@@ -13312,7 +13492,7 @@ type MockPermissionAPI_RemovePermissionFromUserExecute_Call struct {
 
 // RemovePermissionFromUserExecute is a helper method to define mock.On call
 //   - r client.ApiRemovePermissionFromUserRequest
-func (_e *MockPermissionAPI_Expecter) RemovePermissionFromUserExecute(r interface{}) *MockPermissionAPI_RemovePermissionFromUserExecute_Call {
+func (_e *MockPermissionAPI_Expecter) RemovePermissionFromUserExecute(r any) *MockPermissionAPI_RemovePermissionFromUserExecute_Call {
 	return &MockPermissionAPI_RemovePermissionFromUserExecute_Call{Call: _e.mock.On("RemovePermissionFromUserExecute", r)}
 }
 
@@ -13346,10 +13526,19 @@ func NewMockPolicyAPI(t interface {
 	Cleanup(func())
 },
 ) *MockPolicyAPI {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &MockPolicyAPI{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }
@@ -13393,7 +13582,7 @@ type MockPolicyAPI_AddProjectToPolicy_Call struct {
 //   - ctx context.Context
 //   - policyUuid string
 //   - projectUuid string
-func (_e *MockPolicyAPI_Expecter) AddProjectToPolicy(ctx interface{}, policyUuid interface{}, projectUuid interface{}) *MockPolicyAPI_AddProjectToPolicy_Call {
+func (_e *MockPolicyAPI_Expecter) AddProjectToPolicy(ctx any, policyUuid any, projectUuid any) *MockPolicyAPI_AddProjectToPolicy_Call {
 	return &MockPolicyAPI_AddProjectToPolicy_Call{Call: _e.mock.On("AddProjectToPolicy", ctx, policyUuid, projectUuid)}
 }
 
@@ -13473,7 +13662,7 @@ type MockPolicyAPI_AddProjectToPolicyExecute_Call struct {
 
 // AddProjectToPolicyExecute is a helper method to define mock.On call
 //   - r client.ApiAddProjectToPolicyRequest
-func (_e *MockPolicyAPI_Expecter) AddProjectToPolicyExecute(r interface{}) *MockPolicyAPI_AddProjectToPolicyExecute_Call {
+func (_e *MockPolicyAPI_Expecter) AddProjectToPolicyExecute(r any) *MockPolicyAPI_AddProjectToPolicyExecute_Call {
 	return &MockPolicyAPI_AddProjectToPolicyExecute_Call{Call: _e.mock.On("AddProjectToPolicyExecute", r)}
 }
 
@@ -13526,7 +13715,7 @@ type MockPolicyAPI_AddTagToPolicy_Call struct {
 //   - ctx context.Context
 //   - policyUuid string
 //   - tagName string
-func (_e *MockPolicyAPI_Expecter) AddTagToPolicy(ctx interface{}, policyUuid interface{}, tagName interface{}) *MockPolicyAPI_AddTagToPolicy_Call {
+func (_e *MockPolicyAPI_Expecter) AddTagToPolicy(ctx any, policyUuid any, tagName any) *MockPolicyAPI_AddTagToPolicy_Call {
 	return &MockPolicyAPI_AddTagToPolicy_Call{Call: _e.mock.On("AddTagToPolicy", ctx, policyUuid, tagName)}
 }
 
@@ -13606,7 +13795,7 @@ type MockPolicyAPI_AddTagToPolicyExecute_Call struct {
 
 // AddTagToPolicyExecute is a helper method to define mock.On call
 //   - r client.ApiAddTagToPolicyRequest
-func (_e *MockPolicyAPI_Expecter) AddTagToPolicyExecute(r interface{}) *MockPolicyAPI_AddTagToPolicyExecute_Call {
+func (_e *MockPolicyAPI_Expecter) AddTagToPolicyExecute(r any) *MockPolicyAPI_AddTagToPolicyExecute_Call {
 	return &MockPolicyAPI_AddTagToPolicyExecute_Call{Call: _e.mock.On("AddTagToPolicyExecute", r)}
 }
 
@@ -13657,7 +13846,7 @@ type MockPolicyAPI_CreatePolicy_Call struct {
 
 // CreatePolicy is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockPolicyAPI_Expecter) CreatePolicy(ctx interface{}) *MockPolicyAPI_CreatePolicy_Call {
+func (_e *MockPolicyAPI_Expecter) CreatePolicy(ctx any) *MockPolicyAPI_CreatePolicy_Call {
 	return &MockPolicyAPI_CreatePolicy_Call{Call: _e.mock.On("CreatePolicy", ctx)}
 }
 
@@ -13727,7 +13916,7 @@ type MockPolicyAPI_CreatePolicyExecute_Call struct {
 
 // CreatePolicyExecute is a helper method to define mock.On call
 //   - r client.ApiCreatePolicyRequest
-func (_e *MockPolicyAPI_Expecter) CreatePolicyExecute(r interface{}) *MockPolicyAPI_CreatePolicyExecute_Call {
+func (_e *MockPolicyAPI_Expecter) CreatePolicyExecute(r any) *MockPolicyAPI_CreatePolicyExecute_Call {
 	return &MockPolicyAPI_CreatePolicyExecute_Call{Call: _e.mock.On("CreatePolicyExecute", r)}
 }
 
@@ -13779,7 +13968,7 @@ type MockPolicyAPI_DeletePolicy_Call struct {
 // DeletePolicy is a helper method to define mock.On call
 //   - ctx context.Context
 //   - uuid string
-func (_e *MockPolicyAPI_Expecter) DeletePolicy(ctx interface{}, uuid interface{}) *MockPolicyAPI_DeletePolicy_Call {
+func (_e *MockPolicyAPI_Expecter) DeletePolicy(ctx any, uuid any) *MockPolicyAPI_DeletePolicy_Call {
 	return &MockPolicyAPI_DeletePolicy_Call{Call: _e.mock.On("DeletePolicy", ctx, uuid)}
 }
 
@@ -13846,7 +14035,7 @@ type MockPolicyAPI_DeletePolicyExecute_Call struct {
 
 // DeletePolicyExecute is a helper method to define mock.On call
 //   - r client.ApiDeletePolicyRequest
-func (_e *MockPolicyAPI_Expecter) DeletePolicyExecute(r interface{}) *MockPolicyAPI_DeletePolicyExecute_Call {
+func (_e *MockPolicyAPI_Expecter) DeletePolicyExecute(r any) *MockPolicyAPI_DeletePolicyExecute_Call {
 	return &MockPolicyAPI_DeletePolicyExecute_Call{Call: _e.mock.On("DeletePolicyExecute", r)}
 }
 
@@ -13897,7 +14086,7 @@ type MockPolicyAPI_GetPolicies_Call struct {
 
 // GetPolicies is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockPolicyAPI_Expecter) GetPolicies(ctx interface{}) *MockPolicyAPI_GetPolicies_Call {
+func (_e *MockPolicyAPI_Expecter) GetPolicies(ctx any) *MockPolicyAPI_GetPolicies_Call {
 	return &MockPolicyAPI_GetPolicies_Call{Call: _e.mock.On("GetPolicies", ctx)}
 }
 
@@ -13967,7 +14156,7 @@ type MockPolicyAPI_GetPoliciesExecute_Call struct {
 
 // GetPoliciesExecute is a helper method to define mock.On call
 //   - r client.ApiGetPoliciesRequest
-func (_e *MockPolicyAPI_Expecter) GetPoliciesExecute(r interface{}) *MockPolicyAPI_GetPoliciesExecute_Call {
+func (_e *MockPolicyAPI_Expecter) GetPoliciesExecute(r any) *MockPolicyAPI_GetPoliciesExecute_Call {
 	return &MockPolicyAPI_GetPoliciesExecute_Call{Call: _e.mock.On("GetPoliciesExecute", r)}
 }
 
@@ -14019,7 +14208,7 @@ type MockPolicyAPI_GetPolicy_Call struct {
 // GetPolicy is a helper method to define mock.On call
 //   - ctx context.Context
 //   - uuid string
-func (_e *MockPolicyAPI_Expecter) GetPolicy(ctx interface{}, uuid interface{}) *MockPolicyAPI_GetPolicy_Call {
+func (_e *MockPolicyAPI_Expecter) GetPolicy(ctx any, uuid any) *MockPolicyAPI_GetPolicy_Call {
 	return &MockPolicyAPI_GetPolicy_Call{Call: _e.mock.On("GetPolicy", ctx, uuid)}
 }
 
@@ -14094,7 +14283,7 @@ type MockPolicyAPI_GetPolicyExecute_Call struct {
 
 // GetPolicyExecute is a helper method to define mock.On call
 //   - r client.ApiGetPolicyRequest
-func (_e *MockPolicyAPI_Expecter) GetPolicyExecute(r interface{}) *MockPolicyAPI_GetPolicyExecute_Call {
+func (_e *MockPolicyAPI_Expecter) GetPolicyExecute(r any) *MockPolicyAPI_GetPolicyExecute_Call {
 	return &MockPolicyAPI_GetPolicyExecute_Call{Call: _e.mock.On("GetPolicyExecute", r)}
 }
 
@@ -14147,7 +14336,7 @@ type MockPolicyAPI_RemoveProjectFromPolicy_Call struct {
 //   - ctx context.Context
 //   - policyUuid string
 //   - projectUuid string
-func (_e *MockPolicyAPI_Expecter) RemoveProjectFromPolicy(ctx interface{}, policyUuid interface{}, projectUuid interface{}) *MockPolicyAPI_RemoveProjectFromPolicy_Call {
+func (_e *MockPolicyAPI_Expecter) RemoveProjectFromPolicy(ctx any, policyUuid any, projectUuid any) *MockPolicyAPI_RemoveProjectFromPolicy_Call {
 	return &MockPolicyAPI_RemoveProjectFromPolicy_Call{Call: _e.mock.On("RemoveProjectFromPolicy", ctx, policyUuid, projectUuid)}
 }
 
@@ -14227,7 +14416,7 @@ type MockPolicyAPI_RemoveProjectFromPolicyExecute_Call struct {
 
 // RemoveProjectFromPolicyExecute is a helper method to define mock.On call
 //   - r client.ApiRemoveProjectFromPolicyRequest
-func (_e *MockPolicyAPI_Expecter) RemoveProjectFromPolicyExecute(r interface{}) *MockPolicyAPI_RemoveProjectFromPolicyExecute_Call {
+func (_e *MockPolicyAPI_Expecter) RemoveProjectFromPolicyExecute(r any) *MockPolicyAPI_RemoveProjectFromPolicyExecute_Call {
 	return &MockPolicyAPI_RemoveProjectFromPolicyExecute_Call{Call: _e.mock.On("RemoveProjectFromPolicyExecute", r)}
 }
 
@@ -14280,7 +14469,7 @@ type MockPolicyAPI_RemoveTagFromPolicy_Call struct {
 //   - ctx context.Context
 //   - policyUuid string
 //   - tagName string
-func (_e *MockPolicyAPI_Expecter) RemoveTagFromPolicy(ctx interface{}, policyUuid interface{}, tagName interface{}) *MockPolicyAPI_RemoveTagFromPolicy_Call {
+func (_e *MockPolicyAPI_Expecter) RemoveTagFromPolicy(ctx any, policyUuid any, tagName any) *MockPolicyAPI_RemoveTagFromPolicy_Call {
 	return &MockPolicyAPI_RemoveTagFromPolicy_Call{Call: _e.mock.On("RemoveTagFromPolicy", ctx, policyUuid, tagName)}
 }
 
@@ -14360,7 +14549,7 @@ type MockPolicyAPI_RemoveTagFromPolicyExecute_Call struct {
 
 // RemoveTagFromPolicyExecute is a helper method to define mock.On call
 //   - r client.ApiRemoveTagFromPolicyRequest
-func (_e *MockPolicyAPI_Expecter) RemoveTagFromPolicyExecute(r interface{}) *MockPolicyAPI_RemoveTagFromPolicyExecute_Call {
+func (_e *MockPolicyAPI_Expecter) RemoveTagFromPolicyExecute(r any) *MockPolicyAPI_RemoveTagFromPolicyExecute_Call {
 	return &MockPolicyAPI_RemoveTagFromPolicyExecute_Call{Call: _e.mock.On("RemoveTagFromPolicyExecute", r)}
 }
 
@@ -14411,7 +14600,7 @@ type MockPolicyAPI_UpdatePolicy_Call struct {
 
 // UpdatePolicy is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockPolicyAPI_Expecter) UpdatePolicy(ctx interface{}) *MockPolicyAPI_UpdatePolicy_Call {
+func (_e *MockPolicyAPI_Expecter) UpdatePolicy(ctx any) *MockPolicyAPI_UpdatePolicy_Call {
 	return &MockPolicyAPI_UpdatePolicy_Call{Call: _e.mock.On("UpdatePolicy", ctx)}
 }
 
@@ -14481,7 +14670,7 @@ type MockPolicyAPI_UpdatePolicyExecute_Call struct {
 
 // UpdatePolicyExecute is a helper method to define mock.On call
 //   - r client.ApiUpdatePolicyRequest
-func (_e *MockPolicyAPI_Expecter) UpdatePolicyExecute(r interface{}) *MockPolicyAPI_UpdatePolicyExecute_Call {
+func (_e *MockPolicyAPI_Expecter) UpdatePolicyExecute(r any) *MockPolicyAPI_UpdatePolicyExecute_Call {
 	return &MockPolicyAPI_UpdatePolicyExecute_Call{Call: _e.mock.On("UpdatePolicyExecute", r)}
 }
 
@@ -14515,10 +14704,19 @@ func NewMockPolicyConditionAPI(t interface {
 	Cleanup(func())
 },
 ) *MockPolicyConditionAPI {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &MockPolicyConditionAPI{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }
@@ -14561,7 +14759,7 @@ type MockPolicyConditionAPI_CreatePolicyCondition_Call struct {
 // CreatePolicyCondition is a helper method to define mock.On call
 //   - ctx context.Context
 //   - uuid string
-func (_e *MockPolicyConditionAPI_Expecter) CreatePolicyCondition(ctx interface{}, uuid interface{}) *MockPolicyConditionAPI_CreatePolicyCondition_Call {
+func (_e *MockPolicyConditionAPI_Expecter) CreatePolicyCondition(ctx any, uuid any) *MockPolicyConditionAPI_CreatePolicyCondition_Call {
 	return &MockPolicyConditionAPI_CreatePolicyCondition_Call{Call: _e.mock.On("CreatePolicyCondition", ctx, uuid)}
 }
 
@@ -14636,7 +14834,7 @@ type MockPolicyConditionAPI_CreatePolicyConditionExecute_Call struct {
 
 // CreatePolicyConditionExecute is a helper method to define mock.On call
 //   - r client.ApiCreatePolicyConditionRequest
-func (_e *MockPolicyConditionAPI_Expecter) CreatePolicyConditionExecute(r interface{}) *MockPolicyConditionAPI_CreatePolicyConditionExecute_Call {
+func (_e *MockPolicyConditionAPI_Expecter) CreatePolicyConditionExecute(r any) *MockPolicyConditionAPI_CreatePolicyConditionExecute_Call {
 	return &MockPolicyConditionAPI_CreatePolicyConditionExecute_Call{Call: _e.mock.On("CreatePolicyConditionExecute", r)}
 }
 
@@ -14688,7 +14886,7 @@ type MockPolicyConditionAPI_DeletePolicyCondition_Call struct {
 // DeletePolicyCondition is a helper method to define mock.On call
 //   - ctx context.Context
 //   - uuid string
-func (_e *MockPolicyConditionAPI_Expecter) DeletePolicyCondition(ctx interface{}, uuid interface{}) *MockPolicyConditionAPI_DeletePolicyCondition_Call {
+func (_e *MockPolicyConditionAPI_Expecter) DeletePolicyCondition(ctx any, uuid any) *MockPolicyConditionAPI_DeletePolicyCondition_Call {
 	return &MockPolicyConditionAPI_DeletePolicyCondition_Call{Call: _e.mock.On("DeletePolicyCondition", ctx, uuid)}
 }
 
@@ -14755,7 +14953,7 @@ type MockPolicyConditionAPI_DeletePolicyConditionExecute_Call struct {
 
 // DeletePolicyConditionExecute is a helper method to define mock.On call
 //   - r client.ApiDeletePolicyConditionRequest
-func (_e *MockPolicyConditionAPI_Expecter) DeletePolicyConditionExecute(r interface{}) *MockPolicyConditionAPI_DeletePolicyConditionExecute_Call {
+func (_e *MockPolicyConditionAPI_Expecter) DeletePolicyConditionExecute(r any) *MockPolicyConditionAPI_DeletePolicyConditionExecute_Call {
 	return &MockPolicyConditionAPI_DeletePolicyConditionExecute_Call{Call: _e.mock.On("DeletePolicyConditionExecute", r)}
 }
 
@@ -14806,7 +15004,7 @@ type MockPolicyConditionAPI_UpdatePolicyCondition_Call struct {
 
 // UpdatePolicyCondition is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockPolicyConditionAPI_Expecter) UpdatePolicyCondition(ctx interface{}) *MockPolicyConditionAPI_UpdatePolicyCondition_Call {
+func (_e *MockPolicyConditionAPI_Expecter) UpdatePolicyCondition(ctx any) *MockPolicyConditionAPI_UpdatePolicyCondition_Call {
 	return &MockPolicyConditionAPI_UpdatePolicyCondition_Call{Call: _e.mock.On("UpdatePolicyCondition", ctx)}
 }
 
@@ -14876,7 +15074,7 @@ type MockPolicyConditionAPI_UpdatePolicyConditionExecute_Call struct {
 
 // UpdatePolicyConditionExecute is a helper method to define mock.On call
 //   - r client.ApiUpdatePolicyConditionRequest
-func (_e *MockPolicyConditionAPI_Expecter) UpdatePolicyConditionExecute(r interface{}) *MockPolicyConditionAPI_UpdatePolicyConditionExecute_Call {
+func (_e *MockPolicyConditionAPI_Expecter) UpdatePolicyConditionExecute(r any) *MockPolicyConditionAPI_UpdatePolicyConditionExecute_Call {
 	return &MockPolicyConditionAPI_UpdatePolicyConditionExecute_Call{Call: _e.mock.On("UpdatePolicyConditionExecute", r)}
 }
 
@@ -14910,10 +15108,19 @@ func NewMockProjectAPI(t interface {
 	Cleanup(func())
 },
 ) *MockProjectAPI {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &MockProjectAPI{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }
@@ -14955,7 +15162,7 @@ type MockProjectAPI_CloneProject_Call struct {
 
 // CloneProject is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockProjectAPI_Expecter) CloneProject(ctx interface{}) *MockProjectAPI_CloneProject_Call {
+func (_e *MockProjectAPI_Expecter) CloneProject(ctx any) *MockProjectAPI_CloneProject_Call {
 	return &MockProjectAPI_CloneProject_Call{Call: _e.mock.On("CloneProject", ctx)}
 }
 
@@ -15025,7 +15232,7 @@ type MockProjectAPI_CloneProjectExecute_Call struct {
 
 // CloneProjectExecute is a helper method to define mock.On call
 //   - r client.ApiCloneProjectRequest
-func (_e *MockProjectAPI_Expecter) CloneProjectExecute(r interface{}) *MockProjectAPI_CloneProjectExecute_Call {
+func (_e *MockProjectAPI_Expecter) CloneProjectExecute(r any) *MockProjectAPI_CloneProjectExecute_Call {
 	return &MockProjectAPI_CloneProjectExecute_Call{Call: _e.mock.On("CloneProjectExecute", r)}
 }
 
@@ -15076,7 +15283,7 @@ type MockProjectAPI_CreateProject_Call struct {
 
 // CreateProject is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockProjectAPI_Expecter) CreateProject(ctx interface{}) *MockProjectAPI_CreateProject_Call {
+func (_e *MockProjectAPI_Expecter) CreateProject(ctx any) *MockProjectAPI_CreateProject_Call {
 	return &MockProjectAPI_CreateProject_Call{Call: _e.mock.On("CreateProject", ctx)}
 }
 
@@ -15146,7 +15353,7 @@ type MockProjectAPI_CreateProjectExecute_Call struct {
 
 // CreateProjectExecute is a helper method to define mock.On call
 //   - r client.ApiCreateProjectRequest
-func (_e *MockProjectAPI_Expecter) CreateProjectExecute(r interface{}) *MockProjectAPI_CreateProjectExecute_Call {
+func (_e *MockProjectAPI_Expecter) CreateProjectExecute(r any) *MockProjectAPI_CreateProjectExecute_Call {
 	return &MockProjectAPI_CreateProjectExecute_Call{Call: _e.mock.On("CreateProjectExecute", r)}
 }
 
@@ -15198,7 +15405,7 @@ type MockProjectAPI_DeleteProject_Call struct {
 // DeleteProject is a helper method to define mock.On call
 //   - ctx context.Context
 //   - uuid string
-func (_e *MockProjectAPI_Expecter) DeleteProject(ctx interface{}, uuid interface{}) *MockProjectAPI_DeleteProject_Call {
+func (_e *MockProjectAPI_Expecter) DeleteProject(ctx any, uuid any) *MockProjectAPI_DeleteProject_Call {
 	return &MockProjectAPI_DeleteProject_Call{Call: _e.mock.On("DeleteProject", ctx, uuid)}
 }
 
@@ -15265,7 +15472,7 @@ type MockProjectAPI_DeleteProjectExecute_Call struct {
 
 // DeleteProjectExecute is a helper method to define mock.On call
 //   - r client.ApiDeleteProjectRequest
-func (_e *MockProjectAPI_Expecter) DeleteProjectExecute(r interface{}) *MockProjectAPI_DeleteProjectExecute_Call {
+func (_e *MockProjectAPI_Expecter) DeleteProjectExecute(r any) *MockProjectAPI_DeleteProjectExecute_Call {
 	return &MockProjectAPI_DeleteProjectExecute_Call{Call: _e.mock.On("DeleteProjectExecute", r)}
 }
 
@@ -15316,7 +15523,7 @@ type MockProjectAPI_DeleteProjects_Call struct {
 
 // DeleteProjects is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockProjectAPI_Expecter) DeleteProjects(ctx interface{}) *MockProjectAPI_DeleteProjects_Call {
+func (_e *MockProjectAPI_Expecter) DeleteProjects(ctx any) *MockProjectAPI_DeleteProjects_Call {
 	return &MockProjectAPI_DeleteProjects_Call{Call: _e.mock.On("DeleteProjects", ctx)}
 }
 
@@ -15378,7 +15585,7 @@ type MockProjectAPI_DeleteProjectsExecute_Call struct {
 
 // DeleteProjectsExecute is a helper method to define mock.On call
 //   - r client.ApiDeleteProjectsRequest
-func (_e *MockProjectAPI_Expecter) DeleteProjectsExecute(r interface{}) *MockProjectAPI_DeleteProjectsExecute_Call {
+func (_e *MockProjectAPI_Expecter) DeleteProjectsExecute(r any) *MockProjectAPI_DeleteProjectsExecute_Call {
 	return &MockProjectAPI_DeleteProjectsExecute_Call{Call: _e.mock.On("DeleteProjectsExecute", r)}
 }
 
@@ -15430,7 +15637,7 @@ type MockProjectAPI_GetChildrenProjects_Call struct {
 // GetChildrenProjects is a helper method to define mock.On call
 //   - ctx context.Context
 //   - uuid string
-func (_e *MockProjectAPI_Expecter) GetChildrenProjects(ctx interface{}, uuid interface{}) *MockProjectAPI_GetChildrenProjects_Call {
+func (_e *MockProjectAPI_Expecter) GetChildrenProjects(ctx any, uuid any) *MockProjectAPI_GetChildrenProjects_Call {
 	return &MockProjectAPI_GetChildrenProjects_Call{Call: _e.mock.On("GetChildrenProjects", ctx, uuid)}
 }
 
@@ -15488,7 +15695,7 @@ type MockProjectAPI_GetChildrenProjectsByClassifier_Call struct {
 //   - ctx context.Context
 //   - classifier string
 //   - uuid string
-func (_e *MockProjectAPI_Expecter) GetChildrenProjectsByClassifier(ctx interface{}, classifier interface{}, uuid interface{}) *MockProjectAPI_GetChildrenProjectsByClassifier_Call {
+func (_e *MockProjectAPI_Expecter) GetChildrenProjectsByClassifier(ctx any, classifier any, uuid any) *MockProjectAPI_GetChildrenProjectsByClassifier_Call {
 	return &MockProjectAPI_GetChildrenProjectsByClassifier_Call{Call: _e.mock.On("GetChildrenProjectsByClassifier", ctx, classifier, uuid)}
 }
 
@@ -15568,7 +15775,7 @@ type MockProjectAPI_GetChildrenProjectsByClassifierExecute_Call struct {
 
 // GetChildrenProjectsByClassifierExecute is a helper method to define mock.On call
 //   - r client.ApiGetChildrenProjectsByClassifierRequest
-func (_e *MockProjectAPI_Expecter) GetChildrenProjectsByClassifierExecute(r interface{}) *MockProjectAPI_GetChildrenProjectsByClassifierExecute_Call {
+func (_e *MockProjectAPI_Expecter) GetChildrenProjectsByClassifierExecute(r any) *MockProjectAPI_GetChildrenProjectsByClassifierExecute_Call {
 	return &MockProjectAPI_GetChildrenProjectsByClassifierExecute_Call{Call: _e.mock.On("GetChildrenProjectsByClassifierExecute", r)}
 }
 
@@ -15621,7 +15828,7 @@ type MockProjectAPI_GetChildrenProjectsByTag_Call struct {
 //   - ctx context.Context
 //   - tag string
 //   - uuid string
-func (_e *MockProjectAPI_Expecter) GetChildrenProjectsByTag(ctx interface{}, tag interface{}, uuid interface{}) *MockProjectAPI_GetChildrenProjectsByTag_Call {
+func (_e *MockProjectAPI_Expecter) GetChildrenProjectsByTag(ctx any, tag any, uuid any) *MockProjectAPI_GetChildrenProjectsByTag_Call {
 	return &MockProjectAPI_GetChildrenProjectsByTag_Call{Call: _e.mock.On("GetChildrenProjectsByTag", ctx, tag, uuid)}
 }
 
@@ -15701,7 +15908,7 @@ type MockProjectAPI_GetChildrenProjectsByTagExecute_Call struct {
 
 // GetChildrenProjectsByTagExecute is a helper method to define mock.On call
 //   - r client.ApiGetChildrenProjectsByTagRequest
-func (_e *MockProjectAPI_Expecter) GetChildrenProjectsByTagExecute(r interface{}) *MockProjectAPI_GetChildrenProjectsByTagExecute_Call {
+func (_e *MockProjectAPI_Expecter) GetChildrenProjectsByTagExecute(r any) *MockProjectAPI_GetChildrenProjectsByTagExecute_Call {
 	return &MockProjectAPI_GetChildrenProjectsByTagExecute_Call{Call: _e.mock.On("GetChildrenProjectsByTagExecute", r)}
 }
 
@@ -15771,7 +15978,7 @@ type MockProjectAPI_GetChildrenProjectsExecute_Call struct {
 
 // GetChildrenProjectsExecute is a helper method to define mock.On call
 //   - r client.ApiGetChildrenProjectsRequest
-func (_e *MockProjectAPI_Expecter) GetChildrenProjectsExecute(r interface{}) *MockProjectAPI_GetChildrenProjectsExecute_Call {
+func (_e *MockProjectAPI_Expecter) GetChildrenProjectsExecute(r any) *MockProjectAPI_GetChildrenProjectsExecute_Call {
 	return &MockProjectAPI_GetChildrenProjectsExecute_Call{Call: _e.mock.On("GetChildrenProjectsExecute", r)}
 }
 
@@ -15823,7 +16030,7 @@ type MockProjectAPI_GetLatestProjectByName_Call struct {
 // GetLatestProjectByName is a helper method to define mock.On call
 //   - ctx context.Context
 //   - name string
-func (_e *MockProjectAPI_Expecter) GetLatestProjectByName(ctx interface{}, name interface{}) *MockProjectAPI_GetLatestProjectByName_Call {
+func (_e *MockProjectAPI_Expecter) GetLatestProjectByName(ctx any, name any) *MockProjectAPI_GetLatestProjectByName_Call {
 	return &MockProjectAPI_GetLatestProjectByName_Call{Call: _e.mock.On("GetLatestProjectByName", ctx, name)}
 }
 
@@ -15898,7 +16105,7 @@ type MockProjectAPI_GetLatestProjectByNameExecute_Call struct {
 
 // GetLatestProjectByNameExecute is a helper method to define mock.On call
 //   - r client.ApiGetLatestProjectByNameRequest
-func (_e *MockProjectAPI_Expecter) GetLatestProjectByNameExecute(r interface{}) *MockProjectAPI_GetLatestProjectByNameExecute_Call {
+func (_e *MockProjectAPI_Expecter) GetLatestProjectByNameExecute(r any) *MockProjectAPI_GetLatestProjectByNameExecute_Call {
 	return &MockProjectAPI_GetLatestProjectByNameExecute_Call{Call: _e.mock.On("GetLatestProjectByNameExecute", r)}
 }
 
@@ -15950,7 +16157,7 @@ type MockProjectAPI_GetProject_Call struct {
 // GetProject is a helper method to define mock.On call
 //   - ctx context.Context
 //   - uuid string
-func (_e *MockProjectAPI_Expecter) GetProject(ctx interface{}, uuid interface{}) *MockProjectAPI_GetProject_Call {
+func (_e *MockProjectAPI_Expecter) GetProject(ctx any, uuid any) *MockProjectAPI_GetProject_Call {
 	return &MockProjectAPI_GetProject_Call{Call: _e.mock.On("GetProject", ctx, uuid)}
 }
 
@@ -16006,7 +16213,7 @@ type MockProjectAPI_GetProjectByNameAndVersion_Call struct {
 
 // GetProjectByNameAndVersion is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockProjectAPI_Expecter) GetProjectByNameAndVersion(ctx interface{}) *MockProjectAPI_GetProjectByNameAndVersion_Call {
+func (_e *MockProjectAPI_Expecter) GetProjectByNameAndVersion(ctx any) *MockProjectAPI_GetProjectByNameAndVersion_Call {
 	return &MockProjectAPI_GetProjectByNameAndVersion_Call{Call: _e.mock.On("GetProjectByNameAndVersion", ctx)}
 }
 
@@ -16076,7 +16283,7 @@ type MockProjectAPI_GetProjectByNameAndVersionExecute_Call struct {
 
 // GetProjectByNameAndVersionExecute is a helper method to define mock.On call
 //   - r client.ApiGetProjectByNameAndVersionRequest
-func (_e *MockProjectAPI_Expecter) GetProjectByNameAndVersionExecute(r interface{}) *MockProjectAPI_GetProjectByNameAndVersionExecute_Call {
+func (_e *MockProjectAPI_Expecter) GetProjectByNameAndVersionExecute(r any) *MockProjectAPI_GetProjectByNameAndVersionExecute_Call {
 	return &MockProjectAPI_GetProjectByNameAndVersionExecute_Call{Call: _e.mock.On("GetProjectByNameAndVersionExecute", r)}
 }
 
@@ -16146,7 +16353,7 @@ type MockProjectAPI_GetProjectExecute_Call struct {
 
 // GetProjectExecute is a helper method to define mock.On call
 //   - r client.ApiGetProjectRequest
-func (_e *MockProjectAPI_Expecter) GetProjectExecute(r interface{}) *MockProjectAPI_GetProjectExecute_Call {
+func (_e *MockProjectAPI_Expecter) GetProjectExecute(r any) *MockProjectAPI_GetProjectExecute_Call {
 	return &MockProjectAPI_GetProjectExecute_Call{Call: _e.mock.On("GetProjectExecute", r)}
 }
 
@@ -16197,7 +16404,7 @@ type MockProjectAPI_GetProjects_Call struct {
 
 // GetProjects is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockProjectAPI_Expecter) GetProjects(ctx interface{}) *MockProjectAPI_GetProjects_Call {
+func (_e *MockProjectAPI_Expecter) GetProjects(ctx any) *MockProjectAPI_GetProjects_Call {
 	return &MockProjectAPI_GetProjects_Call{Call: _e.mock.On("GetProjects", ctx)}
 }
 
@@ -16249,7 +16456,7 @@ type MockProjectAPI_GetProjectsByClassifier_Call struct {
 // GetProjectsByClassifier is a helper method to define mock.On call
 //   - ctx context.Context
 //   - classifier string
-func (_e *MockProjectAPI_Expecter) GetProjectsByClassifier(ctx interface{}, classifier interface{}) *MockProjectAPI_GetProjectsByClassifier_Call {
+func (_e *MockProjectAPI_Expecter) GetProjectsByClassifier(ctx any, classifier any) *MockProjectAPI_GetProjectsByClassifier_Call {
 	return &MockProjectAPI_GetProjectsByClassifier_Call{Call: _e.mock.On("GetProjectsByClassifier", ctx, classifier)}
 }
 
@@ -16324,7 +16531,7 @@ type MockProjectAPI_GetProjectsByClassifierExecute_Call struct {
 
 // GetProjectsByClassifierExecute is a helper method to define mock.On call
 //   - r client.ApiGetProjectsByClassifierRequest
-func (_e *MockProjectAPI_Expecter) GetProjectsByClassifierExecute(r interface{}) *MockProjectAPI_GetProjectsByClassifierExecute_Call {
+func (_e *MockProjectAPI_Expecter) GetProjectsByClassifierExecute(r any) *MockProjectAPI_GetProjectsByClassifierExecute_Call {
 	return &MockProjectAPI_GetProjectsByClassifierExecute_Call{Call: _e.mock.On("GetProjectsByClassifierExecute", r)}
 }
 
@@ -16376,7 +16583,7 @@ type MockProjectAPI_GetProjectsByTag_Call struct {
 // GetProjectsByTag is a helper method to define mock.On call
 //   - ctx context.Context
 //   - tag string
-func (_e *MockProjectAPI_Expecter) GetProjectsByTag(ctx interface{}, tag interface{}) *MockProjectAPI_GetProjectsByTag_Call {
+func (_e *MockProjectAPI_Expecter) GetProjectsByTag(ctx any, tag any) *MockProjectAPI_GetProjectsByTag_Call {
 	return &MockProjectAPI_GetProjectsByTag_Call{Call: _e.mock.On("GetProjectsByTag", ctx, tag)}
 }
 
@@ -16451,7 +16658,7 @@ type MockProjectAPI_GetProjectsByTagExecute_Call struct {
 
 // GetProjectsByTagExecute is a helper method to define mock.On call
 //   - r client.ApiGetProjectsByTagRequest
-func (_e *MockProjectAPI_Expecter) GetProjectsByTagExecute(r interface{}) *MockProjectAPI_GetProjectsByTagExecute_Call {
+func (_e *MockProjectAPI_Expecter) GetProjectsByTagExecute(r any) *MockProjectAPI_GetProjectsByTagExecute_Call {
 	return &MockProjectAPI_GetProjectsByTagExecute_Call{Call: _e.mock.On("GetProjectsByTagExecute", r)}
 }
 
@@ -16521,7 +16728,7 @@ type MockProjectAPI_GetProjectsExecute_Call struct {
 
 // GetProjectsExecute is a helper method to define mock.On call
 //   - r client.ApiGetProjectsRequest
-func (_e *MockProjectAPI_Expecter) GetProjectsExecute(r interface{}) *MockProjectAPI_GetProjectsExecute_Call {
+func (_e *MockProjectAPI_Expecter) GetProjectsExecute(r any) *MockProjectAPI_GetProjectsExecute_Call {
 	return &MockProjectAPI_GetProjectsExecute_Call{Call: _e.mock.On("GetProjectsExecute", r)}
 }
 
@@ -16573,7 +16780,7 @@ type MockProjectAPI_GetProjectsWithoutDescendantsOf_Call struct {
 // GetProjectsWithoutDescendantsOf is a helper method to define mock.On call
 //   - ctx context.Context
 //   - uuid string
-func (_e *MockProjectAPI_Expecter) GetProjectsWithoutDescendantsOf(ctx interface{}, uuid interface{}) *MockProjectAPI_GetProjectsWithoutDescendantsOf_Call {
+func (_e *MockProjectAPI_Expecter) GetProjectsWithoutDescendantsOf(ctx any, uuid any) *MockProjectAPI_GetProjectsWithoutDescendantsOf_Call {
 	return &MockProjectAPI_GetProjectsWithoutDescendantsOf_Call{Call: _e.mock.On("GetProjectsWithoutDescendantsOf", ctx, uuid)}
 }
 
@@ -16648,7 +16855,7 @@ type MockProjectAPI_GetProjectsWithoutDescendantsOfExecute_Call struct {
 
 // GetProjectsWithoutDescendantsOfExecute is a helper method to define mock.On call
 //   - r client.ApiGetProjectsWithoutDescendantsOfRequest
-func (_e *MockProjectAPI_Expecter) GetProjectsWithoutDescendantsOfExecute(r interface{}) *MockProjectAPI_GetProjectsWithoutDescendantsOfExecute_Call {
+func (_e *MockProjectAPI_Expecter) GetProjectsWithoutDescendantsOfExecute(r any) *MockProjectAPI_GetProjectsWithoutDescendantsOfExecute_Call {
 	return &MockProjectAPI_GetProjectsWithoutDescendantsOfExecute_Call{Call: _e.mock.On("GetProjectsWithoutDescendantsOfExecute", r)}
 }
 
@@ -16700,7 +16907,7 @@ type MockProjectAPI_PatchProject_Call struct {
 // PatchProject is a helper method to define mock.On call
 //   - ctx context.Context
 //   - uuid string
-func (_e *MockProjectAPI_Expecter) PatchProject(ctx interface{}, uuid interface{}) *MockProjectAPI_PatchProject_Call {
+func (_e *MockProjectAPI_Expecter) PatchProject(ctx any, uuid any) *MockProjectAPI_PatchProject_Call {
 	return &MockProjectAPI_PatchProject_Call{Call: _e.mock.On("PatchProject", ctx, uuid)}
 }
 
@@ -16775,7 +16982,7 @@ type MockProjectAPI_PatchProjectExecute_Call struct {
 
 // PatchProjectExecute is a helper method to define mock.On call
 //   - r client.ApiPatchProjectRequest
-func (_e *MockProjectAPI_Expecter) PatchProjectExecute(r interface{}) *MockProjectAPI_PatchProjectExecute_Call {
+func (_e *MockProjectAPI_Expecter) PatchProjectExecute(r any) *MockProjectAPI_PatchProjectExecute_Call {
 	return &MockProjectAPI_PatchProjectExecute_Call{Call: _e.mock.On("PatchProjectExecute", r)}
 }
 
@@ -16826,7 +17033,7 @@ type MockProjectAPI_UpdateProject_Call struct {
 
 // UpdateProject is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockProjectAPI_Expecter) UpdateProject(ctx interface{}) *MockProjectAPI_UpdateProject_Call {
+func (_e *MockProjectAPI_Expecter) UpdateProject(ctx any) *MockProjectAPI_UpdateProject_Call {
 	return &MockProjectAPI_UpdateProject_Call{Call: _e.mock.On("UpdateProject", ctx)}
 }
 
@@ -16896,7 +17103,7 @@ type MockProjectAPI_UpdateProjectExecute_Call struct {
 
 // UpdateProjectExecute is a helper method to define mock.On call
 //   - r client.ApiUpdateProjectRequest
-func (_e *MockProjectAPI_Expecter) UpdateProjectExecute(r interface{}) *MockProjectAPI_UpdateProjectExecute_Call {
+func (_e *MockProjectAPI_Expecter) UpdateProjectExecute(r any) *MockProjectAPI_UpdateProjectExecute_Call {
 	return &MockProjectAPI_UpdateProjectExecute_Call{Call: _e.mock.On("UpdateProjectExecute", r)}
 }
 
@@ -16930,10 +17137,19 @@ func NewMockProjectPropertyAPI(t interface {
 	Cleanup(func())
 },
 ) *MockProjectPropertyAPI {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &MockProjectPropertyAPI{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }
@@ -16976,7 +17192,7 @@ type MockProjectPropertyAPI_CreateProperty1_Call struct {
 // CreateProperty1 is a helper method to define mock.On call
 //   - ctx context.Context
 //   - uuid string
-func (_e *MockProjectPropertyAPI_Expecter) CreateProperty1(ctx interface{}, uuid interface{}) *MockProjectPropertyAPI_CreateProperty1_Call {
+func (_e *MockProjectPropertyAPI_Expecter) CreateProperty1(ctx any, uuid any) *MockProjectPropertyAPI_CreateProperty1_Call {
 	return &MockProjectPropertyAPI_CreateProperty1_Call{Call: _e.mock.On("CreateProperty1", ctx, uuid)}
 }
 
@@ -17051,7 +17267,7 @@ type MockProjectPropertyAPI_CreateProperty1Execute_Call struct {
 
 // CreateProperty1Execute is a helper method to define mock.On call
 //   - r client.ApiCreateProperty1Request
-func (_e *MockProjectPropertyAPI_Expecter) CreateProperty1Execute(r interface{}) *MockProjectPropertyAPI_CreateProperty1Execute_Call {
+func (_e *MockProjectPropertyAPI_Expecter) CreateProperty1Execute(r any) *MockProjectPropertyAPI_CreateProperty1Execute_Call {
 	return &MockProjectPropertyAPI_CreateProperty1Execute_Call{Call: _e.mock.On("CreateProperty1Execute", r)}
 }
 
@@ -17103,7 +17319,7 @@ type MockProjectPropertyAPI_DeleteProperty1_Call struct {
 // DeleteProperty1 is a helper method to define mock.On call
 //   - ctx context.Context
 //   - uuid string
-func (_e *MockProjectPropertyAPI_Expecter) DeleteProperty1(ctx interface{}, uuid interface{}) *MockProjectPropertyAPI_DeleteProperty1_Call {
+func (_e *MockProjectPropertyAPI_Expecter) DeleteProperty1(ctx any, uuid any) *MockProjectPropertyAPI_DeleteProperty1_Call {
 	return &MockProjectPropertyAPI_DeleteProperty1_Call{Call: _e.mock.On("DeleteProperty1", ctx, uuid)}
 }
 
@@ -17170,7 +17386,7 @@ type MockProjectPropertyAPI_DeleteProperty1Execute_Call struct {
 
 // DeleteProperty1Execute is a helper method to define mock.On call
 //   - r client.ApiDeleteProperty1Request
-func (_e *MockProjectPropertyAPI_Expecter) DeleteProperty1Execute(r interface{}) *MockProjectPropertyAPI_DeleteProperty1Execute_Call {
+func (_e *MockProjectPropertyAPI_Expecter) DeleteProperty1Execute(r any) *MockProjectPropertyAPI_DeleteProperty1Execute_Call {
 	return &MockProjectPropertyAPI_DeleteProperty1Execute_Call{Call: _e.mock.On("DeleteProperty1Execute", r)}
 }
 
@@ -17222,7 +17438,7 @@ type MockProjectPropertyAPI_GetProperties1_Call struct {
 // GetProperties1 is a helper method to define mock.On call
 //   - ctx context.Context
 //   - uuid string
-func (_e *MockProjectPropertyAPI_Expecter) GetProperties1(ctx interface{}, uuid interface{}) *MockProjectPropertyAPI_GetProperties1_Call {
+func (_e *MockProjectPropertyAPI_Expecter) GetProperties1(ctx any, uuid any) *MockProjectPropertyAPI_GetProperties1_Call {
 	return &MockProjectPropertyAPI_GetProperties1_Call{Call: _e.mock.On("GetProperties1", ctx, uuid)}
 }
 
@@ -17297,7 +17513,7 @@ type MockProjectPropertyAPI_GetProperties1Execute_Call struct {
 
 // GetProperties1Execute is a helper method to define mock.On call
 //   - r client.ApiGetProperties1Request
-func (_e *MockProjectPropertyAPI_Expecter) GetProperties1Execute(r interface{}) *MockProjectPropertyAPI_GetProperties1Execute_Call {
+func (_e *MockProjectPropertyAPI_Expecter) GetProperties1Execute(r any) *MockProjectPropertyAPI_GetProperties1Execute_Call {
 	return &MockProjectPropertyAPI_GetProperties1Execute_Call{Call: _e.mock.On("GetProperties1Execute", r)}
 }
 
@@ -17349,7 +17565,7 @@ type MockProjectPropertyAPI_UpdateProperty_Call struct {
 // UpdateProperty is a helper method to define mock.On call
 //   - ctx context.Context
 //   - uuid string
-func (_e *MockProjectPropertyAPI_Expecter) UpdateProperty(ctx interface{}, uuid interface{}) *MockProjectPropertyAPI_UpdateProperty_Call {
+func (_e *MockProjectPropertyAPI_Expecter) UpdateProperty(ctx any, uuid any) *MockProjectPropertyAPI_UpdateProperty_Call {
 	return &MockProjectPropertyAPI_UpdateProperty_Call{Call: _e.mock.On("UpdateProperty", ctx, uuid)}
 }
 
@@ -17424,7 +17640,7 @@ type MockProjectPropertyAPI_UpdatePropertyExecute_Call struct {
 
 // UpdatePropertyExecute is a helper method to define mock.On call
 //   - r client.ApiUpdatePropertyRequest
-func (_e *MockProjectPropertyAPI_Expecter) UpdatePropertyExecute(r interface{}) *MockProjectPropertyAPI_UpdatePropertyExecute_Call {
+func (_e *MockProjectPropertyAPI_Expecter) UpdatePropertyExecute(r any) *MockProjectPropertyAPI_UpdatePropertyExecute_Call {
 	return &MockProjectPropertyAPI_UpdatePropertyExecute_Call{Call: _e.mock.On("UpdatePropertyExecute", r)}
 }
 
@@ -17458,10 +17674,19 @@ func NewMockRepositoryAPI(t interface {
 	Cleanup(func())
 },
 ) *MockRepositoryAPI {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &MockRepositoryAPI{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }
@@ -17503,7 +17728,7 @@ type MockRepositoryAPI_CreateRepository_Call struct {
 
 // CreateRepository is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockRepositoryAPI_Expecter) CreateRepository(ctx interface{}) *MockRepositoryAPI_CreateRepository_Call {
+func (_e *MockRepositoryAPI_Expecter) CreateRepository(ctx any) *MockRepositoryAPI_CreateRepository_Call {
 	return &MockRepositoryAPI_CreateRepository_Call{Call: _e.mock.On("CreateRepository", ctx)}
 }
 
@@ -17573,7 +17798,7 @@ type MockRepositoryAPI_CreateRepositoryExecute_Call struct {
 
 // CreateRepositoryExecute is a helper method to define mock.On call
 //   - r client.ApiCreateRepositoryRequest
-func (_e *MockRepositoryAPI_Expecter) CreateRepositoryExecute(r interface{}) *MockRepositoryAPI_CreateRepositoryExecute_Call {
+func (_e *MockRepositoryAPI_Expecter) CreateRepositoryExecute(r any) *MockRepositoryAPI_CreateRepositoryExecute_Call {
 	return &MockRepositoryAPI_CreateRepositoryExecute_Call{Call: _e.mock.On("CreateRepositoryExecute", r)}
 }
 
@@ -17625,7 +17850,7 @@ type MockRepositoryAPI_DeleteRepository_Call struct {
 // DeleteRepository is a helper method to define mock.On call
 //   - ctx context.Context
 //   - uuid string
-func (_e *MockRepositoryAPI_Expecter) DeleteRepository(ctx interface{}, uuid interface{}) *MockRepositoryAPI_DeleteRepository_Call {
+func (_e *MockRepositoryAPI_Expecter) DeleteRepository(ctx any, uuid any) *MockRepositoryAPI_DeleteRepository_Call {
 	return &MockRepositoryAPI_DeleteRepository_Call{Call: _e.mock.On("DeleteRepository", ctx, uuid)}
 }
 
@@ -17692,7 +17917,7 @@ type MockRepositoryAPI_DeleteRepositoryExecute_Call struct {
 
 // DeleteRepositoryExecute is a helper method to define mock.On call
 //   - r client.ApiDeleteRepositoryRequest
-func (_e *MockRepositoryAPI_Expecter) DeleteRepositoryExecute(r interface{}) *MockRepositoryAPI_DeleteRepositoryExecute_Call {
+func (_e *MockRepositoryAPI_Expecter) DeleteRepositoryExecute(r any) *MockRepositoryAPI_DeleteRepositoryExecute_Call {
 	return &MockRepositoryAPI_DeleteRepositoryExecute_Call{Call: _e.mock.On("DeleteRepositoryExecute", r)}
 }
 
@@ -17743,7 +17968,7 @@ type MockRepositoryAPI_GetRepositories_Call struct {
 
 // GetRepositories is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockRepositoryAPI_Expecter) GetRepositories(ctx interface{}) *MockRepositoryAPI_GetRepositories_Call {
+func (_e *MockRepositoryAPI_Expecter) GetRepositories(ctx any) *MockRepositoryAPI_GetRepositories_Call {
 	return &MockRepositoryAPI_GetRepositories_Call{Call: _e.mock.On("GetRepositories", ctx)}
 }
 
@@ -17795,7 +18020,7 @@ type MockRepositoryAPI_GetRepositoriesByType_Call struct {
 // GetRepositoriesByType is a helper method to define mock.On call
 //   - ctx context.Context
 //   - type_ string
-func (_e *MockRepositoryAPI_Expecter) GetRepositoriesByType(ctx interface{}, type_ interface{}) *MockRepositoryAPI_GetRepositoriesByType_Call {
+func (_e *MockRepositoryAPI_Expecter) GetRepositoriesByType(ctx any, type_ any) *MockRepositoryAPI_GetRepositoriesByType_Call {
 	return &MockRepositoryAPI_GetRepositoriesByType_Call{Call: _e.mock.On("GetRepositoriesByType", ctx, type_)}
 }
 
@@ -17870,7 +18095,7 @@ type MockRepositoryAPI_GetRepositoriesByTypeExecute_Call struct {
 
 // GetRepositoriesByTypeExecute is a helper method to define mock.On call
 //   - r client.ApiGetRepositoriesByTypeRequest
-func (_e *MockRepositoryAPI_Expecter) GetRepositoriesByTypeExecute(r interface{}) *MockRepositoryAPI_GetRepositoriesByTypeExecute_Call {
+func (_e *MockRepositoryAPI_Expecter) GetRepositoriesByTypeExecute(r any) *MockRepositoryAPI_GetRepositoriesByTypeExecute_Call {
 	return &MockRepositoryAPI_GetRepositoriesByTypeExecute_Call{Call: _e.mock.On("GetRepositoriesByTypeExecute", r)}
 }
 
@@ -17940,7 +18165,7 @@ type MockRepositoryAPI_GetRepositoriesExecute_Call struct {
 
 // GetRepositoriesExecute is a helper method to define mock.On call
 //   - r client.ApiGetRepositoriesRequest
-func (_e *MockRepositoryAPI_Expecter) GetRepositoriesExecute(r interface{}) *MockRepositoryAPI_GetRepositoriesExecute_Call {
+func (_e *MockRepositoryAPI_Expecter) GetRepositoriesExecute(r any) *MockRepositoryAPI_GetRepositoriesExecute_Call {
 	return &MockRepositoryAPI_GetRepositoriesExecute_Call{Call: _e.mock.On("GetRepositoriesExecute", r)}
 }
 
@@ -17991,7 +18216,7 @@ type MockRepositoryAPI_GetRepositoryMetaComponent_Call struct {
 
 // GetRepositoryMetaComponent is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockRepositoryAPI_Expecter) GetRepositoryMetaComponent(ctx interface{}) *MockRepositoryAPI_GetRepositoryMetaComponent_Call {
+func (_e *MockRepositoryAPI_Expecter) GetRepositoryMetaComponent(ctx any) *MockRepositoryAPI_GetRepositoryMetaComponent_Call {
 	return &MockRepositoryAPI_GetRepositoryMetaComponent_Call{Call: _e.mock.On("GetRepositoryMetaComponent", ctx)}
 }
 
@@ -18061,7 +18286,7 @@ type MockRepositoryAPI_GetRepositoryMetaComponentExecute_Call struct {
 
 // GetRepositoryMetaComponentExecute is a helper method to define mock.On call
 //   - r client.ApiGetRepositoryMetaComponentRequest
-func (_e *MockRepositoryAPI_Expecter) GetRepositoryMetaComponentExecute(r interface{}) *MockRepositoryAPI_GetRepositoryMetaComponentExecute_Call {
+func (_e *MockRepositoryAPI_Expecter) GetRepositoryMetaComponentExecute(r any) *MockRepositoryAPI_GetRepositoryMetaComponentExecute_Call {
 	return &MockRepositoryAPI_GetRepositoryMetaComponentExecute_Call{Call: _e.mock.On("GetRepositoryMetaComponentExecute", r)}
 }
 
@@ -18112,7 +18337,7 @@ type MockRepositoryAPI_UpdateRepository_Call struct {
 
 // UpdateRepository is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockRepositoryAPI_Expecter) UpdateRepository(ctx interface{}) *MockRepositoryAPI_UpdateRepository_Call {
+func (_e *MockRepositoryAPI_Expecter) UpdateRepository(ctx any) *MockRepositoryAPI_UpdateRepository_Call {
 	return &MockRepositoryAPI_UpdateRepository_Call{Call: _e.mock.On("UpdateRepository", ctx)}
 }
 
@@ -18182,7 +18407,7 @@ type MockRepositoryAPI_UpdateRepositoryExecute_Call struct {
 
 // UpdateRepositoryExecute is a helper method to define mock.On call
 //   - r client.ApiUpdateRepositoryRequest
-func (_e *MockRepositoryAPI_Expecter) UpdateRepositoryExecute(r interface{}) *MockRepositoryAPI_UpdateRepositoryExecute_Call {
+func (_e *MockRepositoryAPI_Expecter) UpdateRepositoryExecute(r any) *MockRepositoryAPI_UpdateRepositoryExecute_Call {
 	return &MockRepositoryAPI_UpdateRepositoryExecute_Call{Call: _e.mock.On("UpdateRepositoryExecute", r)}
 }
 
@@ -18216,10 +18441,19 @@ func NewMockSearchAPI(t interface {
 	Cleanup(func())
 },
 ) *MockSearchAPI {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &MockSearchAPI{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }
@@ -18261,7 +18495,7 @@ type MockSearchAPI_AggregateSearch_Call struct {
 
 // AggregateSearch is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockSearchAPI_Expecter) AggregateSearch(ctx interface{}) *MockSearchAPI_AggregateSearch_Call {
+func (_e *MockSearchAPI_Expecter) AggregateSearch(ctx any) *MockSearchAPI_AggregateSearch_Call {
 	return &MockSearchAPI_AggregateSearch_Call{Call: _e.mock.On("AggregateSearch", ctx)}
 }
 
@@ -18331,7 +18565,7 @@ type MockSearchAPI_AggregateSearchExecute_Call struct {
 
 // AggregateSearchExecute is a helper method to define mock.On call
 //   - r client.ApiAggregateSearchRequest
-func (_e *MockSearchAPI_Expecter) AggregateSearchExecute(r interface{}) *MockSearchAPI_AggregateSearchExecute_Call {
+func (_e *MockSearchAPI_Expecter) AggregateSearchExecute(r any) *MockSearchAPI_AggregateSearchExecute_Call {
 	return &MockSearchAPI_AggregateSearchExecute_Call{Call: _e.mock.On("AggregateSearchExecute", r)}
 }
 
@@ -18382,7 +18616,7 @@ type MockSearchAPI_ComponentSearch_Call struct {
 
 // ComponentSearch is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockSearchAPI_Expecter) ComponentSearch(ctx interface{}) *MockSearchAPI_ComponentSearch_Call {
+func (_e *MockSearchAPI_Expecter) ComponentSearch(ctx any) *MockSearchAPI_ComponentSearch_Call {
 	return &MockSearchAPI_ComponentSearch_Call{Call: _e.mock.On("ComponentSearch", ctx)}
 }
 
@@ -18452,7 +18686,7 @@ type MockSearchAPI_ComponentSearchExecute_Call struct {
 
 // ComponentSearchExecute is a helper method to define mock.On call
 //   - r client.ApiComponentSearchRequest
-func (_e *MockSearchAPI_Expecter) ComponentSearchExecute(r interface{}) *MockSearchAPI_ComponentSearchExecute_Call {
+func (_e *MockSearchAPI_Expecter) ComponentSearchExecute(r any) *MockSearchAPI_ComponentSearchExecute_Call {
 	return &MockSearchAPI_ComponentSearchExecute_Call{Call: _e.mock.On("ComponentSearchExecute", r)}
 }
 
@@ -18503,7 +18737,7 @@ type MockSearchAPI_LicenseSearch_Call struct {
 
 // LicenseSearch is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockSearchAPI_Expecter) LicenseSearch(ctx interface{}) *MockSearchAPI_LicenseSearch_Call {
+func (_e *MockSearchAPI_Expecter) LicenseSearch(ctx any) *MockSearchAPI_LicenseSearch_Call {
 	return &MockSearchAPI_LicenseSearch_Call{Call: _e.mock.On("LicenseSearch", ctx)}
 }
 
@@ -18573,7 +18807,7 @@ type MockSearchAPI_LicenseSearchExecute_Call struct {
 
 // LicenseSearchExecute is a helper method to define mock.On call
 //   - r client.ApiLicenseSearchRequest
-func (_e *MockSearchAPI_Expecter) LicenseSearchExecute(r interface{}) *MockSearchAPI_LicenseSearchExecute_Call {
+func (_e *MockSearchAPI_Expecter) LicenseSearchExecute(r any) *MockSearchAPI_LicenseSearchExecute_Call {
 	return &MockSearchAPI_LicenseSearchExecute_Call{Call: _e.mock.On("LicenseSearchExecute", r)}
 }
 
@@ -18624,7 +18858,7 @@ type MockSearchAPI_ProjectSearch_Call struct {
 
 // ProjectSearch is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockSearchAPI_Expecter) ProjectSearch(ctx interface{}) *MockSearchAPI_ProjectSearch_Call {
+func (_e *MockSearchAPI_Expecter) ProjectSearch(ctx any) *MockSearchAPI_ProjectSearch_Call {
 	return &MockSearchAPI_ProjectSearch_Call{Call: _e.mock.On("ProjectSearch", ctx)}
 }
 
@@ -18694,7 +18928,7 @@ type MockSearchAPI_ProjectSearchExecute_Call struct {
 
 // ProjectSearchExecute is a helper method to define mock.On call
 //   - r client.ApiProjectSearchRequest
-func (_e *MockSearchAPI_Expecter) ProjectSearchExecute(r interface{}) *MockSearchAPI_ProjectSearchExecute_Call {
+func (_e *MockSearchAPI_Expecter) ProjectSearchExecute(r any) *MockSearchAPI_ProjectSearchExecute_Call {
 	return &MockSearchAPI_ProjectSearchExecute_Call{Call: _e.mock.On("ProjectSearchExecute", r)}
 }
 
@@ -18745,7 +18979,7 @@ type MockSearchAPI_Reindex_Call struct {
 
 // Reindex is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockSearchAPI_Expecter) Reindex(ctx interface{}) *MockSearchAPI_Reindex_Call {
+func (_e *MockSearchAPI_Expecter) Reindex(ctx any) *MockSearchAPI_Reindex_Call {
 	return &MockSearchAPI_Reindex_Call{Call: _e.mock.On("Reindex", ctx)}
 }
 
@@ -18815,7 +19049,7 @@ type MockSearchAPI_ReindexExecute_Call struct {
 
 // ReindexExecute is a helper method to define mock.On call
 //   - r client.ApiReindexRequest
-func (_e *MockSearchAPI_Expecter) ReindexExecute(r interface{}) *MockSearchAPI_ReindexExecute_Call {
+func (_e *MockSearchAPI_Expecter) ReindexExecute(r any) *MockSearchAPI_ReindexExecute_Call {
 	return &MockSearchAPI_ReindexExecute_Call{Call: _e.mock.On("ReindexExecute", r)}
 }
 
@@ -18866,7 +19100,7 @@ type MockSearchAPI_ServiceSearch_Call struct {
 
 // ServiceSearch is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockSearchAPI_Expecter) ServiceSearch(ctx interface{}) *MockSearchAPI_ServiceSearch_Call {
+func (_e *MockSearchAPI_Expecter) ServiceSearch(ctx any) *MockSearchAPI_ServiceSearch_Call {
 	return &MockSearchAPI_ServiceSearch_Call{Call: _e.mock.On("ServiceSearch", ctx)}
 }
 
@@ -18936,7 +19170,7 @@ type MockSearchAPI_ServiceSearchExecute_Call struct {
 
 // ServiceSearchExecute is a helper method to define mock.On call
 //   - r client.ApiServiceSearchRequest
-func (_e *MockSearchAPI_Expecter) ServiceSearchExecute(r interface{}) *MockSearchAPI_ServiceSearchExecute_Call {
+func (_e *MockSearchAPI_Expecter) ServiceSearchExecute(r any) *MockSearchAPI_ServiceSearchExecute_Call {
 	return &MockSearchAPI_ServiceSearchExecute_Call{Call: _e.mock.On("ServiceSearchExecute", r)}
 }
 
@@ -18987,7 +19221,7 @@ type MockSearchAPI_VulnerabilitySearch_Call struct {
 
 // VulnerabilitySearch is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockSearchAPI_Expecter) VulnerabilitySearch(ctx interface{}) *MockSearchAPI_VulnerabilitySearch_Call {
+func (_e *MockSearchAPI_Expecter) VulnerabilitySearch(ctx any) *MockSearchAPI_VulnerabilitySearch_Call {
 	return &MockSearchAPI_VulnerabilitySearch_Call{Call: _e.mock.On("VulnerabilitySearch", ctx)}
 }
 
@@ -19057,7 +19291,7 @@ type MockSearchAPI_VulnerabilitySearchExecute_Call struct {
 
 // VulnerabilitySearchExecute is a helper method to define mock.On call
 //   - r client.ApiVulnerabilitySearchRequest
-func (_e *MockSearchAPI_Expecter) VulnerabilitySearchExecute(r interface{}) *MockSearchAPI_VulnerabilitySearchExecute_Call {
+func (_e *MockSearchAPI_Expecter) VulnerabilitySearchExecute(r any) *MockSearchAPI_VulnerabilitySearchExecute_Call {
 	return &MockSearchAPI_VulnerabilitySearchExecute_Call{Call: _e.mock.On("VulnerabilitySearchExecute", r)}
 }
 
@@ -19108,7 +19342,7 @@ type MockSearchAPI_VulnerableSoftwareSearch_Call struct {
 
 // VulnerableSoftwareSearch is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockSearchAPI_Expecter) VulnerableSoftwareSearch(ctx interface{}) *MockSearchAPI_VulnerableSoftwareSearch_Call {
+func (_e *MockSearchAPI_Expecter) VulnerableSoftwareSearch(ctx any) *MockSearchAPI_VulnerableSoftwareSearch_Call {
 	return &MockSearchAPI_VulnerableSoftwareSearch_Call{Call: _e.mock.On("VulnerableSoftwareSearch", ctx)}
 }
 
@@ -19178,7 +19412,7 @@ type MockSearchAPI_VulnerableSoftwareSearchExecute_Call struct {
 
 // VulnerableSoftwareSearchExecute is a helper method to define mock.On call
 //   - r client.ApiVulnerableSoftwareSearchRequest
-func (_e *MockSearchAPI_Expecter) VulnerableSoftwareSearchExecute(r interface{}) *MockSearchAPI_VulnerableSoftwareSearchExecute_Call {
+func (_e *MockSearchAPI_Expecter) VulnerableSoftwareSearchExecute(r any) *MockSearchAPI_VulnerableSoftwareSearchExecute_Call {
 	return &MockSearchAPI_VulnerableSoftwareSearchExecute_Call{Call: _e.mock.On("VulnerableSoftwareSearchExecute", r)}
 }
 
@@ -19212,10 +19446,19 @@ func NewMockServiceAPI(t interface {
 	Cleanup(func())
 },
 ) *MockServiceAPI {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &MockServiceAPI{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }
@@ -19258,7 +19501,7 @@ type MockServiceAPI_CreateService_Call struct {
 // CreateService is a helper method to define mock.On call
 //   - ctx context.Context
 //   - uuid string
-func (_e *MockServiceAPI_Expecter) CreateService(ctx interface{}, uuid interface{}) *MockServiceAPI_CreateService_Call {
+func (_e *MockServiceAPI_Expecter) CreateService(ctx any, uuid any) *MockServiceAPI_CreateService_Call {
 	return &MockServiceAPI_CreateService_Call{Call: _e.mock.On("CreateService", ctx, uuid)}
 }
 
@@ -19333,7 +19576,7 @@ type MockServiceAPI_CreateServiceExecute_Call struct {
 
 // CreateServiceExecute is a helper method to define mock.On call
 //   - r client.ApiCreateServiceRequest
-func (_e *MockServiceAPI_Expecter) CreateServiceExecute(r interface{}) *MockServiceAPI_CreateServiceExecute_Call {
+func (_e *MockServiceAPI_Expecter) CreateServiceExecute(r any) *MockServiceAPI_CreateServiceExecute_Call {
 	return &MockServiceAPI_CreateServiceExecute_Call{Call: _e.mock.On("CreateServiceExecute", r)}
 }
 
@@ -19385,7 +19628,7 @@ type MockServiceAPI_DeleteService_Call struct {
 // DeleteService is a helper method to define mock.On call
 //   - ctx context.Context
 //   - uuid string
-func (_e *MockServiceAPI_Expecter) DeleteService(ctx interface{}, uuid interface{}) *MockServiceAPI_DeleteService_Call {
+func (_e *MockServiceAPI_Expecter) DeleteService(ctx any, uuid any) *MockServiceAPI_DeleteService_Call {
 	return &MockServiceAPI_DeleteService_Call{Call: _e.mock.On("DeleteService", ctx, uuid)}
 }
 
@@ -19452,7 +19695,7 @@ type MockServiceAPI_DeleteServiceExecute_Call struct {
 
 // DeleteServiceExecute is a helper method to define mock.On call
 //   - r client.ApiDeleteServiceRequest
-func (_e *MockServiceAPI_Expecter) DeleteServiceExecute(r interface{}) *MockServiceAPI_DeleteServiceExecute_Call {
+func (_e *MockServiceAPI_Expecter) DeleteServiceExecute(r any) *MockServiceAPI_DeleteServiceExecute_Call {
 	return &MockServiceAPI_DeleteServiceExecute_Call{Call: _e.mock.On("DeleteServiceExecute", r)}
 }
 
@@ -19504,7 +19747,7 @@ type MockServiceAPI_GetAllServices_Call struct {
 // GetAllServices is a helper method to define mock.On call
 //   - ctx context.Context
 //   - uuid string
-func (_e *MockServiceAPI_Expecter) GetAllServices(ctx interface{}, uuid interface{}) *MockServiceAPI_GetAllServices_Call {
+func (_e *MockServiceAPI_Expecter) GetAllServices(ctx any, uuid any) *MockServiceAPI_GetAllServices_Call {
 	return &MockServiceAPI_GetAllServices_Call{Call: _e.mock.On("GetAllServices", ctx, uuid)}
 }
 
@@ -19579,7 +19822,7 @@ type MockServiceAPI_GetAllServicesExecute_Call struct {
 
 // GetAllServicesExecute is a helper method to define mock.On call
 //   - r client.ApiGetAllServicesRequest
-func (_e *MockServiceAPI_Expecter) GetAllServicesExecute(r interface{}) *MockServiceAPI_GetAllServicesExecute_Call {
+func (_e *MockServiceAPI_Expecter) GetAllServicesExecute(r any) *MockServiceAPI_GetAllServicesExecute_Call {
 	return &MockServiceAPI_GetAllServicesExecute_Call{Call: _e.mock.On("GetAllServicesExecute", r)}
 }
 
@@ -19631,7 +19874,7 @@ type MockServiceAPI_GetServiceByUuid_Call struct {
 // GetServiceByUuid is a helper method to define mock.On call
 //   - ctx context.Context
 //   - uuid string
-func (_e *MockServiceAPI_Expecter) GetServiceByUuid(ctx interface{}, uuid interface{}) *MockServiceAPI_GetServiceByUuid_Call {
+func (_e *MockServiceAPI_Expecter) GetServiceByUuid(ctx any, uuid any) *MockServiceAPI_GetServiceByUuid_Call {
 	return &MockServiceAPI_GetServiceByUuid_Call{Call: _e.mock.On("GetServiceByUuid", ctx, uuid)}
 }
 
@@ -19706,7 +19949,7 @@ type MockServiceAPI_GetServiceByUuidExecute_Call struct {
 
 // GetServiceByUuidExecute is a helper method to define mock.On call
 //   - r client.ApiGetServiceByUuidRequest
-func (_e *MockServiceAPI_Expecter) GetServiceByUuidExecute(r interface{}) *MockServiceAPI_GetServiceByUuidExecute_Call {
+func (_e *MockServiceAPI_Expecter) GetServiceByUuidExecute(r any) *MockServiceAPI_GetServiceByUuidExecute_Call {
 	return &MockServiceAPI_GetServiceByUuidExecute_Call{Call: _e.mock.On("GetServiceByUuidExecute", r)}
 }
 
@@ -19757,7 +20000,7 @@ type MockServiceAPI_UpdateService_Call struct {
 
 // UpdateService is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockServiceAPI_Expecter) UpdateService(ctx interface{}) *MockServiceAPI_UpdateService_Call {
+func (_e *MockServiceAPI_Expecter) UpdateService(ctx any) *MockServiceAPI_UpdateService_Call {
 	return &MockServiceAPI_UpdateService_Call{Call: _e.mock.On("UpdateService", ctx)}
 }
 
@@ -19827,7 +20070,7 @@ type MockServiceAPI_UpdateServiceExecute_Call struct {
 
 // UpdateServiceExecute is a helper method to define mock.On call
 //   - r client.ApiUpdateServiceRequest
-func (_e *MockServiceAPI_Expecter) UpdateServiceExecute(r interface{}) *MockServiceAPI_UpdateServiceExecute_Call {
+func (_e *MockServiceAPI_Expecter) UpdateServiceExecute(r any) *MockServiceAPI_UpdateServiceExecute_Call {
 	return &MockServiceAPI_UpdateServiceExecute_Call{Call: _e.mock.On("UpdateServiceExecute", r)}
 }
 
@@ -19861,10 +20104,19 @@ func NewMockTagAPI(t interface {
 	Cleanup(func())
 },
 ) *MockTagAPI {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &MockTagAPI{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }
@@ -19906,7 +20158,7 @@ type MockTagAPI_CreateTags_Call struct {
 
 // CreateTags is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockTagAPI_Expecter) CreateTags(ctx interface{}) *MockTagAPI_CreateTags_Call {
+func (_e *MockTagAPI_Expecter) CreateTags(ctx any) *MockTagAPI_CreateTags_Call {
 	return &MockTagAPI_CreateTags_Call{Call: _e.mock.On("CreateTags", ctx)}
 }
 
@@ -19968,7 +20220,7 @@ type MockTagAPI_CreateTagsExecute_Call struct {
 
 // CreateTagsExecute is a helper method to define mock.On call
 //   - r client.ApiCreateTagsRequest
-func (_e *MockTagAPI_Expecter) CreateTagsExecute(r interface{}) *MockTagAPI_CreateTagsExecute_Call {
+func (_e *MockTagAPI_Expecter) CreateTagsExecute(r any) *MockTagAPI_CreateTagsExecute_Call {
 	return &MockTagAPI_CreateTagsExecute_Call{Call: _e.mock.On("CreateTagsExecute", r)}
 }
 
@@ -20019,7 +20271,7 @@ type MockTagAPI_DeleteTags_Call struct {
 
 // DeleteTags is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockTagAPI_Expecter) DeleteTags(ctx interface{}) *MockTagAPI_DeleteTags_Call {
+func (_e *MockTagAPI_Expecter) DeleteTags(ctx any) *MockTagAPI_DeleteTags_Call {
 	return &MockTagAPI_DeleteTags_Call{Call: _e.mock.On("DeleteTags", ctx)}
 }
 
@@ -20081,7 +20333,7 @@ type MockTagAPI_DeleteTagsExecute_Call struct {
 
 // DeleteTagsExecute is a helper method to define mock.On call
 //   - r client.ApiDeleteTagsRequest
-func (_e *MockTagAPI_Expecter) DeleteTagsExecute(r interface{}) *MockTagAPI_DeleteTagsExecute_Call {
+func (_e *MockTagAPI_Expecter) DeleteTagsExecute(r any) *MockTagAPI_DeleteTagsExecute_Call {
 	return &MockTagAPI_DeleteTagsExecute_Call{Call: _e.mock.On("DeleteTagsExecute", r)}
 }
 
@@ -20132,7 +20384,7 @@ type MockTagAPI_GetAllTags_Call struct {
 
 // GetAllTags is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockTagAPI_Expecter) GetAllTags(ctx interface{}) *MockTagAPI_GetAllTags_Call {
+func (_e *MockTagAPI_Expecter) GetAllTags(ctx any) *MockTagAPI_GetAllTags_Call {
 	return &MockTagAPI_GetAllTags_Call{Call: _e.mock.On("GetAllTags", ctx)}
 }
 
@@ -20202,7 +20454,7 @@ type MockTagAPI_GetAllTagsExecute_Call struct {
 
 // GetAllTagsExecute is a helper method to define mock.On call
 //   - r client.ApiGetAllTagsRequest
-func (_e *MockTagAPI_Expecter) GetAllTagsExecute(r interface{}) *MockTagAPI_GetAllTagsExecute_Call {
+func (_e *MockTagAPI_Expecter) GetAllTagsExecute(r any) *MockTagAPI_GetAllTagsExecute_Call {
 	return &MockTagAPI_GetAllTagsExecute_Call{Call: _e.mock.On("GetAllTagsExecute", r)}
 }
 
@@ -20254,7 +20506,7 @@ type MockTagAPI_GetTaggedCollectionProjects_Call struct {
 // GetTaggedCollectionProjects is a helper method to define mock.On call
 //   - ctx context.Context
 //   - name string
-func (_e *MockTagAPI_Expecter) GetTaggedCollectionProjects(ctx interface{}, name interface{}) *MockTagAPI_GetTaggedCollectionProjects_Call {
+func (_e *MockTagAPI_Expecter) GetTaggedCollectionProjects(ctx any, name any) *MockTagAPI_GetTaggedCollectionProjects_Call {
 	return &MockTagAPI_GetTaggedCollectionProjects_Call{Call: _e.mock.On("GetTaggedCollectionProjects", ctx, name)}
 }
 
@@ -20329,7 +20581,7 @@ type MockTagAPI_GetTaggedCollectionProjectsExecute_Call struct {
 
 // GetTaggedCollectionProjectsExecute is a helper method to define mock.On call
 //   - r client.ApiGetTaggedCollectionProjectsRequest
-func (_e *MockTagAPI_Expecter) GetTaggedCollectionProjectsExecute(r interface{}) *MockTagAPI_GetTaggedCollectionProjectsExecute_Call {
+func (_e *MockTagAPI_Expecter) GetTaggedCollectionProjectsExecute(r any) *MockTagAPI_GetTaggedCollectionProjectsExecute_Call {
 	return &MockTagAPI_GetTaggedCollectionProjectsExecute_Call{Call: _e.mock.On("GetTaggedCollectionProjectsExecute", r)}
 }
 
@@ -20381,7 +20633,7 @@ type MockTagAPI_GetTaggedNotificationRules_Call struct {
 // GetTaggedNotificationRules is a helper method to define mock.On call
 //   - ctx context.Context
 //   - name string
-func (_e *MockTagAPI_Expecter) GetTaggedNotificationRules(ctx interface{}, name interface{}) *MockTagAPI_GetTaggedNotificationRules_Call {
+func (_e *MockTagAPI_Expecter) GetTaggedNotificationRules(ctx any, name any) *MockTagAPI_GetTaggedNotificationRules_Call {
 	return &MockTagAPI_GetTaggedNotificationRules_Call{Call: _e.mock.On("GetTaggedNotificationRules", ctx, name)}
 }
 
@@ -20456,7 +20708,7 @@ type MockTagAPI_GetTaggedNotificationRulesExecute_Call struct {
 
 // GetTaggedNotificationRulesExecute is a helper method to define mock.On call
 //   - r client.ApiGetTaggedNotificationRulesRequest
-func (_e *MockTagAPI_Expecter) GetTaggedNotificationRulesExecute(r interface{}) *MockTagAPI_GetTaggedNotificationRulesExecute_Call {
+func (_e *MockTagAPI_Expecter) GetTaggedNotificationRulesExecute(r any) *MockTagAPI_GetTaggedNotificationRulesExecute_Call {
 	return &MockTagAPI_GetTaggedNotificationRulesExecute_Call{Call: _e.mock.On("GetTaggedNotificationRulesExecute", r)}
 }
 
@@ -20508,7 +20760,7 @@ type MockTagAPI_GetTaggedPolicies_Call struct {
 // GetTaggedPolicies is a helper method to define mock.On call
 //   - ctx context.Context
 //   - name string
-func (_e *MockTagAPI_Expecter) GetTaggedPolicies(ctx interface{}, name interface{}) *MockTagAPI_GetTaggedPolicies_Call {
+func (_e *MockTagAPI_Expecter) GetTaggedPolicies(ctx any, name any) *MockTagAPI_GetTaggedPolicies_Call {
 	return &MockTagAPI_GetTaggedPolicies_Call{Call: _e.mock.On("GetTaggedPolicies", ctx, name)}
 }
 
@@ -20583,7 +20835,7 @@ type MockTagAPI_GetTaggedPoliciesExecute_Call struct {
 
 // GetTaggedPoliciesExecute is a helper method to define mock.On call
 //   - r client.ApiGetTaggedPoliciesRequest
-func (_e *MockTagAPI_Expecter) GetTaggedPoliciesExecute(r interface{}) *MockTagAPI_GetTaggedPoliciesExecute_Call {
+func (_e *MockTagAPI_Expecter) GetTaggedPoliciesExecute(r any) *MockTagAPI_GetTaggedPoliciesExecute_Call {
 	return &MockTagAPI_GetTaggedPoliciesExecute_Call{Call: _e.mock.On("GetTaggedPoliciesExecute", r)}
 }
 
@@ -20635,7 +20887,7 @@ type MockTagAPI_GetTaggedProjects_Call struct {
 // GetTaggedProjects is a helper method to define mock.On call
 //   - ctx context.Context
 //   - name string
-func (_e *MockTagAPI_Expecter) GetTaggedProjects(ctx interface{}, name interface{}) *MockTagAPI_GetTaggedProjects_Call {
+func (_e *MockTagAPI_Expecter) GetTaggedProjects(ctx any, name any) *MockTagAPI_GetTaggedProjects_Call {
 	return &MockTagAPI_GetTaggedProjects_Call{Call: _e.mock.On("GetTaggedProjects", ctx, name)}
 }
 
@@ -20710,7 +20962,7 @@ type MockTagAPI_GetTaggedProjectsExecute_Call struct {
 
 // GetTaggedProjectsExecute is a helper method to define mock.On call
 //   - r client.ApiGetTaggedProjectsRequest
-func (_e *MockTagAPI_Expecter) GetTaggedProjectsExecute(r interface{}) *MockTagAPI_GetTaggedProjectsExecute_Call {
+func (_e *MockTagAPI_Expecter) GetTaggedProjectsExecute(r any) *MockTagAPI_GetTaggedProjectsExecute_Call {
 	return &MockTagAPI_GetTaggedProjectsExecute_Call{Call: _e.mock.On("GetTaggedProjectsExecute", r)}
 }
 
@@ -20762,7 +21014,7 @@ type MockTagAPI_GetTags_Call struct {
 // GetTags is a helper method to define mock.On call
 //   - ctx context.Context
 //   - policyUuid string
-func (_e *MockTagAPI_Expecter) GetTags(ctx interface{}, policyUuid interface{}) *MockTagAPI_GetTags_Call {
+func (_e *MockTagAPI_Expecter) GetTags(ctx any, policyUuid any) *MockTagAPI_GetTags_Call {
 	return &MockTagAPI_GetTags_Call{Call: _e.mock.On("GetTags", ctx, policyUuid)}
 }
 
@@ -20837,7 +21089,7 @@ type MockTagAPI_GetTagsExecute_Call struct {
 
 // GetTagsExecute is a helper method to define mock.On call
 //   - r client.ApiGetTagsRequest
-func (_e *MockTagAPI_Expecter) GetTagsExecute(r interface{}) *MockTagAPI_GetTagsExecute_Call {
+func (_e *MockTagAPI_Expecter) GetTagsExecute(r any) *MockTagAPI_GetTagsExecute_Call {
 	return &MockTagAPI_GetTagsExecute_Call{Call: _e.mock.On("GetTagsExecute", r)}
 }
 
@@ -20889,7 +21141,7 @@ type MockTagAPI_GetTagsForPolicy_Call struct {
 // GetTagsForPolicy is a helper method to define mock.On call
 //   - ctx context.Context
 //   - uuid string
-func (_e *MockTagAPI_Expecter) GetTagsForPolicy(ctx interface{}, uuid interface{}) *MockTagAPI_GetTagsForPolicy_Call {
+func (_e *MockTagAPI_Expecter) GetTagsForPolicy(ctx any, uuid any) *MockTagAPI_GetTagsForPolicy_Call {
 	return &MockTagAPI_GetTagsForPolicy_Call{Call: _e.mock.On("GetTagsForPolicy", ctx, uuid)}
 }
 
@@ -20964,7 +21216,7 @@ type MockTagAPI_GetTagsForPolicyExecute_Call struct {
 
 // GetTagsForPolicyExecute is a helper method to define mock.On call
 //   - r client.ApiGetTagsForPolicyRequest
-func (_e *MockTagAPI_Expecter) GetTagsForPolicyExecute(r interface{}) *MockTagAPI_GetTagsForPolicyExecute_Call {
+func (_e *MockTagAPI_Expecter) GetTagsForPolicyExecute(r any) *MockTagAPI_GetTagsForPolicyExecute_Call {
 	return &MockTagAPI_GetTagsForPolicyExecute_Call{Call: _e.mock.On("GetTagsForPolicyExecute", r)}
 }
 
@@ -21016,7 +21268,7 @@ type MockTagAPI_TagNotificationRules_Call struct {
 // TagNotificationRules is a helper method to define mock.On call
 //   - ctx context.Context
 //   - name string
-func (_e *MockTagAPI_Expecter) TagNotificationRules(ctx interface{}, name interface{}) *MockTagAPI_TagNotificationRules_Call {
+func (_e *MockTagAPI_Expecter) TagNotificationRules(ctx any, name any) *MockTagAPI_TagNotificationRules_Call {
 	return &MockTagAPI_TagNotificationRules_Call{Call: _e.mock.On("TagNotificationRules", ctx, name)}
 }
 
@@ -21083,7 +21335,7 @@ type MockTagAPI_TagNotificationRulesExecute_Call struct {
 
 // TagNotificationRulesExecute is a helper method to define mock.On call
 //   - r client.ApiTagNotificationRulesRequest
-func (_e *MockTagAPI_Expecter) TagNotificationRulesExecute(r interface{}) *MockTagAPI_TagNotificationRulesExecute_Call {
+func (_e *MockTagAPI_Expecter) TagNotificationRulesExecute(r any) *MockTagAPI_TagNotificationRulesExecute_Call {
 	return &MockTagAPI_TagNotificationRulesExecute_Call{Call: _e.mock.On("TagNotificationRulesExecute", r)}
 }
 
@@ -21135,7 +21387,7 @@ type MockTagAPI_TagPolicies_Call struct {
 // TagPolicies is a helper method to define mock.On call
 //   - ctx context.Context
 //   - name string
-func (_e *MockTagAPI_Expecter) TagPolicies(ctx interface{}, name interface{}) *MockTagAPI_TagPolicies_Call {
+func (_e *MockTagAPI_Expecter) TagPolicies(ctx any, name any) *MockTagAPI_TagPolicies_Call {
 	return &MockTagAPI_TagPolicies_Call{Call: _e.mock.On("TagPolicies", ctx, name)}
 }
 
@@ -21202,7 +21454,7 @@ type MockTagAPI_TagPoliciesExecute_Call struct {
 
 // TagPoliciesExecute is a helper method to define mock.On call
 //   - r client.ApiTagPoliciesRequest
-func (_e *MockTagAPI_Expecter) TagPoliciesExecute(r interface{}) *MockTagAPI_TagPoliciesExecute_Call {
+func (_e *MockTagAPI_Expecter) TagPoliciesExecute(r any) *MockTagAPI_TagPoliciesExecute_Call {
 	return &MockTagAPI_TagPoliciesExecute_Call{Call: _e.mock.On("TagPoliciesExecute", r)}
 }
 
@@ -21254,7 +21506,7 @@ type MockTagAPI_TagProjects_Call struct {
 // TagProjects is a helper method to define mock.On call
 //   - ctx context.Context
 //   - name string
-func (_e *MockTagAPI_Expecter) TagProjects(ctx interface{}, name interface{}) *MockTagAPI_TagProjects_Call {
+func (_e *MockTagAPI_Expecter) TagProjects(ctx any, name any) *MockTagAPI_TagProjects_Call {
 	return &MockTagAPI_TagProjects_Call{Call: _e.mock.On("TagProjects", ctx, name)}
 }
 
@@ -21321,7 +21573,7 @@ type MockTagAPI_TagProjectsExecute_Call struct {
 
 // TagProjectsExecute is a helper method to define mock.On call
 //   - r client.ApiTagProjectsRequest
-func (_e *MockTagAPI_Expecter) TagProjectsExecute(r interface{}) *MockTagAPI_TagProjectsExecute_Call {
+func (_e *MockTagAPI_Expecter) TagProjectsExecute(r any) *MockTagAPI_TagProjectsExecute_Call {
 	return &MockTagAPI_TagProjectsExecute_Call{Call: _e.mock.On("TagProjectsExecute", r)}
 }
 
@@ -21373,7 +21625,7 @@ type MockTagAPI_UntagNotificationRules_Call struct {
 // UntagNotificationRules is a helper method to define mock.On call
 //   - ctx context.Context
 //   - name string
-func (_e *MockTagAPI_Expecter) UntagNotificationRules(ctx interface{}, name interface{}) *MockTagAPI_UntagNotificationRules_Call {
+func (_e *MockTagAPI_Expecter) UntagNotificationRules(ctx any, name any) *MockTagAPI_UntagNotificationRules_Call {
 	return &MockTagAPI_UntagNotificationRules_Call{Call: _e.mock.On("UntagNotificationRules", ctx, name)}
 }
 
@@ -21440,7 +21692,7 @@ type MockTagAPI_UntagNotificationRulesExecute_Call struct {
 
 // UntagNotificationRulesExecute is a helper method to define mock.On call
 //   - r client.ApiUntagNotificationRulesRequest
-func (_e *MockTagAPI_Expecter) UntagNotificationRulesExecute(r interface{}) *MockTagAPI_UntagNotificationRulesExecute_Call {
+func (_e *MockTagAPI_Expecter) UntagNotificationRulesExecute(r any) *MockTagAPI_UntagNotificationRulesExecute_Call {
 	return &MockTagAPI_UntagNotificationRulesExecute_Call{Call: _e.mock.On("UntagNotificationRulesExecute", r)}
 }
 
@@ -21492,7 +21744,7 @@ type MockTagAPI_UntagPolicies_Call struct {
 // UntagPolicies is a helper method to define mock.On call
 //   - ctx context.Context
 //   - name string
-func (_e *MockTagAPI_Expecter) UntagPolicies(ctx interface{}, name interface{}) *MockTagAPI_UntagPolicies_Call {
+func (_e *MockTagAPI_Expecter) UntagPolicies(ctx any, name any) *MockTagAPI_UntagPolicies_Call {
 	return &MockTagAPI_UntagPolicies_Call{Call: _e.mock.On("UntagPolicies", ctx, name)}
 }
 
@@ -21559,7 +21811,7 @@ type MockTagAPI_UntagPoliciesExecute_Call struct {
 
 // UntagPoliciesExecute is a helper method to define mock.On call
 //   - r client.ApiUntagPoliciesRequest
-func (_e *MockTagAPI_Expecter) UntagPoliciesExecute(r interface{}) *MockTagAPI_UntagPoliciesExecute_Call {
+func (_e *MockTagAPI_Expecter) UntagPoliciesExecute(r any) *MockTagAPI_UntagPoliciesExecute_Call {
 	return &MockTagAPI_UntagPoliciesExecute_Call{Call: _e.mock.On("UntagPoliciesExecute", r)}
 }
 
@@ -21611,7 +21863,7 @@ type MockTagAPI_UntagProjects_Call struct {
 // UntagProjects is a helper method to define mock.On call
 //   - ctx context.Context
 //   - name string
-func (_e *MockTagAPI_Expecter) UntagProjects(ctx interface{}, name interface{}) *MockTagAPI_UntagProjects_Call {
+func (_e *MockTagAPI_Expecter) UntagProjects(ctx any, name any) *MockTagAPI_UntagProjects_Call {
 	return &MockTagAPI_UntagProjects_Call{Call: _e.mock.On("UntagProjects", ctx, name)}
 }
 
@@ -21678,7 +21930,7 @@ type MockTagAPI_UntagProjectsExecute_Call struct {
 
 // UntagProjectsExecute is a helper method to define mock.On call
 //   - r client.ApiUntagProjectsRequest
-func (_e *MockTagAPI_Expecter) UntagProjectsExecute(r interface{}) *MockTagAPI_UntagProjectsExecute_Call {
+func (_e *MockTagAPI_Expecter) UntagProjectsExecute(r any) *MockTagAPI_UntagProjectsExecute_Call {
 	return &MockTagAPI_UntagProjectsExecute_Call{Call: _e.mock.On("UntagProjectsExecute", r)}
 }
 
@@ -21712,10 +21964,19 @@ func NewMockTeamAPI(t interface {
 	Cleanup(func())
 },
 ) *MockTeamAPI {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &MockTeamAPI{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }
@@ -21757,7 +22018,7 @@ type MockTeamAPI_AvailableTeams_Call struct {
 
 // AvailableTeams is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockTeamAPI_Expecter) AvailableTeams(ctx interface{}) *MockTeamAPI_AvailableTeams_Call {
+func (_e *MockTeamAPI_Expecter) AvailableTeams(ctx any) *MockTeamAPI_AvailableTeams_Call {
 	return &MockTeamAPI_AvailableTeams_Call{Call: _e.mock.On("AvailableTeams", ctx)}
 }
 
@@ -21827,7 +22088,7 @@ type MockTeamAPI_AvailableTeamsExecute_Call struct {
 
 // AvailableTeamsExecute is a helper method to define mock.On call
 //   - r client.ApiAvailableTeamsRequest
-func (_e *MockTeamAPI_Expecter) AvailableTeamsExecute(r interface{}) *MockTeamAPI_AvailableTeamsExecute_Call {
+func (_e *MockTeamAPI_Expecter) AvailableTeamsExecute(r any) *MockTeamAPI_AvailableTeamsExecute_Call {
 	return &MockTeamAPI_AvailableTeamsExecute_Call{Call: _e.mock.On("AvailableTeamsExecute", r)}
 }
 
@@ -21878,7 +22139,7 @@ type MockTeamAPI_CreateTeam_Call struct {
 
 // CreateTeam is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockTeamAPI_Expecter) CreateTeam(ctx interface{}) *MockTeamAPI_CreateTeam_Call {
+func (_e *MockTeamAPI_Expecter) CreateTeam(ctx any) *MockTeamAPI_CreateTeam_Call {
 	return &MockTeamAPI_CreateTeam_Call{Call: _e.mock.On("CreateTeam", ctx)}
 }
 
@@ -21948,7 +22209,7 @@ type MockTeamAPI_CreateTeamExecute_Call struct {
 
 // CreateTeamExecute is a helper method to define mock.On call
 //   - r client.ApiCreateTeamRequest
-func (_e *MockTeamAPI_Expecter) CreateTeamExecute(r interface{}) *MockTeamAPI_CreateTeamExecute_Call {
+func (_e *MockTeamAPI_Expecter) CreateTeamExecute(r any) *MockTeamAPI_CreateTeamExecute_Call {
 	return &MockTeamAPI_CreateTeamExecute_Call{Call: _e.mock.On("CreateTeamExecute", r)}
 }
 
@@ -22000,7 +22261,7 @@ type MockTeamAPI_DeleteApiKey_Call struct {
 // DeleteApiKey is a helper method to define mock.On call
 //   - ctx context.Context
 //   - publicIdOrKey string
-func (_e *MockTeamAPI_Expecter) DeleteApiKey(ctx interface{}, publicIdOrKey interface{}) *MockTeamAPI_DeleteApiKey_Call {
+func (_e *MockTeamAPI_Expecter) DeleteApiKey(ctx any, publicIdOrKey any) *MockTeamAPI_DeleteApiKey_Call {
 	return &MockTeamAPI_DeleteApiKey_Call{Call: _e.mock.On("DeleteApiKey", ctx, publicIdOrKey)}
 }
 
@@ -22067,7 +22328,7 @@ type MockTeamAPI_DeleteApiKeyExecute_Call struct {
 
 // DeleteApiKeyExecute is a helper method to define mock.On call
 //   - r client.ApiDeleteApiKeyRequest
-func (_e *MockTeamAPI_Expecter) DeleteApiKeyExecute(r interface{}) *MockTeamAPI_DeleteApiKeyExecute_Call {
+func (_e *MockTeamAPI_Expecter) DeleteApiKeyExecute(r any) *MockTeamAPI_DeleteApiKeyExecute_Call {
 	return &MockTeamAPI_DeleteApiKeyExecute_Call{Call: _e.mock.On("DeleteApiKeyExecute", r)}
 }
 
@@ -22118,7 +22379,7 @@ type MockTeamAPI_DeleteTeam_Call struct {
 
 // DeleteTeam is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockTeamAPI_Expecter) DeleteTeam(ctx interface{}) *MockTeamAPI_DeleteTeam_Call {
+func (_e *MockTeamAPI_Expecter) DeleteTeam(ctx any) *MockTeamAPI_DeleteTeam_Call {
 	return &MockTeamAPI_DeleteTeam_Call{Call: _e.mock.On("DeleteTeam", ctx)}
 }
 
@@ -22180,7 +22441,7 @@ type MockTeamAPI_DeleteTeamExecute_Call struct {
 
 // DeleteTeamExecute is a helper method to define mock.On call
 //   - r client.ApiDeleteTeamRequest
-func (_e *MockTeamAPI_Expecter) DeleteTeamExecute(r interface{}) *MockTeamAPI_DeleteTeamExecute_Call {
+func (_e *MockTeamAPI_Expecter) DeleteTeamExecute(r any) *MockTeamAPI_DeleteTeamExecute_Call {
 	return &MockTeamAPI_DeleteTeamExecute_Call{Call: _e.mock.On("DeleteTeamExecute", r)}
 }
 
@@ -22232,7 +22493,7 @@ type MockTeamAPI_GenerateApiKey_Call struct {
 // GenerateApiKey is a helper method to define mock.On call
 //   - ctx context.Context
 //   - uuid string
-func (_e *MockTeamAPI_Expecter) GenerateApiKey(ctx interface{}, uuid interface{}) *MockTeamAPI_GenerateApiKey_Call {
+func (_e *MockTeamAPI_Expecter) GenerateApiKey(ctx any, uuid any) *MockTeamAPI_GenerateApiKey_Call {
 	return &MockTeamAPI_GenerateApiKey_Call{Call: _e.mock.On("GenerateApiKey", ctx, uuid)}
 }
 
@@ -22307,7 +22568,7 @@ type MockTeamAPI_GenerateApiKeyExecute_Call struct {
 
 // GenerateApiKeyExecute is a helper method to define mock.On call
 //   - r client.ApiGenerateApiKeyRequest
-func (_e *MockTeamAPI_Expecter) GenerateApiKeyExecute(r interface{}) *MockTeamAPI_GenerateApiKeyExecute_Call {
+func (_e *MockTeamAPI_Expecter) GenerateApiKeyExecute(r any) *MockTeamAPI_GenerateApiKeyExecute_Call {
 	return &MockTeamAPI_GenerateApiKeyExecute_Call{Call: _e.mock.On("GenerateApiKeyExecute", r)}
 }
 
@@ -22358,7 +22619,7 @@ type MockTeamAPI_GetSelf_Call struct {
 
 // GetSelf is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockTeamAPI_Expecter) GetSelf(ctx interface{}) *MockTeamAPI_GetSelf_Call {
+func (_e *MockTeamAPI_Expecter) GetSelf(ctx any) *MockTeamAPI_GetSelf_Call {
 	return &MockTeamAPI_GetSelf_Call{Call: _e.mock.On("GetSelf", ctx)}
 }
 
@@ -22428,7 +22689,7 @@ type MockTeamAPI_GetSelfExecute_Call struct {
 
 // GetSelfExecute is a helper method to define mock.On call
 //   - r client.ApiGetSelfRequest
-func (_e *MockTeamAPI_Expecter) GetSelfExecute(r interface{}) *MockTeamAPI_GetSelfExecute_Call {
+func (_e *MockTeamAPI_Expecter) GetSelfExecute(r any) *MockTeamAPI_GetSelfExecute_Call {
 	return &MockTeamAPI_GetSelfExecute_Call{Call: _e.mock.On("GetSelfExecute", r)}
 }
 
@@ -22480,7 +22741,7 @@ type MockTeamAPI_GetTeam_Call struct {
 // GetTeam is a helper method to define mock.On call
 //   - ctx context.Context
 //   - uuid string
-func (_e *MockTeamAPI_Expecter) GetTeam(ctx interface{}, uuid interface{}) *MockTeamAPI_GetTeam_Call {
+func (_e *MockTeamAPI_Expecter) GetTeam(ctx any, uuid any) *MockTeamAPI_GetTeam_Call {
 	return &MockTeamAPI_GetTeam_Call{Call: _e.mock.On("GetTeam", ctx, uuid)}
 }
 
@@ -22555,7 +22816,7 @@ type MockTeamAPI_GetTeamExecute_Call struct {
 
 // GetTeamExecute is a helper method to define mock.On call
 //   - r client.ApiGetTeamRequest
-func (_e *MockTeamAPI_Expecter) GetTeamExecute(r interface{}) *MockTeamAPI_GetTeamExecute_Call {
+func (_e *MockTeamAPI_Expecter) GetTeamExecute(r any) *MockTeamAPI_GetTeamExecute_Call {
 	return &MockTeamAPI_GetTeamExecute_Call{Call: _e.mock.On("GetTeamExecute", r)}
 }
 
@@ -22606,7 +22867,7 @@ type MockTeamAPI_GetTeams_Call struct {
 
 // GetTeams is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockTeamAPI_Expecter) GetTeams(ctx interface{}) *MockTeamAPI_GetTeams_Call {
+func (_e *MockTeamAPI_Expecter) GetTeams(ctx any) *MockTeamAPI_GetTeams_Call {
 	return &MockTeamAPI_GetTeams_Call{Call: _e.mock.On("GetTeams", ctx)}
 }
 
@@ -22676,7 +22937,7 @@ type MockTeamAPI_GetTeamsExecute_Call struct {
 
 // GetTeamsExecute is a helper method to define mock.On call
 //   - r client.ApiGetTeamsRequest
-func (_e *MockTeamAPI_Expecter) GetTeamsExecute(r interface{}) *MockTeamAPI_GetTeamsExecute_Call {
+func (_e *MockTeamAPI_Expecter) GetTeamsExecute(r any) *MockTeamAPI_GetTeamsExecute_Call {
 	return &MockTeamAPI_GetTeamsExecute_Call{Call: _e.mock.On("GetTeamsExecute", r)}
 }
 
@@ -22728,7 +22989,7 @@ type MockTeamAPI_RegenerateApiKey_Call struct {
 // RegenerateApiKey is a helper method to define mock.On call
 //   - ctx context.Context
 //   - publicIdOrKey string
-func (_e *MockTeamAPI_Expecter) RegenerateApiKey(ctx interface{}, publicIdOrKey interface{}) *MockTeamAPI_RegenerateApiKey_Call {
+func (_e *MockTeamAPI_Expecter) RegenerateApiKey(ctx any, publicIdOrKey any) *MockTeamAPI_RegenerateApiKey_Call {
 	return &MockTeamAPI_RegenerateApiKey_Call{Call: _e.mock.On("RegenerateApiKey", ctx, publicIdOrKey)}
 }
 
@@ -22803,7 +23064,7 @@ type MockTeamAPI_RegenerateApiKeyExecute_Call struct {
 
 // RegenerateApiKeyExecute is a helper method to define mock.On call
 //   - r client.ApiRegenerateApiKeyRequest
-func (_e *MockTeamAPI_Expecter) RegenerateApiKeyExecute(r interface{}) *MockTeamAPI_RegenerateApiKeyExecute_Call {
+func (_e *MockTeamAPI_Expecter) RegenerateApiKeyExecute(r any) *MockTeamAPI_RegenerateApiKeyExecute_Call {
 	return &MockTeamAPI_RegenerateApiKeyExecute_Call{Call: _e.mock.On("RegenerateApiKeyExecute", r)}
 }
 
@@ -22855,7 +23116,7 @@ type MockTeamAPI_UpdateApiKeyComment_Call struct {
 // UpdateApiKeyComment is a helper method to define mock.On call
 //   - ctx context.Context
 //   - publicIdOrKey string
-func (_e *MockTeamAPI_Expecter) UpdateApiKeyComment(ctx interface{}, publicIdOrKey interface{}) *MockTeamAPI_UpdateApiKeyComment_Call {
+func (_e *MockTeamAPI_Expecter) UpdateApiKeyComment(ctx any, publicIdOrKey any) *MockTeamAPI_UpdateApiKeyComment_Call {
 	return &MockTeamAPI_UpdateApiKeyComment_Call{Call: _e.mock.On("UpdateApiKeyComment", ctx, publicIdOrKey)}
 }
 
@@ -22930,7 +23191,7 @@ type MockTeamAPI_UpdateApiKeyCommentExecute_Call struct {
 
 // UpdateApiKeyCommentExecute is a helper method to define mock.On call
 //   - r client.ApiUpdateApiKeyCommentRequest
-func (_e *MockTeamAPI_Expecter) UpdateApiKeyCommentExecute(r interface{}) *MockTeamAPI_UpdateApiKeyCommentExecute_Call {
+func (_e *MockTeamAPI_Expecter) UpdateApiKeyCommentExecute(r any) *MockTeamAPI_UpdateApiKeyCommentExecute_Call {
 	return &MockTeamAPI_UpdateApiKeyCommentExecute_Call{Call: _e.mock.On("UpdateApiKeyCommentExecute", r)}
 }
 
@@ -22981,7 +23242,7 @@ type MockTeamAPI_UpdateTeam_Call struct {
 
 // UpdateTeam is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockTeamAPI_Expecter) UpdateTeam(ctx interface{}) *MockTeamAPI_UpdateTeam_Call {
+func (_e *MockTeamAPI_Expecter) UpdateTeam(ctx any) *MockTeamAPI_UpdateTeam_Call {
 	return &MockTeamAPI_UpdateTeam_Call{Call: _e.mock.On("UpdateTeam", ctx)}
 }
 
@@ -23051,7 +23312,7 @@ type MockTeamAPI_UpdateTeamExecute_Call struct {
 
 // UpdateTeamExecute is a helper method to define mock.On call
 //   - r client.ApiUpdateTeamRequest
-func (_e *MockTeamAPI_Expecter) UpdateTeamExecute(r interface{}) *MockTeamAPI_UpdateTeamExecute_Call {
+func (_e *MockTeamAPI_Expecter) UpdateTeamExecute(r any) *MockTeamAPI_UpdateTeamExecute_Call {
 	return &MockTeamAPI_UpdateTeamExecute_Call{Call: _e.mock.On("UpdateTeamExecute", r)}
 }
 
@@ -23085,10 +23346,19 @@ func NewMockUserAPI(t interface {
 	Cleanup(func())
 },
 ) *MockUserAPI {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &MockUserAPI{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }
@@ -23131,7 +23401,7 @@ type MockUserAPI_AddTeamToUser_Call struct {
 // AddTeamToUser is a helper method to define mock.On call
 //   - ctx context.Context
 //   - username string
-func (_e *MockUserAPI_Expecter) AddTeamToUser(ctx interface{}, username interface{}) *MockUserAPI_AddTeamToUser_Call {
+func (_e *MockUserAPI_Expecter) AddTeamToUser(ctx any, username any) *MockUserAPI_AddTeamToUser_Call {
 	return &MockUserAPI_AddTeamToUser_Call{Call: _e.mock.On("AddTeamToUser", ctx, username)}
 }
 
@@ -23206,7 +23476,7 @@ type MockUserAPI_AddTeamToUserExecute_Call struct {
 
 // AddTeamToUserExecute is a helper method to define mock.On call
 //   - r client.ApiAddTeamToUserRequest
-func (_e *MockUserAPI_Expecter) AddTeamToUserExecute(r interface{}) *MockUserAPI_AddTeamToUserExecute_Call {
+func (_e *MockUserAPI_Expecter) AddTeamToUserExecute(r any) *MockUserAPI_AddTeamToUserExecute_Call {
 	return &MockUserAPI_AddTeamToUserExecute_Call{Call: _e.mock.On("AddTeamToUserExecute", r)}
 }
 
@@ -23257,7 +23527,7 @@ type MockUserAPI_CreateLdapUser_Call struct {
 
 // CreateLdapUser is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockUserAPI_Expecter) CreateLdapUser(ctx interface{}) *MockUserAPI_CreateLdapUser_Call {
+func (_e *MockUserAPI_Expecter) CreateLdapUser(ctx any) *MockUserAPI_CreateLdapUser_Call {
 	return &MockUserAPI_CreateLdapUser_Call{Call: _e.mock.On("CreateLdapUser", ctx)}
 }
 
@@ -23327,7 +23597,7 @@ type MockUserAPI_CreateLdapUserExecute_Call struct {
 
 // CreateLdapUserExecute is a helper method to define mock.On call
 //   - r client.ApiCreateLdapUserRequest
-func (_e *MockUserAPI_Expecter) CreateLdapUserExecute(r interface{}) *MockUserAPI_CreateLdapUserExecute_Call {
+func (_e *MockUserAPI_Expecter) CreateLdapUserExecute(r any) *MockUserAPI_CreateLdapUserExecute_Call {
 	return &MockUserAPI_CreateLdapUserExecute_Call{Call: _e.mock.On("CreateLdapUserExecute", r)}
 }
 
@@ -23378,7 +23648,7 @@ type MockUserAPI_CreateManagedUser_Call struct {
 
 // CreateManagedUser is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockUserAPI_Expecter) CreateManagedUser(ctx interface{}) *MockUserAPI_CreateManagedUser_Call {
+func (_e *MockUserAPI_Expecter) CreateManagedUser(ctx any) *MockUserAPI_CreateManagedUser_Call {
 	return &MockUserAPI_CreateManagedUser_Call{Call: _e.mock.On("CreateManagedUser", ctx)}
 }
 
@@ -23448,7 +23718,7 @@ type MockUserAPI_CreateManagedUserExecute_Call struct {
 
 // CreateManagedUserExecute is a helper method to define mock.On call
 //   - r client.ApiCreateManagedUserRequest
-func (_e *MockUserAPI_Expecter) CreateManagedUserExecute(r interface{}) *MockUserAPI_CreateManagedUserExecute_Call {
+func (_e *MockUserAPI_Expecter) CreateManagedUserExecute(r any) *MockUserAPI_CreateManagedUserExecute_Call {
 	return &MockUserAPI_CreateManagedUserExecute_Call{Call: _e.mock.On("CreateManagedUserExecute", r)}
 }
 
@@ -23499,7 +23769,7 @@ type MockUserAPI_CreateOidcUser_Call struct {
 
 // CreateOidcUser is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockUserAPI_Expecter) CreateOidcUser(ctx interface{}) *MockUserAPI_CreateOidcUser_Call {
+func (_e *MockUserAPI_Expecter) CreateOidcUser(ctx any) *MockUserAPI_CreateOidcUser_Call {
 	return &MockUserAPI_CreateOidcUser_Call{Call: _e.mock.On("CreateOidcUser", ctx)}
 }
 
@@ -23569,7 +23839,7 @@ type MockUserAPI_CreateOidcUserExecute_Call struct {
 
 // CreateOidcUserExecute is a helper method to define mock.On call
 //   - r client.ApiCreateOidcUserRequest
-func (_e *MockUserAPI_Expecter) CreateOidcUserExecute(r interface{}) *MockUserAPI_CreateOidcUserExecute_Call {
+func (_e *MockUserAPI_Expecter) CreateOidcUserExecute(r any) *MockUserAPI_CreateOidcUserExecute_Call {
 	return &MockUserAPI_CreateOidcUserExecute_Call{Call: _e.mock.On("CreateOidcUserExecute", r)}
 }
 
@@ -23620,7 +23890,7 @@ type MockUserAPI_DeleteLdapUser_Call struct {
 
 // DeleteLdapUser is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockUserAPI_Expecter) DeleteLdapUser(ctx interface{}) *MockUserAPI_DeleteLdapUser_Call {
+func (_e *MockUserAPI_Expecter) DeleteLdapUser(ctx any) *MockUserAPI_DeleteLdapUser_Call {
 	return &MockUserAPI_DeleteLdapUser_Call{Call: _e.mock.On("DeleteLdapUser", ctx)}
 }
 
@@ -23682,7 +23952,7 @@ type MockUserAPI_DeleteLdapUserExecute_Call struct {
 
 // DeleteLdapUserExecute is a helper method to define mock.On call
 //   - r client.ApiDeleteLdapUserRequest
-func (_e *MockUserAPI_Expecter) DeleteLdapUserExecute(r interface{}) *MockUserAPI_DeleteLdapUserExecute_Call {
+func (_e *MockUserAPI_Expecter) DeleteLdapUserExecute(r any) *MockUserAPI_DeleteLdapUserExecute_Call {
 	return &MockUserAPI_DeleteLdapUserExecute_Call{Call: _e.mock.On("DeleteLdapUserExecute", r)}
 }
 
@@ -23733,7 +24003,7 @@ type MockUserAPI_DeleteManagedUser_Call struct {
 
 // DeleteManagedUser is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockUserAPI_Expecter) DeleteManagedUser(ctx interface{}) *MockUserAPI_DeleteManagedUser_Call {
+func (_e *MockUserAPI_Expecter) DeleteManagedUser(ctx any) *MockUserAPI_DeleteManagedUser_Call {
 	return &MockUserAPI_DeleteManagedUser_Call{Call: _e.mock.On("DeleteManagedUser", ctx)}
 }
 
@@ -23795,7 +24065,7 @@ type MockUserAPI_DeleteManagedUserExecute_Call struct {
 
 // DeleteManagedUserExecute is a helper method to define mock.On call
 //   - r client.ApiDeleteManagedUserRequest
-func (_e *MockUserAPI_Expecter) DeleteManagedUserExecute(r interface{}) *MockUserAPI_DeleteManagedUserExecute_Call {
+func (_e *MockUserAPI_Expecter) DeleteManagedUserExecute(r any) *MockUserAPI_DeleteManagedUserExecute_Call {
 	return &MockUserAPI_DeleteManagedUserExecute_Call{Call: _e.mock.On("DeleteManagedUserExecute", r)}
 }
 
@@ -23846,7 +24116,7 @@ type MockUserAPI_DeleteOidcUser_Call struct {
 
 // DeleteOidcUser is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockUserAPI_Expecter) DeleteOidcUser(ctx interface{}) *MockUserAPI_DeleteOidcUser_Call {
+func (_e *MockUserAPI_Expecter) DeleteOidcUser(ctx any) *MockUserAPI_DeleteOidcUser_Call {
 	return &MockUserAPI_DeleteOidcUser_Call{Call: _e.mock.On("DeleteOidcUser", ctx)}
 }
 
@@ -23908,7 +24178,7 @@ type MockUserAPI_DeleteOidcUserExecute_Call struct {
 
 // DeleteOidcUserExecute is a helper method to define mock.On call
 //   - r client.ApiDeleteOidcUserRequest
-func (_e *MockUserAPI_Expecter) DeleteOidcUserExecute(r interface{}) *MockUserAPI_DeleteOidcUserExecute_Call {
+func (_e *MockUserAPI_Expecter) DeleteOidcUserExecute(r any) *MockUserAPI_DeleteOidcUserExecute_Call {
 	return &MockUserAPI_DeleteOidcUserExecute_Call{Call: _e.mock.On("DeleteOidcUserExecute", r)}
 }
 
@@ -23959,7 +24229,7 @@ type MockUserAPI_ForceChangePassword_Call struct {
 
 // ForceChangePassword is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockUserAPI_Expecter) ForceChangePassword(ctx interface{}) *MockUserAPI_ForceChangePassword_Call {
+func (_e *MockUserAPI_Expecter) ForceChangePassword(ctx any) *MockUserAPI_ForceChangePassword_Call {
 	return &MockUserAPI_ForceChangePassword_Call{Call: _e.mock.On("ForceChangePassword", ctx)}
 }
 
@@ -24021,7 +24291,7 @@ type MockUserAPI_ForceChangePasswordExecute_Call struct {
 
 // ForceChangePasswordExecute is a helper method to define mock.On call
 //   - r client.ApiForceChangePasswordRequest
-func (_e *MockUserAPI_Expecter) ForceChangePasswordExecute(r interface{}) *MockUserAPI_ForceChangePasswordExecute_Call {
+func (_e *MockUserAPI_Expecter) ForceChangePasswordExecute(r any) *MockUserAPI_ForceChangePasswordExecute_Call {
 	return &MockUserAPI_ForceChangePasswordExecute_Call{Call: _e.mock.On("ForceChangePasswordExecute", r)}
 }
 
@@ -24072,7 +24342,7 @@ type MockUserAPI_GetLdapUsers_Call struct {
 
 // GetLdapUsers is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockUserAPI_Expecter) GetLdapUsers(ctx interface{}) *MockUserAPI_GetLdapUsers_Call {
+func (_e *MockUserAPI_Expecter) GetLdapUsers(ctx any) *MockUserAPI_GetLdapUsers_Call {
 	return &MockUserAPI_GetLdapUsers_Call{Call: _e.mock.On("GetLdapUsers", ctx)}
 }
 
@@ -24142,7 +24412,7 @@ type MockUserAPI_GetLdapUsersExecute_Call struct {
 
 // GetLdapUsersExecute is a helper method to define mock.On call
 //   - r client.ApiGetLdapUsersRequest
-func (_e *MockUserAPI_Expecter) GetLdapUsersExecute(r interface{}) *MockUserAPI_GetLdapUsersExecute_Call {
+func (_e *MockUserAPI_Expecter) GetLdapUsersExecute(r any) *MockUserAPI_GetLdapUsersExecute_Call {
 	return &MockUserAPI_GetLdapUsersExecute_Call{Call: _e.mock.On("GetLdapUsersExecute", r)}
 }
 
@@ -24193,7 +24463,7 @@ type MockUserAPI_GetManagedUsers_Call struct {
 
 // GetManagedUsers is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockUserAPI_Expecter) GetManagedUsers(ctx interface{}) *MockUserAPI_GetManagedUsers_Call {
+func (_e *MockUserAPI_Expecter) GetManagedUsers(ctx any) *MockUserAPI_GetManagedUsers_Call {
 	return &MockUserAPI_GetManagedUsers_Call{Call: _e.mock.On("GetManagedUsers", ctx)}
 }
 
@@ -24263,7 +24533,7 @@ type MockUserAPI_GetManagedUsersExecute_Call struct {
 
 // GetManagedUsersExecute is a helper method to define mock.On call
 //   - r client.ApiGetManagedUsersRequest
-func (_e *MockUserAPI_Expecter) GetManagedUsersExecute(r interface{}) *MockUserAPI_GetManagedUsersExecute_Call {
+func (_e *MockUserAPI_Expecter) GetManagedUsersExecute(r any) *MockUserAPI_GetManagedUsersExecute_Call {
 	return &MockUserAPI_GetManagedUsersExecute_Call{Call: _e.mock.On("GetManagedUsersExecute", r)}
 }
 
@@ -24314,7 +24584,7 @@ type MockUserAPI_GetOidcUsers_Call struct {
 
 // GetOidcUsers is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockUserAPI_Expecter) GetOidcUsers(ctx interface{}) *MockUserAPI_GetOidcUsers_Call {
+func (_e *MockUserAPI_Expecter) GetOidcUsers(ctx any) *MockUserAPI_GetOidcUsers_Call {
 	return &MockUserAPI_GetOidcUsers_Call{Call: _e.mock.On("GetOidcUsers", ctx)}
 }
 
@@ -24384,7 +24654,7 @@ type MockUserAPI_GetOidcUsersExecute_Call struct {
 
 // GetOidcUsersExecute is a helper method to define mock.On call
 //   - r client.ApiGetOidcUsersRequest
-func (_e *MockUserAPI_Expecter) GetOidcUsersExecute(r interface{}) *MockUserAPI_GetOidcUsersExecute_Call {
+func (_e *MockUserAPI_Expecter) GetOidcUsersExecute(r any) *MockUserAPI_GetOidcUsersExecute_Call {
 	return &MockUserAPI_GetOidcUsersExecute_Call{Call: _e.mock.On("GetOidcUsersExecute", r)}
 }
 
@@ -24435,7 +24705,7 @@ type MockUserAPI_GetSelf1_Call struct {
 
 // GetSelf1 is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockUserAPI_Expecter) GetSelf1(ctx interface{}) *MockUserAPI_GetSelf1_Call {
+func (_e *MockUserAPI_Expecter) GetSelf1(ctx any) *MockUserAPI_GetSelf1_Call {
 	return &MockUserAPI_GetSelf1_Call{Call: _e.mock.On("GetSelf1", ctx)}
 }
 
@@ -24505,7 +24775,7 @@ type MockUserAPI_GetSelf1Execute_Call struct {
 
 // GetSelf1Execute is a helper method to define mock.On call
 //   - r client.ApiGetSelf1Request
-func (_e *MockUserAPI_Expecter) GetSelf1Execute(r interface{}) *MockUserAPI_GetSelf1Execute_Call {
+func (_e *MockUserAPI_Expecter) GetSelf1Execute(r any) *MockUserAPI_GetSelf1Execute_Call {
 	return &MockUserAPI_GetSelf1Execute_Call{Call: _e.mock.On("GetSelf1Execute", r)}
 }
 
@@ -24557,7 +24827,7 @@ type MockUserAPI_RemoveTeamFromUser_Call struct {
 // RemoveTeamFromUser is a helper method to define mock.On call
 //   - ctx context.Context
 //   - username string
-func (_e *MockUserAPI_Expecter) RemoveTeamFromUser(ctx interface{}, username interface{}) *MockUserAPI_RemoveTeamFromUser_Call {
+func (_e *MockUserAPI_Expecter) RemoveTeamFromUser(ctx any, username any) *MockUserAPI_RemoveTeamFromUser_Call {
 	return &MockUserAPI_RemoveTeamFromUser_Call{Call: _e.mock.On("RemoveTeamFromUser", ctx, username)}
 }
 
@@ -24632,7 +24902,7 @@ type MockUserAPI_RemoveTeamFromUserExecute_Call struct {
 
 // RemoveTeamFromUserExecute is a helper method to define mock.On call
 //   - r client.ApiRemoveTeamFromUserRequest
-func (_e *MockUserAPI_Expecter) RemoveTeamFromUserExecute(r interface{}) *MockUserAPI_RemoveTeamFromUserExecute_Call {
+func (_e *MockUserAPI_Expecter) RemoveTeamFromUserExecute(r any) *MockUserAPI_RemoveTeamFromUserExecute_Call {
 	return &MockUserAPI_RemoveTeamFromUserExecute_Call{Call: _e.mock.On("RemoveTeamFromUserExecute", r)}
 }
 
@@ -24683,7 +24953,7 @@ type MockUserAPI_UpdateManagedUser_Call struct {
 
 // UpdateManagedUser is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockUserAPI_Expecter) UpdateManagedUser(ctx interface{}) *MockUserAPI_UpdateManagedUser_Call {
+func (_e *MockUserAPI_Expecter) UpdateManagedUser(ctx any) *MockUserAPI_UpdateManagedUser_Call {
 	return &MockUserAPI_UpdateManagedUser_Call{Call: _e.mock.On("UpdateManagedUser", ctx)}
 }
 
@@ -24753,7 +25023,7 @@ type MockUserAPI_UpdateManagedUserExecute_Call struct {
 
 // UpdateManagedUserExecute is a helper method to define mock.On call
 //   - r client.ApiUpdateManagedUserRequest
-func (_e *MockUserAPI_Expecter) UpdateManagedUserExecute(r interface{}) *MockUserAPI_UpdateManagedUserExecute_Call {
+func (_e *MockUserAPI_Expecter) UpdateManagedUserExecute(r any) *MockUserAPI_UpdateManagedUserExecute_Call {
 	return &MockUserAPI_UpdateManagedUserExecute_Call{Call: _e.mock.On("UpdateManagedUserExecute", r)}
 }
 
@@ -24804,7 +25074,7 @@ type MockUserAPI_UpdateSelf_Call struct {
 
 // UpdateSelf is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockUserAPI_Expecter) UpdateSelf(ctx interface{}) *MockUserAPI_UpdateSelf_Call {
+func (_e *MockUserAPI_Expecter) UpdateSelf(ctx any) *MockUserAPI_UpdateSelf_Call {
 	return &MockUserAPI_UpdateSelf_Call{Call: _e.mock.On("UpdateSelf", ctx)}
 }
 
@@ -24874,7 +25144,7 @@ type MockUserAPI_UpdateSelfExecute_Call struct {
 
 // UpdateSelfExecute is a helper method to define mock.On call
 //   - r client.ApiUpdateSelfRequest
-func (_e *MockUserAPI_Expecter) UpdateSelfExecute(r interface{}) *MockUserAPI_UpdateSelfExecute_Call {
+func (_e *MockUserAPI_Expecter) UpdateSelfExecute(r any) *MockUserAPI_UpdateSelfExecute_Call {
 	return &MockUserAPI_UpdateSelfExecute_Call{Call: _e.mock.On("UpdateSelfExecute", r)}
 }
 
@@ -24925,7 +25195,7 @@ type MockUserAPI_ValidateCredentials_Call struct {
 
 // ValidateCredentials is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockUserAPI_Expecter) ValidateCredentials(ctx interface{}) *MockUserAPI_ValidateCredentials_Call {
+func (_e *MockUserAPI_Expecter) ValidateCredentials(ctx any) *MockUserAPI_ValidateCredentials_Call {
 	return &MockUserAPI_ValidateCredentials_Call{Call: _e.mock.On("ValidateCredentials", ctx)}
 }
 
@@ -24993,7 +25263,7 @@ type MockUserAPI_ValidateCredentialsExecute_Call struct {
 
 // ValidateCredentialsExecute is a helper method to define mock.On call
 //   - r client.ApiValidateCredentialsRequest
-func (_e *MockUserAPI_Expecter) ValidateCredentialsExecute(r interface{}) *MockUserAPI_ValidateCredentialsExecute_Call {
+func (_e *MockUserAPI_Expecter) ValidateCredentialsExecute(r any) *MockUserAPI_ValidateCredentialsExecute_Call {
 	return &MockUserAPI_ValidateCredentialsExecute_Call{Call: _e.mock.On("ValidateCredentialsExecute", r)}
 }
 
@@ -25044,7 +25314,7 @@ type MockUserAPI_ValidateOidcAccessToken_Call struct {
 
 // ValidateOidcAccessToken is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockUserAPI_Expecter) ValidateOidcAccessToken(ctx interface{}) *MockUserAPI_ValidateOidcAccessToken_Call {
+func (_e *MockUserAPI_Expecter) ValidateOidcAccessToken(ctx any) *MockUserAPI_ValidateOidcAccessToken_Call {
 	return &MockUserAPI_ValidateOidcAccessToken_Call{Call: _e.mock.On("ValidateOidcAccessToken", ctx)}
 }
 
@@ -25112,7 +25382,7 @@ type MockUserAPI_ValidateOidcAccessTokenExecute_Call struct {
 
 // ValidateOidcAccessTokenExecute is a helper method to define mock.On call
 //   - r client.ApiValidateOidcAccessTokenRequest
-func (_e *MockUserAPI_Expecter) ValidateOidcAccessTokenExecute(r interface{}) *MockUserAPI_ValidateOidcAccessTokenExecute_Call {
+func (_e *MockUserAPI_Expecter) ValidateOidcAccessTokenExecute(r any) *MockUserAPI_ValidateOidcAccessTokenExecute_Call {
 	return &MockUserAPI_ValidateOidcAccessTokenExecute_Call{Call: _e.mock.On("ValidateOidcAccessTokenExecute", r)}
 }
 
@@ -25146,10 +25416,19 @@ func NewMockVersionAPI(t interface {
 	Cleanup(func())
 },
 ) *MockVersionAPI {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &MockVersionAPI{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }
@@ -25191,7 +25470,7 @@ type MockVersionAPI_GetVersion_Call struct {
 
 // GetVersion is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockVersionAPI_Expecter) GetVersion(ctx interface{}) *MockVersionAPI_GetVersion_Call {
+func (_e *MockVersionAPI_Expecter) GetVersion(ctx any) *MockVersionAPI_GetVersion_Call {
 	return &MockVersionAPI_GetVersion_Call{Call: _e.mock.On("GetVersion", ctx)}
 }
 
@@ -25261,7 +25540,7 @@ type MockVersionAPI_GetVersionExecute_Call struct {
 
 // GetVersionExecute is a helper method to define mock.On call
 //   - r client.ApiGetVersionRequest
-func (_e *MockVersionAPI_Expecter) GetVersionExecute(r interface{}) *MockVersionAPI_GetVersionExecute_Call {
+func (_e *MockVersionAPI_Expecter) GetVersionExecute(r any) *MockVersionAPI_GetVersionExecute_Call {
 	return &MockVersionAPI_GetVersionExecute_Call{Call: _e.mock.On("GetVersionExecute", r)}
 }
 
@@ -25295,10 +25574,19 @@ func NewMockVexAPI(t interface {
 	Cleanup(func())
 },
 ) *MockVexAPI {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &MockVexAPI{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }
@@ -25341,7 +25629,7 @@ type MockVexAPI_ExportProjectAsCycloneDx1_Call struct {
 // ExportProjectAsCycloneDx1 is a helper method to define mock.On call
 //   - ctx context.Context
 //   - uuid string
-func (_e *MockVexAPI_Expecter) ExportProjectAsCycloneDx1(ctx interface{}, uuid interface{}) *MockVexAPI_ExportProjectAsCycloneDx1_Call {
+func (_e *MockVexAPI_Expecter) ExportProjectAsCycloneDx1(ctx any, uuid any) *MockVexAPI_ExportProjectAsCycloneDx1_Call {
 	return &MockVexAPI_ExportProjectAsCycloneDx1_Call{Call: _e.mock.On("ExportProjectAsCycloneDx1", ctx, uuid)}
 }
 
@@ -25414,7 +25702,7 @@ type MockVexAPI_ExportProjectAsCycloneDx1Execute_Call struct {
 
 // ExportProjectAsCycloneDx1Execute is a helper method to define mock.On call
 //   - r client.ApiExportProjectAsCycloneDx1Request
-func (_e *MockVexAPI_Expecter) ExportProjectAsCycloneDx1Execute(r interface{}) *MockVexAPI_ExportProjectAsCycloneDx1Execute_Call {
+func (_e *MockVexAPI_Expecter) ExportProjectAsCycloneDx1Execute(r any) *MockVexAPI_ExportProjectAsCycloneDx1Execute_Call {
 	return &MockVexAPI_ExportProjectAsCycloneDx1Execute_Call{Call: _e.mock.On("ExportProjectAsCycloneDx1Execute", r)}
 }
 
@@ -25465,7 +25753,7 @@ type MockVexAPI_UploadVex_Call struct {
 
 // UploadVex is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockVexAPI_Expecter) UploadVex(ctx interface{}) *MockVexAPI_UploadVex_Call {
+func (_e *MockVexAPI_Expecter) UploadVex(ctx any) *MockVexAPI_UploadVex_Call {
 	return &MockVexAPI_UploadVex_Call{Call: _e.mock.On("UploadVex", ctx)}
 }
 
@@ -25516,7 +25804,7 @@ type MockVexAPI_UploadVex1_Call struct {
 
 // UploadVex1 is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockVexAPI_Expecter) UploadVex1(ctx interface{}) *MockVexAPI_UploadVex1_Call {
+func (_e *MockVexAPI_Expecter) UploadVex1(ctx any) *MockVexAPI_UploadVex1_Call {
 	return &MockVexAPI_UploadVex1_Call{Call: _e.mock.On("UploadVex1", ctx)}
 }
 
@@ -25586,7 +25874,7 @@ type MockVexAPI_UploadVex1Execute_Call struct {
 
 // UploadVex1Execute is a helper method to define mock.On call
 //   - r client.ApiUploadVex1Request
-func (_e *MockVexAPI_Expecter) UploadVex1Execute(r interface{}) *MockVexAPI_UploadVex1Execute_Call {
+func (_e *MockVexAPI_Expecter) UploadVex1Execute(r any) *MockVexAPI_UploadVex1Execute_Call {
 	return &MockVexAPI_UploadVex1Execute_Call{Call: _e.mock.On("UploadVex1Execute", r)}
 }
 
@@ -25656,7 +25944,7 @@ type MockVexAPI_UploadVexExecute_Call struct {
 
 // UploadVexExecute is a helper method to define mock.On call
 //   - r client.ApiUploadVexRequest
-func (_e *MockVexAPI_Expecter) UploadVexExecute(r interface{}) *MockVexAPI_UploadVexExecute_Call {
+func (_e *MockVexAPI_Expecter) UploadVexExecute(r any) *MockVexAPI_UploadVexExecute_Call {
 	return &MockVexAPI_UploadVexExecute_Call{Call: _e.mock.On("UploadVexExecute", r)}
 }
 
@@ -25690,10 +25978,19 @@ func NewMockViolationAPI(t interface {
 	Cleanup(func())
 },
 ) *MockViolationAPI {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &MockViolationAPI{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }
@@ -25735,7 +26032,7 @@ type MockViolationAPI_GetViolations_Call struct {
 
 // GetViolations is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockViolationAPI_Expecter) GetViolations(ctx interface{}) *MockViolationAPI_GetViolations_Call {
+func (_e *MockViolationAPI_Expecter) GetViolations(ctx any) *MockViolationAPI_GetViolations_Call {
 	return &MockViolationAPI_GetViolations_Call{Call: _e.mock.On("GetViolations", ctx)}
 }
 
@@ -25787,7 +26084,7 @@ type MockViolationAPI_GetViolationsByComponent_Call struct {
 // GetViolationsByComponent is a helper method to define mock.On call
 //   - ctx context.Context
 //   - uuid string
-func (_e *MockViolationAPI_Expecter) GetViolationsByComponent(ctx interface{}, uuid interface{}) *MockViolationAPI_GetViolationsByComponent_Call {
+func (_e *MockViolationAPI_Expecter) GetViolationsByComponent(ctx any, uuid any) *MockViolationAPI_GetViolationsByComponent_Call {
 	return &MockViolationAPI_GetViolationsByComponent_Call{Call: _e.mock.On("GetViolationsByComponent", ctx, uuid)}
 }
 
@@ -25862,7 +26159,7 @@ type MockViolationAPI_GetViolationsByComponentExecute_Call struct {
 
 // GetViolationsByComponentExecute is a helper method to define mock.On call
 //   - r client.ApiGetViolationsByComponentRequest
-func (_e *MockViolationAPI_Expecter) GetViolationsByComponentExecute(r interface{}) *MockViolationAPI_GetViolationsByComponentExecute_Call {
+func (_e *MockViolationAPI_Expecter) GetViolationsByComponentExecute(r any) *MockViolationAPI_GetViolationsByComponentExecute_Call {
 	return &MockViolationAPI_GetViolationsByComponentExecute_Call{Call: _e.mock.On("GetViolationsByComponentExecute", r)}
 }
 
@@ -25914,7 +26211,7 @@ type MockViolationAPI_GetViolationsByProject_Call struct {
 // GetViolationsByProject is a helper method to define mock.On call
 //   - ctx context.Context
 //   - uuid string
-func (_e *MockViolationAPI_Expecter) GetViolationsByProject(ctx interface{}, uuid interface{}) *MockViolationAPI_GetViolationsByProject_Call {
+func (_e *MockViolationAPI_Expecter) GetViolationsByProject(ctx any, uuid any) *MockViolationAPI_GetViolationsByProject_Call {
 	return &MockViolationAPI_GetViolationsByProject_Call{Call: _e.mock.On("GetViolationsByProject", ctx, uuid)}
 }
 
@@ -25989,7 +26286,7 @@ type MockViolationAPI_GetViolationsByProjectExecute_Call struct {
 
 // GetViolationsByProjectExecute is a helper method to define mock.On call
 //   - r client.ApiGetViolationsByProjectRequest
-func (_e *MockViolationAPI_Expecter) GetViolationsByProjectExecute(r interface{}) *MockViolationAPI_GetViolationsByProjectExecute_Call {
+func (_e *MockViolationAPI_Expecter) GetViolationsByProjectExecute(r any) *MockViolationAPI_GetViolationsByProjectExecute_Call {
 	return &MockViolationAPI_GetViolationsByProjectExecute_Call{Call: _e.mock.On("GetViolationsByProjectExecute", r)}
 }
 
@@ -26059,7 +26356,7 @@ type MockViolationAPI_GetViolationsExecute_Call struct {
 
 // GetViolationsExecute is a helper method to define mock.On call
 //   - r client.ApiGetViolationsRequest
-func (_e *MockViolationAPI_Expecter) GetViolationsExecute(r interface{}) *MockViolationAPI_GetViolationsExecute_Call {
+func (_e *MockViolationAPI_Expecter) GetViolationsExecute(r any) *MockViolationAPI_GetViolationsExecute_Call {
 	return &MockViolationAPI_GetViolationsExecute_Call{Call: _e.mock.On("GetViolationsExecute", r)}
 }
 
@@ -26093,10 +26390,19 @@ func NewMockViolationanalysisAPI(t interface {
 	Cleanup(func())
 },
 ) *MockViolationanalysisAPI {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &MockViolationanalysisAPI{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }
@@ -26138,7 +26444,7 @@ type MockViolationanalysisAPI_RetrieveAnalysis1_Call struct {
 
 // RetrieveAnalysis1 is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockViolationanalysisAPI_Expecter) RetrieveAnalysis1(ctx interface{}) *MockViolationanalysisAPI_RetrieveAnalysis1_Call {
+func (_e *MockViolationanalysisAPI_Expecter) RetrieveAnalysis1(ctx any) *MockViolationanalysisAPI_RetrieveAnalysis1_Call {
 	return &MockViolationanalysisAPI_RetrieveAnalysis1_Call{Call: _e.mock.On("RetrieveAnalysis1", ctx)}
 }
 
@@ -26208,7 +26514,7 @@ type MockViolationanalysisAPI_RetrieveAnalysis1Execute_Call struct {
 
 // RetrieveAnalysis1Execute is a helper method to define mock.On call
 //   - r client.ApiRetrieveAnalysis1Request
-func (_e *MockViolationanalysisAPI_Expecter) RetrieveAnalysis1Execute(r interface{}) *MockViolationanalysisAPI_RetrieveAnalysis1Execute_Call {
+func (_e *MockViolationanalysisAPI_Expecter) RetrieveAnalysis1Execute(r any) *MockViolationanalysisAPI_RetrieveAnalysis1Execute_Call {
 	return &MockViolationanalysisAPI_RetrieveAnalysis1Execute_Call{Call: _e.mock.On("RetrieveAnalysis1Execute", r)}
 }
 
@@ -26259,7 +26565,7 @@ type MockViolationanalysisAPI_UpdateAnalysis1_Call struct {
 
 // UpdateAnalysis1 is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockViolationanalysisAPI_Expecter) UpdateAnalysis1(ctx interface{}) *MockViolationanalysisAPI_UpdateAnalysis1_Call {
+func (_e *MockViolationanalysisAPI_Expecter) UpdateAnalysis1(ctx any) *MockViolationanalysisAPI_UpdateAnalysis1_Call {
 	return &MockViolationanalysisAPI_UpdateAnalysis1_Call{Call: _e.mock.On("UpdateAnalysis1", ctx)}
 }
 
@@ -26329,7 +26635,7 @@ type MockViolationanalysisAPI_UpdateAnalysis1Execute_Call struct {
 
 // UpdateAnalysis1Execute is a helper method to define mock.On call
 //   - r client.ApiUpdateAnalysis1Request
-func (_e *MockViolationanalysisAPI_Expecter) UpdateAnalysis1Execute(r interface{}) *MockViolationanalysisAPI_UpdateAnalysis1Execute_Call {
+func (_e *MockViolationanalysisAPI_Expecter) UpdateAnalysis1Execute(r any) *MockViolationanalysisAPI_UpdateAnalysis1Execute_Call {
 	return &MockViolationanalysisAPI_UpdateAnalysis1Execute_Call{Call: _e.mock.On("UpdateAnalysis1Execute", r)}
 }
 
@@ -26363,10 +26669,19 @@ func NewMockVulnerabilityAPI(t interface {
 	Cleanup(func())
 },
 ) *MockVulnerabilityAPI {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &MockVulnerabilityAPI{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }
@@ -26410,7 +26725,7 @@ type MockVulnerabilityAPI_AssignVulnerability_Call struct {
 //   - ctx context.Context
 //   - uuid string
 //   - component string
-func (_e *MockVulnerabilityAPI_Expecter) AssignVulnerability(ctx interface{}, uuid interface{}, component interface{}) *MockVulnerabilityAPI_AssignVulnerability_Call {
+func (_e *MockVulnerabilityAPI_Expecter) AssignVulnerability(ctx any, uuid any, component any) *MockVulnerabilityAPI_AssignVulnerability_Call {
 	return &MockVulnerabilityAPI_AssignVulnerability_Call{Call: _e.mock.On("AssignVulnerability", ctx, uuid, component)}
 }
 
@@ -26474,7 +26789,7 @@ type MockVulnerabilityAPI_AssignVulnerability1_Call struct {
 //   - source string
 //   - vulnId string
 //   - component string
-func (_e *MockVulnerabilityAPI_Expecter) AssignVulnerability1(ctx interface{}, source interface{}, vulnId interface{}, component interface{}) *MockVulnerabilityAPI_AssignVulnerability1_Call {
+func (_e *MockVulnerabilityAPI_Expecter) AssignVulnerability1(ctx any, source any, vulnId any, component any) *MockVulnerabilityAPI_AssignVulnerability1_Call {
 	return &MockVulnerabilityAPI_AssignVulnerability1_Call{Call: _e.mock.On("AssignVulnerability1", ctx, source, vulnId, component)}
 }
 
@@ -26551,7 +26866,7 @@ type MockVulnerabilityAPI_AssignVulnerability1Execute_Call struct {
 
 // AssignVulnerability1Execute is a helper method to define mock.On call
 //   - r client.ApiAssignVulnerability1Request
-func (_e *MockVulnerabilityAPI_Expecter) AssignVulnerability1Execute(r interface{}) *MockVulnerabilityAPI_AssignVulnerability1Execute_Call {
+func (_e *MockVulnerabilityAPI_Expecter) AssignVulnerability1Execute(r any) *MockVulnerabilityAPI_AssignVulnerability1Execute_Call {
 	return &MockVulnerabilityAPI_AssignVulnerability1Execute_Call{Call: _e.mock.On("AssignVulnerability1Execute", r)}
 }
 
@@ -26613,7 +26928,7 @@ type MockVulnerabilityAPI_AssignVulnerabilityExecute_Call struct {
 
 // AssignVulnerabilityExecute is a helper method to define mock.On call
 //   - r client.ApiAssignVulnerabilityRequest
-func (_e *MockVulnerabilityAPI_Expecter) AssignVulnerabilityExecute(r interface{}) *MockVulnerabilityAPI_AssignVulnerabilityExecute_Call {
+func (_e *MockVulnerabilityAPI_Expecter) AssignVulnerabilityExecute(r any) *MockVulnerabilityAPI_AssignVulnerabilityExecute_Call {
 	return &MockVulnerabilityAPI_AssignVulnerabilityExecute_Call{Call: _e.mock.On("AssignVulnerabilityExecute", r)}
 }
 
@@ -26664,7 +26979,7 @@ type MockVulnerabilityAPI_CreateVulnerability_Call struct {
 
 // CreateVulnerability is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockVulnerabilityAPI_Expecter) CreateVulnerability(ctx interface{}) *MockVulnerabilityAPI_CreateVulnerability_Call {
+func (_e *MockVulnerabilityAPI_Expecter) CreateVulnerability(ctx any) *MockVulnerabilityAPI_CreateVulnerability_Call {
 	return &MockVulnerabilityAPI_CreateVulnerability_Call{Call: _e.mock.On("CreateVulnerability", ctx)}
 }
 
@@ -26734,7 +27049,7 @@ type MockVulnerabilityAPI_CreateVulnerabilityExecute_Call struct {
 
 // CreateVulnerabilityExecute is a helper method to define mock.On call
 //   - r client.ApiCreateVulnerabilityRequest
-func (_e *MockVulnerabilityAPI_Expecter) CreateVulnerabilityExecute(r interface{}) *MockVulnerabilityAPI_CreateVulnerabilityExecute_Call {
+func (_e *MockVulnerabilityAPI_Expecter) CreateVulnerabilityExecute(r any) *MockVulnerabilityAPI_CreateVulnerabilityExecute_Call {
 	return &MockVulnerabilityAPI_CreateVulnerabilityExecute_Call{Call: _e.mock.On("CreateVulnerabilityExecute", r)}
 }
 
@@ -26786,7 +27101,7 @@ type MockVulnerabilityAPI_DeleteVulnerability_Call struct {
 // DeleteVulnerability is a helper method to define mock.On call
 //   - ctx context.Context
 //   - uuid string
-func (_e *MockVulnerabilityAPI_Expecter) DeleteVulnerability(ctx interface{}, uuid interface{}) *MockVulnerabilityAPI_DeleteVulnerability_Call {
+func (_e *MockVulnerabilityAPI_Expecter) DeleteVulnerability(ctx any, uuid any) *MockVulnerabilityAPI_DeleteVulnerability_Call {
 	return &MockVulnerabilityAPI_DeleteVulnerability_Call{Call: _e.mock.On("DeleteVulnerability", ctx, uuid)}
 }
 
@@ -26853,7 +27168,7 @@ type MockVulnerabilityAPI_DeleteVulnerabilityExecute_Call struct {
 
 // DeleteVulnerabilityExecute is a helper method to define mock.On call
 //   - r client.ApiDeleteVulnerabilityRequest
-func (_e *MockVulnerabilityAPI_Expecter) DeleteVulnerabilityExecute(r interface{}) *MockVulnerabilityAPI_DeleteVulnerabilityExecute_Call {
+func (_e *MockVulnerabilityAPI_Expecter) DeleteVulnerabilityExecute(r any) *MockVulnerabilityAPI_DeleteVulnerabilityExecute_Call {
 	return &MockVulnerabilityAPI_DeleteVulnerabilityExecute_Call{Call: _e.mock.On("DeleteVulnerabilityExecute", r)}
 }
 
@@ -26904,7 +27219,7 @@ type MockVulnerabilityAPI_GenerateInternalVulnerabilityIdentifier_Call struct {
 
 // GenerateInternalVulnerabilityIdentifier is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockVulnerabilityAPI_Expecter) GenerateInternalVulnerabilityIdentifier(ctx interface{}) *MockVulnerabilityAPI_GenerateInternalVulnerabilityIdentifier_Call {
+func (_e *MockVulnerabilityAPI_Expecter) GenerateInternalVulnerabilityIdentifier(ctx any) *MockVulnerabilityAPI_GenerateInternalVulnerabilityIdentifier_Call {
 	return &MockVulnerabilityAPI_GenerateInternalVulnerabilityIdentifier_Call{Call: _e.mock.On("GenerateInternalVulnerabilityIdentifier", ctx)}
 }
 
@@ -26972,7 +27287,7 @@ type MockVulnerabilityAPI_GenerateInternalVulnerabilityIdentifierExecute_Call st
 
 // GenerateInternalVulnerabilityIdentifierExecute is a helper method to define mock.On call
 //   - r client.ApiGenerateInternalVulnerabilityIdentifierRequest
-func (_e *MockVulnerabilityAPI_Expecter) GenerateInternalVulnerabilityIdentifierExecute(r interface{}) *MockVulnerabilityAPI_GenerateInternalVulnerabilityIdentifierExecute_Call {
+func (_e *MockVulnerabilityAPI_Expecter) GenerateInternalVulnerabilityIdentifierExecute(r any) *MockVulnerabilityAPI_GenerateInternalVulnerabilityIdentifierExecute_Call {
 	return &MockVulnerabilityAPI_GenerateInternalVulnerabilityIdentifierExecute_Call{Call: _e.mock.On("GenerateInternalVulnerabilityIdentifierExecute", r)}
 }
 
@@ -27025,7 +27340,7 @@ type MockVulnerabilityAPI_GetAffectedProject_Call struct {
 //   - ctx context.Context
 //   - source string
 //   - vuln string
-func (_e *MockVulnerabilityAPI_Expecter) GetAffectedProject(ctx interface{}, source interface{}, vuln interface{}) *MockVulnerabilityAPI_GetAffectedProject_Call {
+func (_e *MockVulnerabilityAPI_Expecter) GetAffectedProject(ctx any, source any, vuln any) *MockVulnerabilityAPI_GetAffectedProject_Call {
 	return &MockVulnerabilityAPI_GetAffectedProject_Call{Call: _e.mock.On("GetAffectedProject", ctx, source, vuln)}
 }
 
@@ -27105,7 +27420,7 @@ type MockVulnerabilityAPI_GetAffectedProjectExecute_Call struct {
 
 // GetAffectedProjectExecute is a helper method to define mock.On call
 //   - r client.ApiGetAffectedProjectRequest
-func (_e *MockVulnerabilityAPI_Expecter) GetAffectedProjectExecute(r interface{}) *MockVulnerabilityAPI_GetAffectedProjectExecute_Call {
+func (_e *MockVulnerabilityAPI_Expecter) GetAffectedProjectExecute(r any) *MockVulnerabilityAPI_GetAffectedProjectExecute_Call {
 	return &MockVulnerabilityAPI_GetAffectedProjectExecute_Call{Call: _e.mock.On("GetAffectedProjectExecute", r)}
 }
 
@@ -27156,7 +27471,7 @@ type MockVulnerabilityAPI_GetAllVulnerabilities_Call struct {
 
 // GetAllVulnerabilities is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockVulnerabilityAPI_Expecter) GetAllVulnerabilities(ctx interface{}) *MockVulnerabilityAPI_GetAllVulnerabilities_Call {
+func (_e *MockVulnerabilityAPI_Expecter) GetAllVulnerabilities(ctx any) *MockVulnerabilityAPI_GetAllVulnerabilities_Call {
 	return &MockVulnerabilityAPI_GetAllVulnerabilities_Call{Call: _e.mock.On("GetAllVulnerabilities", ctx)}
 }
 
@@ -27226,7 +27541,7 @@ type MockVulnerabilityAPI_GetAllVulnerabilitiesExecute_Call struct {
 
 // GetAllVulnerabilitiesExecute is a helper method to define mock.On call
 //   - r client.ApiGetAllVulnerabilitiesRequest
-func (_e *MockVulnerabilityAPI_Expecter) GetAllVulnerabilitiesExecute(r interface{}) *MockVulnerabilityAPI_GetAllVulnerabilitiesExecute_Call {
+func (_e *MockVulnerabilityAPI_Expecter) GetAllVulnerabilitiesExecute(r any) *MockVulnerabilityAPI_GetAllVulnerabilitiesExecute_Call {
 	return &MockVulnerabilityAPI_GetAllVulnerabilitiesExecute_Call{Call: _e.mock.On("GetAllVulnerabilitiesExecute", r)}
 }
 
@@ -27278,7 +27593,7 @@ type MockVulnerabilityAPI_GetVulnerabilitiesByComponent_Call struct {
 // GetVulnerabilitiesByComponent is a helper method to define mock.On call
 //   - ctx context.Context
 //   - uuid string
-func (_e *MockVulnerabilityAPI_Expecter) GetVulnerabilitiesByComponent(ctx interface{}, uuid interface{}) *MockVulnerabilityAPI_GetVulnerabilitiesByComponent_Call {
+func (_e *MockVulnerabilityAPI_Expecter) GetVulnerabilitiesByComponent(ctx any, uuid any) *MockVulnerabilityAPI_GetVulnerabilitiesByComponent_Call {
 	return &MockVulnerabilityAPI_GetVulnerabilitiesByComponent_Call{Call: _e.mock.On("GetVulnerabilitiesByComponent", ctx, uuid)}
 }
 
@@ -27353,7 +27668,7 @@ type MockVulnerabilityAPI_GetVulnerabilitiesByComponentExecute_Call struct {
 
 // GetVulnerabilitiesByComponentExecute is a helper method to define mock.On call
 //   - r client.ApiGetVulnerabilitiesByComponentRequest
-func (_e *MockVulnerabilityAPI_Expecter) GetVulnerabilitiesByComponentExecute(r interface{}) *MockVulnerabilityAPI_GetVulnerabilitiesByComponentExecute_Call {
+func (_e *MockVulnerabilityAPI_Expecter) GetVulnerabilitiesByComponentExecute(r any) *MockVulnerabilityAPI_GetVulnerabilitiesByComponentExecute_Call {
 	return &MockVulnerabilityAPI_GetVulnerabilitiesByComponentExecute_Call{Call: _e.mock.On("GetVulnerabilitiesByComponentExecute", r)}
 }
 
@@ -27405,7 +27720,7 @@ type MockVulnerabilityAPI_GetVulnerabilitiesByProject_Call struct {
 // GetVulnerabilitiesByProject is a helper method to define mock.On call
 //   - ctx context.Context
 //   - uuid string
-func (_e *MockVulnerabilityAPI_Expecter) GetVulnerabilitiesByProject(ctx interface{}, uuid interface{}) *MockVulnerabilityAPI_GetVulnerabilitiesByProject_Call {
+func (_e *MockVulnerabilityAPI_Expecter) GetVulnerabilitiesByProject(ctx any, uuid any) *MockVulnerabilityAPI_GetVulnerabilitiesByProject_Call {
 	return &MockVulnerabilityAPI_GetVulnerabilitiesByProject_Call{Call: _e.mock.On("GetVulnerabilitiesByProject", ctx, uuid)}
 }
 
@@ -27480,7 +27795,7 @@ type MockVulnerabilityAPI_GetVulnerabilitiesByProjectExecute_Call struct {
 
 // GetVulnerabilitiesByProjectExecute is a helper method to define mock.On call
 //   - r client.ApiGetVulnerabilitiesByProjectRequest
-func (_e *MockVulnerabilityAPI_Expecter) GetVulnerabilitiesByProjectExecute(r interface{}) *MockVulnerabilityAPI_GetVulnerabilitiesByProjectExecute_Call {
+func (_e *MockVulnerabilityAPI_Expecter) GetVulnerabilitiesByProjectExecute(r any) *MockVulnerabilityAPI_GetVulnerabilitiesByProjectExecute_Call {
 	return &MockVulnerabilityAPI_GetVulnerabilitiesByProjectExecute_Call{Call: _e.mock.On("GetVulnerabilitiesByProjectExecute", r)}
 }
 
@@ -27532,7 +27847,7 @@ type MockVulnerabilityAPI_GetVulnerabilityByUuid_Call struct {
 // GetVulnerabilityByUuid is a helper method to define mock.On call
 //   - ctx context.Context
 //   - uuid string
-func (_e *MockVulnerabilityAPI_Expecter) GetVulnerabilityByUuid(ctx interface{}, uuid interface{}) *MockVulnerabilityAPI_GetVulnerabilityByUuid_Call {
+func (_e *MockVulnerabilityAPI_Expecter) GetVulnerabilityByUuid(ctx any, uuid any) *MockVulnerabilityAPI_GetVulnerabilityByUuid_Call {
 	return &MockVulnerabilityAPI_GetVulnerabilityByUuid_Call{Call: _e.mock.On("GetVulnerabilityByUuid", ctx, uuid)}
 }
 
@@ -27607,7 +27922,7 @@ type MockVulnerabilityAPI_GetVulnerabilityByUuidExecute_Call struct {
 
 // GetVulnerabilityByUuidExecute is a helper method to define mock.On call
 //   - r client.ApiGetVulnerabilityByUuidRequest
-func (_e *MockVulnerabilityAPI_Expecter) GetVulnerabilityByUuidExecute(r interface{}) *MockVulnerabilityAPI_GetVulnerabilityByUuidExecute_Call {
+func (_e *MockVulnerabilityAPI_Expecter) GetVulnerabilityByUuidExecute(r any) *MockVulnerabilityAPI_GetVulnerabilityByUuidExecute_Call {
 	return &MockVulnerabilityAPI_GetVulnerabilityByUuidExecute_Call{Call: _e.mock.On("GetVulnerabilityByUuidExecute", r)}
 }
 
@@ -27660,7 +27975,7 @@ type MockVulnerabilityAPI_GetVulnerabilityByVulnId_Call struct {
 //   - ctx context.Context
 //   - source string
 //   - vuln string
-func (_e *MockVulnerabilityAPI_Expecter) GetVulnerabilityByVulnId(ctx interface{}, source interface{}, vuln interface{}) *MockVulnerabilityAPI_GetVulnerabilityByVulnId_Call {
+func (_e *MockVulnerabilityAPI_Expecter) GetVulnerabilityByVulnId(ctx any, source any, vuln any) *MockVulnerabilityAPI_GetVulnerabilityByVulnId_Call {
 	return &MockVulnerabilityAPI_GetVulnerabilityByVulnId_Call{Call: _e.mock.On("GetVulnerabilityByVulnId", ctx, source, vuln)}
 }
 
@@ -27740,7 +28055,7 @@ type MockVulnerabilityAPI_GetVulnerabilityByVulnIdExecute_Call struct {
 
 // GetVulnerabilityByVulnIdExecute is a helper method to define mock.On call
 //   - r client.ApiGetVulnerabilityByVulnIdRequest
-func (_e *MockVulnerabilityAPI_Expecter) GetVulnerabilityByVulnIdExecute(r interface{}) *MockVulnerabilityAPI_GetVulnerabilityByVulnIdExecute_Call {
+func (_e *MockVulnerabilityAPI_Expecter) GetVulnerabilityByVulnIdExecute(r any) *MockVulnerabilityAPI_GetVulnerabilityByVulnIdExecute_Call {
 	return &MockVulnerabilityAPI_GetVulnerabilityByVulnIdExecute_Call{Call: _e.mock.On("GetVulnerabilityByVulnIdExecute", r)}
 }
 
@@ -27793,7 +28108,7 @@ type MockVulnerabilityAPI_UnassignVulnerability_Call struct {
 //   - ctx context.Context
 //   - uuid string
 //   - component string
-func (_e *MockVulnerabilityAPI_Expecter) UnassignVulnerability(ctx interface{}, uuid interface{}, component interface{}) *MockVulnerabilityAPI_UnassignVulnerability_Call {
+func (_e *MockVulnerabilityAPI_Expecter) UnassignVulnerability(ctx any, uuid any, component any) *MockVulnerabilityAPI_UnassignVulnerability_Call {
 	return &MockVulnerabilityAPI_UnassignVulnerability_Call{Call: _e.mock.On("UnassignVulnerability", ctx, uuid, component)}
 }
 
@@ -27857,7 +28172,7 @@ type MockVulnerabilityAPI_UnassignVulnerability1_Call struct {
 //   - source string
 //   - vulnId string
 //   - component string
-func (_e *MockVulnerabilityAPI_Expecter) UnassignVulnerability1(ctx interface{}, source interface{}, vulnId interface{}, component interface{}) *MockVulnerabilityAPI_UnassignVulnerability1_Call {
+func (_e *MockVulnerabilityAPI_Expecter) UnassignVulnerability1(ctx any, source any, vulnId any, component any) *MockVulnerabilityAPI_UnassignVulnerability1_Call {
 	return &MockVulnerabilityAPI_UnassignVulnerability1_Call{Call: _e.mock.On("UnassignVulnerability1", ctx, source, vulnId, component)}
 }
 
@@ -27934,7 +28249,7 @@ type MockVulnerabilityAPI_UnassignVulnerability1Execute_Call struct {
 
 // UnassignVulnerability1Execute is a helper method to define mock.On call
 //   - r client.ApiUnassignVulnerability1Request
-func (_e *MockVulnerabilityAPI_Expecter) UnassignVulnerability1Execute(r interface{}) *MockVulnerabilityAPI_UnassignVulnerability1Execute_Call {
+func (_e *MockVulnerabilityAPI_Expecter) UnassignVulnerability1Execute(r any) *MockVulnerabilityAPI_UnassignVulnerability1Execute_Call {
 	return &MockVulnerabilityAPI_UnassignVulnerability1Execute_Call{Call: _e.mock.On("UnassignVulnerability1Execute", r)}
 }
 
@@ -27996,7 +28311,7 @@ type MockVulnerabilityAPI_UnassignVulnerabilityExecute_Call struct {
 
 // UnassignVulnerabilityExecute is a helper method to define mock.On call
 //   - r client.ApiUnassignVulnerabilityRequest
-func (_e *MockVulnerabilityAPI_Expecter) UnassignVulnerabilityExecute(r interface{}) *MockVulnerabilityAPI_UnassignVulnerabilityExecute_Call {
+func (_e *MockVulnerabilityAPI_Expecter) UnassignVulnerabilityExecute(r any) *MockVulnerabilityAPI_UnassignVulnerabilityExecute_Call {
 	return &MockVulnerabilityAPI_UnassignVulnerabilityExecute_Call{Call: _e.mock.On("UnassignVulnerabilityExecute", r)}
 }
 
@@ -28047,7 +28362,7 @@ type MockVulnerabilityAPI_UpdateVulnerability_Call struct {
 
 // UpdateVulnerability is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *MockVulnerabilityAPI_Expecter) UpdateVulnerability(ctx interface{}) *MockVulnerabilityAPI_UpdateVulnerability_Call {
+func (_e *MockVulnerabilityAPI_Expecter) UpdateVulnerability(ctx any) *MockVulnerabilityAPI_UpdateVulnerability_Call {
 	return &MockVulnerabilityAPI_UpdateVulnerability_Call{Call: _e.mock.On("UpdateVulnerability", ctx)}
 }
 
@@ -28117,7 +28432,7 @@ type MockVulnerabilityAPI_UpdateVulnerabilityExecute_Call struct {
 
 // UpdateVulnerabilityExecute is a helper method to define mock.On call
 //   - r client.ApiUpdateVulnerabilityRequest
-func (_e *MockVulnerabilityAPI_Expecter) UpdateVulnerabilityExecute(r interface{}) *MockVulnerabilityAPI_UpdateVulnerabilityExecute_Call {
+func (_e *MockVulnerabilityAPI_Expecter) UpdateVulnerabilityExecute(r any) *MockVulnerabilityAPI_UpdateVulnerabilityExecute_Call {
 	return &MockVulnerabilityAPI_UpdateVulnerabilityExecute_Call{Call: _e.mock.On("UpdateVulnerabilityExecute", r)}
 }
 
