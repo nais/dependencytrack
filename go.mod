@@ -1,6 +1,6 @@
 module github.com/nais/dependencytrack
 
-go 1.26.6
+go 1.27.2
 
 tool (
 	github.com/nais/dependencytrack/pkg/dependencytrack
