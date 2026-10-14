@@ -35,6 +35,7 @@ type Config struct {
 	TrivyIgnoreUnfixed    bool   `json:"trivy-ignore-unfixed"`
 	OssIndexApiUsername   string `json:"oss-index-api-username"`
 	OssIndexApiToken      string `json:"oss-index-api-token"`
+	DependencytrackV5     bool   `json:"dependencytrack-v5"`
 
 	PortfolioMetricsCadence     string `json:"portfolio-metrics-cadence"`
 	VulnerabilityMetricsCadence string `json:"vulnerability-metrics-cadence"`
@@ -65,6 +66,7 @@ func init() {
 	flag.BoolVar(&cfg.TrivyIgnoreUnfixed, "trivy-ignore-unfixed", cfg.TrivyIgnoreUnfixed, "ignore unfixed vulnerabilities")
 	flag.StringVar(&cfg.OssIndexApiUsername, "oss-index-api-username", cfg.OssIndexApiUsername, "oss index username")
 	flag.StringVar(&cfg.OssIndexApiToken, "oss-index-api-token", cfg.OssIndexApiToken, "oss index token")
+	flag.BoolVar(&cfg.DependencytrackV5, "dependencytrack-v5", cfg.DependencytrackV5, "configure vulnerability sources and analyzers as Dependency-Track v5 extensions")
 	flag.StringVar(&cfg.PortfolioMetricsCadence, "portfolio-metrics-cadence", cfg.PortfolioMetricsCadence, "task-scheduler portfolio.metrics.update.cadence in hours; omit to leave unchanged")
 	flag.StringVar(&cfg.VulnerabilityMetricsCadence, "vulnerability-metrics-cadence", cfg.VulnerabilityMetricsCadence, "task-scheduler vulnerability.metrics.update.cadence in hours; omit to leave unchanged")
 	flag.StringVar(&cfg.InternalComponentIdCadence, "internal-component-identification-cadence", cfg.InternalComponentIdCadence, "task-scheduler internal.components.identification.cadence in hours; omit to leave unchanged")
@@ -335,6 +337,13 @@ func main() {
 			}
 		}
 		log.Info("done: config properties updated")
+	}
+
+	if cfg.DependencytrackV5 {
+		if err := configureExtensions(ctx, c, extensionUpdates(cfg), log); err != nil {
+			log.Fatalf("configure extensions: %v", err)
+		}
+		log.Info("done: extensions configured")
 	}
 }
 
