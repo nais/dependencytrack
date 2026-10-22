@@ -36,7 +36,7 @@ bootstrap:
   # pod must restart to pick up a changed cadence (TaskScheduler reads these once
   # at startup).
   taskScheduler:
-    # Import GitHub advisories every 2 hour. Project reanalysis runs separately.
+    # Import GitHub advisories every 2 hours. Project reanalysis runs separately.
     githubAdvisoryMirrorCadence: "2"
     # DT default 1h. Full portfolio + per-component metrics rescan.
     portfolioMetricsUpdateCadence: "3"
