@@ -183,6 +183,11 @@ values:
     displayName: Bootstrap internal components identification cadence (hours)
     config:
       type: string
+  bootstrap.taskScheduler.githubAdvisoryMirrorCadence:
+    description: Cadence in hours for mirroring GitHub Security Advisories (DT default 6h)
+    displayName: Bootstrap GitHub advisory mirror cadence (hours)
+    config:
+      type: string
 
   # Frontend Config
   frontend.swagger.enabled:

@@ -39,6 +39,7 @@ type Config struct {
 	PortfolioMetricsCadence     string `json:"portfolio-metrics-cadence"`
 	VulnerabilityMetricsCadence string `json:"vulnerability-metrics-cadence"`
 	InternalComponentIdCadence  string `json:"internal-component-identification-cadence"`
+	GithubAdvisoryMirrorCadence string `json:"github-advisory-mirror-cadence"`
 }
 
 func (c *Config) taskSchedulerCadences() map[string]string {
@@ -46,6 +47,7 @@ func (c *Config) taskSchedulerCadences() map[string]string {
 		"portfolio.metrics.update.cadence":           c.PortfolioMetricsCadence,
 		"vulnerability.metrics.update.cadence":       c.VulnerabilityMetricsCadence,
 		"internal.components.identification.cadence": c.InternalComponentIdCadence,
+		"ghsa.mirror.cadence":                        c.GithubAdvisoryMirrorCadence,
 	}
 }
 
@@ -68,6 +70,7 @@ func init() {
 	flag.StringVar(&cfg.PortfolioMetricsCadence, "portfolio-metrics-cadence", cfg.PortfolioMetricsCadence, "task-scheduler portfolio.metrics.update.cadence in hours; omit to leave unchanged")
 	flag.StringVar(&cfg.VulnerabilityMetricsCadence, "vulnerability-metrics-cadence", cfg.VulnerabilityMetricsCadence, "task-scheduler vulnerability.metrics.update.cadence in hours; omit to leave unchanged")
 	flag.StringVar(&cfg.InternalComponentIdCadence, "internal-component-identification-cadence", cfg.InternalComponentIdCadence, "task-scheduler internal.components.identification.cadence in hours; omit to leave unchanged")
+	flag.StringVar(&cfg.GithubAdvisoryMirrorCadence, "github-advisory-mirror-cadence", cfg.GithubAdvisoryMirrorCadence, "task-scheduler ghsa.mirror.cadence in hours; omit to leave unchanged")
 }
 
 func main() {
