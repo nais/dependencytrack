@@ -86,6 +86,13 @@ func TestResolveCadence(t *testing.T) {
 	}
 }
 
+func TestGithubAdvisoryMirrorCadence(t *testing.T) {
+	c := &Config{GithubAdvisoryMirrorCadence: "1"}
+	if got := c.taskSchedulerCadences()["ghsa.mirror.cadence"]; got != "1" {
+		t.Fatalf("ghsa.mirror.cadence = %q, want 1", got)
+	}
+}
+
 func TestParseEcosystemList(t *testing.T) {
 	tests := []struct {
 		name string

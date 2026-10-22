@@ -82,6 +82,10 @@ spec:
             - name: INTERNAL_COMPONENT_IDENTIFICATION_CADENCE
               value: "{{ .Values.bootstrap.taskScheduler.internalComponentsIdentificationCadence }}"
           {{- end }}
+          {{- if and .Values.bootstrap.taskScheduler .Values.bootstrap.taskScheduler.githubAdvisoryMirrorCadence }}
+            - name: GITHUB_ADVISORY_MIRROR_CADENCE
+              value: "{{ .Values.bootstrap.taskScheduler.githubAdvisoryMirrorCadence }}"
+          {{- end }}
           envFrom:
             - secretRef:
                 name: "{{ .Release.Name }}-bootstrap-pwd"
