@@ -29,7 +29,7 @@ func TestMain(m *testing.M) {
 	log.SetFormatter(&log.TextFormatter{
 		DisableTimestamp: true,
 	})
-	baseUrl, cleanup := DependencyTrackPool("4.14.5-alpine")
+	baseUrl, cleanup := DependencyTrackPool("4.14.6-alpine")
 	cwp, err := dependencytrack.NewClient(baseUrl, "admin", "test", log.WithField("test", "client_integration_test"))
 	if err != nil {
 		log.Fatalf("Failed to create DependencyTrack client: %v", err)
