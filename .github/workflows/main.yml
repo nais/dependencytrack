@@ -69,9 +69,10 @@ jobs:
           name: ${{ env.NAME }}-bootstrap
           google_service_account: gh-${{ env.NAME }}
           workload_identity_provider: ${{ secrets.NAIS_IO_WORKLOAD_IDENTITY_PROVIDER }}
-          push: true
+          push: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
 
   helm:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     needs:
       - bootstrap
