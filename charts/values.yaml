@@ -156,7 +156,7 @@ trivy:
     registry: "ghcr.io"
     repository: "aquasecurity/trivy"
     tag: "0.76.1"
-    digest: ""
+    digest: "sha256:790fd66d1697395d8693d1acaa1ea702406a20f109b6fc7bac8db623eca6c06c"
   serverToken: "todo"
   podSecurityContext:
     seccompProfile:
