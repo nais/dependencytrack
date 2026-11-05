@@ -34,8 +34,8 @@ func TestParseFinding(t *testing.T) {
 	assert.Equal(t, "a loooong description", v.Cve.Description)
 	assert.Empty(t, v.Cve.ReferenceText)
 	assert.Equal(t, []dependencytrack.Cwe{
-		{Id: 392, Name: "Missing Report of Error Condition"},
-		{Id: 1395, Name: "Dependency on Vulnerable Third-Party Component"},
+		{Id: 392, Name: "Missing Report of Error Condition", Link: "https://cwe.mitre.org/data/definitions/392.html"},
+		{Id: 1395, Name: "Dependency on Vulnerable Third-Party Component", Link: "https://cwe.mitre.org/data/definitions/1395.html"},
 	}, v.Cve.Cwes)
 	assert.Equal(t, "44.0.1", v.LatestVersion)
 	assert.Equal(t, 1, len(v.Cve.References))
@@ -133,8 +133,8 @@ func TestParseFinding_Cwes(t *testing.T) {
 				map[string]any{"cweId": float64(787)},
 			}},
 			want: []dependencytrack.Cwe{
-				{Id: 252, Name: "Unchecked Return Value"},
-				{Id: 787},
+				{Id: 252, Name: "Unchecked Return Value", Link: "https://cwe.mitre.org/data/definitions/252.html"},
+				{Id: 787, Link: "https://cwe.mitre.org/data/definitions/787.html"},
 			},
 		},
 	}

@@ -59,6 +59,7 @@ type Cve struct {
 type Cwe struct {
 	Id   int32
 	Name string
+	Link string
 }
 
 type VulnMetadata struct {
@@ -268,7 +269,11 @@ func ParseFinding(finding client.Finding) (*Vulnerability, error) {
 				continue
 			}
 			name, _ := cwe["name"].(string)
-			cwes = append(cwes, Cwe{Id: int32(id), Name: name})
+			cwes = append(cwes, Cwe{
+				Id:   int32(id),
+				Name: name,
+				Link: fmt.Sprintf("https://cwe.mitre.org/data/definitions/%d.html", int32(id)),
+			})
 		}
 	}
 
