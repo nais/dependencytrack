@@ -36,8 +36,8 @@ bootstrap:
   # pod must restart to pick up a changed cadence (TaskScheduler reads these once
   # at startup).
   taskScheduler:
-    osvMirrorCadence: "6"
-    portfolioVulnerabilityAnalysisCadence: "6"
+    osvMirrorCadence: ""
+    portfolioVulnerabilityAnalysisCadence: ""
     # Import GitHub advisories every 2 hours. Project reanalysis runs separately.
     githubAdvisoryMirrorCadence: "2"
     # DT default 1h. Full portfolio + per-component metrics rescan.
