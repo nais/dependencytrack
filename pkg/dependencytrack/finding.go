@@ -46,12 +46,20 @@ type Vulnerability struct {
 }
 
 type Cve struct {
-	Id          string
-	Description string
-	Title       string
-	Link        string
-	Severity    Severity
-	References  map[string]string
+	Id            string
+	Description   string
+	Title         string
+	Link          string
+	Severity      Severity
+	References    map[string]string
+	ReferenceText string
+	Cwes          []Cwe
+}
+
+type Cwe struct {
+	Id   int32
+	Name string
+	Link string
 }
 
 type VulnMetadata struct {
@@ -247,6 +255,28 @@ func ParseFinding(finding client.Finding) (*Vulnerability, error) {
 		desc = d
 	}
 
+	referenceText, _ := vulnData["references"].(string)
+
+	var cwes []Cwe
+	if entries, ok := vulnData["cwes"].([]any); ok {
+		for _, entry := range entries {
+			cwe, ok := entry.(map[string]any)
+			if !ok {
+				continue
+			}
+			id, ok := cwe["cweId"].(float64)
+			if !ok || id <= 0 || id != float64(int32(id)) {
+				continue
+			}
+			name, _ := cwe["name"].(string)
+			cwes = append(cwes, Cwe{
+				Id:   int32(id),
+				Name: name,
+				Link: fmt.Sprintf("https://cwe.mitre.org/data/definitions/%d.html", int32(id)),
+			})
+		}
+	}
+
 	purl := ""
 	if p, ok := component["purl"].(string); ok {
 		purl = p
@@ -312,12 +342,14 @@ func ParseFinding(finding client.Finding) (*Vulnerability, error) {
 		SuppressedState: suppressedState,
 		LatestVersion:   componentLatestVersion,
 		Cve: &Cve{
-			Id:          primaryId,
-			Description: desc,
-			Title:       title,
-			Link:        link,
-			Severity:    severity,
-			References:  references,
+			Id:            primaryId,
+			Description:   desc,
+			Title:         title,
+			Link:          link,
+			Severity:      severity,
+			References:    references,
+			ReferenceText: referenceText,
+			Cwes:          cwes,
 		},
 		Cvss:           cvssScore,
 		EpssScore:      epssScore,
