@@ -188,6 +188,16 @@ values:
     displayName: Bootstrap GitHub advisory mirror cadence (hours)
     config:
       type: string
+  bootstrap.taskScheduler.osvMirrorCadence:
+    description: Positive integer hours between OSV imports; empty leaves unchanged. Restart backend after bootstrap.
+    displayName: Bootstrap OSV mirror cadence (hours)
+    config:
+      type: string
+  bootstrap.taskScheduler.portfolioVulnerabilityAnalysisCadence:
+    description: Positive integer hours between portfolio vulnerability analyses; empty leaves unchanged. Restart backend after bootstrap.
+    displayName: Bootstrap portfolio vulnerability analysis cadence (hours)
+    config:
+      type: string
 
   # Frontend Config
   frontend.swagger.enabled:
