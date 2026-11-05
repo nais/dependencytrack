@@ -36,10 +36,12 @@ type Config struct {
 	OssIndexApiUsername   string `json:"oss-index-api-username"`
 	OssIndexApiToken      string `json:"oss-index-api-token"`
 
-	PortfolioMetricsCadence     string `json:"portfolio-metrics-cadence"`
-	VulnerabilityMetricsCadence string `json:"vulnerability-metrics-cadence"`
-	InternalComponentIdCadence  string `json:"internal-component-identification-cadence"`
-	GithubAdvisoryMirrorCadence string `json:"github-advisory-mirror-cadence"`
+	PortfolioMetricsCadence               string `json:"portfolio-metrics-cadence"`
+	VulnerabilityMetricsCadence           string `json:"vulnerability-metrics-cadence"`
+	InternalComponentIdCadence            string `json:"internal-component-identification-cadence"`
+	GithubAdvisoryMirrorCadence           string `json:"github-advisory-mirror-cadence"`
+	OsvMirrorCadence                      string `json:"osv-mirror-cadence"`
+	PortfolioVulnerabilityAnalysisCadence string `json:"portfolio-vulnerability-analysis-cadence"`
 }
 
 func (c *Config) taskSchedulerCadences() map[string]string {
@@ -48,6 +50,8 @@ func (c *Config) taskSchedulerCadences() map[string]string {
 		"vulnerability.metrics.update.cadence":       c.VulnerabilityMetricsCadence,
 		"internal.components.identification.cadence": c.InternalComponentIdCadence,
 		"ghsa.mirror.cadence":                        c.GithubAdvisoryMirrorCadence,
+		"osv.mirror.cadence":                         c.OsvMirrorCadence,
+		"portfolio.vulnerability.analysis.cadence":   c.PortfolioVulnerabilityAnalysisCadence,
 	}
 }
 
@@ -71,6 +75,8 @@ func init() {
 	flag.StringVar(&cfg.VulnerabilityMetricsCadence, "vulnerability-metrics-cadence", cfg.VulnerabilityMetricsCadence, "task-scheduler vulnerability.metrics.update.cadence in hours; omit to leave unchanged")
 	flag.StringVar(&cfg.InternalComponentIdCadence, "internal-component-identification-cadence", cfg.InternalComponentIdCadence, "task-scheduler internal.components.identification.cadence in hours; omit to leave unchanged")
 	flag.StringVar(&cfg.GithubAdvisoryMirrorCadence, "github-advisory-mirror-cadence", cfg.GithubAdvisoryMirrorCadence, "task-scheduler ghsa.mirror.cadence in hours; omit to leave unchanged")
+	flag.StringVar(&cfg.OsvMirrorCadence, "osv-mirror-cadence", cfg.OsvMirrorCadence, "task-scheduler osv.mirror.cadence in hours; omit to leave unchanged")
+	flag.StringVar(&cfg.PortfolioVulnerabilityAnalysisCadence, "portfolio-vulnerability-analysis-cadence", cfg.PortfolioVulnerabilityAnalysisCadence, "task-scheduler portfolio.vulnerability.analysis.cadence in hours; omit to leave unchanged")
 }
 
 func main() {

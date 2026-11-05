@@ -86,6 +86,14 @@ spec:
             - name: GITHUB_ADVISORY_MIRROR_CADENCE
               value: "{{ .Values.bootstrap.taskScheduler.githubAdvisoryMirrorCadence }}"
           {{- end }}
+          {{- if and .Values.bootstrap.taskScheduler .Values.bootstrap.taskScheduler.osvMirrorCadence }}
+            - name: OSV_MIRROR_CADENCE
+              value: "{{ .Values.bootstrap.taskScheduler.osvMirrorCadence }}"
+          {{- end }}
+          {{- if and .Values.bootstrap.taskScheduler .Values.bootstrap.taskScheduler.portfolioVulnerabilityAnalysisCadence }}
+            - name: PORTFOLIO_VULNERABILITY_ANALYSIS_CADENCE
+              value: "{{ .Values.bootstrap.taskScheduler.portfolioVulnerabilityAnalysisCadence }}"
+          {{- end }}
           envFrom:
             - secretRef:
                 name: "{{ .Release.Name }}-bootstrap-pwd"

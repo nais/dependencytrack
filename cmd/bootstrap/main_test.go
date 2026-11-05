@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"strings"
 	"testing"
 )
@@ -90,6 +91,48 @@ func TestGithubAdvisoryMirrorCadence(t *testing.T) {
 	c := &Config{GithubAdvisoryMirrorCadence: "1"}
 	if got := c.taskSchedulerCadences()["ghsa.mirror.cadence"]; got != "1" {
 		t.Fatalf("ghsa.mirror.cadence = %q, want 1", got)
+	}
+}
+
+func TestVulnerabilityCadenceFlags(t *testing.T) {
+	original := *cfg
+	t.Cleanup(func() { *cfg = original })
+
+	tests := []struct {
+		name     string
+		mirror   string
+		analysis string
+	}{
+		{name: "custom intervals", mirror: "2", analysis: "12"},
+		{name: "empty leaves unchanged", mirror: "", analysis: ""},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			flags := flag.NewFlagSet(t.Name(), flag.ContinueOnError)
+			for _, name := range []string{"osv-mirror-cadence", "portfolio-vulnerability-analysis-cadence"} {
+				f := flag.Lookup(name)
+				if f == nil {
+					t.Fatalf("flag %q is not registered", name)
+				}
+				flags.Var(f.Value, f.Name, f.Usage)
+			}
+			if err := flags.Parse([]string{
+				"--osv-mirror-cadence=" + tt.mirror,
+				"--portfolio-vulnerability-analysis-cadence=" + tt.analysis,
+			}); err != nil {
+				t.Fatal(err)
+			}
+			cadences := cfg.taskSchedulerCadences()
+			for property, want := range map[string]string{
+				"osv.mirror.cadence":                       tt.mirror,
+				"portfolio.vulnerability.analysis.cadence": tt.analysis,
+			} {
+				if got := cadences[property]; got != want {
+					t.Errorf("%s = %q, want %q", property, got, want)
+				}
+			}
+		})
 	}
 }
 
