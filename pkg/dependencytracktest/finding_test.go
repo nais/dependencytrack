@@ -32,6 +32,11 @@ func TestParseFinding(t *testing.T) {
 	assert.Equal(t, true, v.Suppressed)
 	assert.Equal(t, "Vulnerable OpenSSL included in cryptography wheels", v.Cve.Title)
 	assert.Equal(t, "a loooong description", v.Cve.Description)
+	assert.Empty(t, v.Cve.ReferenceText)
+	assert.Equal(t, []dependencytrack.Cwe{
+		{Id: 392, Name: "Missing Report of Error Condition"},
+		{Id: 1395, Name: "Dependency on Vulnerable Third-Party Component"},
+	}, v.Cve.Cwes)
 	assert.Equal(t, "44.0.1", v.LatestVersion)
 	assert.Equal(t, 1, len(v.Cve.References))
 	assert.NotNil(t, v.Cvss)
@@ -40,6 +45,114 @@ func TestParseFinding(t *testing.T) {
 	assert.Equal(t, 0.00527, *v.EpssScore)
 	assert.NotNil(t, v.EpssPercentile)
 	assert.Equal(t, 0.66622, *v.EpssPercentile)
+}
+
+func TestParseFinding_ReferenceText(t *testing.T) {
+	text := "http://www.openwall.com/lists/oss-security/2026/10/23/25\r\n- [Brotli release](https://github.com/google/brotli/releases/tag/v1.2.1)\r\n"
+	tests := []struct {
+		name       string
+		references any
+		want       string
+	}{
+		{
+			name:       "preserves plain URLs and Markdown unchanged",
+			references: text,
+			want:       text,
+		},
+		{
+			name:       "empty references",
+			references: "",
+		},
+		{
+			name: "null references",
+		},
+		{
+			name:       "unexpected references type",
+			references: []any{"https://example.com/advisory"},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			finding := client.Finding{
+				Component: map[string]any{"uuid": "c1", "project": "p1", "purl": "pkg:pypi/test@1.0"},
+				Vulnerability: map[string]any{
+					"vulnId":     "GHSA-79v4-65xg-pq4g",
+					"source":     "GITHUB",
+					"references": tt.references,
+					"aliases": []any{
+						map[string]any{"cveId": "CVE-2024-12797", "ghsaId": "GHSA-79v4-65xg-pq4g"},
+					},
+				},
+				Analysis: map[string]any{"isSuppressed": false},
+			}
+			v, err := dependencytrack.ParseFinding(finding)
+			if !assert.NoError(t, err) {
+				return
+			}
+			assert.Equal(t, tt.want, v.Cve.ReferenceText)
+			assert.Equal(t, "CVE-2024-12797", v.Cve.Id)
+			assert.Equal(t, map[string]string{"CVE-2024-12797": "GHSA-79v4-65xg-pq4g"}, v.Cve.References)
+		})
+	}
+}
+
+func TestParseFinding_Cwes(t *testing.T) {
+	tests := []struct {
+		name string
+		vuln map[string]any
+		want []dependencytrack.Cwe
+	}{
+		{
+			name: "missing list",
+			vuln: map[string]any{},
+		},
+		{
+			name: "null list",
+			vuln: map[string]any{"cwes": nil},
+		},
+		{
+			name: "empty list",
+			vuln: map[string]any{"cwes": []any{}},
+		},
+		{
+			name: "unexpected list type",
+			vuln: map[string]any{"cwes": "CWE-252"},
+		},
+		{
+			name: "invalid entries do not discard valid weaknesses",
+			vuln: map[string]any{"cwes": []any{
+				nil,
+				"CWE-252",
+				map[string]any{"name": "Missing ID"},
+				map[string]any{"cweId": "252"},
+				map[string]any{"cweId": float64(-1)},
+				map[string]any{"cweId": 252.5},
+				map[string]any{"cweId": float64(1 << 32)},
+				map[string]any{"cweId": float64(252), "name": "Unchecked Return Value"},
+				map[string]any{"cweId": float64(787)},
+			}},
+			want: []dependencytrack.Cwe{
+				{Id: 252, Name: "Unchecked Return Value"},
+				{Id: 787},
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			finding := client.Finding{
+				Component:     map[string]any{"uuid": "c1", "project": "p1"},
+				Vulnerability: tt.vuln,
+				Analysis:      map[string]any{"isSuppressed": false},
+			}
+			v, err := dependencytrack.ParseFinding(finding)
+			if !assert.NoError(t, err) {
+				return
+			}
+			assert.Equal(t, tt.want, v.Cve.Cwes)
+		})
+	}
 }
 
 func TestParseFinding_Aliases(t *testing.T) {
