@@ -1,0 +1,24 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ .Values.app.fullnameOverride }}-api-server-metrics
+  labels:
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/name: app-api-server
+    app.kubernetes.io/component: api-server
+spec:
+  namespaceSelector:
+    matchNames:
+      - {{ .Release.Namespace }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: {{ .Release.Name }}
+      app.kubernetes.io/name: app-api-server
+      app.kubernetes.io/component: api-server
+  podTargetLabels:
+    - dependencytrack.io/role
+  endpoints:
+    - port: management
+      path: /metrics
+      interval: {{ .Values.app.apiServer.serviceMonitor.scrapeInterval }}
+      scrapeTimeout: {{ .Values.app.apiServer.serviceMonitor.scrapeTimeout }}
