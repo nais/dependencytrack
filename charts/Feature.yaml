@@ -1,5 +1,8 @@
 environmentKinds:
   - management
+dependencies:
+  - allOf:
+      - monitoring-crds
 timeout: 20m0s
 values:
   # Shared Config
