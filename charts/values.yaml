@@ -25,7 +25,7 @@ bootstrap:
     - username: console
       password: todo
   trivy:
-    ignore_unfixed: true
+    ignore_unfixed: false
     api_token:
     base_url: http://dependencytrack-trivy:4954
   oss_index:
