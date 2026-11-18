@@ -240,14 +240,14 @@ func main() {
 				cp = append(cp, prop)
 				log.Info("added: trivy base url")
 			case "trivy.ignore.unfixed":
-				if isAlreadySet(prop.PropertyValue, "true") {
-					log.Info("trivy ignore unfixed already enabled")
+				unfixed := strconv.FormatBool(cfg.TrivyIgnoreUnfixed)
+				if isAlreadySet(prop.PropertyValue, unfixed) {
+					log.Infof("trivy.ignore.unfixed already set to %s", unfixed)
 					continue
 				}
-				unfixed := "true"
 				prop.PropertyValue = &unfixed
 				cp = append(cp, prop)
-				log.Info("added: trivy ignore unfixed")
+				log.Infof("updated: trivy.ignore.unfixed to %s", unfixed)
 			}
 		}
 
