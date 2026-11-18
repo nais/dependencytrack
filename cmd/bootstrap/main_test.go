@@ -85,7 +85,7 @@ func TestBootstrapTrivyIgnoreUnfixed(t *testing.T) {
 			})
 			server := httptest.NewServer(mux)
 			defer server.Close()
-			t.Setenv("BASE_URL", server.URL)
+			t.Setenv("BASE_URL", server.URL+"/api")
 
 			main()
 
