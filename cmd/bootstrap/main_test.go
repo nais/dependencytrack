@@ -1,10 +1,109 @@
 package main
 
 import (
+	"encoding/base64"
+	"encoding/json"
 	"flag"
+	"fmt"
+	"net/http"
+	"net/http/httptest"
+	"os"
 	"strings"
 	"testing"
+	"time"
+
+	"github.com/nais/dependencytrack/pkg/dependencytrack"
 )
+
+func TestBootstrapTrivyIgnoreUnfixed(t *testing.T) {
+	for _, tt := range []struct {
+		name    string
+		stored  string
+		desired string
+	}{
+		{name: "disable ignoring unfixed", stored: "true", desired: "false"},
+		{name: "enable ignoring unfixed", stored: "false", desired: "true"},
+		{name: "already false", stored: "false", desired: "false"},
+		{name: "already true", stored: "true", desired: "true"},
+	} {
+		t.Run(tt.name, func(t *testing.T) {
+			originalConfig, originalArgs := *cfg, os.Args
+			t.Cleanup(func() {
+				*cfg, os.Args = originalConfig, originalArgs
+			})
+			os.Args = []string{"bootstrap"}
+			t.Chdir(t.TempDir())
+			flag.VisitAll(func(f *flag.Flag) {
+				if !strings.HasPrefix(f.Name, "test.") {
+					t.Setenv(strings.ToUpper(strings.ReplaceAll(f.Name, "-", "_")), f.DefValue)
+				}
+			})
+			if err := os.Unsetenv("TRIVY_IGNORE_UNFIXED"); err != nil {
+				t.Fatal(err)
+			}
+			if err := os.WriteFile(".env", []byte("TRIVY_IGNORE_UNFIXED="+tt.desired+"\n"), 0o600); err != nil {
+				t.Fatal(err)
+			}
+			if err := os.WriteFile("users.yaml", []byte("users: []\n"), 0o600); err != nil {
+				t.Fatal(err)
+			}
+			t.Setenv("USERS_FILE", "users.yaml")
+			t.Setenv("TRIVY_API_TOKEN", "test-token")
+
+			updates := make(chan string, 2)
+			token := "eyJhbGciOiJub25lIn0." + base64.RawURLEncoding.EncodeToString(
+				fmt.Appendf(nil, `{"exp":%d}`, time.Now().Add(time.Hour).Unix()),
+			) + "."
+			mux := http.NewServeMux()
+			mux.HandleFunc("POST /api/v1/user/login", func(w http.ResponseWriter, _ *http.Request) {
+				w.Header().Set("Content-Type", "text/plain")
+				_, _ = w.Write([]byte(token))
+			})
+			mux.HandleFunc("GET /api/v1/team", func(w http.ResponseWriter, _ *http.Request) {
+				w.Header().Set("Content-Type", "application/json")
+				_, _ = w.Write([]byte(`[{"name":"Administrators","uuid":"test-team","apiKeys":[{"key":"test-key"}]}]`))
+			})
+			mux.HandleFunc("GET /api/v1/configProperty", func(w http.ResponseWriter, _ *http.Request) {
+				w.Header().Set("Content-Type", "application/json")
+				_, _ = fmt.Fprintf(w, `[{"groupName":"integrations","propertyName":"trivy.ignore.unfixed","propertyValue":%q,"propertyType":"BOOLEAN"}]`, tt.stored)
+			})
+			mux.HandleFunc("POST /api/v1/configProperty", func(w http.ResponseWriter, r *http.Request) {
+				var property dependencytrack.ConfigProperty
+				if err := json.NewDecoder(r.Body).Decode(&property); err != nil {
+					t.Error(err)
+					w.WriteHeader(http.StatusBadRequest)
+					return
+				}
+				if property.PropertyValue == nil {
+					t.Error("missing property value")
+					w.WriteHeader(http.StatusBadRequest)
+					return
+				}
+				updates <- *property.PropertyValue
+				w.Header().Set("Content-Type", "application/json")
+				_, _ = w.Write([]byte(`{}`))
+			})
+			server := httptest.NewServer(mux)
+			defer server.Close()
+			t.Setenv("BASE_URL", server.URL)
+
+			main()
+
+			select {
+			case got := <-updates:
+				if tt.stored == tt.desired {
+					t.Errorf("unexpected update to %q when value is already set", got)
+				} else if got != tt.desired {
+					t.Errorf("trivy.ignore.unfixed = %q, want %q", got, tt.desired)
+				}
+			default:
+				if tt.stored != tt.desired {
+					t.Errorf("trivy.ignore.unfixed was not updated from %q to %q", tt.stored, tt.desired)
+				}
+			}
+		})
+	}
+}
 
 func TestResolveBomValidationMode(t *testing.T) {
 	tests := []struct {
